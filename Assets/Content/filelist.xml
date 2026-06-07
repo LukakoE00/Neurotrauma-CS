@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<contentpackage name="Neurotrauma CS" modversion="1.0" corepackage="false">
+    <Text file="%ModDir%/Texts/English.xml" />
+</contentpackage>

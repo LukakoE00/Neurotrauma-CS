@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\SharedProject\SharedProject.projitems" Label="Shared" />
+  <Import Project="../Build.props"/>
+  
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <DefineConstants>TRACETRACE;CLIENT;WINDOWS</DefineConstants>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <DefineConstants>TRACETRACE;CLIENT;WINDOWS</DefineConstants>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="Barotrauma">
+      <HintPath>..\Refs\Windows\Barotrauma.dll</HintPath>
+    </Reference>
+    <Reference Include="BarotraumaCore">
+      <HintPath>..\Refs\Windows\BarotraumaCore.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoGame.Framework.Windows.NetStandard">
+      <HintPath>..\Refs\MonoGame.Framework.Windows.NetStandard.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <Target Name="CopyFiles" AfterTargets="Build">
+    <ItemGroup>
+      <Assemblies Include="$(TargetDir)$(TargetName).dll" />
+      <DepsFiles Include="$(TargetDir)$(TargetName).deps.json" />
+    </ItemGroup>
+    <Copy SourceFiles="@(Assemblies)" DestinationFiles="$(ModDeployDir)bin\Client\Windows\$(TargetName).dll" />
+    <Copy SourceFiles="@(DepsFiles)" DestinationFiles="$(ModDeployDir)bin\Client\Windows\$(TargetName).deps.json" />
+  </Target>
+</Project>
