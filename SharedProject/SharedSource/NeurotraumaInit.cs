@@ -19,7 +19,14 @@
         {
             // After all plugins have loaded
             // Put code that interacts with other plugins here.
-            PrintNTInitInfo();
+
+            // So, we're bringing back the init.lua classic. This will run MP serverside AND singleplayer; but not clientside.
+            #if SERVER
+                PrintNTInitInfo();
+            #else
+                if (GameMain.IsSingleplayer)
+                    PrintNTInitInfo();
+            #endif
         }
 
         public void PreInitPatching()
