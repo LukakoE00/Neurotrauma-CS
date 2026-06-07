@@ -1,0 +1,1 @@
+- Re-add all base NT Afflictions, sorted and amended where needed accordingly.

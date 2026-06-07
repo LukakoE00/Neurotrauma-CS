@@ -1,0 +1,1 @@
+- Re-add overrides for Talents once items have been sorted.
