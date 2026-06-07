@@ -1,5 +1,7 @@
-This is all just the skeleton from the C# documentation, changed for Neurotrauma
+This is all just the skeleton from the C# documentation, changed for Neurotrauma.
 It should be noted that I don't know what I am doing yet!
+
+Google Doc with codebase can be found [here](https://docs.google.com/document/d/1AJDsnBTOf8GZjzLwk0Dm6FDzZSp3U4sCgUFjvv2a_uo/edit?tab=t.0#heading=h.w01ukn2d7564)
 
 - Namespace: _Neurotrauma_
 - If you're going to be running this locally, change the LocalMods folder directory in **Build.props**. IDK if there is a better way to do this without GitHub constantly changing it.
