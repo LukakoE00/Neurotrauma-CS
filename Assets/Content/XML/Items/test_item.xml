@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Override>
+	<Items>
+		<!-- Antibiotic ointment / heals infected wound -->
+		<!-- Maybe it's worth moving to Consumables.xml. By: TheManyFacedDemon -->
+		<Item name="" identifier="ointment" category="Medical" Tags="smallitem,medical" maxstacksize="32" maxstacksizecharacterinventory="8" useinhealthinterface="true" cargocontaineridentifier="mediccrate" scale="0.265" impactsoundtag="impact_soft">
+			<PreferredContainer primary="medcab" minamount="16" maxamount="24" spawnprobability="1"/>
+			<PreferredContainer primary="abandonedmedcab" minamount="0" maxamount="3" spawnprobability="0.10"/>
+			<PreferredContainer primary="outpostmedcompartment" minamount="0" maxamount="5" spawnprobability="0.25"/>
+
+			<Price baseprice="40">
+				<Price storeidentifier="merchantoutpost" multiplier="1.4" minavailable="9"/>
+				<Price storeidentifier="merchantcity" multiplier="1.25" minavailable="18"/>
+				<Price storeidentifier="merchantmedical" sold="true" multiplier="0.9" minavailable="18"/>
+			</Price>
+
+			<Fabricate suitablefabricators="medicalfabricator" requiredtime="15" amount="4">
+				<RequiredSkill identifier="medical" level="10"/>
+				<RequiredItem identifier="stabilozine" amount="1"/>
+				<RequiredItem identifier="antibiotics" amount="1"/>
+			</Fabricate>
+
+			<Deconstruct/>
+
+			<SuitableTreatment identifier="infectedwound" suitability="100"/>
+			<SuitableTreatment identifier="burn_deg1" suitability="50"/>
+			<SuitableTreatment identifier="burn_deg2" suitability="50"/>
+			<InventoryIcon texture="%ModDir%/Images/InventoryItemIconAtlas.png" sourcerect="64,64,64,64" origin="0.5,0.5"/>
+			<Sprite texture="%ModDir%/Images/InGameItemIconAtlas.png" sourcerect="128,256,128,128" depth="0.6" origin="0.5,0.5"/>
+			<Body width="60" height="20" density="20"/>
+
+			<MeleeWeapon canBeCombined="true" removeOnCombined="true" slots="Any,RightHand,LeftHand" aimpos="5,0" handle1="-5,0" holdangle="10" reload="1.0" msg="ItemMsgPickUpSelect">
+				<RequiredSkill identifier="medical" level="55" />
+				<StatusEffect type="OnUse" target="This" Condition="-100.0" setvalue="true">
+					<Sound file="%ModDir%/Sound/ointment.ogg" range="500" />
+				</StatusEffect>
+				<StatusEffect type="OnBroken" target="This">
+					<Remove/>
+				</StatusEffect>
+			</MeleeWeapon>
+
+			<SkillRequirementHint identifier="medical" level="10"/>
+		</Item>
+	</Items>
+</Override>

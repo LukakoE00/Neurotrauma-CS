@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <contentpackage name="Neurotrauma CS" modversion="1.0" corepackage="false">
     <Text file="%ModDir%/Localization/English/English.xml" />
-
+    <Items file="%ModDir%/XML/Items/test_item.xml" />
 </contentpackage>

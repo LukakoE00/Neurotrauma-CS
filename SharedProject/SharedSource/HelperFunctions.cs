@@ -7,6 +7,15 @@ using static Barotrauma.PetBehavior.ItemProduction;
 // What shit was Tina/Mannatu smoking. How do you write this many functions. - GreenBean
 // The majority of these functions are direct translations into C#. Due to the fact that most of the C# methods were already exposed in lua, we can easily do this.
 
+// Also due to this fact of being in C#, many functions are now irrelevant.
+// Lerp (Rest in Peace lil bro, you were the king).
+// Clamp (My goat).
+// Minimum
+// Maximum
+// Distance Between
+// 
+
+
 namespace Neurotrauma
 {
 
