@@ -17,32 +17,26 @@ namespace Neurotrauma
     }
 
     // The priority defines at wich frequency the affliction gets updated. 
-    public enum AfflictionPriority
+    public enum AfflictionPriority: int
     {
-        LOW,  // Every 8s
-        MEDIUM, // Every 4s
-        HIGH // Every 2s
+        LOW = 8*60,  // Every 8s
+        MEDIUM = 4*60, // Every 4s
+        HIGH = 2*60 // Every 2s
     }
 
     public class NTAfflictionInfos
     {
-        private AfflictionPriority Priority { get; }
+        public AfflictionPriority Priority { get; }
         // They return an int because i can't return void. so do whatever you want with it 
-        private Func<NTUpdateFunctionInfos, int> UpdateFunction { get; } 
+        public Func<NTUpdateFunctionInfos, int> UpdateFunction { get; } 
 
-        public NTAfflictionInfos(AfflictionPriority priority, Func<NTUpdateFunctionInfos, int> updateFunction)
+        public NTAfflictionInfos(Func<NTUpdateFunctionInfos, int> updateFunction, AfflictionPriority priority = AfflictionPriority.HIGH)
         {
             this.Priority = priority;
             this.UpdateFunction = updateFunction;
         }
 
-        public AfflictionPriority GetPriority() { return this.Priority; }
-        public Func<NTUpdateFunctionInfos, int> GetUpdateFunction() { return this.UpdateFunction; }
-
     }
-
-
-
 
     // Contains the list of every affliction defined by Neurotrauma. Addons should add their afflictions there.
     // We should provide functions to Lua to add Afflictions here. 

@@ -40,7 +40,7 @@ namespace Neurotrauma
             
             LuaCsLogger.Log("adding HF to globals");
             //TODO get this shit to work
-            luaScriptManagementService.InternalScript.Globals["HF"] = UserData.CreateStatic(typeof(HF));
+            // luaScriptManagementService.InternalScript.Globals["HF"] = UserData.CreateStatic(typeof(HF));
             
         }
 
