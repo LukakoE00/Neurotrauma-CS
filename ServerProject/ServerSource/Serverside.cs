@@ -20,11 +20,25 @@
 
         }
 
+        private void DefineAllItems()
+        {
+
+            NTItemMethods.RegisterItemUpdateFunction("ointment", (infos) =>
+            {
+                HF.AddAfflictionLimb(infos.target, "ointmented", infos.targetLimb.type, 60, infos.user);
+                HF.AddAfflictionLimb(infos.target, "infectedwound", infos.targetLimb.type, -100, infos.user);
+
+                return 0;
+            })
+                ;
+        }
+
         public void InitializeServer()
         {
             LuaCsLogger.Log("Running InitializeServer");
             DefineAllStats();
             DefineAllAfflictions();
+            DefineAllItems();
         }
 
         public void OnLoadCompletedServer()
@@ -40,8 +54,8 @@
 
             harmony.Patch(originalApplyDamage, prefix: new HarmonyMethod(typeof(OnDamaged), nameof(OnDamaged.Override_ApplyDamage)));
             harmony.Patch(originalDamageLimb, prefix: new HarmonyMethod(typeof(OnDamaged), nameof(OnDamaged.Override_DamageLimb)));
-            harmony.Patch(originalUse, prefix: new HarmonyMethod(typeof(ItemMethods), nameof(ItemMethods.Override_Use)));
-            harmony.Patch(originalApplyTreatment, prefix: new HarmonyMethod(typeof(ItemMethods), nameof(ItemMethods.Override_ApplyTreatment)));
+            harmony.Patch(originalUse, prefix: new HarmonyMethod(typeof(NTItemMethods), nameof(NTItemMethods.Override_Use)));
+            harmony.Patch(originalApplyTreatment, prefix: new HarmonyMethod(typeof(NTItemMethods), nameof(NTItemMethods.Override_ApplyTreatment)));
         }
 
         public void DisposeServer()
