@@ -1,5 +1,2 @@
-﻿
-namespace Neurotrauma
-{
+﻿namespace Neurotrauma;
 
-}

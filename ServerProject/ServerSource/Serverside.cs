@@ -5,8 +5,6 @@
     {
         // Server-specific code
 
-        private Harmony harmony;
-
         private void DefineAllStats()
         {
             // I wanted to write every stats already defined in LuaNT however NTC looks like complete horsedong.
@@ -24,16 +22,18 @@
 
         public void InitializeServer()
         {
+            LuaCsLogger.Log("Running InitializeServer");
             DefineAllStats();
             DefineAllAfflictions();
         }
 
         public void OnLoadCompletedServer()
         {
+            LuaCsLogger.Log("Running OnLoadCompletedServers");
             harmony = new Harmony("neurotrauma.server");
 
             var originalApplyDamage = AccessTools.Method(typeof(CharacterHealth), "ApplyDamage", [typeof(Limb), typeof(AttackResult), typeof(bool), typeof(bool)]);
-            var originalDamageLimb = AccessTools.Method(typeof(Character), "DamageLimb", [typeof(Vector2), typeof(Limb), typeof(IEnumerable<Affliction>), typeof(float), typeof(bool), typeof(Vector2), 
+            var originalDamageLimb = AccessTools.Method(typeof(Character), "DamageLimb", [typeof(Vector2), typeof(Limb), typeof(IEnumerable<Affliction>), typeof(float), typeof(bool), typeof(Vector2),
                 typeof(Character), typeof(float), typeof(bool), typeof(float), typeof(bool), typeof(bool), typeof(bool)]);
 
             harmony.Patch(originalApplyDamage, prefix: new HarmonyMethod(typeof(OnDamaged), nameof(OnDamaged.Override_ApplyDamage)));
