@@ -6,6 +6,12 @@ namespace Neurotrauma;
 public class NTItemMethods
 {
 
+    /**
+     * <summary>
+     * Contains all the data necessary for an item update function.
+     * 
+     * </summary>
+     */
     public class ItemUpdateFunctionInfos
     {
         public Item item { get; }
@@ -22,40 +28,72 @@ public class NTItemMethods
         }
     }
 
-    private static Dictionary<string, Func<ItemUpdateFunctionInfos, int>> NTItemUpdateFunctions = new Dictionary<string, Func<ItemUpdateFunctionInfos, int>> { };
+    private static Dictionary<string, Func<ItemUpdateFunctionInfos, int>> NTItemRegistry = new Dictionary<string, Func<ItemUpdateFunctionInfos, int>> { };
 
-    public static Dictionary<string, Func<ItemUpdateFunctionInfos, int>> GetNTItemUpdateFunctions ()
+    public static Dictionary<string, Func<ItemUpdateFunctionInfos, int>> GetNTItemRegistry ()
     {
-        return NTItemUpdateFunctions;
+        return NTItemRegistry;
     }
 
-    public static void RegisterItemUpdateFunction(string itemID, Func<ItemUpdateFunctionInfos, int> function)
+    /**<summary>
+     * Register a new identifier => function to the NTItemRegistry.
+     * The function will trigger when the item matching the identifier is used.
+     * </summary>
+     * <param name="itemID">The identifier described in the XML.</param>
+     * <param name="function">The item update function.</param>
+     * <returns>Returns true if the item was defined correctly (if it was not already defined). Returns false otherwise.</returns>
+     */
+    public static bool RegisterItemUpdateFunction(string itemID, Func<ItemUpdateFunctionInfos, int> function)
     {
-        if (!NTItemUpdateFunctions.ContainsKey(itemID))
+        if (!NTItemRegistry.ContainsKey(itemID))
         {
-            NTItemUpdateFunctions.Add(itemID, function);
+            NTItemRegistry.Add(itemID, function);
+            return true;
         }
+
+        return false;
     }
 
-    public static void OverrideItemUpdateFunction(string itemID, Func<ItemUpdateFunctionInfos, int> function)
+    /**<summary>
+     * Overrides an already defined function matching the itemID.
+     * Does nothing if the itemID isn't defined in the registry.
+     * </summary>
+     * <param name="itemID">The identifier described in the XML.</param>
+     * <param name="function">The item update function.</param>
+     * <returns>Returns true if the override was succesful, false otherwise.</returns>
+     */
+    public static bool OverrideItemUpdateFunction(string itemID, Func<ItemUpdateFunctionInfos, int> function)
     {
-        if (NTItemUpdateFunctions.ContainsKey(itemID))
+        if (NTItemRegistry.ContainsKey(itemID))
         {
-            NTItemUpdateFunctions.Add(itemID, function);
+            NTItemRegistry.Add(itemID, function);
+            return true;
         }
+
+        return false;
     }
 
 
+    /**
+     * <summary>
+     * The function patching the base game Item.ApplyTreatment
+     * </summary>
+     */
     public static void Override_ApplyTreatment(Item __instance, Character user, Character character, Limb targetLimb)
     {
 
         string itemID = __instance.Prefab.Identifier.ToString();
-        if (NTItemUpdateFunctions.ContainsKey(itemID))
+        if (NTItemRegistry.ContainsKey(itemID))
         {
-            NTItemUpdateFunctions[itemID].Invoke(new ItemUpdateFunctionInfos(__instance, user, character, targetLimb));
+            NTItemRegistry[itemID].Invoke(new ItemUpdateFunctionInfos(__instance, user, character, targetLimb));
         }
     }
 
+    /**
+     * <summary>
+     * The function patching the base game Item.Use
+     * </summary>
+     */
     public static void Override_Use(Item __instance, float deltaTime, Character user = null, Limb targetLimb = null, Entity useTarget = null, Character userForOnUsedEvent = null)
     {
         LuaCsLogger.Log("use");
