@@ -1,21 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <contentpackage name="Neurotrauma CS" modversion="1.0" corepackage="false">
     <Text file="%ModDir%/Localization/English/English.xml" />
-    <Afflictions file="%ModDir%/XML/AnyBodypart.xml" />
-    <Afflictions file="%ModDir%/XML/Blood.xml" />
-    <Afflictions file="%ModDir%/XML/BloodTypes.xml" />
-    <Afflictions file="%ModDir%/XML/Bones.xml" />
-    <Afflictions file="%ModDir%/XML/Brain.xml" />
-    <Afflictions file="%ModDir%/XML/Extremities.xml" />
-    <Afflictions file="%ModDir%/XML/Functionality.xml" />
-    <Afflictions file="%ModDir%/XML/Head.xml" />
-    <Afflictions file="%ModDir%/XML/Heart.xml" />
-    <Afflictions file="%ModDir%/XML/ItemDerived.xml" />
-    <Afflictions file="%ModDir%/XML/Kidneys.xml" />
-    <Afflictions file="%ModDir%/XML/Liver.xml" />
-    <Afflictions file="%ModDir%/XML/Lungs.xml" />
-    <Afflictions file="%ModDir%/XML/Overrides.xml" />
-    <Afflictions file="%ModDir%/XML/Surgical.xml" />
-    <Afflictions file="%ModDir%/XML/Symptoms.xml" />
-    <Afflictions file="%ModDir%/XML/Torso.xml" />
+
 </contentpackage>
