@@ -1,9 +1,9 @@
 ﻿
 using Barotrauma;
+using Barotrauma.Networking;
 using FluentResults;
 using System;
 using System.Xml.Linq;
-using static Barotrauma.PetBehavior.ItemProduction;
 // What shit was Tina/Mannatu smoking. How do you write this many functions. - GreenBean
 // The majority of these functions are direct translations into C#. Due to the fact that most of the C# methods were already exposed in lua, we can easily do this.
 
@@ -13,7 +13,6 @@ using static Barotrauma.PetBehavior.ItemProduction;
 // Minimum
 // Maximum
 // Distance Between
-// 
 
 
 namespace Neurotrauma
@@ -186,6 +185,75 @@ namespace Neurotrauma
             List<string> DisallowedTalents = new List<string>();
         }
 
+        public static void PrintChat(string Message)
+        {
+        #if SERVER
+            LuaGame.SendMessage(Message, ChatMessageType.Server, null);
+        #endif
+        
+        }
+
+        public static void DMClient(Client Client, string Message, Color Color)
+        {
+        #if SERVER
+            ChatMessage ChatMsg = ChatMessage.Create("",Message,ChatMessageType.Server,null);
+            ChatMsg.Color = Color;
+            LuaGame.SendMessage(Message, ChatMessageType.Server, null);
+        #endif
+
+        }
+
+        public static bool Chance(float Chance)
+        {
+            float RandomChance = new Random().Range(0, 1);
+            return RandomChance < Chance;
+        }
+
+        public static float BoolToNum(bool Value, float Out = 1)
+        {
+            if (Value) { return  Out; }
+            return 0;
+        }
+
+        // ---------------------------------------- Character Related Helper Functions -------------------------------------------------- \\
+
+        public static float GetSkillLevel(Character Character, Identifier SkillType)
+        {
+            return Character.GetSkillLevel(SkillType);
+        }
+
+        public static float GetBaseSkillLevel(Character Character, Identifier SkillType)
+        {
+            return Character.Info.Job.GetSkillLevel(SkillType);
+        }
+        public static bool GetSkillRequirmentMet(Character Character, Identifier SkillType, float RequiredAmount)
+        {
+            float SkillLevel = GetSkillLevel(Character, SkillType);
+            // Need to implement our NTConfig part here.
+            return Chance(Math.Clamp(SkillLevel/RequiredAmount,0,1));
+        }
+        public static bool GetSurgerySkillRequirmentMet(Character Character, float RequiredAmount)
+        {
+            float SkillLevel = GetSkillLevel(Character, "surgery");
+            // Need to implement our NTConfig part here.
+            return Chance(Math.Clamp(SkillLevel / RequiredAmount, 0, 1));
+        }
+
+        public static void GiveSkill(Character Character, Identifier SkillType, float Amount)
+        {
+            Character.Info.IncreaseSkillLevel(SkillType, Amount);
+        }
+
+        public static void GiveSurgerySkill(Character Character, float Amount)
+        {
+            Character.Info.IncreaseSkillLevel("surgery", Amount);
+        }
+
+        public static void GiveSkillScaled(Character Character, Identifier SkillType, float Amount)
+        {
+            GiveSkill(Character, SkillType, (float) (Amount * 0.001 / Math.Max(GetSkillLevel(Character,SkillType),1)));
+        }
+
         // ---------------------------------------- Affliction Related Helper Functions -------------------------------------------------- \\
         public static bool HasAffliction(Character Character, string Identifier = "", float MinAmount = 0)
         {
@@ -211,6 +279,36 @@ namespace Neurotrauma
                 return true;
             }
             return false;
+        }
+
+        public static bool HasAfflictionExtremity(Character Character, string Identifier = "", LimbType GivenLimbType = LimbType.Torso, double MinAmount = 0.5)
+        {
+            Affliction Aff = null;
+            List<List<LimbType>> LocalLimbsToCheck = [[LimbType.LeftArm, LimbType.LeftForearm, LimbType.LeftHand],[LimbType.RightArm, LimbType.RightForearm, LimbType.RightHand],
+                                                        [LimbType.LeftLeg, LimbType.LeftThigh, LimbType.LeftFoot],[LimbType.RightLeg, LimbType.RightThigh, LimbType.RightFoot]];
+
+            foreach (List<LimbType> SubList in LocalLimbsToCheck)
+            {
+                if (NormalizeLimbType(GivenLimbType) == SubList[0])
+                {
+                    Aff = GetAfflictionLimb(Character, Identifier, SubList[0]);
+                    if (Aff == null)
+                    {
+                        Aff = GetAfflictionLimb(Character, Identifier, SubList[1]);
+                    }
+                    if (Aff == null)
+                    {
+                        Aff = GetAfflictionLimb(Character, Identifier, SubList[2]);
+                    }
+                    break; // We can end the for loop, we found what we were looking for.
+                }
+            }
+            bool Res = false;
+            if (Aff != null)
+            {
+                Res = Aff.Strength >= MinAmount;
+            }
+            return Res;
         }
 
         public static Affliction GetAffliction(Character Character, String Identifier = "")
@@ -296,6 +394,55 @@ namespace Neurotrauma
             float PrevStrength = GetAfflictionStrength(Character, Identifier);
             Strength *= 1 - GetResistance(Character, Identifier);
             SetAffliction(Character, Identifier, Strength + PrevStrength, Aggresor, PrevStrength);
+        }
+
+        public static void ApplyAfflictionChange(Character Character, string Identifier, float Strength, float PrevStrength, float MinStrength, float MaxStrength)
+        {
+            Strength = Math.Clamp(Strength, MinStrength, MaxStrength);
+            PrevStrength = Math.Clamp(PrevStrength, MinStrength, MaxStrength);
+            if (PrevStrength != Strength)
+            {
+                SetAffliction(Character,Identifier, Strength, Character, Strength);
+            }
+        }
+
+        public static void ApplyAfflictionChangeLimb(Character Character, LimbType GivenLimbType, string Identifier, float Strength, float PrevStrength, float MinStrength, float MaxStrength)
+        {
+            Strength = Math.Clamp(Strength, MinStrength, MaxStrength);
+            PrevStrength = Math.Clamp(PrevStrength, MinStrength, MaxStrength);
+            if (PrevStrength != Strength)
+            {
+                SetAfflictionLimb(Character, Identifier, GivenLimbType, Strength, Character, Strength);
+            }
+        }
+
+        public static void ApplySymptom(Character Character, string Identifier, bool HasSymptom, bool RemoveIfNot)
+        {
+            if (!HasSymptom && !RemoveIfNot)
+            {
+                return;
+            }
+
+            float Strength = 0;
+            if (HasSymptom) { Strength = 100; }
+            if (RemoveIfNot || HasSymptom)
+            {
+                SetAffliction(Character, Identifier, Strength, Character, Strength);
+            }
+        }
+        public static void ApplySymptomLimb(Character Character, LimbType GivenLimbType, string Identifier, bool HasSymptom, bool RemoveIfNot)
+        {
+            if (!HasSymptom && !RemoveIfNot)
+            {
+                return;
+            }
+
+            float Strength = 0;
+            if (HasSymptom) { Strength = 100; }
+            if (RemoveIfNot || HasSymptom)
+            {
+                SetAfflictionLimb(Character, Identifier, GivenLimbType, Strength, Character, Strength);
+            }
         }
 
 
