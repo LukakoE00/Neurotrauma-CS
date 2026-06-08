@@ -215,6 +215,17 @@ namespace Neurotrauma
             return 0;
         }
 
+        public static bool GameIsPaused()
+        {
+        #if SERVER
+            return false;
+        #elif SHARED
+            return LuaGame.Paused;
+        #else
+            return false;
+        #endif
+        }
+
         // ---------------------------------------- Character Related Helper Functions -------------------------------------------------- \\
 
         public static float GetSkillLevel(Character Character, Identifier SkillType)
