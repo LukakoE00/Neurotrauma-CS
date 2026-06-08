@@ -11,6 +11,7 @@ global using Barotrauma;
 global using Barotrauma.LuaCs;
 global using Barotrauma.Extensions;
 global using Microsoft.Xna.Framework;
+global using HarmonyLib;
 
 [assembly: IgnoresAccessChecksTo("Barotrauma")]
 [assembly: IgnoresAccessChecksTo("BarotraumaCore")]

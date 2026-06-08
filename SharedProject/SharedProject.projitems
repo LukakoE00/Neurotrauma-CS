@@ -12,5 +12,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)SharedSource\AssemblySettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SharedSource\NeurotraumaInit.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)sharedsource\NTInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)sharedsource\PatchTest.cs" />
   </ItemGroup>
 </Project>
