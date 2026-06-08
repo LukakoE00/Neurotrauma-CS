@@ -25,12 +25,13 @@
 
             NTItemMethods.RegisterItemUpdateFunction("ointment", (infos) =>
             {
+                LuaCsLogger.Log("ointment");
                 HF.AddAfflictionLimb(infos.target, "ointmented", infos.targetLimb.type, 60, infos.user);
                 HF.AddAfflictionLimb(infos.target, "infectedwound", infos.targetLimb.type, -100, infos.user);
 
                 return 0;
-            })
-                ;
+            });
+                
         }
 
         public void InitializeServer()

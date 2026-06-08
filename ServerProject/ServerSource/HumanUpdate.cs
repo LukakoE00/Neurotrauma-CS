@@ -1,8 +1,9 @@
-﻿using System.Reflection.Metadata.Ecma335;
+﻿using Barotrauma.LuaCs.Events;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Neurotrauma;
 
-class HumanUpdate
+class HumanUpdate : IEventUpdate
 {
     private static int UpdateCooldown = 0;
     private static int UpdateIntervalHigh = (int) AfflictionPriority.HIGH; // 120 = 2s
@@ -16,7 +17,7 @@ class HumanUpdate
     }
 
     private static void UpdateHuman(Character character)
-    {
+    { 
 
     }
 
@@ -42,4 +43,16 @@ class HumanUpdate
 
     }
 
+    private static void UpdateLoop()
+    {
+
+    }
+
+    // Gets called 60 times a second
+    public void OnUpdate(double fixedDeltaTime)
+    {
+        if (HF.GameIsPaused()) return;
+
+        UpdateLoop();
+    }
 }
