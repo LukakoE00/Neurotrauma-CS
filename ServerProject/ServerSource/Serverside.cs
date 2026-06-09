@@ -5,16 +5,6 @@
     {
         // Server-specific code
 
-        private void DefineAllStats()
-        {
-            // I wanted to write every stats already defined in LuaNT however NTC looks like complete horsedong.
-            // I will then leave it for someone to write them, but here is an example of how to register a stat:
-            NTStat.RegisterStat("stasis", (character) =>
-            {
-                return HF.HasAffliction(character.Character, "stasis") ? 1 : 0;
-            });
-        }
-
         private void DefineAllAfflictions()
         {
 
@@ -29,7 +19,6 @@
                 HF.AddAfflictionLimb(infos.target, "ointmented", infos.targetLimb.type, 60, infos.user);
                 HF.AddAfflictionLimb(infos.target, "infectedwound", infos.targetLimb.type, -100, infos.user);
 
-                return 0;
             });
                 
         }
@@ -37,7 +26,6 @@
         public void InitializeServer()
         {
             LuaCsLogger.Log("Running InitializeServer");
-            DefineAllStats();
             DefineAllAfflictions();
             DefineAllItems();
         }
