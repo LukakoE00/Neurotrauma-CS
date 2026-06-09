@@ -3,6 +3,7 @@ using Barotrauma;
 using Barotrauma.Networking;
 using FluentResults;
 using System;
+using System.Collections.ObjectModel;
 using System.Xml.Linq;
 // What shit was Tina/Mannatu smoking. How do you write this many functions. - GreenBean
 // The majority of these functions are direct translations into C#. Due to the fact that most of the C# methods were already exposed in lua, we can easily do this.
@@ -26,6 +27,14 @@ namespace Neurotrauma
         public static readonly List<LimbType> LegsToCheck = [LimbType.LeftLeg, LimbType.RightLeg];
         public static readonly List<LimbType> ArmsToCheck = [LimbType.LeftArm, LimbType.RightArm];
         public static readonly List<LimbType> LimbsToCheck = [LimbType.LeftArm, LimbType.RightArm, LimbType.LeftLeg, LimbType.RightLeg, LimbType.Torso, LimbType.Head];
+        public static readonly Dictionary<LimbType, string> StringLimbsToCheck = new Dictionary<LimbType, string>() { 
+                                                                                                                        { LimbType.LeftArm, "LeftArm" },{ LimbType.RightArm, "RightArm" },
+                                                                                                                        { LimbType.LeftArm, "LeftLeg" },{ LimbType.RightArm, "RightLeg" },
+                                                                                                                        { LimbType.Torso, "Torso" },{ LimbType.Head, "Head" }};
+        public static readonly Dictionary<LimbType, string> ShortHandLimbsToCheck = new Dictionary<LimbType, string>() {
+                                                                                                                        { LimbType.LeftArm, "la" },{ LimbType.RightArm, "ra" },
+                                                                                                                        { LimbType.LeftArm, "ll" },{ LimbType.RightArm, "rl" },
+                                                                                                                        { LimbType.Torso, "t" },{ LimbType.Head, "h" }};
 
         public static Limb GetCharacterLimb(Character Character, LimbType GivenLimbType)
         {
@@ -63,6 +72,21 @@ namespace Neurotrauma
 
             return GivenLimbType;
         }
+
+        public static string LimbToString(LimbType GivenLimbType)
+        {
+            LimbType NormalizedLimb = NormalizeLimbType(GivenLimbType);
+            StringLimbsToCheck.TryGetValue(NormalizedLimb, out string Value);
+            return Value;
+        }
+
+        public static string CreateLimbAfflictionID(LimbType GivenLimbType, string Identifier, string FailSafe)
+        {
+            LimbType NormalizedLimb = NormalizeLimbType(GivenLimbType);
+            ShortHandLimbsToCheck.TryGetValue (NormalizedLimb, out string Value);
+            return (Value + "_" + Identifier) ?? FailSafe;
+        }
+
 
         // ---------------------------------------- Utility Related Helper Functions -------------------------------------------------- \\
 
@@ -224,6 +248,30 @@ namespace Neurotrauma
         #else
             return false;
         #endif
+        }
+
+        public static void GiveItem(Character Character, string ItemIdentifier) // This took me an hour to translate btw lol
+        {
+            // HostSide Only
+#if SHARED
+#if CLIENT
+            if (LuaGame.IsMultiplayer())
+            {
+                return;
+            }
+#endif
+            if (Entity.Spawner == null)
+            {
+                LuaCsTimer.Wait((params object[] _) => { GiveItem(Character, Item); }, 35); // Thanks Evil and Misinformation Factory
+                return;
+            }
+            LuaCsTimer.Wait((params object[] _) => 
+            { 
+            ItemPrefab IPrefab = ItemPrefab.GetItemPrefab(ItemID);
+            Entity.Spawner.AddItemToSpawnQueue(IPrefab, Character.WorldPosition, null, null, (Item) => { Character.Inventory.TryPutItem(Item, null, [InvSlotType.Any]); });
+            }, 35);
+            return;
+#endif
         }
 
         // ---------------------------------------- Character Related Helper Functions -------------------------------------------------- \\
@@ -456,6 +504,111 @@ namespace Neurotrauma
             }
         }
 
+        // ---------------------------------------- Specific Affliction Helper Functions -------------------------------------------------- \\
 
+        public static void DislocateLimb(Character Character, LimbType GivenLimbType, float Strength = 1) // UNUSED?
+        {
+            GivenLimbType = NormalizeLimbType(GivenLimbType);
+            AddAfflictionLimb(Character, "dislocation", GivenLimbType, Strength, Character);
+        }
+
+        public static void BreakLimb(Character Character, LimbType GivenLimbType, float Strength = 1)
+        {
+            GivenLimbType = NormalizeLimbType(GivenLimbType);
+            AddAfflictionLimb(Character, "fracture", GivenLimbType, Strength, Character);
+            // Implement the gypsum cast thing here.
+        }
+        public static void ArteryCutLimb(Character Character, LimbType GivenLimbType, float Strength = 1)
+        {
+            GivenLimbType = NormalizeLimbType(GivenLimbType);
+            AddAfflictionLimb(Character, "arterialcut", GivenLimbType, Strength, Character);
+        }
+
+        public static bool LimbIsDislocated(Character Character, LimbType GivenLimbType, bool IsArm)
+        {
+            GivenLimbType = NormalizeLimbType(GivenLimbType);
+            if (IsArm) { return HasAfflictionLimb(Character, "dislocation", GivenLimbType, 100); }
+            return HasAfflictionLimb(Character, "dislocation", GivenLimbType);
+        }
+
+        public static bool LimbIsBroken(Character Character, LimbType GivenLimbType, bool IsArm)
+        {
+            GivenLimbType = NormalizeLimbType(GivenLimbType);
+            if (IsArm) { return HasAfflictionLimb(Character, "fracture", GivenLimbType, 100); }
+            return HasAfflictionLimb(Character, "fracture", GivenLimbType);
+        }
+
+        public static bool LimbIsArterialCut(Character Character, LimbType GivenLimbType)
+        {
+            GivenLimbType = NormalizeLimbType(GivenLimbType);
+            return HasAfflictionLimb(Character, "arterialcut", GivenLimbType);
+        }
+
+        public static bool LimbIsTraumaticallyAmputated(Character Character, LimbType GivenLimbType)
+        {
+            GivenLimbType = NormalizeLimbType(GivenLimbType);
+            return HasAfflictionLimb(Character, CreateLimbAfflictionID(GivenLimbType,"amputation","ll_amputation") + "t", GivenLimbType);
+        }
+
+        public static bool LimbIsSurgicallyAmputated(Character Character, LimbType GivenLimbType)
+        {
+            GivenLimbType = NormalizeLimbType(GivenLimbType);
+            return HasAfflictionLimb(Character, CreateLimbAfflictionID(GivenLimbType, "amputation", "ll_amputation") + "s", GivenLimbType);
+        }
+
+        public static bool LimbIsAmputated(Character Character, LimbType GivenLimbType)
+        {
+            GivenLimbType = NormalizeLimbType(GivenLimbType);
+            return LimbIsSurgicallyAmputated(Character, GivenLimbType) || LimbIsTraumaticallyAmputated(Character, GivenLimbType);
+        }
+
+        public static void SurgicallyAmputateLimb(Character Character, LimbType GivenLimbType, float Strength = 100, float TraumampStrength = 0)
+        {
+            GivenLimbType = NormalizeLimbType(GivenLimbType);
+            SetAffliction(Character, CreateLimbAfflictionID(GivenLimbType, "amputation", "ll_amputation") + "s", Strength, Character, Strength);
+            SetAffliction(Character, CreateLimbAfflictionID(GivenLimbType, "amputation", "ll_amputation") + "t", TraumampStrength, Character, TraumampStrength);
+            SetAffliction(Character, "gangrene", 0, Character, 0);
+        }
+
+        public static void TraumamputateLimb(Character Character, LimbType GivenLimbType, Character Attacker)
+        {
+            GivenLimbType = NormalizeLimbType(GivenLimbType);
+            if (!LimbsToCheck.Contains(GivenLimbType)) { return; }
+            Dictionary<LimbType, string> LimbToAffliction = new Dictionary<LimbType, string>() { {LimbType.RightLeg,"gate_ta_rl" }, { LimbType.LeftLeg, "gate_ta_ll" }, 
+                                                                                                { LimbType.RightArm, "gate_ta_ra" },{ LimbType.LeftArm, "gate_ta_la" },
+                                                                                                { LimbType.Head, "gate_ta_h" } };
+            Dictionary<LimbType, string> LimbToItem = new Dictionary<LimbType, string>() { {LimbType.RightLeg,"rleg" }, { LimbType.LeftLeg, "lleg" },
+                                                                                                { LimbType.RightArm, "rarm" },{ LimbType.LeftArm, "larm" },
+                                                                                                { LimbType.Head, "headta" } };
+            LimbToAffliction.TryGetValue(GivenLimbType, out string Value);
+            LimbToItem.TryGetValue(GivenLimbType, out string Value2);
+            string Aff = Value;
+            string LimbItem = Value2;
+            if (!Attacker.IsHuman && !Attacker.Inventory.IsFull())
+            {
+
+            }
+            else
+            {
+
+            }
+        }
+
+        public static void SurgicallyAmputateLimbAndGenerateItem(Character UsingCharacter, Character TargetCharacter, LimbType GivenLimbType) // Holy mouth full
+        {
+            Item PrevItem = GetItemInHeadWear(TargetCharacter);
+            if (PrevItem != null && GivenLimbType == LimbType.Head) { PrevItem.Drop(UsingCharacter,true); }
+            bool DropLimb = !LimbIsAmputated(TargetCharacter,GivenLimbType) || !HasAfflictionLimb(TargetCharacter,"gangrene",GivenLimbType,15);
+            if (DropLimb)
+            {
+                Dictionary<LimbType, string> LimbToItem = new Dictionary<LimbType, string>() { {LimbType.RightLeg,"rleg" }, { LimbType.LeftLeg, "lleg" },
+                                                                                                { LimbType.RightArm, "rarm" },{ LimbType.LeftArm, "larm" },
+                                                                                                { LimbType.Head, "headsa" } };
+                if (LimbToItem[GivenLimbType] != null)
+                {
+                    GiveItem(UsingCharacter, LimbToItem[GivenLimbType]);
+                }
+            }
+        }
     }
 }
