@@ -4,7 +4,10 @@ using Barotrauma.Networking;
 using FluentResults;
 using System;
 using System.Collections.ObjectModel;
+using System.Data.SqlTypes;
+using System.Text;
 using System.Xml.Linq;
+using static System.Net.Mime.MediaTypeNames;
 // What shit was Tina/Mannatu smoking. How do you write this many functions. - GreenBean
 // The majority of these functions are direct translations into C#. Due to the fact that most of the C# methods were already exposed in lua, we can easily do this.
 
@@ -87,6 +90,50 @@ namespace Neurotrauma
             return (Value + "_" + Identifier) ?? FailSafe;
         }
 
+        public static bool LimbIsExtremity(LimbType GivenLimbType)
+        {
+            return GivenLimbType != LimbType.Torso && GivenLimbType != LimbType.Head;
+        }
+
+        public static void ForceArmLock(Character Character, string Identifier) // This took me an hour to translate btw lol
+        {
+            // HostSide Only
+#if SHARED
+#if CLIENT
+            if (LuaGame.IsMultiplayer())
+            {
+                return;
+            }
+#endif
+            if (Entity.Spawner == null)
+            {
+                LuaCsTimer.Wait((params object[] _) => { ForceArmLock(Character, Identifier); }, 35);
+                return;
+            }
+
+            int HandIndex = 6;
+            if (Identifier == "armlock2") {HandIndex = 5;}
+            Item PrevItem = Character.Inventory.GetItemAt(HandIndex)
+            if (PrevItem != null) { PrevItem.Drop(Character,true);}
+
+            LuaCsTimer.Wait((params object[] _) => 
+            { 
+            ItemPrefab IPrefab = ItemPrefab.GetItemPrefab(Identifier);
+            Entity.Spawner.AddItemToSpawnQueue(IPrefab, Character.WorldPosition, null, null, (Item) => {
+                                                                                                            if (Character.Inventory != null && Identifier == "armlock1") 
+                                                                                                            {
+                                                                                                                Character.Inventory.TryPutItem(Item, null, [InvSlotType.RightHand]); 
+                                                                                                            }
+                                                                                                            if (Character.Inventory != null && Identifier == "armlock2") 
+                                                                                                            {
+                                                                                                                Character.Inventory.TryPutItem(Item, null, [InvSlotType.LeftHand]); 
+                                                                                                            }
+                                                                                                        }
+            );
+            }, 35);
+            return;
+#endif
+        }
 
         // ---------------------------------------- Utility Related Helper Functions -------------------------------------------------- \\
 
@@ -176,39 +223,6 @@ namespace Neurotrauma
             return GetCharacterInventorySlotIdentifer(Character, 2);
         }
 
-        public static List<string> EndocrineTalents = [
-            "aggressiveengineering",
-            "crisismanagement",
-            "cannedheat",
-            "doubleduty",
-            "firemanscarry",
-            "fieldmedic",
-            "multitasker",
-            "aceofalltrades",
-            "stillkicking",
-            "drunkensailor",
-            "trustedcaptain",
-            "downwiththeship",
-            "physicalconditioning",
-            "beatcop",
-            "commando",
-            "justascratch",
-            "intheflow",
-            "collegeathletics"];
-        
-        public static void ApplyEndocrineBoost(Character Character, List<string> TalentList = null) // I actually think we can just use the C# version.
-        {
-            // WIP
-            TalentList = TalentList ?? EndocrineTalents;
-
-            // gee I sure love translating lua into C#
-            Character TargetCharacter = Character;
-            if (TargetCharacter.Info == null) { return; }
-            TalentTree TalentTree = TalentTree.JobTalentTrees[Character.Info.Job.Prefab.Identifier.Value];
-            if (TalentTree == null) { return; }
-            List<string> DisallowedTalents = new List<string>();
-        }
-
         public static void PrintChat(string Message)
         {
         #if SERVER
@@ -250,7 +264,7 @@ namespace Neurotrauma
         #endif
         }
 
-        public static void GiveItem(Character Character, string ItemIdentifier) // This took me an hour to translate btw lol
+        public static void GiveItem(Character Character, string ItemIdentifier, float Condition = 100) // This took me an hour to translate btw lol
         {
             // HostSide Only
 #if SHARED
@@ -262,15 +276,263 @@ namespace Neurotrauma
 #endif
             if (Entity.Spawner == null)
             {
-                LuaCsTimer.Wait((params object[] _) => { GiveItem(Character, Item); }, 35); // Thanks Evil and Misinformation Factory
+                LuaCsTimer.Wait((params object[] _) => { GiveItem(Character, ItemIdentifier); }, 35); // Thanks Evil and Misinformation Factory
                 return;
             }
             LuaCsTimer.Wait((params object[] _) => 
             { 
-            ItemPrefab IPrefab = ItemPrefab.GetItemPrefab(ItemID);
-            Entity.Spawner.AddItemToSpawnQueue(IPrefab, Character.WorldPosition, null, null, (Item) => { Character.Inventory.TryPutItem(Item, null, [InvSlotType.Any]); });
+            ItemPrefab IPrefab = ItemPrefab.GetItemPrefab(ItemIdentifier);
+            Entity.Spawner.AddItemToSpawnQueue(IPrefab, Character.WorldPosition, null, null, (Item) => {
+                                                                                                        Item.Condition = Condition; 
+                                                                                                        Character.Inventory.TryPutItem(Item, null, [InvSlotType.Any]); 
+                                                                                                        }
+            );
             }, 35);
             return;
+#endif
+        }
+
+        public static void GiveItemAtCondtition(Character Character, string ItemIdentifier, float Condition) // DEPRECATED: Shouldn't be used, use GiveItem instead and the condition paramter.
+        {
+            GiveItem(Character, ItemIdentifier, Condition);
+        }
+
+        public static void SpawnItemPlusFunction(string ItemIdentifier, CharacterInventory Inventory, InvSlotType Slot, Vector2 Position,LuaCsAction Function, params object[] Param)
+        {
+            // HostSide Only
+#if SHARED
+#if CLIENT
+            if (LuaGame.IsMultiplayer())
+            {
+                return;
+            }
+#endif
+            if (Entity.Spawner == null)
+            {
+                LuaCsTimer.Wait((params object[] _) => { SpawnItemPlusFunction(ItemIdentifier, Inventory, Slot, Position, Function, Param); }, 35); // Thanks Evil and Misinformation Factory
+                return;
+            }
+            LuaCsTimer.Wait((params object[] _) => 
+            { 
+            ItemPrefab IPrefab = ItemPrefab.GetItemPrefab(ItemIdentifier);
+            if (Inventory != null)
+            {
+            Entity.Spawner.AddItemToSpawnQueue(IPrefab, Position ?? Inventory.Owner.AnimController.WorldPosition, null, null, (Item) => {
+                                                                                                        Inventory.TryPutItem(Item, (int) Slot, true, true, null); 
+                                                                                                        Param.Append(Item);
+                                                                                                        Function.Invoke(Param);
+                                                                                                        return;
+                                                                                                        }
+            }
+
+            Entity.Spawner.AddItemToSpawnQueue(IPrefab, Position ?? Inventory.Container.Item.WorldPosition, null, null, (Item) => {
+                                                                                                        if (Slot != null)
+                                                                                                        {
+                                                                                                            Inventory.TryPutItem(Item, (int) Slot, true, true, null); 
+                                                                                                        }
+                                                                                                        else
+                                                                                                        {
+                                                                                                            Inventory.TryPutItem(Item, null, [Slot], true, true);
+                                                                                                        }
+                                                                                                        Param.Append(Item);
+                                                                                                        Function.Invoke(Param);
+                                                                                                        return;
+                                                                                                        }
+            );
+            }, 35);
+            return;
+#endif
+        }
+
+        public static void GiveItemPlusFunction(string ItemIdentifier, Character Character, LuaCsAction Function, params object[] Param)
+        {
+            // HostSide Only
+#if SHARED
+#if CLIENT
+            if (LuaGame.IsMultiplayer())
+            {
+                return;
+            }
+#endif
+            if (Entity.Spawner == null)
+            {
+                LuaCsTimer.Wait((params object[] _) => { GiveItemPlusFunction(ItemIdentifier, Character, Function, Param); }, 35); // Thanks Evil and Misinformation Factory
+                return;
+            }
+            LuaCsTimer.Wait((params object[] _) => 
+            { 
+            ItemPrefab IPrefab = ItemPrefab.GetItemPrefab(ItemIdentifier);
+            if (Inventory != null)
+            {
+
+            Entity.Spawner.AddItemToSpawnQueue(IPrefab, Position ?? Inventory.Container.Item.WorldPosition, null, null, (Item) => {
+                                                                                                        Inventory.TryPutItem(Item, null, [InvSlotType.Any], true, true);
+                                                                                                        Param.Append(Item);
+                                                                                                        Function.Invoke(Param);
+                                                                                                        return;
+                                                                                                        }
+            );
+            }, 35);
+            return;
+#endif
+        }
+
+        public static void SpawnItemAt(string ItemIdentifier, Vector2 Position)
+        {
+#if SHARED
+#if CLIENT
+            if (LuaGame.IsMultiplayer())
+            {
+                return;
+            }
+#endif
+            if (Entity.Spawner == null)
+            {
+                LuaCsTimer.Wait((params object[] _) => { SpawnItemAt(ItemIdentifier, Position); }, 35); // Thanks Evil and Misinformation Factory
+                return;
+            }
+            LuaCsTimer.Wait((params object[] _) => 
+            { 
+            ItemPrefab IPrefab = ItemPrefab.GetItemPrefab(ItemIdentifier);
+            if (Inventory != null)
+            {
+                Entity.Spawner.AddItemToSpawnQueue(IPrefab, Position, null, null, null);
+            }, 35);
+            return;
+#endif
+        }
+
+        public static void RemoveItem(Item Item)
+        {
+#if SHARED
+#if CLIENT
+            if (LuaGame.IsMultiplayer())
+            {
+                return;
+            }
+#endif  
+            if (Item == null || Item.Removed) {return;}    
+
+            if (Entity.Spawner == null)
+            {
+                LuaCsTimer.Wait((params object[] _) => { RemoveItem(Item); }, 35); // Thanks Evil and Misinformation Factory
+                return;
+            }
+            
+            Entity.Spawner.AddEntityToRemoveQueue(Item)
+#endif
+        }
+
+        public static bool ItemHasTag(Item Item, string Tag)
+        {
+            return Item.HasTag(Tag);
+        }
+
+        public static void PutItemInContainer(Item Container, string Identifier, int Index = 0)
+        {
+#if SHARED
+#if CLIENT
+            if (LuaGame.IsMultiplayer())
+            {
+                return;
+            }
+#endif  
+
+            if (Entity.Spawner == null)
+            {
+                LuaCsTimer.Wait((params object[] _) => { PutItemInContainer(Container, Identifier, Index); }, 35); // Thanks Evil and Misinformation Factory
+                return;
+            }
+            
+            Inventory Inv = Container.OwnInventory;
+            if (Inv == null) {return;}
+
+            Item PrevItem = Inv.GetItemAt(Index);
+            if (PrevItem != null)
+            {
+                Inv.ForceRemoveSlot(PrevItem,Index);
+                PrevItem.Drop();
+            }
+
+            // Use Server Spawn Method
+            LuaCsTimer.Wait((params object[] _) => 
+            { 
+                ItemPrefab NewPrefab = ItemPrefab.GetItemPrefab(Identifier);
+                Entity.Spawner.AddItemToSpawnQueue(NewPrefab, Container.WorldPosition, null, null, (Item) => 
+                    { 
+                        Inv.TryPutItem(Item,null, [Index], true, true); 
+                    };
+            }, 35); // Thanks Evil and Misinformation Factory
+            return;
+#endif
+        }
+
+        public static void RemoveCharacter(Character Character)
+        {
+#if SHARED
+#if CLIENT
+            if (LuaGame.IsMultiplayer())
+            {
+                return;
+            }
+#endif
+            if (Character == null || Character.Removed) {return;}    
+
+            if (Entity.Spawner == null)
+            {
+                LuaCsTimer.Wait((params object[] _) => { RemoveCharacter(Character); }, 35); // Thanks Evil and Misinformation Factory
+                return;
+            }
+            
+            Entity.Spawner.AddEntityToRemoveQueue(Character)
+#endif
+        }
+
+        public static string CauseOfDeathToString(CauseOfDeath COD) // COD Zombies?????
+        {
+            string Res;
+
+            if (COD.Affliction != null && COD.Affliction.CauseOfDeathDescription != null)
+            {
+                Res = Convert.ToString(COD.Affliction.CauseOfDeathDescription) ?? "";
+            }
+            else
+            {
+                Res = Convert.ToString(COD.Type) ?? "";
+            }
+            return Res ?? "";
+        }
+
+        public static void Explode(Entity GivenEntity, float Range = 0, float Force = 0, float Damage = 0, float StructureDamage = 0, float ItemDamage = 0, float EmpStrength = 0, float BallastFloraStrength = 0)
+        {
+            LuaGame.Explode(GivenEntity.WorldPosition,Range,Force,Damage,StructureDamage,ItemDamage,EmpStrength,BallastFloraStrength);
+        }
+
+        public static string GetText(Identifier Identifier)
+        {
+            LocalizedString Text = TextManager.Get(Identifier);
+            return Convert.ToString(Text) ?? "";
+        }
+
+        public static int JobMemberCount(string JobIdentifier)
+        {
+            int Res = 0;
+            foreach (Character Character in Character.CharacterList)
+            {
+                if (Character.IsHuman && !Character.IsDead && Character.Info.Job != null)
+                {
+                    if (Character.Info.Job.Prefab.Identifier.Value == JobIdentifier) { Res++; }
+                }
+            }
+            return Res;
+        }
+
+        public static void SendTextBox(string Header, string Msg, Client CharacterClient)
+        {
+#if SERVER
+            LuaGame.SendDirectChatMessage(Header, Msg, null, ChatMessageType.MessageBox, CharacterClient);
+#elif CLIENT
+            GUI.AddMessage(Msg, Color.White);
 #endif
         }
 
@@ -311,6 +573,17 @@ namespace Neurotrauma
         public static void GiveSkillScaled(Character Character, Identifier SkillType, float Amount)
         {
             GiveSkill(Character, SkillType, (float) (Amount * 0.001 / Math.Max(GetSkillLevel(Character,SkillType),1)));
+        }
+
+        public static bool HasAbilityFlag(Character Character, AbilityFlags FlagType)
+        {
+            return Character.HasAbilityFlag(FlagType);
+        }
+
+        public static Vector2 GetVelocity(Character Character)
+        {
+            if (Character == null || Character.AnimController == null || Character.AnimController.MainLimb == null || Character.AnimController.MainLimb.body == null) { return new Vector2(0,0); }
+            return Character.AnimController.MainLimb.body.LinearVelocity;
         }
 
         // ---------------------------------------- Affliction Related Helper Functions -------------------------------------------------- \\
@@ -562,15 +835,7 @@ namespace Neurotrauma
             return LimbIsSurgicallyAmputated(Character, GivenLimbType) || LimbIsTraumaticallyAmputated(Character, GivenLimbType);
         }
 
-        public static void SurgicallyAmputateLimb(Character Character, LimbType GivenLimbType, float Strength = 100, float TraumampStrength = 0)
-        {
-            GivenLimbType = NormalizeLimbType(GivenLimbType);
-            SetAffliction(Character, CreateLimbAfflictionID(GivenLimbType, "amputation", "ll_amputation") + "s", Strength, Character, Strength);
-            SetAffliction(Character, CreateLimbAfflictionID(GivenLimbType, "amputation", "ll_amputation") + "t", TraumampStrength, Character, TraumampStrength);
-            SetAffliction(Character, "gangrene", 0, Character, 0);
-        }
-
-        public static void TraumamputateLimb(Character Character, LimbType GivenLimbType, Character Attacker)
+        public static void TraumamputateLimbAndGenerateItem(Character Character, LimbType GivenLimbType, Character Attacker)
         {
             GivenLimbType = NormalizeLimbType(GivenLimbType);
             if (!LimbsToCheck.Contains(GivenLimbType)) { return; }
@@ -595,7 +860,7 @@ namespace Neurotrauma
             }
         }
 
-        public static void TraumamputateLimbMinusItem(Character Character, LimbType GivenLimbType, Character Attacker)
+        public static void TraumamputateLimb(Character Character, LimbType GivenLimbType, Character Attacker)
         {
             GivenLimbType = NormalizeLimbType(GivenLimbType);
             if (!LimbsToCheck.Contains(GivenLimbType)) { return; }
@@ -627,6 +892,98 @@ namespace Neurotrauma
                     GiveItem(UsingCharacter, LimbToItem[GivenLimbType]);
                 }
             }
+        }
+
+        public static void SurgicallyAmputateLimb(Character Character, LimbType GivenLimbType, float Strength = 100, float TraumampStrength = 0)
+        {
+            GivenLimbType = NormalizeLimbType(GivenLimbType);
+            SetAffliction(Character, CreateLimbAfflictionID(GivenLimbType, "amputation", "ll_amputation") + "s", Strength, Character, Strength);
+            SetAffliction(Character, CreateLimbAfflictionID(GivenLimbType, "amputation", "ll_amputation") + "t", TraumampStrength, Character, TraumampStrength);
+            SetAffliction(Character, "gangrene", 0, Character, 0);
+        }
+
+        public static bool CanPerformSurgeryOn(Character Character)
+        {
+            return HasAffliction(Character, "analgesia", 1) || HasAffliction(Character, "sym_unconsciousness", (float) .1);
+        }
+
+        public static void Fibrillate(Character Character, float Amount)
+        {
+            // tachycardia (increased heartrate) ->
+            // fibrillation(irregular heartbeat)->
+
+            // cardiacarrest
+
+            float Tachycardia = GetAfflictionStrength(Character, "tachycardia");
+            float Fibrillation = GetAfflictionStrength(Character, "fibrillation");
+            float CardiacArrest = GetAfflictionStrength(Character, "cardiacarrest");
+
+            // Already in cardiac arrest? Don't do anything.
+            if (CardiacArrest > 0) { return; }
+            float PreviousAmount = Tachycardia / 5;
+            if (Fibrillation > 0) { PreviousAmount = 20 + Fibrillation; }
+            float NewAmount = PreviousAmount + Amount;
+
+            //0 - 20: 0 - 100 % tachycardia
+            // 20 - 120: 0 - 100 % fibrillation
+            // > 120: cardiac arrest
+
+            if (NewAmount < 20)
+            {
+                Tachycardia = NewAmount * 5;
+                Fibrillation = 0;
+            }
+            else
+            {
+                if (NewAmount < 120)
+                {
+                    Tachycardia = 0;
+                    Fibrillation = NewAmount - 20;
+                }
+                else 
+                {
+                    Tachycardia = 0;
+                    Fibrillation = 0;
+                    SetAffliction(Character, "cardiacarrest", 10,Character, CardiacArrest);
+                }
+            }
+
+            SetAffliction(Character, "tachycardia", Tachycardia, Character, 0);
+            SetAffliction(Character, "fibrillation", Fibrillation, Character, 0);
+        }
+
+        // ---------------------------------------- Client Related Helper Functions -------------------------------------------------- \\
+
+        public static Client CharacterToClient(Character Character)
+        {
+#if SHARED
+#if !CLIENT
+        foreach (Client GClient in Client.ClientList)
+        {
+            if (GClient.Character == Character)
+            {
+                return GClient;
+            }
+        }
+#endif
+#endif
+        return null;
+        }
+
+        public static Client ClientFromName(string Name)
+        {
+#if SHARED
+#if !CLIENT
+        foreach (Client GClient in Client.ClientList)
+        {
+            if (GClient.Name == Name)
+            {
+                return GClient;
+            }
+        }
+#endif
+#endif
+        return null;
         }
     }
 }
