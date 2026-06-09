@@ -7,12 +7,10 @@ namespace Neurotrauma
 
         public Character Character { get; }
 
-        public CharacterStats Stats { get; }
 
-        public NTUpdateFunctionInfos(Character character, CharacterStats stats)
+        public NTUpdateFunctionInfos(Character character)
         {
             this.Character = character;
-            this.Stats = stats;
         }
     }
 
@@ -28,9 +26,9 @@ namespace Neurotrauma
     {
         public AfflictionPriority Priority { get; }
         // They return an int because i can't return void. so do whatever you want with it 
-        public Func<NTUpdateFunctionInfos, int> UpdateFunction { get; } 
+        public Action<NTUpdateFunctionInfos> UpdateFunction { get; } 
 
-        public NTAfflictionInfos(Func<NTUpdateFunctionInfos, int> updateFunction, AfflictionPriority priority = AfflictionPriority.HIGH)
+        public NTAfflictionInfos(Action<NTUpdateFunctionInfos> updateFunction, AfflictionPriority priority = AfflictionPriority.HIGH)
         {
             this.Priority = priority;
             this.UpdateFunction = updateFunction;
@@ -47,11 +45,27 @@ namespace Neurotrauma
 
         public static Dictionary<string, NTAfflictionInfos> Afflictions { get; } = new Dictionary<string, NTAfflictionInfos>();
 
+        private static List<string> AfflictionsLOW = [];
+        private static List<string> AfflictionsMEDIUM = [];
+        private static List<string> AfflictionsHIGH = [];
+
         public static void RegisterAffliciton(string id, NTAfflictionInfos affliction)
         {
             if (!Afflictions.ContainsKey(id))
             {
                 Afflictions.Add(id, affliction);
+                switch (affliction.Priority)
+                {
+                    case AfflictionPriority.LOW:
+                        AfflictionsLOW.Add(id);
+                        break;
+                    case AfflictionPriority.MEDIUM:
+                        AfflictionsMEDIUM.Add(id);
+                        break;
+                    case AfflictionPriority.HIGH:
+                        AfflictionsHIGH.Add(id);
+                        break;
+                }
             } else
             {
                 LuaCsLogger.LogError($"Affliction with id {id} already exists! Multiple addons might be trying to register the same affliciton.\n" +
@@ -71,6 +85,37 @@ namespace Neurotrauma
             {
                 LuaCsLogger.LogError($"Affliction with id {id} does not exist! Can't override it.");
             }
+        }
+
+
+        // I recommend running this function only once OnLoadCompleted as it could be perf inducing.
+        public static Dictionary<string, NTAfflictionInfos> GetAfflictionsByPriority(AfflictionPriority priority)
+        {
+            Dictionary<string, NTAfflictionInfos> output = [];
+
+            switch (priority)
+            {
+                case AfflictionPriority.LOW:
+                    AfflictionsLOW.ForEach(affID =>
+                    {
+                        output.Add(affID, Afflictions[affID]);
+                    });
+                    break;
+                case AfflictionPriority.MEDIUM:
+                    AfflictionsMEDIUM.ForEach(affID =>
+                    {
+                        output.Add(affID, Afflictions[affID]);
+                    });
+                    break;
+                case AfflictionPriority.HIGH:
+                    AfflictionsHIGH.ForEach(affID =>
+                    {
+                        output.Add(affID, Afflictions[affID]);
+                    });
+                    break;
+            }
+
+            return output;
         }
     }
 }
