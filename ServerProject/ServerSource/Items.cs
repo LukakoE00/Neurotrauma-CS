@@ -39,7 +39,7 @@ public class NTItemMethods
      * <param name="function">The item update function.</param>
      * <returns>Returns true if the item was defined correctly (if it was not already defined). Returns false otherwise.</returns>
      */
-    public static bool RegisterItemUpdateFunction(string itemID, Action<ItemUpdateFunctionInfos> function)
+    public static bool RegisterItemUseFunction(string itemID, Action<ItemUpdateFunctionInfos> function)
     {
         if (!NTItemRegistry.ContainsKey(itemID))
         {
@@ -58,7 +58,7 @@ public class NTItemMethods
      * <param name="function">The item update function.</param>
      * <returns>Returns true if the override was succesful, false otherwise.</returns>
      */
-    public static bool OverrideItemUpdateFunction(string itemID, Action<ItemUpdateFunctionInfos> function)
+    public static bool UpdateItemUseFunction(string itemID, Action<ItemUpdateFunctionInfos> function)
     {
         if (NTItemRegistry.ContainsKey(itemID))
         {
@@ -92,7 +92,7 @@ public class NTItemMethods
      */
     public static void Override_Use(Item __instance, float deltaTime, Character user = null, Limb targetLimb = null, Entity useTarget = null, Character userForOnUsedEvent = null)
     {
-        LuaCsLogger.Log("use");
+       // LuaCsLogger.Log("use");
     }
 }
 
