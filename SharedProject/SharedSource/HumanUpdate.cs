@@ -1,31 +1,97 @@
 ﻿using Barotrauma.LuaCs.Compatibility;
 using Barotrauma.LuaCs.Events;
 using MonoMod.RuntimeDetour;
+using static Barotrauma.Networking.MessageFragment;
 
 namespace Neurotrauma;
 
 class HumanUpdate
 {
     private static int UpdateCooldown = 0;
-    private static readonly int UpdateIntervalHigh = (int) AfflictionPriority.HIGH; // 120 = 2s
-    private static readonly int UpdateIntervalMedium = (int) AfflictionPriority.MEDIUM; // 240 = 4s
-    private static readonly int UpdateIntervalLow = (int) AfflictionPriority.LOW; // 480 = 8s
-    //private static int DeltaTime
+    private static readonly int UpdateIntervalHigh = (int)AfflictionPriority.HIGH; // 120 = 2s
+    private static readonly int UpdateIntervalMedium = (int)AfflictionPriority.MEDIUM; // 240 = 4s
+    private static readonly int UpdateIntervalLow = (int)AfflictionPriority.LOW; // 480 = 8s
+    private List<NTHuman> UpdatingHumans = new List<NTHuman>();
+    private List<NTMonster> UpdatingMonsters = new List<NTMonster>();
 
-    
+    // ---------------------------------------- NT Human Update Classes -------------------------------------------------- \\
 
-    private static void UpdateMonster(Character character)
+    class NTHuman(Character Human)
     {
-        
+        public Character Human = Human; // Our Human Ref
+        private static CharacterStats LocalStats = new CharacterStats();
+        private static CharacterAfflictions LocalAfflictions = new CharacterAfflictions();
+
+        public static CharacterStats? GetStats()
+        {
+            return LocalStats;
+        }
+
+        public class CharacterAfflictions
+        {
+            private static List<string> UpdatingAfflictions = new List<string>(); // Stores the ID's of our updating afflictions.
+
+            public static void RegisterAffliction(string ID)
+            {
+                if (NTAfflictions.HasAffliction(ID))
+                {
+                    UpdatingAfflictions.Add(ID);
+                }
+            }
+
+            public static void RemoveAffliction(string ID)
+            {
+                if (NTAfflictions.HasAffliction(ID))
+                {
+                    UpdatingAfflictions.Remove(ID);
+                }
+            }
+
+            public static List<string> GetUpdatingAfflictons()
+            {
+                return UpdatingAfflictions;
+            }
+        }
+
+        public class CharacterStats
+        {
+            private Dictionary<string, int> Stats { get; }
+
+            public CharacterStats()
+            {
+                Stats = new Dictionary<string, int>();
+            }
+
+            // If you want to recalculate a single stat
+            public void RecalculateSingle(string id, NTUpdateFunctionInfos character)
+            {
+
+                if (NTStats.Stats[id] != null)
+                {
+                    NTStats.Stats[id].Recalculate(character);
+                }
+            }
+
+            // If we need to recalculate every stats for a character we can call this
+            public void RecalculateAll(NTUpdateFunctionInfos character)
+            {
+                foreach (var stat in NTStats.Stats)
+                {
+                    stat.Value.Recalculate(character);
+                }
+            }
+        }
+
     }
 
-    private static void UpdateHuman(Character character, List<AfflictionPriority> priorities)
+    class NTMonster(Character Monster) // To Do
     {
-        LuaCsLogger.Log(character.Prefab.Identifier.ToString());
+        public Character Monster = Monster; // Our Monster Ref
+
     }
 
-    
 
+    // ---------------------------------------- The Human Update -------------------------------------------------- \\
 
     // Returns a list 
     private static List<AfflictionPriority> GetLowestPriority(int cd)
@@ -52,12 +118,11 @@ class HumanUpdate
         return output;
     }
 
-
     private int Interval = 120;
     private int Tick = 0;
     private double NTDeltaTime = UpdateIntervalHigh / 120;
     // Gets called 60 times a second
-    public void OnUpdate(double fixedDeltaTime)
+    public void ThinkUpdate(double fixedDeltaTime)
     {
         // If game paused we just skip
         if (HF.GameIsPaused()) return;
@@ -72,41 +137,65 @@ class HumanUpdate
 
         Update(checkedPriorities);
 
-        UpdateCooldown += 1;
+        UpdateCooldown++;
     }
 
-    private static void Update(List<AfflictionPriority> priorities)
+    private void Update(List<AfflictionPriority> priorities)
     {
-        List<Character> HumanList = new List<Character>();
-        List<Character> MonsterList = new List<Character>();
+        List<Character> CHList = Character.CharacterList;
 
-        Character.CharacterList.ForEach(c =>
+        foreach (Character c in CHList)
         {
-            if (c.isDead) return;
+            if (c.isDead) continue; // Skip to next iteration
 
             if (c.IsHuman && c.Enabled)
             {
-                HumanList.Add(c);
+                NTHuman NewNTHuman = new NTHuman(c); // Hopefully this wont create a memory leak.
+                if (!UpdatingHumans.Contains(NewNTHuman))
+                {
+                    UpdatingHumans.Add(NewNTHuman);
+                }
             }
             else
             {
-                MonsterList.Add(c);
+                if (!c.IsHuman)
+                {
+                    NTMonster NewNTMonster = new NTMonster(c);
+                    if (!UpdatingMonsters.Contains(NewNTMonster))
+                    {
+                        UpdatingMonsters.Add(NewNTMonster);
+                    }
+                }
             }
-        });
-
-        foreach (var human in HumanList)
-        {
-
-            Thread UpdateHumanT = new Thread(() => UpdateHuman(human, priorities));
-
-            UpdateHumanT.Start();
-
         }
 
-        foreach (var monster in MonsterList)
+        UpdateHumans(priorities);
+
+        UpdateMonsters(priorities);
+    }
+
+    private void UpdateHumans(List<AfflictionPriority> priorities)
+    {
+        foreach (NTHuman Human in UpdatingHumans)
         {
 
+            UpdateHuman(Human, priorities);
+
         }
+    }
+
+    private static void UpdateHuman(NTHuman Character, List<AfflictionPriority> priorities)
+    {
+        LuaCsLogger.Log(Character.Human.Prefab.Identifier.ToString());
+    }
+
+    private void UpdateMonsters(List<AfflictionPriority> priorities)
+    {
+
+    }
+
+    private static void UpdateMonster(Character character)
+    {
 
     }
 }

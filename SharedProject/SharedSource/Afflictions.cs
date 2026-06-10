@@ -1,5 +1,14 @@
 namespace Neurotrauma
 {
+
+    // The priority defines at wich frequency the affliction gets updated. 
+    public enum AfflictionPriority : int
+    {
+        LOW = 8 * 60,  // Every 8s
+        MEDIUM = 4 * 60, // Every 4s
+        HIGH = 2 * 60 // Every 2s
+    }
+
     public class NTUpdateFunctionInfos
     {
         // We can edit NTUpdateFunctionInfos to change what affliction update functions have access to
@@ -12,14 +21,6 @@ namespace Neurotrauma
         {
             this.Character = character;
         }
-    }
-
-    // The priority defines at wich frequency the affliction gets updated. 
-    public enum AfflictionPriority: int
-    {
-        LOW = 8*60,  // Every 8s
-        MEDIUM = 4*60, // Every 4s
-        HIGH = 2*60 // Every 2s
     }
 
     public class NTAfflictionInfos
@@ -117,6 +118,38 @@ namespace Neurotrauma
 
             return output;
         }
+
+        public static bool HasAffliction(string id)
+        {
+            return Afflictions.ContainsKey(id);
+        }
+
+
+    }
+
+    public abstract class NTAffliction
+    {
+        public required double Strength { get; set; }
+        public required double MinStrength { get; set; }
+        public required double MaxStrength { get; set; }
+
+        public required string Identifier { get; set; }
+        public required List<NTAffliction> DependentAfflictions { get; set; }
+        public AfflictionPriority Priority { get; set; } = AfflictionPriority.HIGH;
+        public void Update() // The main update function of an affliction.
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class NTTorsoAffliction : NTAffliction
+    {
+
+    }
+
+    public class NTLimbAffliction : NTAffliction
+    {
+        public List<LimbType> AllowedLimbs { get; set; } = HF.LimbsToCheck;
     }
 }
 

@@ -115,7 +115,7 @@ namespace Neurotrauma
             LuaCsSetup.Instance.Hook.Add("think", "NTCS.ThinkUpdate", (params object[] _) => // The Hook details
             { // Start of our Function
                 double DeltaTime = 1;
-                HU.OnUpdate(DeltaTime);
+                HU.ThinkUpdate(DeltaTime);
                 return null;
             }); // End of our Function
 #pragma warning restore CS0618 // Type or member is obsolete
