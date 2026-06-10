@@ -543,6 +543,11 @@ namespace Neurotrauma
             return Character.GetSkillLevel(SkillType);
         }
 
+        public static float GetSurgerySkill(Character Character)
+        {
+            return Character.GetSkillLevel("surgery");
+        }
+
         public static float GetBaseSkillLevel(Character Character, Identifier SkillType)
         {
             return Character.Info.Job.GetSkillLevel(SkillType);
