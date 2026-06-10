@@ -17,6 +17,10 @@
 <MyModName.SampleSettingShared.DisplayCategory>Sample</MyModName.SampleSettingShared.DisplayCategory>
 <MyModName.SampleSettingShared.Tooltip>Sample tooltip!</MyModName.SampleSettingShared.Tooltip>
 
+<!-- ================================================= GUI LOCALIZATION ================================================= -->
+
+<ntgui_pausemenubutton_name>Neurotrauma Config</ntgui_pausemenubutton_name>
+	
 <!-- ================================================= AFFLICTIONS ================================================= -->
 <!-- TEMPLATE -->
 

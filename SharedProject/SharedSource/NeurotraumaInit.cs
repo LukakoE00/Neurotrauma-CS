@@ -36,10 +36,14 @@ namespace Neurotrauma
         // Put any code here that does not rely on other plugins.
         public void Initialize()
         {
-#if SERVER
-            InitializeServer();
-#endif
-            UserData.RegisterType(typeof(HF));
+            #if SERVER
+                        InitializeServer();
+            #endif
+                        UserData.RegisterType(typeof(HF));
+
+            #if CLIENT
+                        ConfigurationMenu.AddConfigToPauseMenu();
+            #endif
         }
 
         // After all plugins have loaded
@@ -49,19 +53,19 @@ namespace Neurotrauma
             // So, we're bringing back the init.lua classic. This will run MP serverside AND singleplayer; but not clientside.
             // It in fact does not run in singleplayer -Cookie
 
-#if SERVER
-            HF.Print("Running Server");
-            OnLoadCompletedServer();
-            InitLuaHooks();
-            PrintNTInitInfo();
-#else
-            if (GameMain.IsSingleplayer)
-            {
-                HF.Print("Running Client");
-                InitLuaHooks();
-                PrintNTInitInfo();
-            }
-#endif
+            #if SERVER
+                        HF.Print("Running Server");
+                        OnLoadCompletedServer();
+                        InitLuaHooks();
+                        PrintNTInitInfo();
+            #else
+                        if (GameMain.IsSingleplayer)
+                        {
+                            HF.Print("Running Client");
+                            InitLuaHooks();
+                            PrintNTInitInfo();
+                        }
+            #endif
         }
 
         // Cleanup your plugin!
