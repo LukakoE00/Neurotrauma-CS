@@ -1,19 +1,25 @@
 ﻿using MonoGame.Utilities;
 using MoonSharp.Interpreter;
 
+
 namespace Neurotrauma
 {
     public partial class NeurotraumaInit : IAssemblyPlugin
     {
+        // ---------------------------         Ydrec Shit         --------------------------- \\
+
         // These are automatically assigned by the plugin service after the Constructor is called
         public IConfigService ConfigService { get; set; }
         public IPluginManagementService PluginService { get; set; }
         public ILoggerService LoggerService { get; set; }
-
         public readonly ILuaScriptManagementService luaScriptManagementService = LuaCsSetup.Instance.LuaScriptManagementService;
-
         private Harmony harmony;
 
+        // --------------------------- Local Variables/Classes --------------------------- \\
+        private static readonly HumanUpdate HU = new HumanUpdate(); // Create our local Human Update class.
+
+
+        // ---------------------------        Functions        --------------------------- \\
         //Called right after the constructor
         public void PreInitPatching()
         {
@@ -24,50 +30,39 @@ namespace Neurotrauma
 
         }
 
-
         // When your plugin is loading, use this instead of the constructor for code relying on
         // the services above.
 
         // Put any code here that does not rely on other plugins.
         public void Initialize()
         {
-
 #if SERVER
             InitializeServer();
 #endif
-
             UserData.RegisterType(typeof(HF));
-            
-            LuaCsLogger.Log("adding HF to globals");
-            //TODO get this shit to work
-            // luaScriptManagementService.InternalScript.Globals["HF"] = UserData.CreateStatic(typeof(HF));
-            
         }
-
 
         // After all plugins have loaded
         // Put code that interacts with other plugins here.
         public void OnLoadCompleted()
         {
-
-
             // So, we're bringing back the init.lua classic. This will run MP serverside AND singleplayer; but not clientside.
             // It in fact does not run in singleplayer -Cookie
 
-            #if SERVER 
-                OnLoadCompletedServer();
-                PrintNTInitInfo();
+#if SERVER
+            HF.Print("Running Server");
+            OnLoadCompletedServer();
+            InitLuaHooks();
+            PrintNTInitInfo();
 #else
-                if (GameMain.IsSingleplayer)
-                    PrintNTInitInfo();
+            if (GameMain.IsSingleplayer)
+            {
+                HF.Print("Running Client");
+                InitLuaHooks();
+                PrintNTInitInfo();
+            }
 #endif
-
-
-            
-
         }
-
-        
 
         // Cleanup your plugin!
         public void Dispose()
@@ -107,5 +102,20 @@ namespace Neurotrauma
 
             LoggerService.Log(consolePrint);
         }
+
+        public static void InitLuaHooks() // Based off the Traumatic Presence mod by Lenny!
+        {
+        HF.Print("Adding Lua Hooks");
+            // This function stores our hooks we will be using for NT 2.
+#pragma warning disable CS0618 // Type or member is obsolete
+            LuaCsSetup.Instance.Hook.Add("think", "NTCS.ThinkUpdate", (params object[] _) => // The Hook details
+            { // Start of our Function
+                double DeltaTime = 1;
+                HU.OnUpdate(DeltaTime);
+                return null;
+            }); // End of our Function
+#pragma warning restore CS0618 // Type or member is obsolete
+        }
+        
     }
 }

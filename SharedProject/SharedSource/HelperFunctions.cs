@@ -536,6 +536,21 @@ namespace Neurotrauma
 #endif
         }
 
+        public static void Print(string Message) // Yes I'm lazy
+        {
+            LuaCsLogger.Log(Message);
+        }
+
+        public static void PrintError(string Message)
+        {
+            LuaCsLogger.Log(Message,Color.Red);
+        }
+
+        public static void PrintWarning(string Message)
+        {
+            LuaCsLogger.Log(Message,Color.Orange);
+        }
+
         // ---------------------------------------- Character Related Helper Functions -------------------------------------------------- \\
 
         public static float GetSkillLevel(Character Character, Identifier SkillType)

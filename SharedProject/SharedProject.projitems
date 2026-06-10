@@ -9,8 +9,10 @@
     <Import_RootNamespace>SharedProject</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)sharedsource\Afflictions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SharedSource\AssemblySettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)sharedsource\HelperFunctions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)sharedsource\HumanUpdate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SharedSource\NeurotraumaInit.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)sharedsource\NTCompat.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)sharedsource\NTInfo.cs" />
