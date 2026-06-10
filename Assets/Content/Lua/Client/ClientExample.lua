@@ -1,0 +1,1 @@
+print("[NT2] This is the ClientExample init print!")

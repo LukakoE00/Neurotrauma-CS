@@ -8,4 +8,14 @@
     <Config File="%ModDir%/Config/SettingsClient.xml" Target="Client" />
     <Config File="%ModDir%/Config/SettingsShared.xml"  />
     <Config File="%ModDir%/Config/SettingsServer.xml" Target="Server" />
+
+	<!-- Lua Files -->
+	<!-- Serverside -->
+	<Lua Folder="%ModDir%/Lua/Server" Target="Server" IsAutorun="true" />
+
+	<!-- Clientside -->
+	<Lua Folder="%ModDir%/Lua/Client" Target="Client" IsAutorun="true" />
+
+	<!-- Shared -->
+	<Lua Folder="%ModDir%/Lua/Shared" Target="Any" IsAutorun="true" />
 </ModConfig>

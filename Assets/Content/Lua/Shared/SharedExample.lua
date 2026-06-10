@@ -1,0 +1,1 @@
+print("[NT2] This is the SharedExample init print!")
