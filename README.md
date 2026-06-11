@@ -1,3 +1,7 @@
+<p align="center">
+<img width="512" height="512" alt="shitpost" src="https://github.com/user-attachments/assets/164dd9c7-28a8-4639-8988-35a935374bc7" />
+</p>
+
 This is all just the skeleton from the C# documentation, changed for Neurotrauma.
 It should be noted that I don't know what I am doing yet!
 
