@@ -44,10 +44,10 @@ namespace Neurotrauma
 
     }
 
-    public class NTStat(double MinStrength = 0, double MaxStrength = 1, double DefaultStrength = 1, Action<NTUpdateFunctionInfos> Update = null)
+    public class NTStat(double MinStrength = 0, double MaxStrength = 1, double DefaultStrength = 1, Action<HumanUpdate.NTHuman> Update = null)
     {
         private double Amount = Math.Clamp(DefaultStrength, MinStrength, MaxStrength);
-        private Action<NTUpdateFunctionInfos> StatUpdate = Update;
+        private Action<HumanUpdate.NTHuman> StatUpdate = Update;
 
         public void AddStrength(double AddingAmount)
         {
@@ -64,7 +64,7 @@ namespace Neurotrauma
             Amount = SetingAmount;
         }
 
-        public void Recalculate(NTUpdateFunctionInfos Character)
+        public void Recalculate(HumanUpdate.NTHuman Character)
         {
             if (StatUpdate != null)
             {

@@ -124,7 +124,7 @@ public class HumanUpdate
             }
 
             // If you want to recalculate a single stat
-            public void RecalculateSingle(string id, NTUpdateFunctionInfos character)
+            public void RecalculateSingle(string id, HumanUpdate.NTHuman character)
             {
 
                 if (NTStats.Stats[id] != null)
@@ -134,7 +134,7 @@ public class HumanUpdate
             }
 
             // If we need to recalculate every stats for a character we can call this
-            public void RecalculateAll(NTUpdateFunctionInfos character)
+            public void RecalculateAll(HumanUpdate.NTHuman character)
             {
                 foreach (var stat in NTStats.Stats)
                 {
