@@ -21,24 +21,45 @@ class HumanUpdate
 
         public Character Human = Human; // Our Human Ref
         public CharacterStats LocalStats = new CharacterStats();
-        public CharacterAfflictions LocalAfflictions = new CharacterAfflictions();
+        public CharacterAfflictions LocalAfflictions = new CharacterAfflictions(Human);
 
         public CharacterStats? GetStats()
         {
             return LocalStats;
         }
 
-        public class CharacterAfflictions()
+        public class CharacterAfflictions(Character Human)
         {
-            private static Dictionary<string,double> UpdatingAfflictions = new Dictionary<string, double>(); // Stores the ID's of our updating afflictions.
+            public Character Human = Human; // Our Human Ref
+            private static Dictionary<string,NTNonLimbAffliction> UpdatingAfflictions = new Dictionary<string, NTNonLimbAffliction>(); // Stores the ID's of our updating afflictions.
+            private static Dictionary<string, NTLimbAffliction> UpdatingLimbAfflictions = new Dictionary<string, NTLimbAffliction>(); // Stores the ID's of our updating (Limb) afflictions.
 
-            public double RegisterGetAffliction(string ID) // Call this at the start of each affliction.
+            public NTAffliction RegisterGetAffliction(string ID,double MinStrength, double MaxStrength,
+                                                List<string> DependentAfflictions, AfflictionPriority Priority = AfflictionPriority.HIGH, bool LimbSpecific = false) // Call this at the start of each affliction.
             {
-                if (NTAfflictions.HasAffliction(ID))
+
+                if (NTAfflictions.HasAffliction(ID) && (UpdatingAfflictions.ContainsKey(ID) || UpdatingLimbAfflictions.ContainsKey(ID)))
                 {
-                    UpdatingAfflictions[ID] = 100;
+                    if (!LimbSpecific)
+                    { 
+                        NTNonLimbAffliction NewAffliction = (NTNonLimbAffliction) CreateAffliction(ID,MinStrength, MaxStrength, DependentAfflictions, Priority);
+                        UpdatingAfflictions[ID] = NewAffliction;
+                    }
+                    else
+                    {
+                        NTLimbAffliction NewAffliction = (NTLimbAffliction) CreateAffliction(ID,MinStrength, MaxStrength, DependentAfflictions, Priority, true);
+                        UpdatingLimbAfflictions[ID] = NewAffliction;
+                    }
                 }
-                return UpdatingAfflictions[ID];
+
+                if (!LimbSpecific)
+                {
+                    return UpdatingAfflictions[ID];
+                }
+                else
+                {
+                    return UpdatingLimbAfflictions[ID];
+                }
             }
 
             public void RemoveAffliction(string ID)
@@ -54,9 +75,25 @@ class HumanUpdate
                 return UpdatingAfflictions.Keys.ToList();
             }
 
-            public void RetreiveAffliction()
+            public NTAffliction GetAff(string ID)
             {
+                if (UpdatingAfflictions.ContainsKey(ID))
+                {
+                    return UpdatingAfflictions[ID];
+                }
+                return UpdatingLimbAfflictions[ID];
+            }
 
+            public NTAffliction CreateAffliction(string ID, double MinStrength, double MaxStrength,
+                                                List<string> DependentAfflictions, AfflictionPriority Priority, bool LimbSpecific = false)
+            {
+                if (LimbSpecific)
+                {
+                    NTNonLimbAffliction NewNonLimbAffliction = new(MinStrength,MaxStrength,ID,DependentAfflictions,Priority);
+                    return NewNonLimbAffliction;
+                }
+                NTLimbAffliction NewLimbAffliction = new(MinStrength, MaxStrength, ID, DependentAfflictions, Priority);
+                return NewLimbAffliction;
             }
         }
 

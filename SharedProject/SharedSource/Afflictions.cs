@@ -1,4 +1,5 @@
 using MoonSharp.Interpreter;
+using static Barotrauma.Networking.MessageFragment;
 
 namespace Neurotrauma
 {
@@ -129,29 +130,50 @@ namespace Neurotrauma
 
     }
 
-    public abstract class NTAffliction
+    public abstract class NTAffliction // Added to NTHuman updatingAfflictions
     {
-        public required double Strength { get; set; }
-        public required double MinStrength { get; set; }
-        public required double MaxStrength { get; set; }
+        public double Strength { get; set; } = 0;
+        public double MinStrength { get; set; }
+        public double MaxStrength { get; set; }
 
-        public required string Identifier { get; set; }
-        public required List<NTAffliction> DependentAfflictions { get; set; }
-        public AfflictionPriority Priority { get; set; } = AfflictionPriority.HIGH;
-        public void Update() // The main update function of an affliction.
+        public string Identifier { get; set; }
+        public List<string> DependentAfflictions { get; set; }
+        public AfflictionPriority Priority { get; set; }
+
+        public NTAffliction(double NewMinStrength, double NewMaxStrength,
+                                        string NewIdentifier, List<string> NewDependentAfflictions, AfflictionPriority NewPriority = AfflictionPriority.HIGH)
         {
-            throw new NotImplementedException();
+            MinStrength = NewMinStrength;
+            MaxStrength = NewMaxStrength;
+            Identifier = NewIdentifier;
+            DependentAfflictions = NewDependentAfflictions;
+            Priority = NewPriority;
         }
     }
 
-    public class NTTorsoAffliction : NTAffliction
+    public class NTNonLimbAffliction : NTAffliction
     {
-
+        public NTNonLimbAffliction(double NewMinStrength, double NewMaxStrength,
+                                        string NewIdentifier, List<string> NewDependentAfflictions, AfflictionPriority NewPriority = AfflictionPriority.HIGH) : 
+                                        base(NewMinStrength, NewMaxStrength, NewIdentifier, NewDependentAfflictions, NewPriority)
+        {
+            MinStrength = NewMinStrength;
+            MaxStrength = NewMaxStrength;
+            Identifier = NewIdentifier;
+            DependentAfflictions = NewDependentAfflictions ;
+            Priority = NewPriority;
+        }
     }
 
     public class NTLimbAffliction : NTAffliction
     {
-        public List<LimbType> AllowedLimbs { get; set; } = HF.LimbsToCheck;
+        public NTLimbAffliction(double NewMinStrength, double NewMaxStrength,
+                                        string NewIdentifier, List<string> NewDependentAfflictions, AfflictionPriority NewPriority = AfflictionPriority.HIGH) :
+                                        base(NewMinStrength, NewMaxStrength, NewIdentifier, NewDependentAfflictions, NewPriority)
+        {
+        }
+
+        public List<LimbType> AllowedLimbs { get; set; } = HF.LimbsToCheck; // I'll add this one later.
     }
 
     public class  NTAfflictionsToAdd
@@ -172,9 +194,23 @@ namespace Neurotrauma
 
         private void AddAfflictions() // Create your afflictions in here.
         {
-            AfflictionsToAdd["example_aff"] = (C, I, L) => {
-                double Strength = C.LocalAfflictions.RegisterGetAffliction(I); // Add the affliction to the character. (And get a ref of it).
-                Strength += 5;
+            AfflictionsToAdd["example_aff"] = (C, ID, Limb) => 
+            {
+
+                NTAffliction Self = C.LocalAfflictions.RegisterGetAffliction(ID,0,100, null); // Add the affliction to the character with it's params. Essentially a condensed version of what you would normally do.
+                C.GetStats(); // Now we can get the players stats!!!!!1
+                Self.Strength += 5; // Or increase the strength!!
+
+            };
+
+            AfflictionsToAdd["example_aff2"] = (C, ID, Limb) =>
+            {
+
+                NTAffliction Self = C.LocalAfflictions.RegisterGetAffliction(ID, 0, 10, ["example_aff"]); // We now tell the Update that we must register "example_aff" too!
+                NTAffliction ExampleAff = C.LocalAfflictions.RegisterGetAffliction("example_aff", 0, 10, null); // Lets get our ExampleAff!!
+                C.GetStats(); // Now we can get the players stats!!!!!1
+                Self.Strength += C.LocalAfflictions.GetAff("example_aff").Strength + 10;
+                ExampleAff.Strength += Self.Strength;
             };
         }
     }
