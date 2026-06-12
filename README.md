@@ -7,6 +7,7 @@ A complete re-write of Neurotrauma in C# (with a dash of Lua). This overhaul aim
 Google Doc with codebase can be found [here](https://docs.google.com/document/d/1AJDsnBTOf8GZjzLwk0Dm6FDzZSp3U4sCgUFjvv2a_uo/edit?tab=t.0#heading=h.w01ukn2d7564)
 
 C# Documentation (for Barotrauma) can be found [here](https://luatrauma.github.io/Luatrauma.Docs/api/cs/client/html/)
+
 Lua Documentation (for Barotrauma) can be found [here](https://evilfactory.github.io/LuaCsForBarotrauma/lua-docs/)
 
 - Namespace: _Neurotrauma_
