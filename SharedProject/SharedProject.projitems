@@ -9,6 +9,8 @@
     <Import_RootNamespace>SharedProject</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)sharedsource\Config.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)sharedsource\ConfigData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)sharedsource\Stats.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)sharedsource\Afflictions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SharedSource\AssemblySettings.cs" />

@@ -36,9 +36,10 @@ namespace Neurotrauma
             #endif
                         UserData.RegisterType(typeof(HF));
 
-            #if CLIENT
+        #if CLIENT
+                        NTConfigData.Register();
                         ConfigurationMenu.AddConfigToPauseMenu();
-            #endif
+        #endif
         }
 
         // After all plugins have loaded

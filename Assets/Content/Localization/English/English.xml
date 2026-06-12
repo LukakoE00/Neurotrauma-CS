@@ -19,7 +19,22 @@
 
 <!-- ================================================= GUI LOCALIZATION ================================================= -->
 
+<!-- Pause Menu Button -->
 <ntgui_pausemenubutton_name>Neurotrauma Config</ntgui_pausemenubutton_name>
+	
+<!-- Button Row-->
+<ntgui_configmenubutton_saveexit>Save and Exit</ntgui_configmenubutton_saveexit>
+<ntgui_configmenubutton_discardexit>Discard and Exit</ntgui_configmenubutton_discardexit>
+<ntgui_configmenubutton_resetvalues>Reset Settings</ntgui_configmenubutton_resetvalues>
+
+<!-- Default Title -->
+<ntgui_config_title>Neurotrauma Config Settings</ntgui_config_title>
+	
+<!-- Default Warning -->
+<ntgui_defaultmessage_config>Server config can only be changed by host or authorized clients.</ntgui_defaultmessage_config>
+
+<!-- Reset Button-->
+<ntgui_resetbutton_tooltip>Reset to Default</ntgui_resetbutton_tooltip>
 	
 <!-- ================================================= AFFLICTIONS ================================================= -->
 <!-- TEMPLATE -->
