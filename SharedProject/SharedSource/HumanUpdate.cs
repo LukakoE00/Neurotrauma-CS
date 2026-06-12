@@ -1,5 +1,6 @@
 ﻿using Barotrauma.LuaCs.Compatibility;
 using Barotrauma.LuaCs.Events;
+using LightInject;
 using MonoMod.RuntimeDetour;
 using static Barotrauma.Networking.MessageFragment;
 
@@ -30,7 +31,43 @@ public class HumanUpdate
 
         public void Update(List<AfflictionPriority> Priorities)
         {
-            LuaCsLogger.Log(Human.Prefab.Identifier.ToString());
+            foreach (KeyValuePair<string,NTNonLimbAffliction> Pair in LocalAfflictions.UpdatingAfflictions)
+            {
+                if (Pair.Key != null)
+                {
+                    // Fetch the data of the affliction
+                    Dictionary<string, double> AffStrengths = LocalAfflictions.UpdatingAffStrength;
+                    string ID = Pair.Key;
+                    NTNonLimbAffliction Aff = Pair.Value;
+                    double CurrentAffStrength = AffStrengths[ID];
+
+                    // Add our affliction Depedencies
+                    foreach (NTAffliction Dependency in Aff.DependentAfflictions)
+                    {
+                        if (!LocalAfflictions.UpdatingAfflictions.ContainsValue((NTNonLimbAffliction)Dependency))
+                        {
+
+                        }
+                    }
+
+                    Aff.UpdateAction(this, ID, LimbType.Torso, LocalAfflictions.UpdatingAffStrength);
+                }
+            }
+
+            foreach (KeyValuePair<string, NTLimbAffliction> Pair in LocalAfflictions.UpdatingLimbAfflictions)
+            {
+                if (Pair.Key != null)
+                {
+                }
+            }
+
+            foreach (KeyValuePair<string, NTBloodAffliction> Pair in LocalAfflictions.UpdatingBloodAfflictions)
+            {
+                if (Pair.Key != null)
+                {
+                }
+            }
+
         }
 
         public class CharacterAfflictions(Character Human)
