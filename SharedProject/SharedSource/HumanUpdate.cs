@@ -12,8 +12,8 @@ public class HumanUpdate
     private static readonly int UpdateIntervalHigh = (int)AfflictionPriority.HIGH; // 120 = 2s
     private static readonly int UpdateIntervalMedium = (int)AfflictionPriority.MEDIUM; // 240 = 4s
     private static readonly int UpdateIntervalLow = (int)AfflictionPriority.LOW; // 480 = 8s
-    private List<NTHuman> UpdatingHumans = new List<NTHuman>();
-    private List<NTMonster> UpdatingMonsters = new List<NTMonster>();
+    static private List<NTHuman> UpdatingHumans = new List<NTHuman>();
+    static private List<NTMonster> UpdatingMonsters = new List<NTMonster>();
 
     // ---------------------------------------- NT Human Update Classes -------------------------------------------------- \\
 
@@ -191,27 +191,29 @@ public class HumanUpdate
 
     // ---------------------------------------- The Human Update -------------------------------------------------- \\
 
-    public void AddEntityToUpdate(Entity AddingEntity)
+    public static void AddCharacterToUpdate(CharacterPrefab prefab, Vector2 position, string seed, CharacterInfo characterInfo, ushort id, bool isRemotePlayer, bool hasAi, bool createNetworkEvent, RagdollParams ragdoll, bool spawnInitialItems)
     {
-        if (AddingEntity is Character)
+        HF.Print("Add Character");
+        if (prefab == null || characterInfo == null) { return; }
+        Character NewCharacter = characterInfo.Character;
+        if (NewCharacter == null) { return; }
+        if (NewCharacter.IsHuman)
         {
-            Character NewCharacter = (Character)AddingEntity;
-            if (NewCharacter.IsHuman)
-            {
-                AddHumanToUpdate(NewCharacter);
-            }
-            else
-            {
-                AddMonsterToUpdate(NewCharacter);
-            }
+            HF.Print($"Adding the following Character {NewCharacter.Name} !");
+            AddHumanToUpdate(NewCharacter);
+        }
+        else
+        {
+            AddMonsterToUpdate(NewCharacter);
         }
     }
 
-    public void RemoveEntityFromUpdate(Entity RemovingEntity)
+    public static void RemoveCharacterFromUpdate(Character target)
     {
-        if (RemovingEntity is Character)
+        HF.Print("Removing Character");
+        if (target is Character)
         {
-            Character NewCharacter = (Character)RemovingEntity;
+            Character NewCharacter = (Character)target;
             if (NewCharacter.IsHuman)
             {
                 RemoveHumanFromUpdate(NewCharacter);
@@ -223,7 +225,7 @@ public class HumanUpdate
         }
     }
 
-    public void AddHumanToUpdate(Character AddedCharacter)
+    public static void AddHumanToUpdate(Character AddedCharacter)
     {
         NTHuman NewNTHuman = new NTHuman(AddedCharacter); // Hopefully this wont create a memory leak.
         if (!UpdatingHumans.Contains(NewNTHuman))
@@ -232,7 +234,7 @@ public class HumanUpdate
         }
     }
 
-    public void RemoveHumanFromUpdate(Character RemovingCharacter) // Probably a better way to do this.
+    public static void RemoveHumanFromUpdate(Character RemovingCharacter) // Probably a better way to do this.
     {
         NTHuman HumanToRemove = null; // We store the index of what to remove so we don't remove while iterating.
         foreach (NTHuman Human in UpdatingHumans)
@@ -249,7 +251,7 @@ public class HumanUpdate
         }
     }
 
-    public void AddMonsterToUpdate(Character AddedMonster)
+    public static void AddMonsterToUpdate(Character AddedMonster)
     {
         if (!AddedMonster.IsHuman)
         {
@@ -261,7 +263,7 @@ public class HumanUpdate
         }
     }
 
-    public void RemoveMonsterFromUpdate(Character RemovingMonster) // Probably a better way to do this.
+    public static void RemoveMonsterFromUpdate(Character RemovingMonster) // Probably a better way to do this.
     {
         NTMonster MonsterToRemove = null; // We store the index of what to remove so we don't remove while iterating.
         foreach (NTMonster Monster in UpdatingMonsters)

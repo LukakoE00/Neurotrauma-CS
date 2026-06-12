@@ -118,11 +118,13 @@
             harmony.Patch(originalApplyTreatment, prefix: new HarmonyMethod(typeof(NTItemMethods), nameof(NTItemMethods.Override_ApplyTreatment)));
 
             // Character Patches
-            var characterCreation = AccessTools.Method(typeof(EntitySpawner.IEntitySpawnInfo), "OnSpawned", [typeof(Entity)]);
-            harmony.Patch(characterCreation, prefix: new HarmonyMethod(typeof(HumanUpdate), nameof(HumanUpdate.AddEntityToUpdate))); // The Character Created hook.
+            var characterCreation = AccessTools.Method(typeof(Character), "Create", 
+                [typeof(CharacterPrefab),typeof(Vector2),typeof(string),typeof(CharacterInfo),typeof(ushort),typeof(bool),typeof(bool),typeof(bool),typeof(RagdollParams),typeof(bool)]);
+            harmony.Patch(characterCreation, prefix: new HarmonyMethod(typeof(HumanUpdate), nameof(HumanUpdate.AddCharacterToUpdate))); // The Character Created hook.
 
-            var characterDied = AccessTools.Method(typeof(EntitySpawner.IEntitySpawnInfo), "AddEntityToRemoveQueue", [typeof(Entity)]);
-            harmony.Patch(characterCreation, prefix: new HarmonyMethod(typeof(HumanUpdate), nameof(HumanUpdate.RemoveEntityFromUpdate))); // The Character Died hook.
+            var characterDeath = AccessTools.Method(typeof(Character), "RecordKill",
+                [typeof(Character)]);
+            harmony.Patch(characterDeath, prefix: new HarmonyMethod(typeof(HumanUpdate), nameof(HumanUpdate.RemoveCharacterFromUpdate))); // The Character died hook.
         }
 
         public void DisposeServer()
