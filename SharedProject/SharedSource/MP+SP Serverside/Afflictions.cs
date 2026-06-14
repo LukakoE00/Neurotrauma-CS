@@ -42,8 +42,8 @@ namespace Neurotrauma
                 }
             } else
             {
-                LuaCsLogger.LogError($"Affliction with id {id} already exists! Multiple addons might be trying to register the same affliciton.\n" +
-                    $"If you're trying to override an affliction update function, use OverrideAffliciton instead.");
+                LuaCsLogger.LogError($"Affliction with id {id} already exists! Multiple addons might be trying to register the same affliction.\n" +
+                    $"If you're trying to override an affliction update function, use OverrideAffliction instead.");
             }
             
         }
