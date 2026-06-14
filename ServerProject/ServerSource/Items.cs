@@ -13,7 +13,7 @@ public class NTItemMethods
      * </summary>
      * 
      */
-    public class DrainageAfflictionInfos { 
+    public class ItemsAfflictionInfos { 
     
         ///<summary>The ID defined in the XML. The affliction MUST be non limb-specific.</summary>
         public string AfflictionID { get; }
@@ -33,7 +33,7 @@ public class NTItemMethods
         */
         public Func<ItemUpdateFunctionInfos, bool> Conditions { get; }
 
-        public DrainageAfflictionInfos(string affID, int xpGain, Func<ItemUpdateFunctionInfos, bool> conditions) 
+        public ItemsAfflictionInfos(string affID, int xpGain, Func<ItemUpdateFunctionInfos, bool> conditions) 
         { 
             //TODO check if affID is limb specific and throw error if so
 
@@ -46,11 +46,11 @@ public class NTItemMethods
 
     /**
      * <summary>
-     * Contains the list of every afflictions cured by drainage. Addons can add to this list.
+     * Contains the list of every afflictions cured by drainage.
      * 
      * </summary>
      */
-    public static List<DrainageAfflictionInfos> DrainageAfflictions { get; } = [];
+    public static List<ItemsAfflictionInfos> DrainageAfflictions { get; } = [];
 
 
     /**
@@ -69,8 +69,14 @@ public class NTItemMethods
 
     /**
      * <summary>
+     * Contains the list of every afflictions healable by sutures.
+     * </summary>
+     */
+    public static List<ItemsAfflictionInfos> SutureAfflictions { get; } = [];
+
+    /**
+     * <summary>
      * Contains all the data necessary for an item use function.
-     * 
      * </summary>
      */
     public class ItemUpdateFunctionInfos
@@ -147,12 +153,12 @@ public class NTItemMethods
             HF.GiveItem(infos.target, "ntsfx_slash");
         });
 
-        DrainageAfflictions.Add(new DrainageAfflictionInfos("pneumothorax", 3, infos =>
+        DrainageAfflictions.Add(new ItemsAfflictionInfos("pneumothorax", 3, infos =>
         {
             return HF.HasAfflictionLimb(infos.target, "retractedskin", LimbType.Torso, 95);
         }));
 
-        DrainageAfflictions.Add(new DrainageAfflictionInfos("tamponade", 3, infos =>
+        DrainageAfflictions.Add(new ItemsAfflictionInfos("tamponade", 3, infos =>
         {
             bool retractedSkin = HF.HasAfflictionLimb(infos.target, "retractedskin", LimbType.Torso, 95);
 
