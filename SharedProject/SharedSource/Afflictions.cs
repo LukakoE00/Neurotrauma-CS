@@ -109,7 +109,7 @@ namespace Neurotrauma
         public double MaxStrength { get; set; }
         public List<NTAffliction> DependentAfflictions { get; set; } = [];
         public AfflictionPriority Priority { get; set; }
-        public string Name = "";
+        public string ID = "";
         public Action<HumanUpdate.NTHuman,string,LimbType> UpdateAction = 
             (HumanUpdate.NTHuman C, string ID, LimbType Limb) => 
             { 
@@ -235,8 +235,9 @@ namespace Neurotrauma
 
         private void AddAfflictions() // Create your afflictions in here.
         {
-            AfflictionsToAdd["Example1"] = new(0, 100, []);
-            AfflictionsToAdd["Example1"].UpdateAction = 
+            AfflictionsToAdd["Example1"] = new(0, 100, []); // Create the new affliction.
+            AfflictionsToAdd["Example1"].ID = "Example1"; // Set the ID.
+            AfflictionsToAdd["Example1"].UpdateAction = // Set the update function.
                 (HumanUpdate.NTHuman C, string ID, LimbType Limb, Dictionary<string, double> AffStrength) =>
             {
                 // To quickly Access our affliction strength do 'AffStrength[ID]' and boom. You now have the strength of this affliction.

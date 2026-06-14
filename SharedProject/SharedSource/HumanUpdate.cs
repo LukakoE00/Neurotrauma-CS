@@ -24,6 +24,10 @@ public class HumanUpdate
         public CharacterStats LocalStats = new CharacterStats();
         public CharacterAfflictions LocalAfflictions = new CharacterAfflictions(Human);
 
+        public List<NTNonLimbAffliction> LastStoredAffs = new();
+        public List<NTLimbAffliction> LastStoredLimbAffs = new();
+        public List<NTBloodAffliction> LastStoredBloodAffs = new();
+
         public CharacterStats? GetStats()
         {
             return LocalStats;
@@ -31,25 +35,22 @@ public class HumanUpdate
 
         public void Update(List<AfflictionPriority> Priorities)
         {
+
+            if (LastStoredAffs != LocalAfflictions.UpdatingAfflictions.Values.ToList()  
+                || LastStoredLimbAffs != LocalAfflictions.UpdatingLimbAfflictions.Values.ToList()
+                || LastStoredBloodAffs != LocalAfflictions.UpdatingBloodAfflictions.Values.ToList())
+            {
+                // Load our dependencies as a fail safe.
+                LocalAfflictions.AddAfflictionDependencies(this, LocalAfflictions.UpdatingAfflictions, LocalAfflictions.UpdatingLimbAfflictions, LocalAfflictions.UpdatingBloodAfflictions);
+            }
+
             foreach (KeyValuePair<string,NTNonLimbAffliction> Pair in LocalAfflictions.UpdatingAfflictions)
             {
                 if (Pair.Key != null)
                 {
                     // Fetch the data of the affliction
-                    Dictionary<string, double> AffStrengths = LocalAfflictions.UpdatingAffStrength;
                     string ID = Pair.Key;
                     NTNonLimbAffliction Aff = Pair.Value;
-                    double CurrentAffStrength = AffStrengths[ID];
-
-                    // Add our affliction Depedencies
-                    foreach (NTAffliction Dependency in Aff.DependentAfflictions)
-                    {
-                        if (!LocalAfflictions.UpdatingAfflictions.ContainsValue((NTNonLimbAffliction)Dependency))
-                        {
-
-                        }
-                    }
-
                     Aff.UpdateAction(this, ID, LimbType.Torso, LocalAfflictions.UpdatingAffStrength);
                 }
             }
@@ -58,6 +59,13 @@ public class HumanUpdate
             {
                 if (Pair.Key != null)
                 {
+                    foreach (LimbType Limb in HF.LimbsToCheck)
+                    {
+                        // Fetch the data of the affliction
+                        string ID = Pair.Key;
+                        NTLimbAffliction Aff = Pair.Value;
+                        Aff.UpdateAction(this, ID, Limb, LocalAfflictions.UpdatingLimbAffStrength);
+                    }
                 }
             }
 
@@ -65,14 +73,22 @@ public class HumanUpdate
             {
                 if (Pair.Key != null)
                 {
+                    // Fetch the data of the affliction
+                    string ID = Pair.Key;
+                    NTBloodAffliction Aff = Pair.Value;
+                    Aff.UpdateAction(this, ID, LimbType.Torso, LocalAfflictions.UpdatingBloodAffStrength);
                 }
             }
 
+            LastStoredAffs = LocalAfflictions.UpdatingAfflictions.Values.ToList();
+            LastStoredLimbAffs = LocalAfflictions.UpdatingLimbAfflictions.Values.ToList();
+            LastStoredBloodAffs = LocalAfflictions.UpdatingBloodAfflictions.Values.ToList();
         }
 
         public class CharacterAfflictions(Character Human)
         {
             public Character Human = Human; // Our Human Ref
+            public NTHuman CharacterNT = CharacterToNTHuman(Human); // Our NTHuman Ref
 
             // Let me break down how we're gonna be running afflictions around here.
             // Basically, we have two dictionaries for one Affliction Category. I.E, Two dictionaries for Blood Afflictions, Two Dictionaries for Limb Afflictions and so on so forth.
@@ -93,6 +109,7 @@ public class HumanUpdate
                 {
                     UpdatingAfflictions[ID] = NTNonLimbAff;
                     UpdatingAffStrength[ID] = Strength;
+                    AddAfflictionDependency(CharacterNT, NTNonLimbAff);
                 }
             }
 
@@ -102,6 +119,7 @@ public class HumanUpdate
                 {
                     UpdatingLimbAfflictions[ID] = NTLimbAff;
                     UpdatingLimbAffStrength[ID][Limb] = Strength;
+                    AddAfflictionDependency(CharacterNT, NTLimbAff);
                 }
             }
 
@@ -111,10 +129,11 @@ public class HumanUpdate
                 {
                     UpdatingBloodAfflictions[ID] = NTBloodAff;
                     UpdatingBloodAffStrength[ID] = Strength;
+                    AddAfflictionDependency(CharacterNT, NTBloodAff);
                 }
             }
 
-            public void RemoveAffliction(string ID, NTAffliction Aff, LimbType Limb = LimbType.Torso)
+            public void RemoveAffliction(string ID, NTAffliction Aff, LimbType Limb = LimbType.Torso) // Should only be called at the end of a human update.
             {
                 if (NTAfflictions.HasAffliction(ID))
                 {
@@ -152,6 +171,210 @@ public class HumanUpdate
                     return UpdatingAfflictions[ID];
                 }
                 return UpdatingLimbAfflictions[ID];
+            }
+
+            public void AddAfflictionDependency(NTHuman C,NTAffliction Aff)
+            {
+                Dictionary<string, NTNonLimbAffliction> DependencyAfflictions = new(); // Stores the ID's of our Dependency afflictions.
+                Dictionary<string, NTLimbAffliction> DependencyLimbAfflictions = new(); // Stores the ID's of our Dependency (Limb) afflictions.
+                Dictionary<string, NTBloodAffliction> DependencyBloodAfflictions = new(); // Stores the ID's of our Dependency (blood) afflictions.
+                Dictionary<string, NTNonLimbAffliction> UpdatingAff = C.LocalAfflictions.UpdatingAfflictions;
+                Dictionary<string, NTLimbAffliction> UpdatingLimbAff = C.LocalAfflictions.UpdatingLimbAfflictions;
+                Dictionary<string, NTBloodAffliction> UpdatingBloodAff = C.LocalAfflictions.UpdatingBloodAfflictions;
+
+                // Add our affliction Depedencies
+                foreach (NTAffliction Dependency in Aff.DependentAfflictions)
+                {
+                    if (Dependency is NTNonLimbAffliction)
+                    {
+                        if (!UpdatingAff.ContainsValue((NTNonLimbAffliction)Dependency))
+                        {
+                            DependencyAfflictions[Dependency.ID] = (NTNonLimbAffliction)Dependency;
+                            continue;
+                        }
+                    }
+                    if (Dependency is NTLimbAffliction)
+                    {
+                        if (!UpdatingLimbAff.ContainsValue((NTLimbAffliction)Dependency))
+                        {
+                            DependencyLimbAfflictions[Dependency.ID] = (NTLimbAffliction)Dependency;
+                            continue;
+                        }
+                    }
+                    if (Dependency is NTBloodAffliction)
+                    {
+                        if (!UpdatingBloodAff.ContainsValue((NTBloodAffliction)Dependency))
+                        {
+                            DependencyBloodAfflictions[Dependency.ID] = (NTBloodAffliction)Dependency;
+                            continue;
+                        }
+                    }
+                }
+
+                foreach (KeyValuePair<string, NTNonLimbAffliction> Pair in DependencyAfflictions)
+                {
+                    C.LocalAfflictions.AddNonLimbAffliction(Pair.Key, Pair.Value, 0);
+                }
+
+                foreach (KeyValuePair<string, NTLimbAffliction> Pair in DependencyLimbAfflictions)
+                {
+                    C.LocalAfflictions.AddLimbAffliction(Pair.Key, Pair.Value, 0, LimbType.Head);
+                    C.LocalAfflictions.AddLimbAffliction(Pair.Key, Pair.Value, 0, LimbType.Torso);
+                    C.LocalAfflictions.AddLimbAffliction(Pair.Key, Pair.Value, 0, LimbType.LeftArm);
+                    C.LocalAfflictions.AddLimbAffliction(Pair.Key, Pair.Value, 0, LimbType.RightArm);
+                    C.LocalAfflictions.AddLimbAffliction(Pair.Key, Pair.Value, 0, LimbType.LeftLeg);
+                    C.LocalAfflictions.AddLimbAffliction(Pair.Key, Pair.Value, 0, LimbType.RightLeg);
+                }
+
+                foreach (KeyValuePair<string, NTBloodAffliction> Pair in DependencyBloodAfflictions)
+                {
+                    C.LocalAfflictions.AddBloodAffliction(Pair.Key, Pair.Value, 0);
+                }
+            }
+
+            public void AddAfflictionDependencies(NTHuman C, Dictionary<string, NTNonLimbAffliction> UpdatingAff, Dictionary<string, NTLimbAffliction> UpdatingLimbAff, Dictionary<string, NTBloodAffliction> UpdatingBloodAff) // Ydrec look away, your holy eyes shouldnt see this.
+            {
+                Dictionary<string,NTNonLimbAffliction> DependencyAfflictions = new(); // Stores the ID's of our Dependency afflictions.
+                Dictionary<string, NTLimbAffliction> DependencyLimbAfflictions = new(); // Stores the ID's of our Dependency (Limb) afflictions.
+                Dictionary<string, NTBloodAffliction> DependencyBloodAfflictions = new(); // Stores the ID's of our Dependency (blood) afflictions.
+
+                foreach (KeyValuePair<string, NTNonLimbAffliction> Pair in UpdatingAff)
+                {
+                    if (Pair.Key != null)
+                    {
+                        // Fetch the data of the affliction
+                        string ID = Pair.Key;
+                        NTNonLimbAffliction Aff = Pair.Value;
+
+                        // Add our affliction Depedencies
+                        foreach (NTAffliction Dependency in Aff.DependentAfflictions)
+                        {
+                            if (Dependency is NTNonLimbAffliction)
+                            {
+                                if (!UpdatingAff.ContainsValue((NTNonLimbAffliction)Dependency))
+                                {
+                                    DependencyAfflictions[Dependency.ID] = (NTNonLimbAffliction)Dependency;
+                                    continue;
+                                }
+                            }
+                            if (Dependency is NTLimbAffliction)
+                            {
+                                if (!UpdatingLimbAff.ContainsValue((NTLimbAffliction)Dependency))
+                                {
+                                    DependencyLimbAfflictions[Dependency.ID] = (NTLimbAffliction)Dependency;
+                                    continue;
+                                }
+                            }
+                            if (Dependency is NTBloodAffliction)
+                            {
+                                if (!UpdatingBloodAff.ContainsValue((NTBloodAffliction)Dependency))
+                                {
+                                    DependencyBloodAfflictions[Dependency.ID] = (NTBloodAffliction)Dependency;
+                                    continue;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                foreach (KeyValuePair<string, NTLimbAffliction> Pair in UpdatingLimbAff)
+                {
+                    if (Pair.Key != null)
+                    {
+                        // Fetch the data of the affliction
+                        string ID = Pair.Key;
+                        NTLimbAffliction Aff = Pair.Value;
+
+                        // Add our affliction Depedencies
+                        foreach (NTAffliction Dependency in Aff.DependentAfflictions)
+                        {
+                            if (Dependency is NTNonLimbAffliction)
+                            {
+                                if (!UpdatingAff.ContainsValue((NTNonLimbAffliction)Dependency))
+                                {
+                                    DependencyAfflictions[Dependency.ID] = (NTNonLimbAffliction)Dependency;
+                                    continue;
+                                }
+                            }
+                            if (Dependency is NTLimbAffliction)
+                            {
+                                if (!UpdatingLimbAff.ContainsValue((NTLimbAffliction)Dependency))
+                                {
+                                    DependencyLimbAfflictions[Dependency.ID] = (NTLimbAffliction)Dependency;
+                                    continue;
+                                }
+                            }
+                            if (Dependency is NTBloodAffliction)
+                            {
+                                if (!UpdatingBloodAff.ContainsValue((NTBloodAffliction)Dependency))
+                                {
+                                    DependencyBloodAfflictions[Dependency.ID] = (NTBloodAffliction)Dependency;
+                                    continue;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                foreach (KeyValuePair<string, NTBloodAffliction> Pair in UpdatingBloodAff)
+                {
+                    if (Pair.Key != null)
+                    {
+                        // Fetch the data of the affliction
+                        string ID = Pair.Key;
+                        NTBloodAffliction Aff = Pair.Value;
+
+                        // Add our affliction Depedencies
+                        foreach (NTAffliction Dependency in Aff.DependentAfflictions)
+                        {
+                            if (Dependency is NTNonLimbAffliction)
+                            {
+                                if (!UpdatingAff.ContainsValue((NTNonLimbAffliction)Dependency))
+                                {
+                                    DependencyAfflictions[Dependency.ID] = (NTNonLimbAffliction)Dependency;
+                                    continue;
+                                }
+                            }
+                            if (Dependency is NTLimbAffliction)
+                            {
+                                if (!UpdatingLimbAff.ContainsValue((NTLimbAffliction)Dependency))
+                                {
+                                    DependencyLimbAfflictions[Dependency.ID] = (NTLimbAffliction)Dependency;
+                                    continue;
+                                }
+                            }
+                            if (Dependency is NTBloodAffliction)
+                            {
+                                if (!UpdatingBloodAff.ContainsValue((NTBloodAffliction)Dependency))
+                                {
+                                    DependencyBloodAfflictions[Dependency.ID] = (NTBloodAffliction)Dependency;
+                                    continue;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                foreach (KeyValuePair<string, NTNonLimbAffliction> Pair in DependencyAfflictions)
+                {
+                    C.LocalAfflictions.AddNonLimbAffliction(Pair.Key, Pair.Value, 0);
+                }
+
+                foreach (KeyValuePair<string, NTLimbAffliction> Pair in DependencyLimbAfflictions)
+                {
+                    C.LocalAfflictions.AddLimbAffliction(Pair.Key, Pair.Value, 0, LimbType.Head);
+                    C.LocalAfflictions.AddLimbAffliction(Pair.Key, Pair.Value, 0, LimbType.Torso);
+                    C.LocalAfflictions.AddLimbAffliction(Pair.Key, Pair.Value, 0, LimbType.LeftArm);
+                    C.LocalAfflictions.AddLimbAffliction(Pair.Key, Pair.Value, 0, LimbType.RightArm);
+                    C.LocalAfflictions.AddLimbAffliction(Pair.Key, Pair.Value, 0, LimbType.LeftLeg);
+                    C.LocalAfflictions.AddLimbAffliction(Pair.Key, Pair.Value, 0, LimbType.RightLeg);
+                }
+
+                foreach (KeyValuePair<string, NTBloodAffliction> Pair in DependencyBloodAfflictions)
+                {
+                    C.LocalAfflictions.AddBloodAffliction(Pair.Key, Pair.Value, 0);
+                }
+
             }
 
         }
@@ -195,6 +418,18 @@ public class HumanUpdate
 
 
     // ---------------------------------------- The Human Update -------------------------------------------------- \\
+
+    public static NTHuman CharacterToNTHuman(Character Character)
+    {
+        foreach (NTHuman Human in UpdatingHumans)
+        {
+            if (Human.Human == Character)
+            {
+                return Human;
+            }
+        }
+        return UpdatingHumans[0]; // As a failsafe return the first stored player.
+    }
 
     public static void AddCharacterToUpdate(CharacterPrefab prefab, Vector2 position, string seed, CharacterInfo characterInfo, ushort id, bool isRemotePlayer, bool hasAi, bool createNetworkEvent, RagdollParams ragdoll, bool spawnInitialItems)
     {
