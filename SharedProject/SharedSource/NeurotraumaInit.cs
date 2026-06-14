@@ -35,8 +35,8 @@ namespace Neurotrauma
             if (HF.GameIsMultiplayer())
             {
                 #if SERVER
-                HF.Print("Initializing for Multiplayer.");
-                InitializeServer();
+                    HF.Print("Initializing for Multiplayer.");
+                    InitializeServer();
                 #endif
             }
 
@@ -46,9 +46,6 @@ namespace Neurotrauma
                 HF.Print("Initializing for Singleplayer.");
                 InitializeServer();
             }
-
-
-
         }
 
         // After all plugins have loaded
@@ -72,7 +69,7 @@ namespace Neurotrauma
             if (HF.GameIsSingleplayer())
             {
                 // ServersideInit.cs
-                HF.Print("Initializing for Singleplayer.");
+                HF.Print("OnLoadCompleted for Singleplayer.");
                 OnLoadCompletedServerside();
             }
 
