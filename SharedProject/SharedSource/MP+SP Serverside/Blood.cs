@@ -1,7 +1,4 @@
-﻿using Barotrauma.Networking;
-using System.Text;
-
-// Disable the Hook warning
+﻿// Disable the Hook warning
 #pragma warning disable CS0618
 namespace Neurotrauma
 {
