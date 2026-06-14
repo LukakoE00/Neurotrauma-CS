@@ -61,8 +61,8 @@ namespace Neurotrauma
 
             LuaCsSetup.Instance.Hook.Add("think", "NTCS.ThinkUpdate", (params object[] _) => // The Hook details (TODO, make this in C#)
             { // Start of our Function
-                double DeltaTime = 1;
-                HU.ThinkUpdate(DeltaTime);
+
+                HU.ThinkUpdate();
                 return null;
             }); // End of our Function
 

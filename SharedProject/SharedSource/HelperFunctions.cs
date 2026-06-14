@@ -290,9 +290,9 @@ namespace Neurotrauma
             //return GameMain.GameSession.IsRunning;
 #elif SHARED
             return LuaGame.RoundStarted;
-#else
-            return false;
 #endif
+
+            return GameMain.GameSession.IsRunning;
         }
 
         public static bool GameIsMultiplayer()

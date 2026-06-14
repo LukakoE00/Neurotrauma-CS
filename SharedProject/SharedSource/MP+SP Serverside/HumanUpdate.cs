@@ -88,7 +88,7 @@ public class HumanUpdate
         public class CharacterAfflictions(Character Human)
         {
             public Character Human = Human; // Our Human Ref
-            public NTHuman CharacterNT = CharacterToNTHuman(Human); // Our NTHuman Ref
+            public NTHuman? CharacterNT = CharacterToNTHuman(Human); // Our NTHuman Ref
 
             // Let me break down how we're gonna be running afflictions around here.
             // Basically, we have two dictionaries for one Affliction Category. I.E, Two dictionaries for Blood Afflictions, Two Dictionaries for Limb Afflictions and so on so forth.
@@ -107,9 +107,15 @@ public class HumanUpdate
             {
                 if (NTAfflictions.HasAffliction(ID))
                 {
-                    UpdatingAfflictions[ID] = NTNonLimbAff;
-                    UpdatingAffStrength[ID] = Strength;
-                    AddAfflictionDependency(CharacterNT, NTNonLimbAff);
+
+                    if (CharacterNT != null)
+                    {
+                        UpdatingAfflictions[ID] = NTNonLimbAff;
+                        UpdatingAffStrength[ID] = Strength;
+                        AddAfflictionDependency(CharacterNT, NTNonLimbAff);
+
+                    }
+
                 }
             }
 
@@ -117,9 +123,12 @@ public class HumanUpdate
             {
                 if (NTAfflictions.HasAffliction(ID))
                 {
-                    UpdatingLimbAfflictions[ID] = NTLimbAff;
-                    UpdatingLimbAffStrength[ID][Limb] = Strength;
-                    AddAfflictionDependency(CharacterNT, NTLimbAff);
+                    if (CharacterNT != null)
+                    {
+                        UpdatingLimbAfflictions[ID] = NTLimbAff;
+                        UpdatingLimbAffStrength[ID][Limb] = Strength;
+                        AddAfflictionDependency(CharacterNT, NTLimbAff);
+                    }
                 }
             }
 
@@ -127,9 +136,12 @@ public class HumanUpdate
             {
                 if (NTAfflictions.HasAffliction(ID))
                 {
-                    UpdatingBloodAfflictions[ID] = NTBloodAff;
-                    UpdatingBloodAffStrength[ID] = Strength;
-                    AddAfflictionDependency(CharacterNT, NTBloodAff);
+                    if (CharacterNT != null)
+                    {
+                        UpdatingBloodAfflictions[ID] = NTBloodAff;
+                        UpdatingBloodAffStrength[ID] = Strength;
+                        AddAfflictionDependency(CharacterNT, NTBloodAff);
+                    }
                 }
             }
 
@@ -419,8 +431,15 @@ public class HumanUpdate
 
     // ---------------------------------------- The Human Update -------------------------------------------------- \\
 
-    public static NTHuman CharacterToNTHuman(Character Character)
+    public static NTHuman? CharacterToNTHuman(Character Character)
     {
+
+        // Instant crash trying to reach for something not defined.
+        if (UpdatingHumans.Count == 0)
+        {
+            return null;
+        }
+
         foreach (NTHuman Human in UpdatingHumans)
         {
             if (Human.Human == Character)
@@ -428,6 +447,9 @@ public class HumanUpdate
                 return Human;
             }
         }
+
+        
+
         return UpdatingHumans[0]; // As a failsafe return the first stored player.
     }
 
@@ -548,8 +570,9 @@ public class HumanUpdate
     private int Tick = 0;
     private double NTDeltaTime = UpdateIntervalHigh / 120;
     // Gets called 60 times a second
-    public void ThinkUpdate(double fixedDeltaTime)
+    public void ThinkUpdate()
     {
+
         // If game paused we just skip
         if (HF.GameIsPaused() || !HF.InGame()) return;
 
