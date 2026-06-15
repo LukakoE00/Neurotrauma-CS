@@ -77,7 +77,7 @@
 
     
     <!-- ============================================== Blood Packs ============================================== -->
-    <Item name="" identifier="bloodpackoplus" nameidentifier="bloodpackoplus" variantof="antibloodloss2">
+    <Item name="" identifier="bloodpacko_positive" nameidentifier="bloodpacko_positive" variantof="antibloodloss2">
         <PreferredContainer primary="medcab" minamount="0" maxamount="0" notcampaign="true"/>
         <PreferredContainer secondary="medcontainer"/>
 
@@ -88,7 +88,7 @@
         </Price>
     </Item>
 
-    <Item name="" identifier="bloodpackaminus" nameidentifier="bloodpackaminus" variantof="antibloodloss2">
+    <Item name="" identifier="bloodpacka_negative" nameidentifier="bloodpacka_negative" variantof="antibloodloss2">
         <PreferredContainer primary="medcab" minamount="0" maxamount="0" notcampaign="true"/>
         <PreferredContainer secondary="outpostmedcompartment,outpostmedcab" minamount="0" maxamount="0" spawnprobability="0"/>
         <PreferredContainer secondary="wreckmedcab,abandonedmedcab" minamount="0" maxamount="0" spawnprobability="0" />
@@ -101,7 +101,7 @@
         </Price>
     </Item>
 
-    <Item name="" identifier="bloodpackaplus" nameidentifier="bloodpackaplus" variantof="antibloodloss2">
+    <Item name="" identifier="bloodpacka_positive" nameidentifier="bloodpacka_positive" variantof="antibloodloss2">
         <PreferredContainer primary="medcab" minamount="0" maxamount="0" notcampaign="true"/>
         <PreferredContainer secondary="medcontainer"/>
 
@@ -112,7 +112,7 @@
         </Price>
     </Item>
 
-    <Item name="" identifier="bloodpackbminus" nameidentifier="bloodpackbminus" variantof="antibloodloss2">
+    <Item name="" identifier="bloodpackb_negative" nameidentifier="bloodpackb_negative" variantof="antibloodloss2">
         <PreferredContainer primary="medcab" minamount="0" maxamount="0" notcampaign="true"/>
         <PreferredContainer secondary="outpostmedcompartment,outpostmedcab" minamount="0" maxamount="0" spawnprobability="0"/>
         <PreferredContainer secondary="medcontainer"/>
@@ -124,7 +124,7 @@
         </Price>
     </Item>
 
-    <Item name="" identifier="bloodpackbplus" nameidentifier="bloodpackbplus" variantof="antibloodloss2">
+    <Item name="" identifier="bloodpackb_positive" nameidentifier="bloodpackb_positive" variantof="antibloodloss2">
         <PreferredContainer primary="medcab" minamount="0" maxamount="0" notcampaign="true"/>
         <PreferredContainer secondary="medcontainer"/>
 
@@ -135,7 +135,7 @@
         </Price>
     </Item>
 
-    <Item name="" identifier="bloodpackabminus" nameidentifier="bloodpackabminus" variantof="antibloodloss2">
+    <Item name="" identifier="bloodpackab_negative" nameidentifier="bloodpackab_negative" variantof="antibloodloss2">
         <PreferredContainer primary="medcab" minamount="0" maxamount="0" notcampaign="true"/>
         <PreferredContainer secondary="outpostmedcompartment,outpostmedcab" minamount="0" maxamount="0" spawnprobability="0"/>
         <PreferredContainer secondary="medcontainer"/>
@@ -147,7 +147,7 @@
         </Price>
     </Item>
 
-    <Item name="" identifier="bloodpackabplus" nameidentifier="bloodpackabplus" variantof="antibloodloss2">
+    <Item name="" identifier="bloodpackab_positive" nameidentifier="bloodpackab_positive" variantof="antibloodloss2">
         <PreferredContainer primary="medcab" minamount="0" maxamount="0" notcampaign="true"/>
         <PreferredContainer secondary="medcontainer"/>
 

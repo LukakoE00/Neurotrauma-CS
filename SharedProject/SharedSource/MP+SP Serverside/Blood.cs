@@ -144,8 +144,8 @@ namespace Neurotrauma
 
                     string bloodTypeDisplay = packtype
                         .Replace("abc", "c")
-                        .Replace("plus", "+")
-                        .Replace("minus", "-")
+                        .Replace("_positive", "+")
+                        .Replace("_negative", "-")
                         .ToUpperInvariant();
 
                     string readout =

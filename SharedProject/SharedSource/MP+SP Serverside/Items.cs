@@ -32,8 +32,6 @@ public class NTItemMethods
 
         public ItemsAfflictionInfos(string affID, int xpGain, Func<ItemUpdateFunctionInfos, bool> conditions) 
         { 
-            //TODO check if affID is limb specific and throw error if so
-
             this.AfflictionID = affID;
             this.XPGain = xpGain;
             this.Conditions = conditions;
@@ -159,7 +157,7 @@ public class NTItemMethods
         {
             bool retractedSkin = HF.HasAfflictionLimb(infos.target, "retractedskin", LimbType.Torso, 95);
 
-            // TODO check for Config thingy
+            if (NTConfig.Get<bool>("NT_OpenCloseTamponade", false)) return false; 
 
             return retractedSkin;
         }));
@@ -652,6 +650,243 @@ public class NTItemMethods
                     + FormatLine(customReadout, customColor),
                 null
             );
+        });
+
+        // Bad to the bones 💀
+        SutureAfflictions.Add(new ItemsAfflictionInfos("bonecut", 0, infos => {
+            return HF.HasAfflictionLimb(infos.target, "surgeryincision", infos.targetLimb.type, 95);
+        }));
+
+        SutureAfflictions.Add(new ItemsAfflictionInfos("drilledbones", 0, infos => {
+            return HF.HasAfflictionLimb(infos.target, "surgeryincision", infos.targetLimb.type, 95);
+        }));
+
+        // Organs
+        SutureAfflictions.Add(new ItemsAfflictionInfos("liverswap", 0, infos => {
+            return HF.HasAfflictionLimb(infos.target, "surgeryincision", infos.targetLimb.type, 95);
+        }));
+
+        SutureAfflictions.Add(new ItemsAfflictionInfos("heartswap", 0, infos => {
+            return HF.HasAfflictionLimb(infos.target, "surgeryincision", infos.targetLimb.type, 95);
+        }));
+
+        SutureAfflictions.Add(new ItemsAfflictionInfos("lungswap", 0, infos => {
+            return HF.HasAfflictionLimb(infos.target, "surgeryincision", infos.targetLimb.type, 95);
+        }));
+
+        SutureAfflictions.Add(new ItemsAfflictionInfos("kidneyswap", 0, infos => {
+            return HF.HasAfflictionLimb(infos.target, "surgeryincision", infos.targetLimb.type, 95);
+        }));
+
+        SutureAfflictions.Add(new ItemsAfflictionInfos("brainswap", 0, infos => {
+            return HF.HasAfflictionLimb(infos.target, "surgeryincision", infos.targetLimb.type, 95);
+        }));
+
+        // Arterialcuts
+
+        SutureAfflictions.Add(new ItemsAfflictionInfos("arterialcut", 3, infos => {
+            return HF.HasAfflictionLimb(infos.target, "retractedskin", infos.targetLimb.type, 95);
+        })); 
+
+        SutureAfflictions.Add(new ItemsAfflictionInfos("carotidarterialcut", 3, infos => {
+            return HF.HasAfflictionLimb(infos.target, "retractedskin", infos.targetLimb.type, 95);
+        }));
+
+        SutureAfflictions.Add(new ItemsAfflictionInfos("aorticrupture", 3, infos => {
+
+            if (!NTConfig.Get<bool>("NT_HardmodeAorticRupture", false)) return false; 
+
+            return HF.HasAfflictionLimb(infos.target, "retractedskin", infos.targetLimb.type, 95);
+        }));
+
+        // Tamponade
+
+        SutureAfflictions.Add(new ItemsAfflictionInfos("tamponade", 3, infos => {
+
+            if (NTConfig.Get<bool>("NT_OpenCloseTamponade", false)) return false;
+
+            return HF.HasAfflictionLimb(infos.target, "retractedskin", infos.targetLimb.type, 95);
+        }));
+
+        // Misc
+
+        SutureAfflictions.Add(new ItemsAfflictionInfos("arteriesclamp", 0, infos => {
+            return HF.HasAfflictionLimb(infos.target, "retractedskin", infos.targetLimb.type, 95);
+        }));
+
+        SutureAfflictions.Add(new ItemsAfflictionInfos("internalbleeding", 3, infos => {
+            return HF.HasAfflictionLimb(infos.target, "retractedskin", infos.targetLimb.type, 95);
+        }));
+
+        SutureAfflictions.Add(new ItemsAfflictionInfos("stroke", 6, infos => {
+            return HF.HasAfflictionLimb(infos.target, "retractedskin", infos.targetLimb.type, 95);
+        }));
+
+        // Surgery Related
+
+        SutureAfflictions.Add(new ItemsAfflictionInfos("clampedbleeders", 0, infos => {
+            return true;
+        }));
+
+        SutureAfflictions.Add(new ItemsAfflictionInfos("surgeryincision", 0, infos => {
+            return true;
+        }));
+
+        SutureAfflictions.Add(new ItemsAfflictionInfos("retractedskin", 0, infos => {
+            return true;
+        }));
+
+        SutureAfflictions.Add(new ItemsAfflictionInfos("caviclean", 0, infos => {
+            return true;
+        }));
+
+        RegisterItemUseFunction("suture", infos =>
+        {
+
+            // Base NT has no stasis check ?
+
+            if (!HF.GetSkillRequirmentMet(infos.user, "medical", 30))
+            {
+                HF.AddAfflictionLimb(infos.target, "internaldamage", infos.targetLimb.type, 6, infos.user);
+                return;
+            }
+
+            // Common afflictions part
+            double healeddamage = 0;
+
+            // Could be better if HF.AddAfflictionLimb returned the amount healed
+            healeddamage += Math.Clamp(HF.GetAfflictionStrengthLimb(infos.target, infos.targetLimb.type, "lacerations", 0), 0, 20);
+            healeddamage += Math.Clamp(HF.GetAfflictionStrengthLimb(infos.target, infos.targetLimb.type, "bitewounds", 0), 0, 20);
+            healeddamage += Math.Clamp(HF.GetAfflictionStrengthLimb(infos.target, infos.targetLimb.type, "explosiondamage", 0), 0, 20);
+            healeddamage += Math.Clamp(HF.GetAfflictionStrengthLimb(infos.target, infos.targetLimb.type, "gunshotwound", 0), 0, 20);
+            healeddamage += Math.Clamp(HF.GetAfflictionStrengthLimb(infos.target, infos.targetLimb.type, "bleeding", 0) / 10, 0, 40);
+            healeddamage += Math.Clamp(HF.GetAfflictionStrengthLimb(infos.target, infos.targetLimb.type, "bleedingnonstop", 0) / 10, 0, 40);
+
+            HF.AddAfflictionLimb(infos.target, "lacerations", infos.targetLimb.type, -20, infos.user);
+            HF.AddAfflictionLimb(infos.target, "bitewounds", infos.targetLimb.type, -20, infos.user);
+            HF.AddAfflictionLimb(infos.target, "explosiondamage", infos.targetLimb.type, -20, infos.user);
+            HF.AddAfflictionLimb(infos.target, "gunshotwound", infos.targetLimb.type, -20, infos.user);
+            HF.AddAfflictionLimb(infos.target, "bleeding", infos.targetLimb.type, -40, infos.user);
+            HF.AddAfflictionLimb(infos.target, "bleedingnonstop", infos.targetLimb.type, -40, infos.user);
+
+            HF.AddAfflictionLimb(infos.target, "suturedw", infos.targetLimb.type, (float) healeddamage, infos.user);
+
+            HF.GiveSkillScaled(infos.user, "medical", (float) healeddamage * 100);
+
+            if (HF.HasAfflictionLimb(infos.target, "bonecut", infos.targetLimb.type, 1))
+            {
+                HF.SurgicallyAmputateLimbAndGenerateItem(infos.user, infos.target, infos.targetLimb.type);
+            }
+
+            HF.AddAffliction(infos.target, "tshocktimeout", -100, infos.user);
+
+            // rewritten
+            foreach (var affInfos in SutureAfflictions)
+            {
+                // If the target doesn't has the affliction, we skip it
+                if (!HF.HasAfflictionLimb(infos.target, affInfos.AfflictionID, infos.targetLimb.type, 1)) continue;
+
+                // If the affliction's conditions are not met, we skip it
+                if (!affInfos.Conditions(infos)) continue;
+
+                AfflictionPrefab prefab = AfflictionPrefab.Prefabs[affInfos.AfflictionID];
+
+                if (prefab == null)
+                {
+                    LuaCsLogger.LogError($"Error trying to heal {affInfos.AfflictionID} with sutures. The providded ID is probably incorrect.");
+                    continue;
+                }
+
+                if (prefab.LimbSpecific)
+                {
+                    HF.SetAfflictionLimb(infos.target, affInfos.AfflictionID, infos.targetLimb.type, 0, infos.user, 0);
+
+                } else
+                {
+                    HF.SetAffliction(infos.target, affInfos.AfflictionID, 0, infos.user, 0);
+                }
+
+                HF.GiveSurgerySkill(infos.user, affInfos.XPGain);
+            }
+        });
+
+        RegisterItemUseFunction("tourniquet", infos =>
+        {
+
+            if (HF.HasAfflictionLimb(infos.target, "arteriesclamp", infos.targetLimb.type, 1)) return;
+
+            // Failure
+            if (!HF.GetSkillRequirmentMet(infos.user, "medcial", 30))
+            {
+                HF.AddAfflictionLimb(infos.target, "blunttrauma", infos.targetLimb.type, 6, infos.user);
+                return;
+            }
+
+            if (HF.LimbIsExtremity(infos.targetLimb.type))
+            {
+                HF.SetAfflictionLimb(infos.target, "arteriesclamp", infos.targetLimb.type, 100, infos.user, 0);
+            } else if (infos.targetLimb.type == LimbType.Head)
+            {
+                HF.SetAffliction(infos.target, "oxygenlow", 200, infos.user, 0);
+                HF.AddAffliction(infos.target, "cerebralhypoxia", 15, infos.user);
+            }
+
+            HF.RemoveItem(infos.item);
+
+        });
+
+        RegisterItemUseFunction("emptybloodpack", infos =>
+        {
+
+            if (infos.item.condition <= 0) return;
+
+            // changing from 31 to somthing like 15 can stop easy station kill by using two blood pack in a row
+            if (!(HF.GetAfflictionStrength(infos.target, "bloodloos", 0) <= 31)) return;
+
+            bool success = HF.GetSkillRequirmentMet(infos.user, "medical", 30);
+            int bloodlossinduced = success ? 40 : 30;
+
+            string bloodtype = NTBloodTypes.GetBloodType(infos.target);
+
+            // We store the data we need for the item tags
+            double acidosis = HF.GetAfflictionStrength(infos.target, "acidosis", 0);
+            double alkalosis = HF.GetAfflictionStrength(infos.target, "alkalosis", 0);
+            double sepsis = HF.GetAfflictionStrength(infos.target, "sepsis", 0);
+
+            HF.SetAffliction(infos.target, "acidosis", (float) HF.GetAfflictionStrength(infos.target, "acidosis", 0) * (float) 0.9, infos.user, 0);
+            HF.SetAffliction(infos.target, "alkalosis", (float)HF.GetAfflictionStrength(infos.target, "alkalosis", 0) * (float)0.9, infos.user, 0);
+
+            HF.AddAffliction(infos.target, "bloodloss", bloodlossinduced, infos.user);
+
+            string btID = bloodtype == "o_minus" ? "antibloodloss2" : "bloodpack" + bloodtype ;
+
+            // Inshallah ca marche -Cookie
+            HF.GiveItemPlusFunction(btID, infos.user, (args) => {
+
+                string[] tags = [];
+
+                double acid = (double) args[0];
+                double alkal = (double) args[1];
+                double seps = (double) args[2];
+
+                if (acid > 0) tags.Append($"acid:{Math.Round(acid)}");
+                if (alkal > 0) tags.Append($"alkal:{Math.Round(alkal)}");
+                if (seps > 0) tags.Append($"sepsis");
+
+                Item item = (Item) args[3];
+
+                foreach (var tag in tags)
+                {
+                    item.AddTag(tag);
+                }
+            
+            }, acidosis, alkalosis, sepsis);
+
+
+            infos.item.condition = 0;
+            HF.GiveItem(infos.target, "ntsfx_syringe");
+
+           
         });
     }
 
