@@ -410,12 +410,9 @@ namespace Neurotrauma
                             Default = new List<string>
                             {
                                 "cardiacarrest",
-                                "ll_arterialcut",
-                                "rl_arterialcut",
-                                "la_arterialcut",
-                                "ra_arterialcut",
-                                "t_arterialcut",
-                                "h_arterialcut",
+                                "arterialcut",
+                                "carotidarterialcut",
+                                "aorticrupture",
                                 "tra_amputation",
                                 "tla_amputation",
                                 "trl_amputation",
