@@ -22,6 +22,7 @@ namespace Neurotrauma
             NTInfo.PrintNTInitInfo(); // Prints the current Neurotrauma information in the console.
             NTBloodTypes.InitializeBloodHooks(); // Initializes LuaHooks needed for Blood.cs
             InitLuaHooks(); // Initializes the Lua hooks at the bottom of this file
+            CharacterPatches.InitCharacterPatches();
 
 
             // What a mess. - Lukako
