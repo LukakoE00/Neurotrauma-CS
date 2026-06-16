@@ -32,15 +32,15 @@ namespace Neurotrauma
 
     public static class AIObjectiveRescueAllPatch
     {
-        public static bool Prefix_IsValidTarget(Character target, Character healer, ref bool isValid)
+        public static bool Prefix_IsValidTarget(Character target, Character character, ref bool ignoredAsMinorWounds, ref bool __result)
         {
             if (!NTConfig.Get("NT_disableBotAlgorithms", true))
             {
                 return true; // Prevent original method from executing
             }
 
-            isValid = false;
-            return false; // Don't prevent original method from executing.. very important to know!
+            __result = false;
+            return false;        // Don't prevent original method from executing.. very important to know!
         }
     }
 
@@ -79,8 +79,6 @@ namespace Neurotrauma
         public static void Postfix_SpeakAboutIssues(HumanAIController __instance)
         {
             Character character = __instance.Character;
-
-            if (!HF.HasAffliction(character, "luabotomy", 1f)) return;
             ChatMessageType chatType = ChatMessage.CanUseRadio(character) ? ChatMessageType.Radio : ChatMessageType.Default;
 
             foreach (string identifier in Afflictions)
