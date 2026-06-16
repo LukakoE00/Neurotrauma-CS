@@ -126,6 +126,21 @@
       showinhealthscannerthreshold="999"
       maxstrength="2">
 
+		<Effect minstrength="0" maxstrength="2" strengthchange="-0.5">
+			<StatusEffect statuseffecttags="medical" target="Character" multiplyafflictionsbymaxvitality="true">
+				<ReduceAffliction identifier="cardiacarrest" amount="2" />
+				<ReduceAffliction identifier="fibrillation" amount="1" />
+				<Affliction identifier="bloodpressure" amount="4" />
+			</StatusEffect>
+			
+			<StatusEffect statuseffecttags="medical" target="Character" multiplyafflictionsbymaxvitality="true" disabledeltatime="true" comparison="and">
+				<Conditional cardiacarrest="lte 0.5" />
+				<Conditional cardiacarrest="gte 0.1" />
+				<ReduceAffliction identifier="cardiacarrest" amount="100" />
+				<Affliction identifier="fibrillation" amount="20" />
+			</StatusEffect>
+		</Effect>
+
       <icon texture="Content/UI/MainIconsAtlas.png" sourcerect="256,896,128,128" color="195,104,60,255" origin="0,0"/>
     </Affliction>
 
@@ -145,6 +160,22 @@
       showinhealthscannerthreshold="999"
       maxstrength="2">
 
+		<Effect minstrength="0" maxstrength="2" strengthchange="-0.5">
+			<StatusEffect statuseffecttags="medical" target="Character" multiplyafflictionsbymaxvitality="true">
+				<ReduceAffliction identifier="cardiacarrest" amount="1.5" />
+				<ReduceAffliction identifier="fibrillation" amount="1" />
+				<Affliction identifier="bloodpressure" amount="5" />
+				<ReduceAffliction identifier="oxygenlow" amount="3" />
+			</StatusEffect>
+			
+			<StatusEffect statuseffecttags="medical" target="Character" multiplyafflictionsbymaxvitality="true" disabledeltatime="true" comparison="and">
+				<Conditional cardiacarrest="lte 0.5" />
+				<Conditional cardiacarrest="gte 0.1" />
+				<ReduceAffliction identifier="cardiacarrest" amount="100" />
+				<Affliction identifier="fibrillation" amount="20" />
+			</StatusEffect>
+		</Effect>
+		
       <icon texture="Content/UI/MainIconsAtlas.png" sourcerect="256,896,128,128" color="195,104,60,255" origin="0,0"/>
     </Affliction>
 
