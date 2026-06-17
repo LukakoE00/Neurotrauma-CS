@@ -6,10 +6,10 @@ namespace Neurotrauma
     internal class ConfigurationMenu
     {
         private static readonly List<(string uiName, string id, string type)> ExpansionNameForUI = new();
-        private static readonly List<(string name, string id)> BaseConfigPages = new()
+        private static readonly List<(LocalizedString name, string id)> BaseConfigPages = new()
         {
-            ("Item Prices", "prices"),
-            ("Item Availability", "availability")
+            (TextManager.Get("ntconfig_pagename_prices"), "prices"),
+            (TextManager.Get("ntconfig_pagename_availability"), "availability")
         };
 
         // This is just what I did in Lua, but now via C#. - Lukako
@@ -113,7 +113,7 @@ namespace Neurotrauma
 
             foreach (var page in BaseConfigPages)
             {
-                ExpansionNameForUI.Add((page.name, page.id, "page"));
+                ExpansionNameForUI.Add((page.name.Value, page.id, "page"));
                 dropdown.AddItem(page.name);
             }
 

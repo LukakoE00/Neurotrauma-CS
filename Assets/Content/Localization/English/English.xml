@@ -962,6 +962,10 @@ Can give blood to: AB+</entitydescription.ab_positivecard>
 <!-- Default Title -->
 <ntgui_config_title>Neurotrauma Config Settings</ntgui_config_title>
 
+<!-- Default Pages -->
+<ntconfig_pagename_prices>Item Prices</ntconfig_pagename_prices>
+<ntconfig_pagename_availability>Item Availability</ntconfig_pagename_availability>
+
 <!-- Default Warning -->
 <ntgui_defaultmessage_config>Server config can only be changed by host or authorized clients.</ntgui_defaultmessage_config>
 
