@@ -112,7 +112,7 @@
         <SuitableTreatment identifier="blunttrauma" suitability="40"/>
         <SuitableTreatment identifier="infectedwound" suitability="-100"/>
         <SuitableTreatment identifier="inflammation" suitability="-100"/>
-        
+
         <InventoryIcon texture="%ModDir%/Images/InventoryItemIconAtlas.png" sourcerect="64,256,64,64" origin="0.5,0.5"/>
         <Sprite texture="%ModDir%/Images/InGameItemIconAtlas.png" sourcerect="896,512,128,128" depth="0.6" origin="0.5,0.5"/>
         <Body width="80" height="45" density="11"/>
@@ -158,16 +158,7 @@
         <Sprite texture="%ModDir%/Images/InGameItemIconAtlas.png" sourcerect="914,250,86,134" depth="0.6" origin="0.5,0.5"/>
         <Body width="41" height="64" density="40"/>
 
-        <MeleeWeapon canBeCombined="true" removeOnCombined="true" slots="Any,RightHand,LeftHand" aimpos="5,0" handle1="-5,0" holdangle="10" reload="1.0" msg="ItemMsgPickUpSelect">
-            <StatusEffect statuseffecttags="medical" type="OnUse" target="This, Limb">
-                <Sound file="Content/Items/Medical/Bandage1.ogg" type="OnUse" range="500"/>
-                <Sound file="Content/Items/Medical/Bandage2.ogg" type="OnUse" range="500"/>
-            </StatusEffect>
-            <StatusEffect type="OnBroken" target="This">
-                <Remove/>
-            </StatusEffect>
-        </MeleeWeapon>
-
+        <MeleeWeapon canBeCombined="true" removeOnCombined="true" slots="Any,RightHand,LeftHand" aimpos="5,0" handle1="-5,0" holdangle="10" reload="1.0" msg="ItemMsgPickUpSelect"/>
         <SkillRequirementHint identifier="medical" level="40"/>
     </Item>
 
@@ -194,6 +185,7 @@
         </Deconstruct>
 
         <SuitableTreatment identifier="bloodloss" suitability="30"/>
+        
         <InventoryIcon texture="%ModDir%/Images/InventoryItemIconAtlas.png" sourcerect="448,192,64,64" origin="0.5,0.5"/>
         <Sprite texture="%ModDir%/Images/InGameItemIconAtlas.png" sourcerect="679,386,51,128" depth="0.6" origin="0.5,0.5"/>
         <Body width="80" height="45" density="11"/>

@@ -97,6 +97,8 @@ public class NTItemMethods
     // REFER TO README.MD WITHIN THE ITEMS FOLDER IN ASSETS!!!!!!!!
     // REFER TO README.MD WITHIN THE ITEMS FOLDER IN ASSETS!!!!!!!!
 
+    // Addendum: The multiplyafflictionsbymaxvitality XML has gotta do that
+
     public static void DefineAllItems()
     {
         // ============== Blood ==============
@@ -433,20 +435,32 @@ public class NTItemMethods
                 HF.SetAfflictionLimb(infos.target, "gypsumcast", infos.targetLimb.type, 100, infos.user, 0);
                 HF.BreakLimb(infos.target, infos.targetLimb.type, -20);
                 HF.GiveSkillScaled(infos.user, "medical", 6000);
-
             }
 
             HF.RemoveItem(infos.item);
+            HF.GiveItem(infos.target, "ntsfx_bandage");
         });
 
         // Ringer's Solution
         // TODO
+        RegisterItemUseFunction("ringerssolution", infos =>
+        {
+
+        });
 
         // Mannitol
         // TODO
+        RegisterItemUseFunction("mannitol", infos =>
+        {
+
+        });
 
         // Thiamine
         // TODO
+        RegisterItemUseFunction("thiamine", infos =>
+        {
+
+        });
 
         // Streptokinase
         RegisterItemUseFunction("streptokinase", infos =>
@@ -492,16 +506,32 @@ public class NTItemMethods
         // ============== OtherEquipment ==============
         // Manual Defibrillator
         // TODO
+        RegisterItemUseFunction("defibrillator", infos =>
+        {
+
+        });
 
         // AED
         // TODO
+        RegisterItemUseFunction("aed", infos =>
+        {
+
+        });
 
         // Blue Shark
         // TODO
+        RegisterItemUseFunction("blahaj", infos =>
+        {
+
+        });
 
         // ============== Overrides ==============
         // Wrench + Variants
         // TODO
+        RegisterItemUseFunction("wrench", infos =>
+        {
+
+        });
 
         // Health Scanner
         RegisterItemUseFunction("healthscanner", infos =>
@@ -702,27 +732,59 @@ public class NTItemMethods
 
         // Saline
         // TODO
+        RegisterItemUseFunction("antibloodloss1", infos =>
+        {
+
+        });
 
         // Bandage
         // TODO
+        RegisterItemUseFunction("antibleeding1", infos =>
+        {
+
+        });
 
         // Plastiseal
         // TODO
+        RegisterItemUseFunction("antibleeding2", infos =>
+        {
+
+        });
 
         // Opium
         // TODO
+        RegisterItemUseFunction("opium", infos =>
+        {
+
+        });
 
         // Morphine
         // TODO
+        RegisterItemUseFunction("antidama1", infos =>
+        {
+
+        });
 
         // Fentanyl
         // TODO
+        RegisterItemUseFunction("antidama2", infos =>
+        {
+
+        });
 
         // Naloxone
         // TODO
+        RegisterItemUseFunction("antinarc", infos =>
+        {
+
+        });
 
         // Broad-Spectrum Antibiotics
         // TODO
+        RegisterItemUseFunction("antibiotics", infos =>
+        {
+
+        });
 
         // Adrenaline
         RegisterItemUseFunction("adrenaline", infos =>
@@ -742,21 +804,45 @@ public class NTItemMethods
 
         // Liquid Oxygenite
         // TODO
+        RegisterItemUseFunction("liquidoxygenite", infos =>
+        {
+
+        });
 
         // Deusizine
         // TODO
+        RegisterItemUseFunction("deusizine", infos =>
+        {
+
+        });
 
         // Antibiotic Glue
         // TODO
+        RegisterItemUseFunction("antibleeding3", infos =>
+        {
+
+        });
 
         // Methamphetamine
         // TODO
+        RegisterItemUseFunction("meth", infos =>
+        {
+
+        });
 
         // Hyperzine
         // TODO
+        RegisterItemUseFunction("hyperzine", infos =>
+        {
+
+        });
 
         // Haloperidol
         // TODO
+        RegisterItemUseFunction("antipsychosis", infos =>
+        {
+
+        });
 
         // Anaparalyzant
         // REWRITTEN FROM XML
@@ -782,9 +868,17 @@ public class NTItemMethods
 
         // Tonic Liquid
         // TODO
+        RegisterItemUseFunction("tonicliquid", infos =>
+        {
+
+        });
 
         // Nitroglycerin
         // TODO
+        RegisterItemUseFunction("nitroglycerin", infos =>
+        {
+
+        });
 
         // ============== SurgicalEquipment ==============
         // Sutures
@@ -978,12 +1072,24 @@ public class NTItemMethods
 
         // Needle
         // TODO
+        RegisterItemUseFunction("needle", infos =>
+        {
+
+        });
 
         // Osteosynthesis Implants
         // TODO
+        RegisterItemUseFunction("osteosynthesisimplants", infos =>
+        {
+
+        });
 
         // Spinal Cord Implants
         // TODO
+        RegisterItemUseFunction("spinalimplant", infos =>
+        {
+
+        });
 
         // Scalpel
         RegisterItemUseFunction("advscalpel", infos =>
@@ -1040,12 +1146,24 @@ public class NTItemMethods
 
         // Surgical Drill
         // TODO
+        RegisterItemUseFunction("surgicaldrill", infos =>
+        {
+
+        });
 
         // Surgical Saw
         // TODO
+        RegisterItemUseFunction("surgerysaw", infos =>
+        {
+
+        });
 
         // Tweezers
         // TODO
+        RegisterItemUseFunction("tweezers", infos =>
+        {
+
+        });
 
         // Organ Scalpels [Lungs, Heart, Kidneys, Liver, Brain]; used by the MultiScalpel + Toggleable StandAlone Scalpels
         // TODO
@@ -1103,19 +1221,32 @@ public class NTItemMethods
 
         // Antiseptic Sprayer
         // TODO
+        RegisterItemUseFunction("antisepticspray", infos =>
+        {
+
+        });
 
         // ============== Toggleable ==============
         // Endovascular Balloon
         // TODO
+        RegisterItemUseFunction("endovascballoon", infos =>
+        {
+
+        });
 
         // Medical Stent
         // TODO
+        RegisterItemUseFunction("medstent", infos =>
+        {
 
-        // Antiseptic
-        // TODO
+        });
 
         // Sodium Nitroprusside
         // TODO
+        RegisterItemUseFunction("pressuremeds", infos =>
+        {
+
+        });
     }
 
     /**<summary>

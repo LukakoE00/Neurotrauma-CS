@@ -434,5 +434,53 @@
         </CustomInterface>
     </Item>
 
+    <!-- Antiseptic Sprayer -->
+    <Item name="" identifier="antisepticspray" category="Equipment" Tags="smallitem,tool,medical" useinhealthinterface="true" cargocontaineridentifier="metalcrate" description="" Scale="0.5" impactsoundtag="impact_soft">
+        <PreferredContainer primary="medcab" spawnprobability="0"/>
+        <PreferredContainer primary="wreckmedcab,abandonedmedcab" minamount="0" maxamount="3" spawnprobability="0.5"/>
+        <PreferredContainer primary="outpostmedcompartment" minamount="0" maxamount="1" spawnprobability="0.25"/>
+
+        <Price baseprice="75" CanBeSpecial="false">
+            <Price storeidentifier="merchantmedical" sold="true" multiplier="0.9" minavailable="2"/>
+        </Price>
+
+        <InventoryIcon texture="%ModDir%/Images/InventoryItemIconAtlas.png" sourcerect="128,64,64,64" origin="0.5,0.5"/>
+        <Sprite texture="%ModDir%/Images/InGameItemIconAtlas.png" sourcerect="384,256,128,128" depth="0.55" origin="0.5,0.5"/>
+        <Deconstruct time="5">
+        </Deconstruct>
+
+        <Fabricate suitablefabricators="fabricator" requiredtime="10">
+            <RequiredItem identifier="plastic"/>
+        </Fabricate>
+
+        <Body width="150" height="60" density="40"/>
+        <SuitableTreatment identifier="infectedwound" suitability="45"/>
+
+        <Holdable slots="Any,RightHand+LeftHand" controlpose="true" aimpos="30,0" handle1="0,-7" handle2="95, 10" msg="ItemMsgPickUpSelect"/>
+
+        <RepairTool range="200" barrelpos="15,5" combatpriority="10">
+            <ParticleEmitter particle="extinguisher" particlespersecond="15" copyentityangle="true" velocitymin="200.0" velocitymax="250.0"/>
+            <RequiredSkill identifier="medical" level="40"/>
+            <RequiredItems items="antiseptic" type="Contained" msg="Antiseptic Required"/>
+
+            <StatusEffect type="OnUse" target="This" Condition="-100" disabledeltatime="true"/>
+
+            <StatusEffect type="OnBroken" target="This" Condition="100" disabledeltatime="true" delay="2" stackable="false"/>
+
+            <StatusEffect type="OnUse" targettype="Contained" targets="antiseptic" disabledeltatime="true" Condition="-10.0"/>
+
+            <StatusEffect statuseffecttags="medical" type="OnUse" target="Limb" disabledeltatime="true">
+                <Sound file="%ModDir%/Sounds/ItemApplication/Tools/spray.ogg" range="500"/>
+                <ReduceAffliction identifier="infectedwound" amount="100"/>
+                <Affliction identifier="ointmented" amount="20"/>
+            </StatusEffect>
+        </RepairTool>
+
+        <ItemContainer capacity="1" maxstacksize="1" hideitems="false" itempos="-35,3" containedspritedepth="0.56" ItemRotation="-90" containedstateindicatorstyle="tank">
+            <Containable items="antiseptic"/>
+        </ItemContainer>
+
+        <SkillRequirementHint identifier="medical" level="40" />
+    </Item>
 </Items>
 </Override>

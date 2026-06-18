@@ -106,6 +106,6 @@ Antiseptic Sprayer: Todo C#
 ## Toggleable:
 Endovascular Balloon: Todo C#
 Medical Stent: Todo C#
-Antiseptic: Todo C#
+Antiseptic: Good enough XML
 Sodium Nitroprusside: Todo C#
 Organ Scalpels: Todo C#
