@@ -462,7 +462,7 @@ public class HumanUpdate
     }
 
     // Returns a list 
-    private static List<AfflictionPriority> GetLowestPriority(int cd) // Cookie fix me
+    private static List<AfflictionPriority> GetLowestPriority(int cd)
     {
         List<AfflictionPriority> output = [];
 
@@ -478,7 +478,7 @@ public class HumanUpdate
             output.Add(AfflictionPriority.MEDIUM);
             output.Add(AfflictionPriority.HIGH);
 
-        } else if (cd % UpdateIntervalHigh == 0)
+        } else // This isnt really a fix but it works for now.
         {
             output.Add(AfflictionPriority.HIGH);
         }
@@ -502,12 +502,11 @@ public class HumanUpdate
 
         // We check if timer is up
         List<AfflictionPriority> checkedPriorities = GetLowestPriority(UpdateCooldown);
+        UpdateCooldown++;
         if (checkedPriorities.Count == 0) return;
 
         HF.Print("Actually Update");
         Update(checkedPriorities);
-
-        UpdateCooldown++;
     }
 
     private void Update(List<AfflictionPriority> priorities)
