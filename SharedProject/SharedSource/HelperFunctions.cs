@@ -923,7 +923,7 @@ namespace Neurotrauma
         public static void BreakLimb(Character Character, LimbType GivenLimbType, float Strength = 1)
         {
             GivenLimbType = NormalizeLimbType(GivenLimbType);
-            AddAfflictionLimb(Character, "fracture", GivenLimbType, Strength, Character);
+            AddAfflictionLimb(Character, "fracturedextremity", GivenLimbType, Strength, Character);
             // Implement the gypsum cast thing here.
         }
         public static void ArteryCutLimb(Character Character, LimbType GivenLimbType, float Strength = 1)
@@ -942,8 +942,8 @@ namespace Neurotrauma
         public static bool LimbIsBroken(Character Character, LimbType GivenLimbType, bool IsArm)
         {
             GivenLimbType = NormalizeLimbType(GivenLimbType);
-            if (IsArm) { return HasAfflictionLimb(Character, "fracture", GivenLimbType, 100); }
-            return HasAfflictionLimb(Character, "fracture", GivenLimbType);
+            if (IsArm) { return HasAfflictionLimb(Character, "fracturedextremity", GivenLimbType, 100); }
+            return HasAfflictionLimb(Character, "fracturedextremity", GivenLimbType);
         }
 
         public static bool LimbIsArterialCut(Character Character, LimbType GivenLimbType)

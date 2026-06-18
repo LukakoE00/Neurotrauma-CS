@@ -44,6 +44,7 @@ namespace Neurotrauma
         }
     }
 
+// This actually doesnt work yet for some reason?
     public static class SpeakAboutIssuesPatch
     {
         private static readonly string[] Afflictions =

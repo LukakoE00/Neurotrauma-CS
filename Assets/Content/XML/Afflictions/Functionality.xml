@@ -821,7 +821,7 @@
 
     <!-- Screams -->
     <Affliction
-      name=""
+      name="Screaming"
       description=""
       identifier="screaming"
 
@@ -832,6 +832,22 @@
       showinhealthscannerthreshold="999"
       showiconthreshold="999"
       maxstrength="2">
+
+      <Effect minstrength="0" maxstrength="2" strengthchange="-1000">
+        <StatusEffect target="Character" comparison="and" disabledeltatime="true" stackable="false" duration="3" checkconditionalalways="false">
+          <Conditional ishuman="true" ismale="true" analgesia="lte 0" anesthesia="lte 0" unconsciousness="lte 0" />
+          <Sound file="%ModDir%/Sounds/Voice/male_onfire1.ogg" selectionmode="Random" />
+          <Sound file="%ModDir%/Sounds/Voice/male_onfire2.ogg" />
+          <Sound file="%ModDir%/Sounds/Voice/male_onfire3.ogg" />
+        </StatusEffect>
+
+        <StatusEffect target="Character" comparison="and" disabledeltatime="true" stackable="false" duration="3" checkconditionalalways="false">
+          <Conditional ishuman="true" isfemale="true" analgesia="lte 0" anesthesia="lte 0" unconsciousness="lte 0" />
+          <Sound file="%ModDir%/Sounds/Voice/woman_agony1.ogg" selectionmode="Random" />
+          <Sound file="%ModDir%/Sounds/Voice/woman_agony2.ogg" />
+          <Sound file="%ModDir%/Sounds/Voice/woman_agony3.ogg" />
+        </StatusEffect>
+      </Effect>
 
       <icon texture="%ModDir%/Images/AfflictionIcons.png" sourcerect="256,0,128,128" color="68,157,198,255" origin="0,0"/>
     </Affliction>
@@ -849,6 +865,18 @@
       showinhealthscannerthreshold="999"
       showiconthreshold="999"
       maxstrength="2">
+
+    <Effect minstrength="0" maxstrength="2" strengthchange="-1000">
+        <StatusEffect target="Character" comparison="and" disabledeltatime="true" stackable="false" duration="3" checkconditionalalways="false">
+          <Conditional analgesia="lte 0" anesthesia="lte 0" unconsciousness="lte 0"/>
+          <LuaHook name="NT.causeScreams" />
+        </StatusEffect>
+
+        <StatusEffect target="Character" multiplyafflictionsbymaxvitality="true" comparison="and" disabledeltatime="true" stackable="false" checkconditionalalways="true">
+          <Conditional ishuman="true" analgesia="lte 0" anesthesia="lte 0" stun="lte 1"/>
+          <Affliction identifier="stun" amount="3" />
+        </StatusEffect>
+    </Effect>
 
       <icon texture="%ModDir%/Images/AfflictionIcons.png" sourcerect="256,0,128,128" color="68,157,198,255" origin="0,0"/>
     </Affliction>

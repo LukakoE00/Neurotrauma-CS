@@ -93,6 +93,61 @@ public class NTItemMethods
         return $"‖color:{color.R},{color.G},{color.B}‖{content}‖color:end‖";
     }
 
+    // Used by Wrenches and their variants to do their thing
+    public static void WrenchFunctionality(NTItemMethods.ItemUpdateFunctionInfos infos)
+    {
+        if (HF.LimbIsDislocated(infos.target, infos.targetLimb.type, false))
+        {
+            float skillrequired = 60;
+
+            if (HF.HasAffliction(infos.target, "analgesia", 0.5f) ||
+                HF.HasAffliction(infos.target, "afadrenaline", 0.5f))
+            {
+                skillrequired -= 30;
+            }
+
+            if (HF.GetSkillRequirementMet(infos.user, "medical", skillrequired))
+            {
+                HF.DislocateLimb(infos.target, infos.targetLimb.type, -1000);
+                HF.GiveSkillScaled(infos.user, "medical", 4000);
+            }
+            else
+            {
+                HF.BreakLimb(infos.target, infos.targetLimb.type, 1000);
+            }
+
+            if (!HF.HasAffliction(infos.target, "analgesia", 0.5f))
+            {
+                HF.AddAffliction(infos.target, "severepain", 5, infos.user);
+            }
+
+            HF.GiveItem(infos.target, "ntsfx_smack");
+        }
+        else if (!HF.HasAffliction(infos.target, "sym_unconsciousness", 0.1f))
+        {
+            var outerWearId = HF.GetOuterWearIdentifier(infos.target);
+
+            if (outerWearId == "stasisbag" || outerWearId == "bodybag" || outerWearId == "autocpr")
+            {
+                var equippedOuterItem = HF.GetItemInOuterWear(infos.target);
+
+                if (infos.user.Inventory.TryPutItem(equippedOuterItem, null, new List<InvSlotType> { InvSlotType.Any }))
+                {
+                    HF.GiveItem(infos.target, "ntsfx_velcro");
+                }
+            }
+        }
+    }
+
+    public static List<string> WrenchItems = new()
+    {
+        "wrench",
+        "heavywrench",
+        "wrenchhardened",
+        "repairpack",
+        "wrench_murdermystery"
+    };
+
     // REFER TO README.MD WITHIN THE ITEMS FOLDER IN ASSETS!!!!!!!!
     // REFER TO README.MD WITHIN THE ITEMS FOLDER IN ASSETS!!!!!!!!
     // REFER TO README.MD WITHIN THE ITEMS FOLDER IN ASSETS!!!!!!!!
@@ -541,33 +596,128 @@ public class NTItemMethods
 
         // ============== OtherEquipment ==============
         // Manual Defibrillator
-        // TODO
         RegisterItemUseFunction("defibrillator", infos =>
         {
+            if (infos.item.Condition <= 0) return;
 
+            infos.item.Condition = 0; // Start Cooldown
+
+            LuaCsSetup.Instance.Timer.Wait((params object[] _) =>
+            {
+                infos.item.Condition = 100; // Finish Cooldown
+            }, 5000);
+
+            var battery = infos.item.OwnInventory.GetItemAt(0);
+            if (battery == null) return;
+
+            bool hasVoltage = battery.Condition > 0;
+            if (!hasVoltage) return;
+
+            HF.GiveItem(infos.target, "ntsfx_manualdefib");
+
+            if (battery.Prefab.Identifier.Value != "fulguriumbatterycell")
+            {
+                battery.Condition -= 20;
+            }
+            else
+            {
+                battery.Condition -= 10;
+            }
+
+            float medicalSkill = HF.GetSkillLevel(infos.user, "medical");
+
+            float successChance = MathF.Pow(medicalSkill / 100f, 2);
+            float arrestSuccessChance = MathF.Pow(medicalSkill / 100f, 4);
+            float arrestFailChance = MathF.Pow(1f - (medicalSkill / 100f), 2) * 0.3f;
+
+            LuaCsSetup.Instance.Timer.Wait((params object[] _) =>
+            {
+                HF.AddAffliction(infos.target, "stun", 2f, infos.user);
+
+                if (HF.Chance(successChance))
+                {
+                    HF.SetAffliction(infos.target, "tachycardia", 0f, infos.user, 0);
+                    HF.SetAffliction(infos.target, "fibrillation", 0f, infos.user, 0);
+                }
+
+                if (HF.Chance(arrestSuccessChance))
+                {
+                    HF.SetAffliction(infos.target, "cardiacarrest", 0f, infos.user, 0);
+                }
+            }, 2000);
         });
 
         // AED
-        // TODO
         RegisterItemUseFunction("aed", infos =>
         {
+            if (infos.item.Condition <= 0) return;
 
+            infos.item.Condition = 0;
+
+            LuaCsSetup.Instance.Timer.Wait((params object[] _) =>
+            {
+                infos.item.Condition = 100;
+            }, 5000);
+
+            var battery = infos.item.OwnInventory.GetItemAt(0);
+            if (battery == null) return;
+
+            bool hasVoltage = battery.Condition > 0;
+            if (!hasVoltage) return;
+
+            bool actionRequired =
+                HF.HasAffliction(infos.target, "tachycardia", 5) ||
+                HF.HasAffliction(infos.target, "fibrillation", 1) ||
+                HF.HasAffliction(infos.target, "cardiacarrest");
+
+            if (!actionRequired)
+            {
+                HF.GiveItem(infos.target, "ntsfx_defib2");
+                return;
+            }
+
+            HF.GiveItem(infos.target, "ntsfx_defib1");
+
+            if (battery.Prefab.Identifier.Value != "fulguriumbatterycell")
+            {
+                battery.Condition -= 20;
+            }
+            else
+            {
+                battery.Condition -= 10;
+            }
+
+            float medicalSkill = HF.GetSkillLevel(infos.user, "medical");
+
+            float arrestSuccessChance = Math.Clamp(medicalSkill / 200f, 0.2f, 0.4f);
+
+            LuaCsSetup.Instance.Timer.Wait((params object[] _) =>
+            {
+                HF.AddAffliction(infos.target, "stun", 2f, infos.user);
+                HF.SetAffliction(infos.target, "tachycardia", 0f, infos.user, 0);
+                HF.SetAffliction(infos.target, "fibrillation", 0f, infos.user, 0);
+
+                if (HF.Chance(arrestSuccessChance))
+                {
+                    HF.SetAffliction(infos.target, "cardiacarrest", 0f, infos.user, 0);
+                }
+
+            }, 3200);
         });
 
         // Blue Shark
-        // TODO
         RegisterItemUseFunction("blahaj", infos =>
         {
-
+            HF.AddAffliction(infos.target, "psychosis", -2f, infos.user);
+            HF.GiveItem(infos.target, "ntsfx_squeak");
         });
 
         // ============== Overrides ==============
-        // Wrench + Variants
-        // TODO
-        RegisterItemUseFunction("wrench", infos =>
+        // Wrenches
+        foreach (string id in WrenchItems)
         {
-
-        });
+            RegisterItemUseFunction(id, WrenchFunctionality);
+        }
 
         // Health Scanner
         RegisterItemUseFunction("healthscanner", infos =>

@@ -9,7 +9,6 @@ namespace Neurotrauma
             LuaCsSetup.Instance.Hook.Add("NT.causeScreams", "NT.causeScreams", (params object[] args) =>
             {
                 if (!NTConfig.Get("NT_screams", true)) return null;
-                if (args.Length < 3) return null;
 
                 var character = args[2] as Character;
                 if (character == null) return null;

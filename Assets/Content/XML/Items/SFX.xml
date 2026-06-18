@@ -183,5 +183,19 @@
             </StatusEffect>
         </ItemComponent>
     </Item>
+
+    <Item name="." identifier="ntsfx_smack" description="." hideinmenus="true">
+        <InventoryIcon texture="Content/Items/InventoryIconAtlas.png" sourcerect="0,0,1,1" origin="0.5,0.5"/>
+        <Sprite texture="Content/Items/Medical/Medicines.png" sourcerect="0,0,1,1" depth="0.6" origin="0.5,0.5"/>
+        <ItemComponent capacity="1" maxstacksize="1" hideitems="true" containedstateindicatorstyle="battery">
+            <StatusEffect type="OnSpawn" target="This" disabledeltatime="true" stackable="false">
+                <Sound file="Content/Items/Weapons/Smack1.ogg" selectionmode="random" range="500"/>
+                <Sound file="Content/Items/Weapons/Smack2.ogg" range="500" />
+            </StatusEffect>
+            <StatusEffect type="always" target="This" disabledeltatime="true" delay="2" stackable="false">
+                <Remove/>
+            </StatusEffect>
+        </ItemComponent>
+    </Item>
 </Items>
 </Override>
