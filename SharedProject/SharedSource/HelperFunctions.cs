@@ -46,6 +46,13 @@ namespace Neurotrauma
             { LimbType.Torso, "t" }, { LimbType.Head, "h" }
         };
 
+        public static readonly Dictionary<LimbType, double> DefaultLimbAffStrengths = new Dictionary<LimbType, double>() 
+        { 
+            { LimbType.Head, 0 }, { LimbType.Torso, 0 }, 
+            { LimbType.LeftArm, 0 }, { LimbType.RightArm, 0 }, 
+            { LimbType.LeftLeg, 0 }, { LimbType.RightLeg, 0 } 
+        };
+
         public static Limb GetCharacterLimb(Character Character, LimbType GivenLimbType)
         {
             return Character.AnimController.GetLimb(GivenLimbType);

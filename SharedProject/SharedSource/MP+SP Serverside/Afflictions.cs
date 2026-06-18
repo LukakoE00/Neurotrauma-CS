@@ -126,10 +126,7 @@ namespace Neurotrauma
         /// The maximum strength the affliction can have.
         /// </summary>
         public double MaxStrength { get; set; }
-        /// <summary>
-        /// The list of ID's of our dependent afflictions. These afflictions get added to our updating afflictions list on update.
-        /// </summary>
-        public List<string> DependentAfflictions { get; set; } = [];
+
         /// <summary>
         /// The priority of our affliction, higher intervals meaner more updates.
         /// </summary>
@@ -147,11 +144,10 @@ namespace Neurotrauma
                 // Insert your Affliction Update in here.
             };
         public NTAffliction(double NewMinStrength, double NewMaxStrength,
-                                        List<string> NewDependentAfflictions, AfflictionPriority NewPriority = AfflictionPriority.HIGH)
+                                        AfflictionPriority NewPriority = AfflictionPriority.HIGH)
         {
             MinStrength = NewMinStrength;
             MaxStrength = NewMaxStrength;
-            DependentAfflictions = NewDependentAfflictions;
             Priority = NewPriority;
         }
     }
@@ -164,12 +160,11 @@ namespace Neurotrauma
                 // Insert your Affliction Update in here.
             };
         
-        public NTNonLimbAffliction(double NewMinStrength, double NewMaxStrength, List<string> NewDependentAfflictions, AfflictionPriority NewPriority = AfflictionPriority.HIGH) : 
-                                        base(NewMinStrength, NewMaxStrength, NewDependentAfflictions, NewPriority)
+        public NTNonLimbAffliction(double NewMinStrength, double NewMaxStrength, AfflictionPriority NewPriority = AfflictionPriority.HIGH) : 
+                                        base(NewMinStrength, NewMaxStrength, NewPriority)
         {
             MinStrength = NewMinStrength;
             MaxStrength = NewMaxStrength;
-            DependentAfflictions = NewDependentAfflictions ;
             Priority = NewPriority;
         }
     }
@@ -182,13 +177,11 @@ namespace Neurotrauma
                 // Insert your Affliction Update in here.
             };
 
-        public NTLimbAffliction(double NewMinStrength, double NewMaxStrength,
-                                         List<string> NewDependentAfflictions, AfflictionPriority NewPriority = AfflictionPriority.HIGH) :
-                                        base(NewMinStrength, NewMaxStrength, NewDependentAfflictions, NewPriority)
+        public NTLimbAffliction(double NewMinStrength, double NewMaxStrength, AfflictionPriority NewPriority = AfflictionPriority.HIGH) :
+                                        base(NewMinStrength, NewMaxStrength, NewPriority)
         {
             MinStrength = NewMinStrength;
             MaxStrength = NewMaxStrength;
-            DependentAfflictions = NewDependentAfflictions;
             Priority = NewPriority;
         }
 
@@ -203,13 +196,11 @@ namespace Neurotrauma
                 // Insert your Affliction Update in here.
             };
 
-        public NTBloodAffliction(double NewMinStrength, double NewMaxStrength,
-                                        List<string> NewDependentAfflictions, AfflictionPriority NewPriority = AfflictionPriority.HIGH) :
-                                        base(NewMinStrength, NewMaxStrength, NewDependentAfflictions, NewPriority)
+        public NTBloodAffliction(double NewMinStrength, double NewMaxStrength, AfflictionPriority NewPriority = AfflictionPriority.HIGH) :
+                                        base(NewMinStrength, NewMaxStrength, NewPriority)
         {
             MinStrength = NewMinStrength;
             MaxStrength = NewMaxStrength;
-            DependentAfflictions = NewDependentAfflictions;
             Priority = NewPriority;
         }
     }
@@ -266,7 +257,7 @@ namespace Neurotrauma
 
         private void AddAfflictions() // Create your afflictions in here.
         {
-            AfflictionsToAdd["Example1"] = new(0, 100, []); // Create the new affliction.
+            AfflictionsToAdd["Example1"] = new(0, 100); // Create the new affliction.
             AfflictionsToAdd["Example1"].ID = "Example1"; // Set the ID.
             AfflictionsToAdd["Example1"].UpdateAction = // Set the update function.
                 (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHuman.CharacterAfflictions.NTHumanNonLimbAffData AffData) =>
@@ -275,7 +266,7 @@ namespace Neurotrauma
                 C.GetAffData()["Example2"].Strength = 0; // Access other afflictions like this.
             };
 
-            AfflictionsToAdd["Example2"] = new(0, 100, ["Example1"]); // This affliction now has "Example1" affliction as a dependency.
+            AfflictionsToAdd["Example2"] = new(0, 100); // This affliction now has "Example1" affliction as a dependency.
             AfflictionsToAdd["Example2"].ID = "Example2";
             AfflictionsToAdd["Example2"].UpdateAction =
                 (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHuman.CharacterAfflictions.NTHumanNonLimbAffData AffData) =>
@@ -291,7 +282,7 @@ namespace Neurotrauma
 
         private void AddLimbAfflictions()
         {
-            LimbAfflictionsToAdd["Example1Limb"] = new(0, 100, []);
+            LimbAfflictionsToAdd["Example1Limb"] = new(0, 100);
             LimbAfflictionsToAdd["Example1Limb"].ID = "Example1Limb";
             LimbAfflictionsToAdd["Example1Limb"].UpdateAction =
                 (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHuman.CharacterAfflictions.NTHumanLimbAffData AffData) =>
@@ -308,7 +299,7 @@ namespace Neurotrauma
 
         private void AddBloodAfflictions()
         {
-            BloodAfflictionsToAdd["Example1Blood"] = new(0, 100, []);
+            BloodAfflictionsToAdd["Example1Blood"] = new(0, 100);
             BloodAfflictionsToAdd["Example1Blood"].ID = "Example1Blood";
             BloodAfflictionsToAdd["Example1Blood"].UpdateAction =
                 (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHuman.CharacterAfflictions.NTHumanBloodAffData AffData) =>
