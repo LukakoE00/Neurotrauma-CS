@@ -96,65 +96,269 @@ public class NTItemMethods
 
     public static void DefineAllItems()
     {
-        RegisterItemUseFunction("adrenaline", infos =>
+        // ============== Blood ==============
+        // Add the Hematology Detectable afflictions in here
+        HematologyDetectable.AddRange(
+        [
+            "sepsis",
+            "immunity",
+            "acidosis",
+            "alkalosis",
+            "bloodloss",
+            "bloodpressure",
+            "afimmunosuppressant",
+            "afthiamine",
+            "afadrenaline",
+            "afstreptokinase",
+            "afantibiotics",
+            "afsaline",
+            "afringerssolution",
+            "afpressuredrug",
+            "afopioid",
+            "afanaesthetic"
+        ]);
+
+        // Hematology Analyzer
+        RegisterItemUseFunction("bloodanalyzer", infos =>
         {
-            HF.AddAffliction(infos.target, "afadrenaline", 55, infos.user);
-            HF.AddAffliction(infos.target, "adrenalinerush", 8, infos.user);
-    
-            if (HF.HasAffliction(infos.target, "cardiacarrest", 0.1f))
+            // Only work if not on cooldown
+            if (infos.item.Condition < 50) return;
+
+            bool success = HF.GetSkillRequirementMet(infos.user, "medical", 30);
+
+            float BloodLossInduced = 3f;
+
+            if (success)
             {
-                HF.AddAffliction(infos.target, "cardiacarrest", -100, infos.user);
-                HF.AddAffliction(infos.target, "fibrillation", 20, infos.user);
+                BloodLossInduced = 1f;
             }
 
-            HF.RemoveItem(infos.item);
+            HF.AddAffliction(infos.target, "bloodloss", BloodLossInduced, infos.user);
+
+            // Spawn donor card
+            var ContainedItem = infos.item.OwnInventory.GetItemAt(0);
+
+            bool HasCartridge = ContainedItem != null &&
+                (
+                    ContainedItem.Prefab.Identifier.Value == "bloodcollector" ||
+                    ContainedItem.HasTag("donorCard")
+                );
+
+            if (HasCartridge)
+            {
+                HF.RemoveItem(ContainedItem);
+
+                string BloodType = NTBloodTypes.GetBloodType(infos.target);
+
+                var TargetIDCard = infos.target.Inventory.GetItemAt(0);
+
+                if (TargetIDCard != null && TargetIDCard.OwnInventory != null && TargetIDCard.OwnInventory.GetItemAt(0) == null)
+                {
+                    HF.PutItemInContainer(TargetIDCard, BloodType + "card");
+                }
+                else
+                {
+                    HF.PutItemInContainer(infos.item, BloodType + "card");
+                }
+            }
+
+            bool useColoredScanner = NTConfig.Get("NTSCAN_enablecoloredscanner", true);
+
+            Color baseColor = useColoredScanner ? HF.GetColor("NTSCAN_basecolor") : new Color(127, 255, 255);
+            Color nameColor = useColoredScanner ? HF.GetColor("NTSCAN_namecolor") : new Color(127, 255, 255);
+            Color lowColor = useColoredScanner ? HF.GetColor("NTSCAN_lowcolor") : new Color(127, 255, 255);
+            Color medColor = useColoredScanner ? HF.GetColor("NTSCAN_medcolor") : new Color(127, 255, 255);
+            Color highColor = useColoredScanner ? HF.GetColor("NTSCAN_highcolor") : new Color(127, 255, 255);
+            Color vitalColor = useColoredScanner ? HF.GetColor("NTSCAN_vitalcolor") : new Color(127, 255, 255);
+            Color removalColor = useColoredScanner ? HF.GetColor("NTSCAN_removalcolor") : new Color(127, 255, 255);
+            Color customColor = useColoredScanner ? HF.GetColor("NTSCAN_customcolor") : new Color(127, 255, 255);
+
+            // Floats
+            float lowMedThreshold = NTConfig.Get<float>("NTSCAN_lowmedThreshold", 1);
+            float medHighThreshold = NTConfig.Get<float>("NT_medhighThreshold", 1);
+
+            // Strings
+            List<string> vitalCategory = NTConfig.Get<List<string>>("NTSCAN_VitalCategory", []);
+            List<string> removalCategory = NTConfig.Get<List<string>>("NTSCAN_RemovalCategory", []);
+            List<string> customCategory = NTConfig.Get<List<string>>("NTSCAN_CustomCategory", []);
+            List<string> ignoredCategory = NTConfig.Get<List<string>>("NTSCAN_IgnoredCategory", []);
+
+            // Not changeable
+            List<string> pressureCategory = ["bloodpressure"];
+
+            // Readout Strings
+            string lowPressureReadout = "";
+            string highPressureReadout = "";
+            string lowStrengthReadout = "";
+            string mediumStrengthReadout = "";
+            string highStrengthReadout = "";
+            string vitalReadout = "";
+            string removalReadout = "";
+            string customReadout = "";
+
+            string BloodTypeName = AfflictionPrefab.Prefabs[NTBloodTypes.GetBloodType(infos.target)].Name.Value;
+
+            string startReadout =
+                $"‖color:{nameColor.R},{nameColor.G},{nameColor.B}‖" +
+                $"Bloodtype: {BloodTypeName}" +
+                "‖color:end‖\n" +
+                $"‖color:{baseColor.R},{baseColor.G},{baseColor.B}‖" +
+                $"Affliction readout for {infos.target.Name}:" +
+                "‖color:end‖\n";
+
+            int afflictionsDisplayed = 0;
+
+            HashSet<string> checkedAfflictions = [];
+
+            foreach (var value in infos.target.CharacterHealth.GetAllAfflictions())
+            {
+                float strength = MathF.Round(value.Strength);
+                var prefab = value.Prefab;
+
+                string id = value.Identifier.Value;
+
+                if (strength <= 2) continue;
+                if (!HematologyDetectable.Contains(prefab.Identifier.Value)) continue;
+
+                if (!checkedAfflictions.Add(id))
+                {
+                    continue;
+                }
+
+                if (ignoredCategory.Contains(id))
+                {
+                    continue;
+                }
+
+                string entry = $"\n{prefab.Name.Value}: {strength}%";
+
+                bool isVital = vitalCategory.Contains(id);
+                bool isRemoval = removalCategory.Contains(id);
+                bool isCustom = customCategory.Contains(id);
+                bool isPressure = pressureCategory.Contains(id);
+
+                if (isVital)
+                {
+                    vitalReadout += entry;
+                }
+                else if (isRemoval)
+                {
+                    removalReadout += entry;
+                }
+                else if (isCustom)
+                {
+                    customReadout += entry;
+                }
+                else if (isPressure)
+                {
+                    if (strength > 130 || strength < 70)
+                    {
+                        highPressureReadout += entry;
+                    }
+                    else
+                    {
+                        lowPressureReadout += entry;
+                    }
+                }
+                else
+                {
+                    if (strength < lowMedThreshold)
+                    {
+                        lowStrengthReadout += entry;
+                    }
+                    else if (strength < medHighThreshold)
+                    {
+                        mediumStrengthReadout += entry;
+                    }
+                    else
+                    {
+                        highStrengthReadout += entry;
+                    }
+                }
+
+                afflictionsDisplayed++;
+            }
+
+            if (afflictionsDisplayed <= 0)
+            {
+                lowStrengthReadout += "\nNo blood pressure detected...";
+            }
+
+            HF.DMClient(
+                HF.CharacterToClient(infos.user),
+                startReadout
+                    + FormatLine(lowPressureReadout, lowColor)
+                    + FormatLine(highPressureReadout, highColor)
+                    + FormatLine(lowStrengthReadout, lowColor)
+                    + FormatLine(mediumStrengthReadout, medColor)
+                    + FormatLine(highStrengthReadout, highColor)
+                    + FormatLine(vitalReadout, vitalColor)
+                    + FormatLine(removalReadout, removalColor)
+                    + FormatLine(customReadout, customColor),
+                null
+            );
+        });
+
+        // Empty Blood Pack
+        RegisterItemUseFunction("emptybloodpack", infos =>
+        {
+
+            if (infos.item.condition <= 0) return;
+
+            // changing from 31 to somthing like 15 can stop easy station kill by using two blood pack in a row
+            // Minor Spelling Mistake :skull: - Lukako
+            float BloodLossStrength = HF.GetAfflictionStrength(infos.target, "bloodloss", 0);
+            if (BloodLossStrength >= 31f) return;
+
+            bool success = HF.GetSkillRequirementMet(infos.user, "medical", 30);
+            int bloodlossinduced = success ? 40 : 30;
+
+            string bloodtype = NTBloodTypes.GetBloodType(infos.target);
+
+            // We store the data we need for the item tags
+            double acidosis = HF.GetAfflictionStrength(infos.target, "acidosis", 0);
+            double alkalosis = HF.GetAfflictionStrength(infos.target, "alkalosis", 0);
+            double sepsis = HF.GetAfflictionStrength(infos.target, "sepsis", 0);
+
+            HF.SetAffliction(infos.target, "acidosis", (float)HF.GetAfflictionStrength(infos.target, "acidosis", 0) * (float)0.9, infos.user, 0);
+            HF.SetAffliction(infos.target, "alkalosis", (float)HF.GetAfflictionStrength(infos.target, "alkalosis", 0) * (float)0.9, infos.user, 0);
+
+            HF.AddAffliction(infos.target, "bloodloss", bloodlossinduced, infos.user);
+
+            string btID = bloodtype == "o_negative" ? "antibloodloss2" : "bloodpack" + bloodtype;
+
+            // Inshallah ca marche -Cookie
+            HF.GiveItemPlusFunction(btID, infos.user, (args) => {
+
+                string[] tags = [];
+
+                double acid = (double)args[0];
+                double alkal = (double)args[1];
+                double seps = (double)args[2];
+
+                if (acid > 0) tags.Append($"acid:{Math.Round(acid)}");
+                if (alkal > 0) tags.Append($"alkal:{Math.Round(alkal)}");
+                if (seps > 0) tags.Append($"sepsis");
+
+                Item item = (Item)args[3];
+
+                foreach (var tag in tags)
+                {
+                    item.AddTag(tag);
+                }
+
+            }, acidosis, alkalosis, sepsis);
+
+
+            infos.item.Condition = 0f;
             HF.GiveItem(infos.target, "ntsfx_syringe");
+
 
         });
 
-        // REWRITTEN FROM XML
-        RegisterItemUseFunction("alienblood", infos =>
-        {
-            if (HF.GetSkillRequirementMet(infos.user, "medical", 55f))
-            {
-                HF.AddAffliction(infos.target, "bloodloss", 20f, infos.user);
-                HF.AddAffliction(infos.target, "hemotransfusionshock", 100f, infos.user);
-                HF.AddAffliction(infos.target, "psychosis", 30f, infos.user);
-                HF.AddAffliction(infos.target, "bloodpressure", 20f, infos.user);
+        // ============== BodyParts ==============
 
-            } else
-            {
-                HF.AddAffliction(infos.target, "bloodloss", 15f, infos.user);
-                HF.AddAffliction(infos.target, "hemotransfusionshock", 100f, infos.user);
-                HF.AddAffliction(infos.target, "psychosis", 30f, infos.user);
-                HF.AddAffliction(infos.target, "bloodpressure", 15f, infos.user);
-            }
-
-            HF.RemoveItem(infos.item);
-            HF.GiveItem(infos.target, "ntsfx_syringe");
-        });
-
-        // REWRITTEN FROM XML
-        RegisterItemUseFunction("antiparalysis", infos =>
-        {
-            if (HF.GetSkillRequirementMet(infos.user, "medical", 64f))
-            {
-                HF.AddAffliction(infos.target, "paralysisresistance", 800f, infos.user);
-                HF.AddAffliction(infos.target, "psychosis", 5f, infos.user);
-                HF.AddAffliction(infos.target, "anesthesia", -200f, infos.user);
-                HF.AddAffliction(infos.target, "afanaesthetic", -200f, infos.user);
-            }
-            else
-            {
-
-                // TODO Apply it over time
-                
-            }
-
-            HF.RemoveItem(infos.item);
-            HF.GiveItem(infos.target, "ntsfx_syringe");
-        });
-
+        // ============== Consumables ==============
         // Azathioprine
         RegisterItemUseFunction("immunosuppressant", infos =>
         {
@@ -181,138 +385,6 @@ public class NTItemMethods
 
         });
 
-        // Scalpel
-        RegisterItemUseFunction("advscalpel", infos =>
-        {
-            // Not in stasis
-            if (HF.HasAffliction(infos.target, "stasis", (float)0.1)) { return; }
-
-            if (!HF.CanPerformSurgeryOn(infos.target) || HF.HasAfflictionLimb(infos.target, "surgeryincision", infos.targetLimb.type, 1)) { return; }
-
-            bool success = HF.GetSurgerySkillRequirementMet(infos.user, 30);
-
-            if (success)
-            {
-                HF.AddAfflictionLimb(infos.target, "surgeryincision", infos.targetLimb.type, 1 + HF.GetSurgerySkill(infos.user) / 2, infos.user); // TODO change this to using surgery instead of medical
-
-                HF.SetAfflictionLimb(infos.target, "suturedi", infos.targetLimb.type, 0, infos.user, 0);
-                HF.SetAfflictionLimb(infos.target, "gypsumcast", infos.targetLimb.type, 0, infos.user, 0);
-                HF.SetAfflictionLimb(infos.target, "bandaged", infos.targetLimb.type, 0, infos.user, 0);
-
-            }
-            else
-            {
-                HF.AddAfflictionLimb(infos.target, "bleeding", infos.targetLimb.type, 15, infos.user);
-                HF.AddAfflictionLimb(infos.target, "lacerations", infos.targetLimb.type, 10, infos.user);
-            }
-
-            HF.GiveItem(infos.target, "ntsfx_slash");
-        });
-
-        DrainageAfflictions.Add(new ItemsAfflictionInfos("pneumothorax", 3, infos =>
-        {
-            return HF.HasAfflictionLimb(infos.target, "retractedskin", LimbType.Torso, 95);
-        }));
-
-        DrainageAfflictions.Add(new ItemsAfflictionInfos("tamponade", 3, infos =>
-        {
-            bool retractedSkin = HF.HasAfflictionLimb(infos.target, "retractedskin", LimbType.Torso, 95);
-
-            if (NTConfig.Get<bool>("NT_OpenCloseTamponade", false)) return false; 
-
-            return retractedSkin;
-        }));
-
-        // From 48 lines to 12 my point stands, why tf was the lua function so girthy?
-        RegisterItemUseFunction("drainage", infos =>
-        {
-            if (HF.HasAffliction(infos.target, "stasis", (float)0.1)) { return; }
-
-            foreach (var affInfos in DrainageAfflictions)
-            {
-                if (!affInfos.Conditions(infos)) continue;
-
-                HF.SetAffliction(infos.target, affInfos.AfflictionID, 0, infos.user, 0);
-                HF.GiveSurgerySkill(infos.user, affInfos.XPGain);
-            }
-        });
-
-        // Hemostat
-        RegisterItemUseFunction("advhemostat", infos =>
-        {
-            if (HF.HasAffliction(infos.target, "stasis", (float)0.1)) { return; }
-
-            if (!HF.CanPerformSurgeryOn(infos.target)) { return; }
-
-            if (!HF.HasAffliction(infos.target, "surgeryincision", 99) || HF.HasAffliction(infos.target, "clampedbleeders", 1)) { return; }
-
-            HF.AddAfflictionLimb(infos.target, "clampedbleeders", infos.targetLimb.type, 1 + HF.GetSurgerySkill(infos.user) / 2, infos.user);
-
-        });
-
-        // Skin Retractors
-        RegisterItemUseFunction("advretractors", infos =>
-        {
-            if (HF.HasAffliction(infos.target, "stasis", (float)0.1)) { return; }
-
-            if (!HF.CanPerformSurgeryOn(infos.target)) { return; }
-
-            if (!HF.HasAffliction(infos.target, "clampedbleeders", 99) || HF.HasAffliction(infos.target, "retractedskin", 1)) { return; }
-
-            HF.AddAfflictionLimb(infos.target, "retractedskin", infos.targetLimb.type, 1 + HF.GetSurgerySkill(infos.user) / 2, infos.user);
-        });
-
-        CuttableAfflictions.Add("bandaged");
-        CuttableAfflictions.Add("bandageddirty");
-        CuttableAfflictions.Add("tourniqueted");
-
-        TraumaShearsAfflictions.Add("gypsumcast");
-
-        // Trauma Shears
-        RegisterItemUseFunction("traumashears", infos =>
-        {
-            if (HF.HasAffliction(infos.target, "stasis", (float)0.1)) { return; }
-
-            List<string> cuttables = CuttableAfflictions;
-            cuttables = [.. cuttables, .. TraumaShearsAfflictions];
-
-            if (HF.GetSkillRequirementMet(infos.user, "medical", 10))
-            {
-                foreach (var affID in cuttables)
-                {
-                    HF.SetAfflictionLimb(infos.target, affID, infos.targetLimb.type, 0, infos.user, 0);
-                }
-            }
-            else
-            {
-                HF.AddAfflictionLimb(infos.target, "bleeding", infos.targetLimb.type, 15, infos.user);
-                HF.AddAfflictionLimb(infos.target, "lacerations", infos.targetLimb.type, 10, infos.user);
-            }
-
-        });
-
-        // Diving Knife 
-        RegisterItemUseFunction("divingknife", infos =>
-        {
-            if (HF.HasAffliction(infos.target, "stasis", (float)0.1)) { return; }
-
-            List<string> cuttables = CuttableAfflictions;
-
-            if (HF.GetSkillRequirementMet(infos.user, "medical", 30))
-            {
-                foreach (var affID in cuttables)
-                {
-                    HF.SetAfflictionLimb(infos.target, affID, infos.targetLimb.type, 0, infos.user, 0);
-                }
-            }
-            else
-            {
-                HF.AddAfflictionLimb(infos.target, "bleeding", infos.targetLimb.type, 15, infos.user);
-                HF.AddAfflictionLimb(infos.target, "lacerations", infos.targetLimb.type, 10, infos.user);
-            }
-
-        });
-
         // Gypsum
         RegisterItemUseFunction("gypsum", infos =>
         {
@@ -334,8 +406,139 @@ public class NTItemMethods
             }
 
             HF.RemoveItem(infos.item);
+        });
 
+        // Tourniquet
+        RegisterItemUseFunction("tourniquet", infos =>
+        {
 
+            if (HF.HasAfflictionLimb(infos.target, "arteriesclamp", infos.targetLimb.type, 1)) return;
+
+            // Failure
+            if (!HF.GetSkillRequirementMet(infos.user, "medcial", 30))
+            {
+                HF.AddAfflictionLimb(infos.target, "blunttrauma", infos.targetLimb.type, 6, infos.user);
+                return;
+            }
+
+            if (HF.LimbIsExtremity(infos.targetLimb.type))
+            {
+                HF.SetAfflictionLimb(infos.target, "arteriesclamp", infos.targetLimb.type, 100, infos.user, 0);
+            }
+            else if (infos.targetLimb.type == LimbType.Head)
+            {
+                HF.SetAffliction(infos.target, "oxygenlow", 200, infos.user, 0);
+                HF.AddAffliction(infos.target, "cerebralhypoxia", 15, infos.user);
+            }
+
+            HF.RemoveItem(infos.item);
+
+        });
+
+        // Propofol
+        RegisterItemUseFunction("propofol", infos =>
+        {
+            float anesthesiaStrength = HF.GetAfflictionStrength(infos.target, "anesthesia", 0);
+            float anesthesiaGained = 1;
+
+            if (HF.HasTalent(infos.user, "ntsp_propofol")) anesthesiaGained = 15;
+
+            if (anesthesiaStrength < 15)
+            {
+                HF.AddAffliction(infos.target, "anesthesia", anesthesiaGained, infos.user);
+            }
+            else
+            {
+                anesthesiaGained = 15 - anesthesiaStrength;
+                HF.AddAffliction(infos.target, "anesthesia", anesthesiaGained, infos.user);
+            }
+
+            HF.AddAffliction(infos.target, "afanaesthetic", 100, infos.user);
+            HF.RemoveItem(infos.item);
+            HF.GiveItem(infos.target, "ntsfx_syringe");
+
+        });
+
+        // Streptokinase
+        RegisterItemUseFunction("streptokinase", infos =>
+        {
+            HF.AddAffliction(infos.target, "heartattack", -100, infos.user);
+            HF.AddAffliction(infos.target, "hemotransfusionshock", -100, infos.user);
+            HF.AddAffliction(infos.target, "afstreptokinase", 50, infos.user);
+
+            if (HF.HasAffliction(infos.target, "stroke"))
+            {
+                HF.AddAffliction(infos.target, "stroke", 5, infos.user);
+                HF.AddAffliction(infos.target, "cerebralhypoxia", 10, infos.user);
+            }
+
+            HF.RemoveItem(infos.item);
+            HF.GiveItem(infos.target, "ntsfx_syringe");
+        });
+
+        // ============== OtherEquipment ==============
+
+        // ============== Overrides ==============
+        // Alien Blood
+        // REWRITTEN FROM XML
+        RegisterItemUseFunction("alienblood", infos =>
+        {
+            if (HF.GetSkillRequirementMet(infos.user, "medical", 55f))
+            {
+                HF.AddAffliction(infos.target, "bloodloss", 20f, infos.user);
+                HF.AddAffliction(infos.target, "hemotransfusionshock", 100f, infos.user);
+                HF.AddAffliction(infos.target, "psychosis", 30f, infos.user);
+                HF.AddAffliction(infos.target, "bloodpressure", 20f, infos.user);
+
+            }
+            else
+            {
+                HF.AddAffliction(infos.target, "bloodloss", 15f, infos.user);
+                HF.AddAffliction(infos.target, "hemotransfusionshock", 100f, infos.user);
+                HF.AddAffliction(infos.target, "psychosis", 30f, infos.user);
+                HF.AddAffliction(infos.target, "bloodpressure", 15f, infos.user);
+            }
+
+            HF.RemoveItem(infos.item);
+            HF.GiveItem(infos.target, "ntsfx_syringe");
+        });
+
+        // Anaparalyzant
+        // REWRITTEN FROM XML
+        RegisterItemUseFunction("antiparalysis", infos =>
+        {
+            if (HF.GetSkillRequirementMet(infos.user, "medical", 64f))
+            {
+                HF.AddAffliction(infos.target, "paralysisresistance", 800f, infos.user);
+                HF.AddAffliction(infos.target, "psychosis", 5f, infos.user);
+                HF.AddAffliction(infos.target, "anesthesia", -200f, infos.user);
+                HF.AddAffliction(infos.target, "afanaesthetic", -200f, infos.user);
+            }
+            else
+            {
+
+                // TODO Apply it over time
+
+            }
+
+            HF.RemoveItem(infos.item);
+            HF.GiveItem(infos.target, "ntsfx_syringe");
+        });
+
+        // Adrenaline
+        RegisterItemUseFunction("adrenaline", infos =>
+        {
+            HF.AddAffliction(infos.target, "afadrenaline", 55, infos.user);
+            HF.AddAffliction(infos.target, "adrenalinerush", 8, infos.user);
+
+            if (HF.HasAffliction(infos.target, "cardiacarrest", 0.1f))
+            {
+                HF.AddAffliction(infos.target, "cardiacarrest", -100, infos.user);
+                HF.AddAffliction(infos.target, "fibrillation", 20, infos.user);
+            }
+
+            HF.RemoveItem(infos.item);
+            HF.GiveItem(infos.target, "ntsfx_syringe");
         });
 
         // Health Scanner
@@ -511,208 +714,8 @@ public class NTItemMethods
             }, 2000);
         });
 
-        // Add the Hematology Detectable afflictions in here
-        HematologyDetectable.AddRange(
-        [
-            "sepsis",
-            "immunity",
-            "acidosis",
-            "alkalosis",
-            "bloodloss",
-            "bloodpressure",
-            "afimmunosuppressant",
-            "afthiamine",
-            "afadrenaline",
-            "afstreptokinase",
-            "afantibiotics",
-            "afsaline",
-            "afringerssolution",
-            "afpressuredrug",
-            "afopioid",
-            "afanaesthetic"
-        ]);
-
-        // Hematology Analyzer
-        RegisterItemUseFunction("bloodanalyzer", infos =>
-        {
-            // Only work if not on cooldown
-            if (infos.item.Condition < 50) return;
-
-            bool success = HF.GetSkillRequirementMet(infos.user, "medical", 30);
-
-            float BloodLossInduced = 3f;
-
-            if (success)
-            {
-                BloodLossInduced = 1f;
-            }
-
-            HF.AddAffliction(infos.target, "bloodloss", BloodLossInduced, infos.user);
-
-            // Spawn donor card
-            var ContainedItem = infos.item.OwnInventory.GetItemAt(0);
-
-            bool HasCartridge = ContainedItem != null &&
-                (
-                    ContainedItem.Prefab.Identifier.Value == "bloodcollector" ||
-                    ContainedItem.HasTag("donorCard")
-                );
-
-            if (HasCartridge)
-            {
-                HF.RemoveItem(ContainedItem);
-
-                string BloodType = NTBloodTypes.GetBloodType(infos.target);
-
-                var TargetIDCard = infos.target.Inventory.GetItemAt(0);
-
-                if (TargetIDCard != null && TargetIDCard.OwnInventory != null && TargetIDCard.OwnInventory.GetItemAt(0) == null)
-                {
-                    HF.PutItemInContainer(TargetIDCard, BloodType + "card");
-                }
-                else
-                {
-                    HF.PutItemInContainer(infos.item, BloodType + "card");
-                }
-            }
-
-            bool useColoredScanner = NTConfig.Get("NTSCAN_enablecoloredscanner", true);
-
-            Color baseColor = useColoredScanner ? HF.GetColor("NTSCAN_basecolor") : new Color(127, 255, 255);
-            Color nameColor = useColoredScanner ? HF.GetColor("NTSCAN_namecolor") : new Color(127, 255, 255);
-            Color lowColor = useColoredScanner ? HF.GetColor("NTSCAN_lowcolor") : new Color(127, 255, 255);
-            Color medColor = useColoredScanner ? HF.GetColor("NTSCAN_medcolor") : new Color(127, 255, 255);
-            Color highColor = useColoredScanner ? HF.GetColor("NTSCAN_highcolor") : new Color(127, 255, 255);
-            Color vitalColor = useColoredScanner ? HF.GetColor("NTSCAN_vitalcolor") : new Color(127, 255, 255);
-            Color removalColor = useColoredScanner ? HF.GetColor("NTSCAN_removalcolor") : new Color(127, 255, 255);
-            Color customColor = useColoredScanner ? HF.GetColor("NTSCAN_customcolor") : new Color(127, 255, 255);
-
-            // Floats
-            float lowMedThreshold = NTConfig.Get<float>("NTSCAN_lowmedThreshold", 1);
-            float medHighThreshold = NTConfig.Get<float>("NT_medhighThreshold", 1);
-            
-            // Strings
-            List<string> vitalCategory = NTConfig.Get<List<string>>("NTSCAN_VitalCategory", []);
-            List<string> removalCategory = NTConfig.Get<List<string>>("NTSCAN_RemovalCategory", []);
-            List<string> customCategory = NTConfig.Get<List<string>>("NTSCAN_CustomCategory", []);
-            List<string> ignoredCategory = NTConfig.Get<List<string>>("NTSCAN_IgnoredCategory", []);
-
-            // Not changeable
-            List<string> pressureCategory = ["bloodpressure"];
-
-            // Readout Strings
-            string lowPressureReadout = "";
-            string highPressureReadout = "";
-            string lowStrengthReadout = "";
-            string mediumStrengthReadout = "";
-            string highStrengthReadout = "";
-            string vitalReadout = "";
-            string removalReadout = "";
-            string customReadout = "";
-
-            string BloodTypeName = AfflictionPrefab.Prefabs[NTBloodTypes.GetBloodType(infos.target)].Name.Value;
-
-            string startReadout =
-                $"‖color:{nameColor.R},{nameColor.G},{nameColor.B}‖" +
-                $"Bloodtype: {BloodTypeName}" +
-                "‖color:end‖\n" +
-                $"‖color:{baseColor.R},{baseColor.G},{baseColor.B}‖" +
-                $"Affliction readout for {infos.target.Name}:" +
-                "‖color:end‖\n";
-
-            int afflictionsDisplayed = 0;
-
-            HashSet<string> checkedAfflictions = [];
-
-            foreach (var value in infos.target.CharacterHealth.GetAllAfflictions())
-            {
-                float strength = MathF.Round(value.Strength);
-                var prefab = value.Prefab;
-
-                string id = value.Identifier.Value;
-
-                if (strength <= 2) continue;
-                if (!HematologyDetectable.Contains(prefab.Identifier.Value)) continue;
-
-                if (!checkedAfflictions.Add(id))
-                {
-                    continue;
-                }
-
-                if (ignoredCategory.Contains(id))
-                {
-                    continue;
-                }
-
-                string entry = $"\n{prefab.Name.Value}: {strength}%";
-
-                bool isVital = vitalCategory.Contains(id);
-                bool isRemoval = removalCategory.Contains(id);
-                bool isCustom = customCategory.Contains(id);
-                bool isPressure = pressureCategory.Contains(id);
-
-                if (isVital)
-                {
-                    vitalReadout += entry;
-                }
-                else if (isRemoval)
-                {
-                    removalReadout += entry;
-                }
-                else if (isCustom)
-                {
-                    customReadout += entry;
-                }
-                else if (isPressure)
-                {
-                    if (strength > 130 || strength < 70)
-                    {
-                        highPressureReadout += entry;
-                    }
-                    else
-                    {
-                        lowPressureReadout += entry;
-                    }
-                }
-                else
-                {
-                    if (strength < lowMedThreshold)
-                    {
-                        lowStrengthReadout += entry;
-                    }
-                    else if (strength < medHighThreshold)
-                    {
-                        mediumStrengthReadout += entry;
-                    }
-                    else
-                    {
-                        highStrengthReadout += entry;
-                    }
-                }
-
-                afflictionsDisplayed++;
-            }
-
-            if (afflictionsDisplayed <= 0)
-            {
-                lowStrengthReadout += "\nNo blood pressure detected...";
-            }
-
-            HF.DMClient(
-                HF.CharacterToClient(infos.user),
-                startReadout
-                    + FormatLine(lowPressureReadout, lowColor)
-                    + FormatLine(highPressureReadout, highColor)
-                    + FormatLine(lowStrengthReadout, lowColor)
-                    + FormatLine(mediumStrengthReadout, medColor)
-                    + FormatLine(highStrengthReadout, highColor)
-                    + FormatLine(vitalReadout, vitalColor)
-                    + FormatLine(removalReadout, removalColor)
-                    + FormatLine(customReadout, customColor),
-                null
-            );
-        });
-
+        // ============== SurgicalEquipment ==============
+        // Sutures
         // Bad to the bones 💀
         SutureAfflictions.Add(new ItemsAfflictionInfos("bonecut", 0, infos => {
             return HF.HasAfflictionLimb(infos.target, "surgeryincision", infos.targetLimb.type, 95);
@@ -747,7 +750,7 @@ public class NTItemMethods
 
         SutureAfflictions.Add(new ItemsAfflictionInfos("arterialcut", 3, infos => {
             return HF.HasAfflictionLimb(infos.target, "retractedskin", infos.targetLimb.type, 95);
-        })); 
+        }));
 
         SutureAfflictions.Add(new ItemsAfflictionInfos("carotidarterialcut", 3, infos => {
             return HF.HasAfflictionLimb(infos.target, "retractedskin", infos.targetLimb.type, 95);
@@ -755,7 +758,7 @@ public class NTItemMethods
 
         SutureAfflictions.Add(new ItemsAfflictionInfos("aorticrupture", 3, infos => {
 
-            if (!NTConfig.Get<bool>("NT_HardmodeAorticRupture", false)) return false; 
+            if (!NTConfig.Get<bool>("NT_HardmodeAorticRupture", false)) return false;
 
             return HF.HasAfflictionLimb(infos.target, "retractedskin", infos.targetLimb.type, 95);
         }));
@@ -830,9 +833,9 @@ public class NTItemMethods
             HF.AddAfflictionLimb(infos.target, "bleeding", infos.targetLimb.type, -40, infos.user);
             HF.AddAfflictionLimb(infos.target, "bleedingnonstop", infos.targetLimb.type, -40, infos.user);
 
-            HF.AddAfflictionLimb(infos.target, "suturedw", infos.targetLimb.type, (float) healeddamage, infos.user);
+            HF.AddAfflictionLimb(infos.target, "suturedw", infos.targetLimb.type, (float)healeddamage, infos.user);
 
-            HF.GiveSkillScaled(infos.user, "medical", (float) healeddamage * 100);
+            HF.GiveSkillScaled(infos.user, "medical", (float)healeddamage * 100);
 
             if (HF.HasAfflictionLimb(infos.target, "bonecut", infos.targetLimb.type, 1))
             {
@@ -862,7 +865,8 @@ public class NTItemMethods
                 {
                     HF.SetAfflictionLimb(infos.target, affInfos.AfflictionID, infos.targetLimb.type, 0, infos.user, 0);
 
-                } else
+                }
+                else
                 {
                     HF.SetAffliction(infos.target, affInfos.AfflictionID, 0, infos.user, 0);
                 }
@@ -871,124 +875,141 @@ public class NTItemMethods
             }
         });
 
-        RegisterItemUseFunction("tourniquet", infos =>
+        // Drainage
+        DrainageAfflictions.Add(new ItemsAfflictionInfos("pneumothorax", 3, infos =>
         {
+            return HF.HasAfflictionLimb(infos.target, "retractedskin", LimbType.Torso, 95);
+        }));
 
-            if (HF.HasAfflictionLimb(infos.target, "arteriesclamp", infos.targetLimb.type, 1)) return;
+        DrainageAfflictions.Add(new ItemsAfflictionInfos("tamponade", 3, infos =>
+        {
+            bool retractedSkin = HF.HasAfflictionLimb(infos.target, "retractedskin", LimbType.Torso, 95);
 
-            // Failure
-            if (!HF.GetSkillRequirementMet(infos.user, "medcial", 30))
+            if (NTConfig.Get<bool>("NT_OpenCloseTamponade", false)) return false;
+
+            return retractedSkin;
+        }));
+
+        // From 48 lines to 12 my point stands, why tf was the lua function so girthy?
+        RegisterItemUseFunction("drainage", infos =>
+        {
+            if (HF.HasAffliction(infos.target, "stasis", (float)0.1)) { return; }
+
+            foreach (var affInfos in DrainageAfflictions)
             {
-                HF.AddAfflictionLimb(infos.target, "blunttrauma", infos.targetLimb.type, 6, infos.user);
-                return;
+                if (!affInfos.Conditions(infos)) continue;
+
+                HF.SetAffliction(infos.target, affInfos.AfflictionID, 0, infos.user, 0);
+                HF.GiveSurgerySkill(infos.user, affInfos.XPGain);
+            }
+        });
+
+        // Scalpel
+        RegisterItemUseFunction("advscalpel", infos =>
+        {
+            // Not in stasis
+            if (HF.HasAffliction(infos.target, "stasis", (float)0.1)) { return; }
+
+            if (!HF.CanPerformSurgeryOn(infos.target) || HF.HasAfflictionLimb(infos.target, "surgeryincision", infos.targetLimb.type, 1)) { return; }
+
+            bool success = HF.GetSurgerySkillRequirementMet(infos.user, 30);
+
+            if (success)
+            {
+                HF.AddAfflictionLimb(infos.target, "surgeryincision", infos.targetLimb.type, 1 + HF.GetSurgerySkill(infos.user) / 2, infos.user); // TODO change this to using surgery instead of medical
+
+                HF.SetAfflictionLimb(infos.target, "suturedi", infos.targetLimb.type, 0, infos.user, 0);
+                HF.SetAfflictionLimb(infos.target, "gypsumcast", infos.targetLimb.type, 0, infos.user, 0);
+                HF.SetAfflictionLimb(infos.target, "bandaged", infos.targetLimb.type, 0, infos.user, 0);
+
+            }
+            else
+            {
+                HF.AddAfflictionLimb(infos.target, "bleeding", infos.targetLimb.type, 15, infos.user);
+                HF.AddAfflictionLimb(infos.target, "lacerations", infos.targetLimb.type, 10, infos.user);
             }
 
-            if (HF.LimbIsExtremity(infos.targetLimb.type))
-            {
-                HF.SetAfflictionLimb(infos.target, "arteriesclamp", infos.targetLimb.type, 100, infos.user, 0);
-            } else if (infos.targetLimb.type == LimbType.Head)
-            {
-                HF.SetAffliction(infos.target, "oxygenlow", 200, infos.user, 0);
-                HF.AddAffliction(infos.target, "cerebralhypoxia", 15, infos.user);
-            }
+            HF.GiveItem(infos.target, "ntsfx_slash");
+        });
 
-            HF.RemoveItem(infos.item);
+        // Hemostat
+        RegisterItemUseFunction("advhemostat", infos =>
+        {
+            if (HF.HasAffliction(infos.target, "stasis", (float)0.1)) { return; }
+
+            if (!HF.CanPerformSurgeryOn(infos.target)) { return; }
+
+            if (!HF.HasAffliction(infos.target, "surgeryincision", 99) || HF.HasAffliction(infos.target, "clampedbleeders", 1)) { return; }
+
+            HF.AddAfflictionLimb(infos.target, "clampedbleeders", infos.targetLimb.type, 1 + HF.GetSurgerySkill(infos.user) / 2, infos.user);
 
         });
 
-        RegisterItemUseFunction("emptybloodpack", infos =>
+        // Skin Retractors
+        RegisterItemUseFunction("advretractors", infos =>
         {
+            if (HF.HasAffliction(infos.target, "stasis", (float)0.1)) { return; }
 
-            if (infos.item.condition <= 0) return;
+            if (!HF.CanPerformSurgeryOn(infos.target)) { return; }
 
-            // changing from 31 to somthing like 15 can stop easy station kill by using two blood pack in a row
-            // Minor Spelling Mistake :skull: - Lukako
-            float BloodLossStrength = HF.GetAfflictionStrength(infos.target, "bloodloss", 0);
-            if (BloodLossStrength >= 31f) return;
+            if (!HF.HasAffliction(infos.target, "clampedbleeders", 99) || HF.HasAffliction(infos.target, "retractedskin", 1)) { return; }
 
-            bool success = HF.GetSkillRequirementMet(infos.user, "medical", 30);
-            int bloodlossinduced = success ? 40 : 30;
+            HF.AddAfflictionLimb(infos.target, "retractedskin", infos.targetLimb.type, 1 + HF.GetSurgerySkill(infos.user) / 2, infos.user);
+        });
 
-            string bloodtype = NTBloodTypes.GetBloodType(infos.target);
+        // Trauma Shears
+        CuttableAfflictions.Add("bandaged");
+        CuttableAfflictions.Add("bandageddirty");
+        CuttableAfflictions.Add("tourniqueted");
 
-            // We store the data we need for the item tags
-            double acidosis = HF.GetAfflictionStrength(infos.target, "acidosis", 0);
-            double alkalosis = HF.GetAfflictionStrength(infos.target, "alkalosis", 0);
-            double sepsis = HF.GetAfflictionStrength(infos.target, "sepsis", 0);
+        TraumaShearsAfflictions.Add("gypsumcast");
 
-            HF.SetAffliction(infos.target, "acidosis", (float) HF.GetAfflictionStrength(infos.target, "acidosis", 0) * (float) 0.9, infos.user, 0);
-            HF.SetAffliction(infos.target, "alkalosis", (float) HF.GetAfflictionStrength(infos.target, "alkalosis", 0) * (float)0.9, infos.user, 0);
+        RegisterItemUseFunction("traumashears", infos =>
+        {
+            if (HF.HasAffliction(infos.target, "stasis", (float)0.1)) { return; }
 
-            HF.AddAffliction(infos.target, "bloodloss", bloodlossinduced, infos.user);
+            List<string> cuttables = CuttableAfflictions;
+            cuttables = [.. cuttables, .. TraumaShearsAfflictions];
 
-            string btID = bloodtype == "o_negative" ? "antibloodloss2" : "bloodpack" + bloodtype ;
-
-            // Inshallah ca marche -Cookie
-            HF.GiveItemPlusFunction(btID, infos.user, (args) => {
-
-                string[] tags = [];
-
-                double acid = (double) args[0];
-                double alkal = (double) args[1];
-                double seps = (double) args[2];
-
-                if (acid > 0) tags.Append($"acid:{Math.Round(acid)}");
-                if (alkal > 0) tags.Append($"alkal:{Math.Round(alkal)}");
-                if (seps > 0) tags.Append($"sepsis");
-
-                Item item = (Item) args[3];
-
-                foreach (var tag in tags)
+            if (HF.GetSkillRequirementMet(infos.user, "medical", 10))
+            {
+                foreach (var affID in cuttables)
                 {
-                    item.AddTag(tag);
+                    HF.SetAfflictionLimb(infos.target, affID, infos.targetLimb.type, 0, infos.user, 0);
                 }
-            
-            }, acidosis, alkalosis, sepsis);
-
-
-            infos.item.Condition = 0f;
-            HF.GiveItem(infos.target, "ntsfx_syringe");
-
-           
-        });
-
-        RegisterItemUseFunction("propofol", infos =>
-        {
-            float anesthesiaStrength = HF.GetAfflictionStrength(infos.target, "anesthesia", 0);
-            float anesthesiaGained = 1;
-
-            if (HF.HasTalent(infos.user, "ntsp_propofol")) anesthesiaGained = 15;
-
-            if (anesthesiaStrength < 15)
+            }
+            else
             {
-                HF.AddAffliction(infos.target, "anesthesia", anesthesiaGained, infos.user);
-            } else
-            {
-                anesthesiaGained = 15 - anesthesiaStrength;
-                HF.AddAffliction(infos.target, "anesthesia", anesthesiaGained, infos.user);
+                HF.AddAfflictionLimb(infos.target, "bleeding", infos.targetLimb.type, 15, infos.user);
+                HF.AddAfflictionLimb(infos.target, "lacerations", infos.targetLimb.type, 10, infos.user);
             }
 
-            HF.AddAffliction(infos.target, "afanaesthetic", 100, infos.user);
-            HF.RemoveItem(infos.item);
-            HF.GiveItem(infos.target, "ntsfx_syringe");
-
         });
 
-        RegisterItemUseFunction("streptokinase", infos =>
+        // Diving Knife (Technically Override but similar to shears)
+        RegisterItemUseFunction("divingknife", infos =>
         {
-            HF.AddAffliction(infos.target, "heartattack", -100, infos.user);
-            HF.AddAffliction(infos.target, "hemotransfusionshock", -100, infos.user);
-            HF.AddAffliction(infos.target, "afstreptokinase", 50, infos.user);
+            if (HF.HasAffliction(infos.target, "stasis", (float)0.1)) { return; }
 
-            if (HF.HasAffliction(infos.target, "stroke"))
+            List<string> cuttables = CuttableAfflictions;
+
+            if (HF.GetSkillRequirementMet(infos.user, "medical", 30))
             {
-                HF.AddAffliction(infos.target, "stroke", 5, infos.user);
-                HF.AddAffliction(infos.target, "cerebralhypoxia", 10, infos.user);
+                foreach (var affID in cuttables)
+                {
+                    HF.SetAfflictionLimb(infos.target, affID, infos.targetLimb.type, 0, infos.user, 0);
+                }
+            }
+            else
+            {
+                HF.AddAfflictionLimb(infos.target, "bleeding", infos.targetLimb.type, 15, infos.user);
+                HF.AddAfflictionLimb(infos.target, "lacerations", infos.targetLimb.type, 10, infos.user);
             }
 
-            HF.RemoveItem(infos.item);
-            HF.GiveItem(infos.target, "ntsfx_syringe");
         });
+
+        // ============== Toggleable ==============
+        
     }
 
 
