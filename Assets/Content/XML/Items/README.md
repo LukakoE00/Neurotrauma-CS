@@ -28,7 +28,7 @@ Left Leg Bionic: Todo C#
 Antibiotic Ointment: DONE
 Azathioprine: DONE
 Tourniquet: DONE
-Gel Ice Pack: Deterioration in XML, rest todo C#
+Gel Ice Pack: DONE
 Gypsum: DONE
 Ringer’s Solution: Todo C#
 Mannitol: Todo C#

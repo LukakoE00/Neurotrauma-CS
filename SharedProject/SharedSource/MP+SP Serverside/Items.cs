@@ -407,10 +407,16 @@ public class NTItemMethods
         // Gel Ice Pack
         RegisterItemUseFunction("gelipack", infos =>
         {
+            if (infos.item.Condition < 25) return;
 
+            float success = HF.BoolToNum(HF.GetSkillRequirementMet(infos.user, "medical", 40));
+            HF.AddAfflictionLimb(infos.target, "iced", infos.targetLimb.type, 75 + success * 25, infos.user);
+            
+            infos.item.Condition = infos.item.Condition - 35;
+            HF.GiveItem(infos.target, "ntsfx_bandage");
         });
 
-            // Gypsum
+        // Gypsum
         RegisterItemUseFunction("gypsum", infos =>
         {
             if (HF.HasAffliction(infos.target, "stasis", (float)0.1)) { return; }
