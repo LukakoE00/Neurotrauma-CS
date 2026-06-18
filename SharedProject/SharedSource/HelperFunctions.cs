@@ -788,7 +788,7 @@ namespace Neurotrauma
             );
         }
 
-        public static void AddAfflictionLimb(Character Character, string Identifier, LimbType GivenLimbType, float Strength, Character Aggresor)
+        public static void AddAfflictionLimb(Character Character, string Identifier, LimbType GivenLimbType, float Strength, Character Aggressor)
         {
             if (Strength < 0)
             {
@@ -797,7 +797,7 @@ namespace Neurotrauma
                     Identifier,
                     -Strength,
                     null,
-                    Aggresor);
+                    Aggressor);
                 return;
             }
 
@@ -807,7 +807,7 @@ namespace Neurotrauma
             if (Resistance > 1) { return; }
 
             float ScaledStrength = Strength * Character.CharacterHealth.MaxVitality / 100 / (1 - Resistance);
-            Affliction Affliction = Prefab.Instantiate(ScaledStrength, Aggresor);
+            Affliction Affliction = Prefab.Instantiate(ScaledStrength, Aggressor);
             bool RecalculateVitality = NTC.AfflictionsAffectingVitality.Contains(Identifier);
 
             // No need to manually calculate strength, just stack it - Lukako
@@ -820,16 +820,16 @@ namespace Neurotrauma
             );
         }
 
-        public static void AddAffliction(Character Character, string Identifier, float Strength, Character Aggresor)
+        public static void AddAffliction(Character Character, string Identifier, float Strength, Character Aggressor)
         {
-            AddAfflictionLimb(Character, Identifier, LimbType.Torso, Strength, Aggresor);
+            AddAfflictionLimb(Character, Identifier, LimbType.Torso, Strength, Aggressor);
         }
 
-        public static void AddAfflictionResisted(Character Character, string Identifier, float Strength, Character Aggresor)
+        public static void AddAfflictionResisted(Character Character, string Identifier, float Strength, Character Aggressor)
         {
             float PrevStrength = GetAfflictionStrength(Character, Identifier);
             Strength *= 1 - GetResistance(Character, Identifier);
-            SetAffliction(Character, Identifier, Strength + PrevStrength, Aggresor, PrevStrength);
+            SetAffliction(Character, Identifier, Strength + PrevStrength, Aggressor, PrevStrength);
         }
 
         public static void ApplyAfflictionChange(Character Character, string Identifier, float Strength, float PrevStrength, float MinStrength, float MaxStrength)
@@ -879,6 +879,37 @@ namespace Neurotrauma
             {
                 SetAfflictionLimb(Character, Identifier, GivenLimbType, Strength, Character, Strength);
             }
+        }
+
+        // Needed for some slow-acting Consumables. - Lukako
+        /// <summary>
+        /// Applies a given Affliction over a given Duration.
+        /// </summary>
+        /// <param name="Target">Character to apply the affliction to.</param>
+        /// <param name="Identifier">Identifier of the affliction to apply.</param>
+        /// <param name="TotalAmount">Total combined strength of applications.</param>
+        /// <param name="Duration">Amount of time in seconds over which the application happens.</param>
+        /// <param name="Aggressor">Character that's considered the one applying the affliction.</param>
+        public static void ApplyAfflictionOverTime(Character Target, string Identifier, float TotalAmount, float Duration, Character Aggressor)
+        {
+            int Applications = (int)Duration;
+            if (Applications <= 0 || Target == null) return;
+
+            float AfflictionAmountPerApplication = TotalAmount / Applications;
+
+            void ApplyAfflictionAgain(int RemainingApplications)
+            {
+                if (RemainingApplications <= 0 || Target == null || Target.Removed) return;
+
+                HF.AddAffliction(Target, Identifier, AfflictionAmountPerApplication, Aggressor);
+
+                LuaCsSetup.Instance.Timer.Wait((params object[] _) =>
+                {
+                    ApplyAfflictionAgain(RemainingApplications - 1);
+                }, 1000);
+            }
+            // Start the loop
+            ApplyAfflictionAgain(Applications);
         }
 
         // ---------------------------------------- Specific Affliction Helper Functions -------------------------------------------------- \\
