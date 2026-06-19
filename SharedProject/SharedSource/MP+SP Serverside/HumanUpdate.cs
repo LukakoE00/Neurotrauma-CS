@@ -367,13 +367,13 @@ public class HumanUpdate
             public class NTHumanStatDoubleData(NTStatDouble Stat, NTHuman C) // Stores our characters Stat Data
             {
                 NTStatDouble StatRef = Stat; // Stores our template.
-                private double Strength = 0;
+                public double Strength = 0;
             }
 
             public class NTHumanStatBoolData(NTStatBool Stat, NTHuman C) // Stores our characters Stat Data
             {
                 NTStatBool StatRef = Stat; // Stores our template.
-                private bool Strength = false;
+                public bool Strength = false;
             }
 
             public Dictionary<string, NTHumanStatDoubleData> DoubleStats = new();
