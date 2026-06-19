@@ -1506,7 +1506,6 @@ public class NTItemMethods
         });
 
         // Tweezers
-        // TODO
         RegisterItemUseFunction("tweezers", infos =>
         {
             // Stasis check
@@ -1723,17 +1722,15 @@ public class NTItemMethods
         // Medical Stent
         RegisterItemUseFunction("medstent", infos =>
         {
-            LimbType limbType = infos.targetLimb.type;
-
             // Stasis check
             if (HF.HasAffliction(infos.target, "stasis", 0.1f)) return;
 
-            if (limbType == LimbType.Torso &&
+            if (infos.targetLimb.type == LimbType.Torso &&
                 HF.HasAffliction(infos.target, "balloonedaorta", 1f))
             {
                 // Remove vascular condition
                 HF.SetAffliction(infos.target, "balloonedaorta", 0f, infos.user, 0);
-                HF.SetAffliction(infos.target, "t_arterialcut", 0f, infos.user, 0);
+                HF.SetAffliction(infos.target, "aorticrupture", 0f, infos.user, 0);
 
                 HF.GiveSkillScaled(infos.user, "medical", 10000f);
             }
