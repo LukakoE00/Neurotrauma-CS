@@ -229,6 +229,21 @@ namespace Neurotrauma
         }
     }
 
+    public class NTSymptom : NTAffliction
+    {
+        public NTSymptom(string NewID, double NewMinStrength = 0, double NewMaxStrength = 100, double NewDefaultStrength = 0, AfflictionPriority NewPriority = AfflictionPriority.HIGH) 
+                            : base(NewID, NewMinStrength, NewMaxStrength, NewDefaultStrength, NewPriority)
+        {
+            ID = NewID;
+            MinStrength = NewMinStrength;
+            MaxStrength = NewMaxStrength;
+            DefaultStrength = Math.Clamp(NewDefaultStrength, NewMinStrength, NewMaxStrength);
+            Priority = NewPriority;
+        }
+
+        int HumanUpdateTime = 0; // How long the Symptom lasts.
+    }
+
 
     public abstract class AfflictionsPackage 
     {
@@ -250,6 +265,11 @@ namespace Neurotrauma
         }
 
         private void AddBloodAfflictions() // Create your afflictions in here.
+        {
+            throw new NotImplementedException();
+        }
+
+        private void AffSymptoms()
         {
             throw new NotImplementedException();
         }
@@ -333,6 +353,11 @@ namespace Neurotrauma
             {
                 NTAfflictions.RegisterAffliction(Pair.Key, Pair.Value);
             }
+        }
+
+        private void AddSymptoms()
+        {
+
         }
     }
 }

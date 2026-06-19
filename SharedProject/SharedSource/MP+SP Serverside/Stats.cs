@@ -7,73 +7,69 @@ namespace Neurotrauma
         public static void DefineAllStats()
         {
             // This isnt done, just a basic template.
-            Stats["healingrate"] = new NTStat(0, 100, 1, (HumanUpdate.NTHuman C) => 
-            { 
-
-            });
-            Stats["specificOrganDamageHealMultiplier"] = new NTStat(0, 100, 1, (HumanUpdate.NTHuman C) => 
-            { 
-            
-            });
-            Stats["neworgandamage"] = new NTStat(0, 100, 1, (HumanUpdate.NTHuman C) => 
-            { 
-            
-            });
-            Stats["clottingrate"] = new NTStat(0, 100, 1, (HumanUpdate.NTHuman C) => 
+            Stats["healingrate"] = new NTStatDouble("healingrate",0,100,1, (C) =>
             {
-
+                return 1;
             });
-            Stats["bloodamount"] = new NTStat(0, 100, 1, (HumanUpdate.NTHuman C) => 
-            { 
-            
+            Stats["neworgandamage"] = new NTStatDouble("healingrate", 0, 100, 1, (C) => 
+            {
+                return 1;
             });
-            Stats["stasis"] = new NTStat(0, 100, 1, (HumanUpdate.NTHuman C) => 
-            { 
-            
+            Stats["clottingrate"] = new NTStatDouble("healingrate", 0, 100, 1, (C) => 
+            {
+                return 1;
             });
-            Stats["sedated"] = new NTStat(0, 100, 1, (HumanUpdate.NTHuman C) => 
-            { 
-            
+            Stats["bloodamount"] = new NTStatDouble("healingrate", 0, 100, 1, (C) => 
+            {
+                return Math.Clamp(100 - C.GetAffData()["bloodloss"].Strength,0,100);
             });
-            Stats["withdrawal"] = new NTStat(0, 100, 1, (HumanUpdate.NTHuman C) => 
-            { 
-            
+            Stats["stasis"] = new NTStatBool("stasis",false, (C) => 
+            {
+                return true;
             });
-            Stats["availableoxygen"] = new NTStat(0, 100, 1, (HumanUpdate.NTHuman C) => 
-            { 
-            
+            Stats["sedated"] = new NTStatBool("sedated",false, (C) => 
+            {
+                return true;
             });
-            Stats["speedmultiplier"] = new NTStat(0, 100, 1, (HumanUpdate.NTHuman C) => 
-            { 
-            
+            Stats["withdrawal"] = new NTStatDouble("healingrate", 0, 100, 1, (C) => 
+            {
+                return 1;
             });
-            Stats["lockleftarm"] = new NTStat(0, 100, 1, (HumanUpdate.NTHuman C) => 
-            { 
-            
+            Stats["availableoxygen"] = new NTStatDouble("healingrate", 0, 100, 1, (C) => 
+            {
+                return 1;
             });
-            Stats["lockrightarm"] = new NTStat(0, 100, 1, (HumanUpdate.NTHuman C) => 
-            { 
-            
+            Stats["speedmultiplier"] = new NTStatDouble("healingrate", 0, 100, 1, (C) => 
+            {
+                return 1;
             });
-            Stats["lockleftleg"] = new NTStat(0, 100, 1, (HumanUpdate.NTHuman C) => 
-            { 
-            
+            Stats["lockleftarm"] = new NTStatBool("lockleftarm",false, (C) => 
+            {
+                return true;
             });
-            Stats["lockrightleg"] = new NTStat(0, 100, 1, (HumanUpdate.NTHuman C) => 
-            { 
-            
+            Stats["lockrightarm"] = new NTStatBool("lockrightarm",false, (C) => 
+            {
+                return true;
             });
-            Stats["wheelchaired"] = new NTStat(0, 100, 1, (HumanUpdate.NTHuman C) => 
-            { 
-            
+            Stats["lockleftleg"] = new NTStatBool("lockleftleg",false, (C) => 
+            {
+                return true;
             });
-            Stats["bonegrowthCount"] = new NTStat(0, 100, 1, (HumanUpdate.NTHuman C) => 
-            { 
-            
+            Stats["lockrightleg"] = new NTStatBool("lockrightleg",false, (C) => 
+            {
+                return true;
             });
-            Stats["burndamage"] = new NTStat(0, 100, 1, (HumanUpdate.NTHuman C) => 
-            { 
-            
+            Stats["wheelchaired"] = new NTStatDouble("healingrate", 0, 100, 1, (C) => 
+            {
+                return 1;
+            });
+            Stats["bonegrowthCount"] = new NTStatDouble("healingrate", 0, 100, 1, (C) => 
+            {
+                return 1;
+            });
+            Stats["burndamage"] = new NTStatDouble("healingrate", 0, 100, 1, (C) => 
+            {
+                return 1;
             });
         }
 
@@ -117,31 +113,60 @@ namespace Neurotrauma
 
     }
 
-    public class NTStat(double MinStrength = 0, double MaxStrength = 1, double DefaultStrength = 1, Action<HumanUpdate.NTHuman> Update = null)
+    public abstract class NTStat(string Name)
     {
-        private double Strength = Math.Clamp(DefaultStrength, MinStrength, MaxStrength);
-        private Action<HumanUpdate.NTHuman> StatUpdate = Update;
-
-        public void AddStrength(double AddingAmount)
+        public void Get()
         {
-            Strength += AddingAmount;
+
         }
+    }
 
-        public void RemoveStrength(double RemovingAmount) // This function is kinda stupid.
-        {
-            AddStrength(-RemovingAmount);
-        }
+    public class NTStatDouble(string Name, double MinStrength = 0, double MaxStrength = 1, double DefaultStrength = 1, Func<HumanUpdate.NTHuman, double> Update = null) : NTStat(Name)
+    {
+        private double MinStrength { get; set; } = MinStrength;
+        private double MaxStrength { get; set; } = MaxStrength;
+        private double DefaultStrength { get; set; } = DefaultStrength;
+        private bool Settable { get; set; } = false;
+        public string ID = Name;
 
-        public void SetStrength(double SetingAmount)
+        public void Add(HumanUpdate.NTHuman C, double AddStrength)
         {
-            Strength = SetingAmount;
-        }
-
-        public void Recalculate(HumanUpdate.NTHuman Character)
-        {
-            if (StatUpdate != null)
+            if (Settable)
             {
-                StatUpdate(Character);
+                C.LocalStats.DoubleStats[ID].Strength = Math.Clamp(C.LocalStats.DoubleStats[ID].Strength + AddStrength,MinStrength,MaxStrength);
+            }
+        }
+
+        public double Get(HumanUpdate.NTHuman C)
+        {
+            return (Update != null) ? Update.Invoke(C) : C.LocalStats.DoubleStats[ID].Strength; // C# my beloved.
+        }
+
+        public void Set(HumanUpdate.NTHuman C, double NewStrength)
+        {
+            if (Settable)
+            {
+                C.LocalStats.DoubleStats[ID].Strength = Math.Clamp(NewStrength,MinStrength,MaxStrength);
+            }
+        }
+
+    }
+
+    public class NTStatBool(string Name, bool Strength = false, Func<HumanUpdate.NTHuman, bool> Update = null) : NTStat(Name)
+    {
+        private bool Settable { get; set; } = false;
+        public string ID = Name;
+
+        public bool Get(HumanUpdate.NTHuman C)
+        {
+            return (Update != null) ? Update.Invoke(C) : Strength; // C# my beloved.
+        }
+
+        public void Set(HumanUpdate.NTHuman C, bool NewStrength)
+        {
+            if (Settable)
+            {
+                C.LocalStats.BoolStats[ID].Strength = NewStrength;
             }
         }
     }

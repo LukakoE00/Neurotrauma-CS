@@ -22,7 +22,7 @@ public class HumanUpdate
         public NTHuman(Character NewHuman)
         {
             Human = NewHuman;
-            LocalStats = new CharacterStats();
+            LocalStats = new CharacterStats(this);
             LocalAfflictions = new CharacterAfflictions(NewHuman,this);
         }
 
@@ -43,6 +43,11 @@ public class HumanUpdate
         public Dictionary<string, CharacterAfflictions.NTHumanBloodAffData> GetBloodAffData()
         {
             return LocalAfflictions.UpdatingBloodAfflictions;
+        }
+
+        public CharacterAfflictions? GetAfflictions()
+        {
+            return LocalAfflictions;
         }
 
         public CharacterStats? GetStats()
@@ -340,31 +345,40 @@ public class HumanUpdate
 
         public class CharacterStats
         {
-            private Dictionary<string, int> Stats { get; }
-
-            public CharacterStats()
+            public CharacterStats(NTHuman C)
             {
-                Stats = new Dictionary<string, int>();
-            }
-
-            // If you want to recalculate a single stat
-            public void RecalculateSingle(string id, HumanUpdate.NTHuman character)
-            {
-
-                if (NTStats.Stats[id] != null)
+                foreach (KeyValuePair<string,NTStat> Pair in NTStats.Stats)
                 {
-                    NTStats.Stats[id].Recalculate(character);
+                    if (Pair.Value is NTStatDouble)
+                    {
+                        NTStatDouble StatDouble = (NTStatDouble)Pair.Value;
+                        NTHumanStatDoubleData NewData = new(StatDouble, C);
+                        DoubleStats[StatDouble.ID] = NewData;
+                    }
+                    else if (Pair.Value is NTStatBool)
+                    {
+                        NTStatBool StatBool = (NTStatBool)Pair.Value;
+                        NTHumanStatBoolData NewData = new(StatBool, C);
+                        BoolStats[StatBool.ID] = NewData;
+                    }
                 }
             }
 
-            // If we need to recalculate every stats for a character we can call this
-            public void RecalculateAll(HumanUpdate.NTHuman character)
+            public class NTHumanStatDoubleData(NTStatDouble Stat, NTHuman C) // Stores our characters Stat Data
             {
-                foreach (var stat in NTStats.Stats)
-                {
-                    stat.Value.Recalculate(character);
-                }
+                NTStatDouble StatRef = Stat; // Stores our template.
+                private double Strength = 0;
             }
+
+            public class NTHumanStatBoolData(NTStatBool Stat, NTHuman C) // Stores our characters Stat Data
+            {
+                NTStatBool StatRef = Stat; // Stores our template.
+                private bool Strength = false;
+            }
+
+            public Dictionary<string, NTHumanStatDoubleData> DoubleStats = new();
+            public Dictionary<string, NTHumanStatBoolData> BoolStats = new();
+
         }
 
     }
