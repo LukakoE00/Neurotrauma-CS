@@ -1548,18 +1548,9 @@
 
             <MeleeWeapon canBeCombined="true" removeOnCombined="true" slots="Any,RightHand,LeftHand" aimpos="40,5" handle1="0,0" holdangle="220" reload="1.0" msg="ItemMsgPickUpSelect" HitOnlyCharacters="true">
                 <RequiredSkill identifier="medical" level="64" />
-                
-                <StatusEffect statuseffecttags="medical" type="OnFailure" target="UseTarget" duration="60.0">
-                    <Affliction identifier="paralysisresistance" amount="6.5" />
-                    <Affliction identifier="psychosis" amount="0.75" />
-                    <ReduceAffliction identifier="anesthesia" amount="3" />
-                    <ReduceAffliction identifier="afanaesthetic" amount="3" />
-                </StatusEffect>
-                
                 <StatusEffect type="OnImpact" target="UseTarget" multiplyafflictionsbymaxvitality="true" AllowWhenBroken="true">
                     <Affliction identifier="stun" amount="0.1" />
                 </StatusEffect>
-
             </MeleeWeapon>
 
             <Projectile characterusable="false" launchimpulse="18.0" sticktocharacters="true" launchrotation="-90" inheritstatuseffectsfrom="MeleeWeapon" inheritrequiredskillsfrom="MeleeWeapon" />
@@ -1674,7 +1665,6 @@
             <Sprite texture="Content/Items/Weapons/weapons_new.png" sourcerect="110,414,31,62" depth="0.6" origin="0.5,0.5" />
             <Body width="35" height="60" density="20" />
 
-
             <Throwable characterusable="true" canbecombined="true" removeoncombined="true" slots="Any,RightHand,LeftHand" throwforce="3.5" aimpos="35,-10" msg="ItemMsgPickUpSelect">
                 <StatusEffect type="OnImpact" target="This" Condition="0.0" setvalue="true" />
                 <StatusEffect type="OnFire" target="This" Condition="-50.0" />
@@ -1694,24 +1684,10 @@
                     <sound file="Content/Items/Weapons/ExplosionDebris1.ogg" range="2000" />
                     <sound file="Content/Items/Weapons/ExplosionDebris2.ogg" range="2000" />
                 </StatusEffect>
-                <RequiredSkill identifier="medical" level="35" />
-                <StatusEffect statuseffecttags="medical" multiplyafflictionsbymaxvitality="true" type="OnSuccess" target="UseTarget" disabledeltatime="true">
-                    <Sound file="Content/Items/Medical/Syringe.ogg" range="500" />
-                    <Affliction identifier="afpressuredrug" amount="100" />
-                </StatusEffect>
-                <StatusEffect statuseffecttags="medical" type="OnSuccess" target="This" disabledeltatime="true">
-                    <Remove/>
-                </StatusEffect>
-                <StatusEffect statuseffecttags="medical" multiplyafflictionsbymaxvitality="true" type="OnFailure" target="UseTarget" disabledeltatime="true">
-                    <Sound file="Content/Items/Medical/Syringe.ogg" range="500" />
-                    <Affliction identifier="afpressuredrug" amount="50" />
-                </StatusEffect>
-                <StatusEffect statuseffecttags="medical" type="OnFailure" target="This" disabledeltatime="true">
-                    <Remove/>
-                </StatusEffect>
             </Throwable>
             <SkillRequirementHint identifier="medical" level="35" />
         </Item>
+
         <Item name="" identifier="repairpack" category="Equipment" Tags="smallitem,tool,electricalrepairtool,mechanicalrepairtool,wrench,wrenchitem,screwdriver,multitool" cargocontaineridentifier="metalcrate" allowasextracargo="true" Scale="0.5" impactsoundtag="impact_metal_light" addedrepairspeedmultiplier="0.2" useinhealthinterface="True">
             <PreferredContainer primary="engcab"/>
             <Price baseprice="43" sold="false">

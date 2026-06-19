@@ -197,5 +197,60 @@
             </StatusEffect>
         </ItemComponent>
     </Item>
+
+    <Item name="." identifier="ntsfx_drill" description="." hideinmenus="true">
+        <InventoryIcon texture="Content/Items/InventoryIconAtlas.png" sourcerect="0,0,1,1" origin="0.5,0.5"/>
+        <Sprite texture="Content/Items/Medical/Medicines.png" sourcerect="0,0,1,1" depth="0.6" origin="0.5,0.5"/>
+        <ItemComponent capacity="1" maxstacksize="1" hideitems="true" containedstateindicatorstyle="battery">
+            <StatusEffect type="OnSpawn" target="This" disabledeltatime="true" stackable="false">
+                <Sound file="%ModDir%/Sounds/ItemApplication/Surgical/drill.ogg" range="500"/>
+            </StatusEffect>
+            <StatusEffect type="always" target="This" disabledeltatime="true" delay="2" stackable="false">
+                <Remove/>
+            </StatusEffect>
+        </ItemComponent>
+    </Item>
+
+    <Item name="." identifier="ntsfx_breakbone" description="." hideinmenus="true">
+        <InventoryIcon texture="Content/Items/InventoryIconAtlas.png" sourcerect="0,0,1,1" origin="0.5,0.5"/>
+        <Sprite texture="Content/Items/Medical/Medicines.png" sourcerect="0,0,1,1" depth="0.6" origin="0.5,0.5"/>
+        <ItemComponent capacity="1" maxstacksize="1" hideitems="true" containedstateindicatorstyle="battery">
+            <StatusEffect type="OnSpawn" target="This" disabledeltatime="true" stackable="false">
+                <sound file="%ModDir%/Sounds/Bones/bonebreak4.ogg" selectionmode="random" range="500"/>
+                <sound file="%ModDir%/Sounds/Bones/bonebreak3.ogg" range="500"/>
+                <sound file="%ModDir%/Sounds/Bones/bonebreak2.ogg" range="500"/>
+                <sound file="%ModDir%/Sounds/Bones/bonebreak1.ogg" range="500"/>
+            </StatusEffect>
+            <StatusEffect type="always" target="This" disabledeltatime="true" delay="2" stackable="false">
+                <Remove/>
+            </StatusEffect>
+        </ItemComponent>
+    </Item>
+
+    <Item name="." identifier="ntsfx_squelch" description="." hideinmenus="true">
+        <InventoryIcon texture="Content/Items/InventoryIconAtlas.png" sourcerect="0,0,1,1" origin="0.5,0.5"/>
+        <Sprite texture="Content/Items/Medical/Medicines.png" sourcerect="0,0,1,1" depth="0.6" origin="0.5,0.5"/>
+        <ItemComponent capacity="1" maxstacksize="1" hideitems="true" containedstateindicatorstyle="battery">
+            <StatusEffect type="OnSpawn" target="This" disabledeltatime="true" stackable="false">
+                <Sound file="%ModDir%/Sounds/ItemApplication/Surgical/squelch1.ogg"/>
+            </StatusEffect>
+            <StatusEffect type="always" target="This" disabledeltatime="true" delay="2" stackable="false">
+                <Remove/>
+            </StatusEffect>
+        </ItemComponent>
+    </Item>
+
+    <Item name="." identifier="ntsfx_spray" description="." hideinmenus="true">
+        <InventoryIcon texture="Content/Items/InventoryIconAtlas.png" sourcerect="0,0,1,1" origin="0.5,0.5"/>
+        <Sprite texture="Content/Items/Medical/Medicines.png" sourcerect="0,0,1,1" depth="0.6" origin="0.5,0.5"/>
+        <ItemComponent capacity="1" maxstacksize="1" hideitems="true" containedstateindicatorstyle="battery">
+            <StatusEffect type="OnSpawn" target="This" disabledeltatime="true" stackable="false">
+                <Sound file="%ModDir%/Sounds/ItemApplication/Tools/spray.ogg" range="500"/>
+            </StatusEffect>
+            <StatusEffect type="always" target="This" disabledeltatime="true" delay="2" stackable="false">
+                <Remove/>
+            </StatusEffect>
+        </ItemComponent>
+    </Item>
 </Items>
 </Override>

@@ -514,9 +514,6 @@ public class NTItemMethods
 
             int duration = 10;
 
-            // Why does applying it stun for 0.1s?
-            HF.AddAffliction(infos.target, "stun", 0.1f, infos.user);
-
             if (success)
             {
                 HF.ApplyAfflictionOverTime(infos.target, "afmannitol", 50, duration, infos.user);
@@ -955,45 +952,30 @@ public class NTItemMethods
         });
 
         // Plastiseal
-        // TODO
         RegisterItemUseFunction("antibleeding2", infos =>
         {
+            bool success = HF.GetSkillRequirementMet(infos.user, "medical", 22);
+            int successNum = success ? 1 : 0;
 
-        });
+            HF.AddAfflictionLimb(infos.target, "dirtybandage", infos.targetLimb.type, -100, infos.user);
+            HF.AddAfflictionLimb(infos.target, "bandaged", infos.targetLimb.type, 50 + successNum * 50, infos.user);
+            HF.AddAfflictionLimb(infos.target, "bleeding", infos.targetLimb.type, -24 - successNum * 24, infos.user);
 
-        // Opium
-        // TODO
-        RegisterItemUseFunction("opium", infos =>
-        {
+            if (HF.HasAfflictionLimb(infos.target, "retractedskin", infos.targetLimb.type))
+            {
+                float affAmount = HF.GetAfflictionStrengthLimb(infos.target, infos.targetLimb.type, "burn");
+                float healedAmount = Math.Min(affAmount, 200f);
 
-        });
+                HF.AddAfflictionLimb(infos.target, "burn", infos.targetLimb.type, -healedAmount, infos.user);
+                HF.GiveSkillScaled(infos.user, "medical", (float)healedAmount * 150);
+            }
+            else if (HF.GetAfflictionStrengthLimb(infos.target, infos.targetLimb.type, "burn", 0) > 50f)
+            {
+                HF.AddAfflictionLimb(infos.target, "burn", infos.targetLimb.type, -12 - successNum * 12, infos.user);
+            }
 
-        // Morphine
-        // TODO
-        RegisterItemUseFunction("antidama1", infos =>
-        {
-
-        });
-
-        // Fentanyl
-        // TODO
-        RegisterItemUseFunction("antidama2", infos =>
-        {
-
-        });
-
-        // Naloxone
-        // TODO
-        RegisterItemUseFunction("antinarc", infos =>
-        {
-
-        });
-
-        // Broad-Spectrum Antibiotics
-        // TODO
-        RegisterItemUseFunction("antibiotics", infos =>
-        {
-
+            HF.RemoveItem(infos.item);
+            HF.GiveItem(infos.target, "ntsfx_bandage");
         });
 
         // Adrenaline
@@ -1012,48 +994,6 @@ public class NTItemMethods
             HF.GiveItem(infos.target, "ntsfx_syringe");
         });
 
-        // Liquid Oxygenite
-        // TODO
-        RegisterItemUseFunction("liquidoxygenite", infos =>
-        {
-
-        });
-
-        // Deusizine
-        // TODO
-        RegisterItemUseFunction("deusizine", infos =>
-        {
-
-        });
-
-        // Antibiotic Glue
-        // TODO
-        RegisterItemUseFunction("antibleeding3", infos =>
-        {
-
-        });
-
-        // Methamphetamine
-        // TODO
-        RegisterItemUseFunction("meth", infos =>
-        {
-
-        });
-
-        // Hyperzine
-        // TODO
-        RegisterItemUseFunction("hyperzine", infos =>
-        {
-
-        });
-
-        // Haloperidol
-        // TODO
-        RegisterItemUseFunction("antipsychosis", infos =>
-        {
-
-        });
-
         // Anaparalyzant
         // REWRITTEN FROM XML
         RegisterItemUseFunction("antiparalysis", infos =>
@@ -1067,27 +1007,30 @@ public class NTItemMethods
             }
             else
             {
-
-                // TODO Apply it over time
-
+                HF.ApplyAfflictionOverTime(infos.target, "paralysisresistance", 390f, 60, infos.user);
+                HF.ApplyAfflictionOverTime(infos.target, "psychosis", 45f, 60, infos.user);
+                HF.ApplyAfflictionOverTime(infos.target, "anesthesia", -180f, 60, infos.user);
+                HF.ApplyAfflictionOverTime(infos.target, "afanaesthetic", -180f, 60, infos.user);
             }
 
             HF.RemoveItem(infos.item);
             HF.GiveItem(infos.target, "ntsfx_syringe");
         });
 
-        // Tonic Liquid
-        // TODO
-        RegisterItemUseFunction("tonicliquid", infos =>
-        {
-
-        });
-
         // Nitroglycerin
-        // TODO
         RegisterItemUseFunction("nitroglycerin", infos =>
         {
+            if (HF.GetSkillRequirementMet(infos.user, "medical", 35f))
+            {
+                HF.AddAffliction(infos.target, "afpressuredrug", 100f, infos.user);
+            }
+            else
+            {
+                HF.AddAffliction(infos.target, "afpressuredrug", 50f, infos.user);
+            }
 
+            HF.RemoveItem(infos.item);
+            HF.GiveItem(infos.target, "ntsfx_syringe");
         });
 
         // ============== SurgicalEquipment ==============
@@ -1281,24 +1224,167 @@ public class NTItemMethods
         });
 
         // Needle
-        // TODO
         RegisterItemUseFunction("needle", infos =>
         {
+            // Stasis check
+            if (HF.HasAffliction(infos.target, "stasis", 0.1f)) return;
 
+            if (infos.targetLimb.type == LimbType.Torso &&
+                !HF.HasAfflictionLimb(infos.target, "retractedskin", infos.targetLimb.type))
+            {
+                if (HF.GetSkillRequirementMet(infos.user, "medical", 20f))
+                {
+                    // If Pneumothorax OR Cardiac Tamponade is present, give skill.
+                    if ((HF.HasAffliction(infos.target, "pneumothorax") ||
+                         HF.HasAffliction(infos.target, "tamponade")) &&
+                        !HF.HasAffliction(infos.target, "needlec", 0.1f))
+                    {
+                        HF.GiveSkillScaled(infos.user, "medical", 4000f);
+                    }
+
+                    HF.SetAffliction(infos.target, "needlec", 100f, infos.user, 0);
+
+                    // If neither condition is present, cause a pneumothorax.
+                    if (!HF.HasAffliction(infos.target, "pneumothorax") &&
+                        !HF.HasAffliction(infos.target, "tamponade"))
+                    {
+                        HF.AddAffliction(infos.target, "pneumothorax", 1f, infos.user);
+                    }
+                    
+                    // Originally, this had a check for NTSP NTCompat code; I'll do that later. - Lukako
+                    HF.RemoveItem(infos.item);
+                }
+                else
+                {
+                    HF.AddAffliction(infos.target, "organdamage", 10f, infos.user);
+                    HF.AddAfflictionLimb(infos.target, "bleeding", infos.targetLimb.type, 10f,infos.user);
+                }
+            }
         });
 
         // Osteosynthesis Implants
-        // TODO
         RegisterItemUseFunction("osteosynthesisimplants", infos =>
         {
+            if (!HF.CanPerformSurgeryOn(infos.target) ||
+                !HF.HasAfflictionLimb(infos.target, "drilledbones", infos.targetLimb.type, 99f))
+            {
+                return;
+            }
 
+            // Originally NTSP integrated for Surgery Skill, TODO.
+            if (HF.GetSkillRequirementMet(infos.user, "Medical", 45f))
+            {
+                void removeAfflictionPlusGainSkill(string afflictionId, float skillGain)
+                {
+                    if (HF.HasAfflictionLimb(infos.target, afflictionId, infos.targetLimb.type))
+                    {
+                        HF.SetAfflictionLimb(infos.target, afflictionId, infos.targetLimb.type, 0f, infos.user, 0);
+                        HF.GiveSkillScaled(infos.user, "medical", skillGain / 4f);
+                    }
+                }
+
+                void removeAfflictionNonLimbSpecificPlusGainSkill(string afflictionId, float skillGain)
+                {
+                    if (HF.HasAffliction(infos.target, afflictionId))
+                    {
+                        HF.SetAffliction(infos.target, afflictionId, 0f, infos.user, 0);
+                        HF.GiveSkillScaled(infos.user, "medical", skillGain / 4f);
+                    }
+                }
+
+                var implantAfflictions = new Dictionary<string, float>
+                {
+                    ["ll_fracture"] = 10000f,
+                    ["rl_fracture"] = 10000f,
+                    ["la_fracture"] = 10000f,
+                    ["ra_fracture"] = 10000f,
+                    ["h_fracture"] = 10000f,
+                    ["n_fracture"] = 10000f,
+                    ["t_fracture"] = 10000f,
+                    ["boneclamp"] = 0f,
+                    ["drilledbones"] = 0f
+                };
+
+                foreach (var kvp in implantAfflictions)
+                {
+                    string identifier = kvp.Key;
+                    float skillGain = kvp.Value;
+
+                    var prefab = AfflictionPrefab.Prefabs[identifier];
+
+                    if (prefab == null) continue;
+
+                    if (prefab.LimbSpecific)
+                    {
+                        removeAfflictionPlusGainSkill(identifier, skillGain);
+                    }
+                    else if (prefab.IndicatorLimb == infos.targetLimb.type)
+                    {
+                        removeAfflictionNonLimbSpecificPlusGainSkill(identifier, skillGain);
+                    }
+                }
+
+                HF.SetAfflictionLimb(infos.target, "bonegrowth", infos.targetLimb.type, 100f, infos.user, 0);
+
+                float itemUses = (1f / NTConfig.Get("NT_OsteoImplants_uses", 4)) * 100f;
+
+                infos.item.Condition -= itemUses;
+                if (infos.item.Condition <= 1f)
+                {
+                    HF.RemoveItem(infos.item);
+                }
+            }
+            else
+            {
+                HF.AddAfflictionLimb(infos.target, "bleeding", infos.targetLimb.type, 5f, infos.user);
+                HF.AddAfflictionLimb(infos.target, "internaldamage", infos.targetLimb.type, 5f, infos.user);
+            }
+
+            // XML-derived sound
+            if (HF.HasAfflictionLimb(infos.target, "drilledbones", infos.targetLimb.type, 99f) &&
+                HF.HasAffliction(infos.target, "analgesia", 1f))
+            {
+                HF.GiveItem(infos.target, "ntsfx_drill");
+            }
         });
 
         // Spinal Cord Implants
-        // TODO
         RegisterItemUseFunction("spinalimplant", infos =>
         {
+            if (!HF.CanPerformSurgeryOn(infos.target) ||
+                !HF.HasAfflictionLimb(infos.target, "retractedskin", infos.targetLimb.type, 99f) ||
+                !HF.HasAffliction(infos.target, "spinalcordinjury", 0.1f))
+            {
+                return;
+            }
 
+            // Originally NTSP integrated for Surgery Skill, TODO.
+            if (HF.GetSkillRequirementMet(infos.user, "Medical", 45f))
+            {
+                HF.SetAffliction(infos.target, "spinalcordinjury", 0f, infos.user, 0);
+
+                float itemUses = (1f / NTConfig.Get("NT_SpinalImplants_uses", 1)) * 100f;
+
+                infos.item.Condition -= itemUses;
+
+                if (infos.item.Condition <= 1f)
+                {
+                    HF.RemoveItem(infos.item);
+                }
+
+                HF.GiveSkillScaled(infos.user, "medical", 6000f);
+            }
+            else
+            {
+                HF.AddAfflictionLimb(infos.target, "bleeding", infos.targetLimb.type, 5f, infos.user);
+                HF.AddAfflictionLimb(infos.target, "internaldamage", infos.targetLimb.type, 5f, infos.user);
+            }
+
+            // XML-derived sound
+            if (HF.HasAfflictionLimb(infos.target, "retractedskin", infos.targetLimb.type, 99f))
+            {
+                HF.GiveItem(infos.target, "ntsfx_drill");
+            }
         });
 
         // Scalpel
@@ -1355,24 +1441,161 @@ public class NTItemMethods
         });
 
         // Surgical Drill
-        // TODO
         RegisterItemUseFunction("surgicaldrill", infos =>
         {
+            // Stasis check
+            if (HF.HasAffliction(infos.target, "stasis", 0.1f)) return;
 
+            if (!HF.CanPerformSurgeryOn(infos.target) ||
+                !HF.HasAfflictionLimb(infos.target, "retractedskin", infos.targetLimb.type, 99f) ||
+                HF.HasAfflictionLimb(infos.target, "drilledbones", infos.targetLimb.type, 1f))
+            {
+                return;
+            }
+
+            if (HF.GetSurgerySkillRequirementMet(infos.user, 45f))
+            {
+                HF.AddAfflictionLimb(infos.target, "drilledbones", infos.targetLimb.type, 1f + HF.GetSurgerySkill(infos.user) / 2f, infos.user);
+            }
+            else
+            {
+                HF.AddAfflictionLimb(infos.target, "burn", infos.targetLimb.type, 12f, infos.user);
+                HF.AddAfflictionLimb(infos.target, "internaldamage", infos.targetLimb.type, 10f, infos.user);
+            }
+
+            // XML-derived sound
+            if (HF.HasAffliction(infos.target, "analgesia", 1f))
+            {
+                HF.GiveItem(infos.target, "ntsfx_drill");
+            }
         });
 
         // Surgical Saw
-        // TODO
         RegisterItemUseFunction("surgerysaw", infos =>
         {
+            // Stasis check
+            if (HF.HasAffliction(infos.target, "stasis", 0.1f)) return;
 
+            if (!HF.CanPerformSurgeryOn(infos.target) ||
+                !HF.HasAfflictionLimb(infos.target, "retractedskin", infos.targetLimb.type, 99f) ||
+                HF.HasAfflictionLimb(infos.target, "bonecut", infos.targetLimb.type, 1f))
+            {
+                return;
+            }
+
+            if (HF.GetSurgerySkillRequirementMet(infos.user, 50f))
+            {
+                if (infos.targetLimb.type != LimbType.Torso)
+                {
+                    HF.AddAfflictionLimb(infos.target, "bonecut", infos.targetLimb.type, 1f + HF.GetSurgerySkill(infos.user) / 2f, infos.user);
+                }
+            }
+            else
+            {
+                HF.AddAfflictionLimb(infos.target, "bleeding", infos.targetLimb.type, 15f, infos.user);
+                HF.AddAfflictionLimb(infos.target, "internaldamage", infos.targetLimb.type, 6f, infos.user);
+                HF.AddAfflictionLimb(infos.target, "lacerations", infos.targetLimb.type, 4f, infos.user);
+            }
+
+            // XML-derived sound
+            if (HF.HasAfflictionLimb(infos.target, "retractedskin", infos.targetLimb.type, 99f) &&
+                HF.HasAffliction(infos.target, "analgesia", 1f))
+            {
+                HF.GiveItem(infos.target, "ntsfx_breakbone");
+            }
         });
 
         // Tweezers
         // TODO
         RegisterItemUseFunction("tweezers", infos =>
         {
+            // Stasis check
+            if (HF.HasAffliction(infos.target, "stasis", 0.1f)) return;
 
+            string usecase = "";
+
+            // Through surgical wound
+            if (HF.CanPerformSurgeryOn(infos.target) &&
+                HF.HasAfflictionLimb(infos.target, "retractedskin", infos.targetLimb.type, 99f))
+            {
+                usecase = "surgery";
+            }
+            // Through normal wound
+            else if (HF.HasAfflictionLimb(infos.target, "gunshotwound", infos.targetLimb.type, 1f) ||
+                     HF.HasAfflictionLimb(infos.target, "explosiondamage", infos.targetLimb.type, 1f))
+            {
+                usecase = "ghetto";
+            }
+
+            if (usecase != "")
+            {
+                if (HF.GetSkillRequirementMet(infos.user, "medical", 30f))
+                {
+                    HF.AddAfflictionLimb(infos.target, "lacerations", infos.targetLimb.type, 5f, infos.user);
+
+                    if (usecase == "ghetto")
+                    {
+                        HF.AddAffliction(infos.target, "traumaticshock", 5f, infos.user);
+                    }
+
+                    void HealAfflictionGiveSkill(string identifier, float healAmount, float skillGain)
+                    {
+                        float affAmount = HF.GetAfflictionStrengthLimb(infos.target, infos.targetLimb.type, identifier);
+                        float healedAmount = Math.Min(affAmount, healAmount);
+
+                        HF.AddAfflictionLimb(infos.target, identifier, infos.targetLimb.type, -healAmount, infos.user);
+                        HF.GiveSkillScaled(infos.user, "medical", healedAmount * skillGain / 2f);
+                    }
+
+                    float foreignBody = HF.GetAfflictionStrengthLimb(infos.target, infos.targetLimb.type, "foreignbody", 0f);
+                    float scrapDropChance = Math.Min(foreignBody, 5f) / 5f * 0.05f;
+
+                    if (HF.Chance(scrapDropChance))
+                    {
+                        HF.GiveItem(infos.user, "scrap");
+                    }
+
+                    float toHealAmount = Rand.Range(3f, 10f);
+
+                    HealAfflictionGiveSkill("foreignbody", toHealAmount, 600f);
+
+                    if (usecase == "surgery")
+                    {
+                        HealAfflictionGiveSkill("internaldamage", toHealAmount, 3f);
+                        HealAfflictionGiveSkill("blunttrauma", toHealAmount, 3f);
+                    }
+                }
+                else
+                {
+                    HF.AddAfflictionLimb(infos.target, "internaldamage", infos.targetLimb.type, 6f, infos.user);
+                }
+            }
+            else
+            {
+                bool sedated = HF.CanPerformSurgeryOn(infos.target);
+
+                // pinchy pinchy!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                HF.AddAfflictionLimb(infos.target, "bleeding", infos.targetLimb.type, 1f, infos.user);
+                HF.AddAfflictionLimb(infos.target, "lacerations", infos.targetLimb.type, 0.5f, infos.user);
+
+                if (!sedated)
+                {
+                    HF.AddAfflictionLimb(infos.target, "intensepain", infos.targetLimb.type, 5f, infos.user);
+                    HF.AddAffliction(infos.target, "stun", 0.1f, infos.user);
+                }
+
+                // special head handling
+                if (infos.targetLimb.type == LimbType.Head)
+                {
+                    HF.AddAfflictionLimb(infos.target, "bleeding", infos.targetLimb.type, 3f, infos.user);
+                    HF.AddAfflictionLimb(infos.target, "lacerations", infos.targetLimb.type, 2f, infos.user);
+
+                    if (!sedated)
+                    {
+                        HF.AddAfflictionLimb(infos.target, "intensepain", infos.targetLimb.type, 5f, infos.user);
+                    }
+                }
+            }
         });
 
         // Organ Scalpels [Lungs, Heart, Kidneys, Liver, Brain]; used by the MultiScalpel + Toggleable StandAlone Scalpels
@@ -1430,32 +1653,107 @@ public class NTItemMethods
         });
 
         // Antiseptic Sprayer
-        // TODO
         RegisterItemUseFunction("antisepticspray", infos =>
         {
+            // Stasis check
+            if (HF.HasAffliction(infos.target, "stasis", 0.1f)) return;
 
+            if (infos.item.Condition <= 0) return;
+
+            infos.item.Condition = 0; // Start Cooldown
+
+            LuaCsSetup.Instance.Timer.Wait((params object[] _) =>
+            {
+                infos.item.Condition = 100; // Finish Cooldown
+            }, 2000);
+
+            var containedItem = infos.item.OwnInventory?.GetItemAt(0);
+            bool hasSaline = containedItem != null && containedItem.Prefab.Identifier == "antibloodloss1";
+            bool hasAntiseptic = containedItem != null && containedItem.Prefab.Identifier == "antiseptic";
+
+            // Surgery use
+            if (hasSaline && infos.targetLimb.type == LimbType.Torso && HF.HasAffliction(infos.target, "infectedcavity", 1f) && HF.HasAffliction(infos.target, "retractedskin", 1f))
+            {
+                float skill = HF.GetSurgerySkill(infos.user);
+                float delay = 11000f - skill * 10f;
+
+                HF.AddAfflictionLimb(infos.target, "caviclean", infos.targetLimb.type, Math.Max(100f - skill / 2f, 10f), infos.user);
+
+                LuaCsSetup.Instance.Timer.Wait((object[] _) =>
+                {
+                    if (!HF.HasAffliction(infos.target, "infectedcavity", 1f))
+                    {
+                        HF.GiveSkillScaled(infos.user, "medical", 10000f);
+                    }
+                }, (int)delay);
+
+                return;
+            }
+            
+            // Antiseptic use
+            if (hasAntiseptic)
+            {
+                HF.AddAffliction(infos.target, "infectedwound", -100f, infos.user);
+                HF.AddAffliction(infos.target, "ointmented", 20f, infos.user);
+            }
+            
+            HF.GiveItem(infos.target, "ntsfx_spray");
         });
 
         // ============== Toggleable ==============
         // Endovascular Balloon
-        // TODO
         RegisterItemUseFunction("endovascballoon", infos =>
         {
+            // Stasis check
+            if (HF.HasAffliction(infos.target, "stasis", 0.1f)) return;
 
+            if (infos.targetLimb.type == LimbType.Torso && HF.HasAfflictionLimb(infos.target, "surgeryincision", infos.targetLimb.type, 1f) && HF.HasAffliction(infos.target, "aorticrupture", 1f))
+            {
+                // Main effect
+                HF.AddAffliction(infos.target, "balloonedaorta", 100f, infos.user);
+                HF.SetAffliction(infos.target, "internalbleeding", 0f, infos.user, 0);
+
+                HF.GiveSkillScaled(infos.user, "medical", 5000f);
+
+                HF.GiveItem(infos.target, "ntsfx_syringe");
+                HF.RemoveItem(infos.item);
+            }
         });
 
         // Medical Stent
-        // TODO
         RegisterItemUseFunction("medstent", infos =>
         {
+            LimbType limbType = infos.targetLimb.type;
 
+            // Stasis check
+            if (HF.HasAffliction(infos.target, "stasis", 0.1f)) return;
+
+            if (limbType == LimbType.Torso &&
+                HF.HasAffliction(infos.target, "balloonedaorta", 1f))
+            {
+                // Remove vascular condition
+                HF.SetAffliction(infos.target, "balloonedaorta", 0f, infos.user, 0);
+                HF.SetAffliction(infos.target, "t_arterialcut", 0f, infos.user, 0);
+
+                HF.GiveSkillScaled(infos.user, "medical", 10000f);
+            }
+
+            HF.GiveItem(infos.target, "ntsfx_syringe");
+            HF.RemoveItem(infos.item);
         });
 
         // Sodium Nitroprusside
-        // TODO
         RegisterItemUseFunction("pressuremeds", infos =>
         {
+            bool success = HF.GetSkillRequirementMet(infos.user, "medical", 10f);
 
+            int totalAmount = success ? 50 : 30;
+            int duration = 10;
+
+            HF.ApplyAfflictionOverTime(infos.target, "afpressuredrug", totalAmount, duration, infos.user);
+
+            HF.GiveItem(infos.target, "ntsfx_pills");
+            HF.RemoveItem(infos.item);
         });
     }
 

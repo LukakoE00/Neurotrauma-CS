@@ -147,16 +147,7 @@
         <Sprite texture="%ModDir%/Images/InGameItemIconAtlas.png" sourcerect="87,403,84,67" origin="0.5,0.5" depth="0.6" />
         <Body width="65" height="15" density="50"/>
 
-        <MeleeWeapon canBeCombined="true" removeOnCombined="true" slots="Any,RightHand,LeftHand" aimpos="5,0" handle1="-5,0" holdangle="10" reload="1.0">
-            <StatusEffect type="OnUse" target="Limb, this" comparison="and">
-                <Conditional drilledbones="gte 99"/>
-                <Conditional analgesia="gte 1"/>
-                <Sound file="%ModDir%/Sounds/ItemApplication/Surgical/drill.ogg" range="500"/>
-            </StatusEffect>
-            <StatusEffect type="OnBroken" target="This">
-                <Remove/>
-            </StatusEffect>
-        </MeleeWeapon>
+        <MeleeWeapon canBeCombined="true" removeOnCombined="true" slots="Any,RightHand,LeftHand" aimpos="5,0" handle1="-5,0" holdangle="10" reload="1.0"/>
 
         <SkillRequirementHint identifier="medical" level="45"/>
     </Item>
@@ -184,16 +175,7 @@
         <Sprite texture="%ModDir%/Images/InGameItemIconAtlas.png" sourcerect="344,403,84,67" origin="0.5,0.5" depth="0.6" />
         <Body width="60" height="90" density="20"/>
 
-        <MeleeWeapon canBeCombined="true" removeOnCombined="true" slots="Any,RightHand,LeftHand" aimpos="5,5" handle1="0,0" holdangle="220" reload="1.0" msg="ItemMsgPickUpSelect">
-            <StatusEffect type="OnUse" target="Limb, This" disabledeltatime="true" comparison="And">
-              <Conditional retractedskin="gt 50" />
-              <Sound file="%ModDir%/Sounds/ItemApplication/Surgical/drill.ogg" range="500" />
-            </StatusEffect>
-            <StatusEffect type="OnBroken" target="This">
-                <Remove/>
-            </StatusEffect>
-        </MeleeWeapon>
-
+        <MeleeWeapon canBeCombined="true" removeOnCombined="true" slots="Any,RightHand,LeftHand" aimpos="5,5" handle1="0,0" holdangle="220" reload="1.0" msg="ItemMsgPickUpSelect"/>
         <SkillRequirementHint identifier="medical" level="45"/>
     </Item>
 
@@ -277,17 +259,7 @@
         <Sprite texture="%ModDir%/Images/InGameItemIconAtlas.png" sourcerect="0,0,128,128" depth="0.55" origin="0.5,0.5"/>
         <Body width="120" height="50" density="50"/>
 
-        <MeleeWeapon slots="Any,RightHand,LeftHand" aimpos="40,5" handle1="-18,-7" holdangle="90" reload="1.0">
-            <StatusEffect type="OnUse" target="Limb" comparison="And">
-                <Conditional analgesia="gte 1"/>
-                <Conditional retractedskin="gte 99"/>
-                <sound file="%ModDir%/Sounds/Bones/bonebreak4.ogg" selectionmode="random" range="500"/>
-                <sound file="%ModDir%/Sounds/Bones/bonebreak3.ogg" range="500"/>
-                <sound file="%ModDir%/Sounds/Bones/bonebreak2.ogg" range="500"/>
-                <sound file="%ModDir%/Sounds/Bones/bonebreak1.ogg" range="500"/>
-            </StatusEffect>
-        </MeleeWeapon>
-
+        <MeleeWeapon slots="Any,RightHand,LeftHand" aimpos="40,5" handle1="-18,-7" holdangle="90" reload="1.0"/>
         <SkillRequirementHint identifier="medical" level="50"/>
     </Item>
 
@@ -307,12 +279,7 @@
         <SuitableTreatment identifier="analgesia" suitability="0.05"/>
         <SuitableTreatment identifier="sym_unconsciousness" suitability="0.05"/>
 
-        <MeleeWeapon slots="Any,RightHand,LeftHand" aimpos="5,0" handle1="-5,-5" holdangle="10" reload="1.0">
-            <StatusEffect type="OnUse" target="Limb" comparison="And" disabledeltatime="True">
-                <Sound file="%ModDir%/Sounds/ItemApplication/Surgical/squelch1.ogg"/>
-            </StatusEffect>
-        </MeleeWeapon>
-
+        <MeleeWeapon slots="Any,RightHand,LeftHand" aimpos="5,0" handle1="-5,-5" holdangle="10" reload="1.0"/>
         <SkillRequirementHint identifier="medical" level="30"/>
     </Item>
 
@@ -367,10 +334,7 @@
         <SuitableTreatment identifier="analgesia" suitability="0.01"/>
         <SuitableTreatment identifier="sym_unconsciousness" suitability="0.01"/>
 
-        <MeleeWeapon slots="Any,RightHand,LeftHand" aimpos="40,5" handle1="-7,2" holdangle="60" reload="1.0">
-            <StatusEffect type="OnUse" target="Limb" comparison="and">
-            </StatusEffect>
-        </MeleeWeapon>
+        <MeleeWeapon slots="Any,RightHand,LeftHand" aimpos="40,5" handle1="-7,2" holdangle="60" reload="1.0"/>
 
         <SkillRequirementHint identifier="medical" level="30"/>
     </Item>
@@ -403,11 +367,7 @@
         <SuitableTreatment identifier="analgesia" suitability="0.04"/>
         <SuitableTreatment identifier="sym_unconsciousness" suitability="0.04"/>
 
-        <MeleeWeapon slots="Any,RightHand,LeftHand" aimpos="40,5" handle1="-7,2" holdangle="60" reload="1.0">
-            <!-- extracting organ -->
-            <StatusEffect statuseffecttags="medical" type="OnUse" target="This,Limb" comparison="and" disabledeltatime="true">
-            </StatusEffect>
-        </MeleeWeapon>
+        <MeleeWeapon slots="Any,RightHand,LeftHand" aimpos="40,5" handle1="-7,2" holdangle="60" reload="1.0"/>
 
         <CustomInterface canbeselected="false" drawhudwhenequipped="true" allowuioverlap="true">
             <GuiFrame relativesize="0.14,0.25" anchor="CenterLeft" pivot="BottomLeft" relativeoffset="0.006,0" style="ItemUI" />
@@ -416,11 +376,6 @@
                     <LuaHook name="NT.multiscalpel.incision"/>
                 </StatusEffect>
             </Button>
-            <!--<Button text="multiscalpel.btn.kidneys"><StatusEffect type="OnUse" stackable="true"><LuaHook name="NT.multiscalpel.kidneys"/></StatusEffect></Button>-->
-            <!--<Button text="multiscalpel.btn.liver"><StatusEffect type="OnUse" stackable="true"><LuaHook name="NT.multiscalpel.liver"/></StatusEffect></Button>-->
-            <!--<Button text="multiscalpel.btn.lungs"><StatusEffect type="OnUse" stackable="true"><LuaHook name="NT.multiscalpel.lungs"/></StatusEffect></Button>-->
-            <!--<Button text="multiscalpel.btn.heart"><StatusEffect type="OnUse" stackable="true"><LuaHook name="NT.multiscalpel.heart"/></StatusEffect></Button>-->
-            <!--<Button text="multiscalpel.btn.brain"><StatusEffect type="OnUse" stackable="true"><LuaHook name="NT.multiscalpel.brain"/></StatusEffect></Button>-->
             <Button text="multiscalpel.btn.bandage">
                 <StatusEffect target="This" type="OnUse" stackable="true">
                     <LuaHook name="NT.multiscalpel.bandage"/>
@@ -462,18 +417,6 @@
             <ParticleEmitter particle="extinguisher" particlespersecond="15" copyentityangle="true" velocitymin="200.0" velocitymax="250.0"/>
             <RequiredSkill identifier="medical" level="40"/>
             <RequiredItems items="antiseptic" type="Contained" msg="Antiseptic Required"/>
-
-            <StatusEffect type="OnUse" target="This" Condition="-100" disabledeltatime="true"/>
-
-            <StatusEffect type="OnBroken" target="This" Condition="100" disabledeltatime="true" delay="2" stackable="false"/>
-
-            <StatusEffect type="OnUse" targettype="Contained" targets="antiseptic" disabledeltatime="true" Condition="-10.0"/>
-
-            <StatusEffect statuseffecttags="medical" type="OnUse" target="Limb" disabledeltatime="true">
-                <Sound file="%ModDir%/Sounds/ItemApplication/Tools/spray.ogg" range="500"/>
-                <ReduceAffliction identifier="infectedwound" amount="100"/>
-                <Affliction identifier="ointmented" amount="20"/>
-            </StatusEffect>
         </RepairTool>
 
         <ItemContainer capacity="1" maxstacksize="1" hideitems="false" itempos="-35,3" containedspritedepth="0.56" ItemRotation="-90" containedstateindicatorstyle="tank">

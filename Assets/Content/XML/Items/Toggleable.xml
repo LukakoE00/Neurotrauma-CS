@@ -22,15 +22,7 @@
         <InventoryIcon texture="%ModDir%/Images/InventoryItemIconAtlas.png" sourcerect="192,128,64,64" origin="0.5,0.5"/>
         <Sprite texture="%ModDir%/Images/InGameItemIconAtlas.png" sourcerect="512,256,128,128" depth="0.55" origin="0.5,0.5"/>
         <Body width="100" height="100" density="50"/>
-        <MeleeWeapon slots="Any,RightHand,LeftHand" aimpos="5,0" handle1="-5,0" holdangle="10" reload="1.0">
-            <StatusEffect type="OnUse" target="This">
-                <Sound file="Content/Items/Medical/Syringe.ogg" range="500"/>
-            </StatusEffect>
-
-            <StatusEffect type="OnBroken" target="This">
-                <Remove/>
-            </StatusEffect>
-        </MeleeWeapon>
+        <MeleeWeapon slots="Any,RightHand,LeftHand" aimpos="5,0" handle1="-5,0" holdangle="10" reload="1.0"/>
     </Item>
 
     <!-- Medical Stent -->
@@ -54,17 +46,9 @@
         <InventoryIcon texture="%ModDir%/Images/InventoryItemIconAtlas.png" sourcerect="384,128,64,64" origin="0.5,0.5"/>
         <Sprite texture="%ModDir%/Images/InventoryItemIconAtlas.png" sourcerect="384,128,64,64" depth="0.55" origin="0.5,0.5"/>
         <Body width="100" height="100" density="50"/>
-        <SuitableTreatment identifier="arterialcut5" suitability="50"/>
+        <SuitableTreatment identifier="aorticrupture" suitability="50"/>
 
-        <MeleeWeapon slots="Any,RightHand,LeftHand" aimpos="5,0" handle1="-5,0" holdangle="10" reload="1.0">
-            <StatusEffect type="OnUse" target="This">
-                <Sound file="Content/Items/Medical/Syringe.ogg" range="500"/>
-            </StatusEffect>
-
-            <StatusEffect type="OnBroken" target="This">
-                <Remove/>
-            </StatusEffect>
-        </MeleeWeapon>
+        <MeleeWeapon slots="Any,RightHand,LeftHand" aimpos="5,0" handle1="-5,0" holdangle="10" reload="1.0"/>
     </Item>
 
     <!-- Antiseptic -->

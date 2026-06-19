@@ -49,63 +49,63 @@ Stasis Bag: Look into changing Overlay system
 Analgesic Tank: Good enough XML
 Toxin Filter: Good enough XML
 Dialyzer: Good enough XML
-Manual Defibrillator: Todo C#
-AED: Todo C#
+Manual Defibrillator: DONE
+AED: DONE
 Ambubag: Good enough XML
 AutoPulse: Good enough XML
 Wheelchair: Good enough XML
-Blue Shark: Todo C#
+Blue Shark: DONE
 Surgery Table: Good enough XML
 
 ## Overrides:
-Wrench: Todo C#
+Wrench: DONE
 Health Scanner: DONE
 Alien Blood: DONE
-Saline: Todo C#
+Saline: DONE
 0- Blood Pack: Todo C#
-Bandage: Todo C#
-Plastiseal: Todo C#
+Bandage: DONE
+Plastiseal: DONE
 Basegame Beds: Good enough XML
-Opium: Todo C#
-Morphine: Todo C# / Don't double apply if XML overriden
-Fentanyl: Todo C# / Don't double apply if XML overriden
-Naloxone: Todo C# / Don't double apply if XML overriden
-Broad-Spectrum Antibiotics: Todo C# / Don't double apply if XML overriden
-Adrenaline: DONE / Don't double apply if XML overriden
+Opium: Good enough XML
+Morphine: Good enough XML
+Fentanyl: Good enough XML
+Naloxone: Good enough XML
+Broad-Spectrum Antibiotics: Good enough XML
+Adrenaline: DONE
 Captains Pipe: Good enough XML
 Cigar: Good enough XML
-Liquid Oxygenite: Todo C# / Don't double apply if XML overriden
-Deusizine: Todo C# / Don't double apply if XML overriden
-Antibiotic Glue: Todo C# / Don't double apply if XML overriden
-Meth: Todo C# / Don't double apply if XML overriden
-Hyperzine: Todo C# / Don't double apply if XML overriden
+Liquid Oxygenite: Good enough XML
+Deusizine: Good enough XML
+Antibiotic Good enough XML
+Meth: Good enough XML
+Hyperzine: Good enough XML
 Diving Knife: DONE
-Haloperidol: Todo C# / Don't double apply if XML overriden
-Anaparalyzant: Todo C# / Don't double apply if XML overriden
+Haloperidol: Good enough XML
+Anaparalyzant: DONE
 Handcuffs: TBD
-Tonic Liquid: Todo C# / Don't double apply if XML overriden
-Nitroglycerin: Todo C# / Don't double apply if XML overriden
-Repair Pack: Todo C# (Wrench variant)
+Tonic Liquid: Good enough XML
+Nitroglycerin: DONE
+Repair Pack: DONE
 
 ## Surgical Equipment:
 Sutures: DONE
 Drainage: DONE
-Needle: Todo C#
-Osteosynthesis Implants: Todo C#
-Spinal Cord Implants: Todo C#
+Needle: DONE
+Osteosynthesis Implants: DONE // Surgery integration todo
+Spinal Cord Implants: DONE // Surgery integration todo
 Hemostat: DONE
 Skin Retractors: DONE
-Surgical Drill: Todo C#
-Surgical Saw: Todo C#
-Tweezers: Todo C#
+Surgical Drill: DONE
+Surgical Saw: DONE
+Tweezers: DONE
 Trauma Shears: DONE
 Scalpel: DONE
 Multi-Purpose Scalpel: Todo C#
-Antiseptic Sprayer: Todo C#
+Antiseptic Sprayer: DONE
 
 ## Toggleable:
-Endovascular Balloon: Todo C#
-Medical Stent: Todo C#
+Endovascular Balloon: DONE // Surgery integration todo
+Medical Stent: DONE // Surgery integration todo
 Antiseptic: Good enough XML
-Sodium Nitroprusside: Todo C#
+Sodium Nitroprusside: DONE
 Organ Scalpels: Todo C#
