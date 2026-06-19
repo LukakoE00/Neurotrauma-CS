@@ -66,6 +66,11 @@ public class NTItemMethods
     public static List<string> HematologyDetectable { get; } = [];
 
     /// <summary>
+    /// Contains the list of item ID's for Wrenches.
+    /// </summary>
+    public static List<string> WrenchItems { get; } = [];
+
+    /// <summary>
     /// Contains all the data necessary for an item use function.
     /// </summary>
     public class ItemUpdateFunctionInfos
@@ -139,14 +144,6 @@ public class NTItemMethods
         }
     }
 
-    public static List<string> WrenchItems = new()
-    {
-        "wrench",
-        "heavywrench",
-        "wrenchhardened",
-        "repairpack",
-        "wrench_murdermystery"
-    };
 
     // REFER TO README.MD WITHIN THE ITEMS FOLDER IN ASSETS!!!!!!!!
     // REFER TO README.MD WITHIN THE ITEMS FOLDER IN ASSETS!!!!!!!!
@@ -714,6 +711,15 @@ public class NTItemMethods
 
         // ============== Overrides ==============
         // Wrenches
+        WrenchItems.AddRange(
+        [
+            "wrench",
+            "heavywrench",
+            "wrenchhardened",
+            "repairpack",
+            "wrench_murdermystery"
+        ]);
+
         foreach (string id in WrenchItems)
         {
             RegisterItemUseFunction(id, WrenchFunctionality);
