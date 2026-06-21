@@ -611,25 +611,33 @@ namespace Neurotrauma
             return Character.GetSkillLevel(SkillType);
         }
 
-        public static float GetSurgerySkill(Character Character)
-        {
-            return Character.GetSkillLevel("surgery");
-        }
-
         public static float GetBaseSkillLevel(Character Character, Identifier SkillType)
         {
             return Character.Info.Job.GetSkillLevel(SkillType);
         }
+
         public static bool GetSkillRequirementMet(Character Character, Identifier SkillType, float RequiredAmount)
         {
             float SkillLevel = GetSkillLevel(Character, SkillType);
             // Need to implement our NTConfig part here.
             return Chance(Math.Clamp(SkillLevel / RequiredAmount, 0, 1));
         }
+
+        public static float GetSurgerySkill(Character Character)
+        {
+            // TODO: NTSP integration
+            // if (NTSP != null && NTConfig.Get("NTSP_enableSurgerySkill", false))
+            //     return Math.Max(5, GetSkillLevel(Character, "surgery"), GetSkillLevel(Character, "medical") / 4);
+            return GetSkillLevel(Character, "medical");
+        }
+
         public static bool GetSurgerySkillRequirementMet(Character Character, float RequiredAmount)
         {
-            float SkillLevel = GetSkillLevel(Character, "surgery");
-            // Need to implement our NTConfig part here.
+            float SkillLevel = GetSurgerySkill(Character);
+
+            if (NTConfig.Get("NT_vanillaSkillCheck", false))
+                return Chance(Math.Clamp((100 - (RequiredAmount - SkillLevel)) / 100, 0, 1));
+
             return Chance(Math.Clamp(SkillLevel / RequiredAmount, 0, 1));
         }
 
@@ -691,7 +699,7 @@ namespace Neurotrauma
             Affliction Aff = GetAfflictionLimb(Character, Identifier, GivenLimbType);
             if (Aff == null) { return false; } // Is the affliction null?
             float AffStrength = Aff.Strength;
-            if (AffStrength > MinAmount)
+            if (AffStrength >= MinAmount)
             {
                 return true;
             }

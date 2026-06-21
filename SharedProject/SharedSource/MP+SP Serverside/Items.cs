@@ -225,6 +225,31 @@ public class NTItemMethods
         HF.GiveItem(infos.target, "ntsfx_syringe");
     }
 
+    // Organ-only function used to spawn the organs; why is this copied 5 times in Lua? - Lukako
+    private static void SpawnOrganTransplant(string transplantID, Character usingCharacter, float condition)
+    {
+        var container = usingCharacter.Inventory.GetItemInLimbSlot(InvSlotType.RightHand);
+        if (container == null || container.OwnInventory == null || container.OwnInventory.IsFull())
+            container = usingCharacter.Inventory.GetItemInLimbSlot(InvSlotType.LeftHand);
+
+        if (container != null && container.OwnInventory != null && !container.OwnInventory.IsFull())
+        {
+            HF.SpawnItemPlusFunction(transplantID, container.OwnInventory, InvSlotType.Any, usingCharacter.WorldPosition, (args) =>
+            {
+                Item item = (Item)args[0];
+                item.Condition = condition;
+            });
+        }
+        else
+        {
+            HF.GiveItemPlusFunction(transplantID, usingCharacter, (args) =>
+            {
+                Item item = (Item)args[0];
+                item.Condition = condition;
+            });
+        }
+    }
+
     // REFER TO README.MD WITHIN THE ITEMS FOLDER IN ASSETS!!!!!!!!
     // REFER TO README.MD WITHIN THE ITEMS FOLDER IN ASSETS!!!!!!!!
     // REFER TO README.MD WITHIN THE ITEMS FOLDER IN ASSETS!!!!!!!!
@@ -463,20 +488,298 @@ public class NTItemMethods
         });
 
         // ============== BodyParts ==============
-        // Liver Transplant
-        // TODO
+        // Liver Transplant Scalpel
+        RegisterItemUseFunction("organscalpel_liver", infos =>
+        {
+            // Stasis check
+            if (HF.HasAffliction(infos.target, "stasis", 0.1f)) return;
 
-        // Lung Transplant
-        // TODO
+            if (infos.targetLimb.type != LimbType.Torso) return;
+            if (!HF.HasAfflictionLimb(infos.target, "retractedskin", infos.targetLimb.type, 1)) return;
 
-        // Kidney Transplant
-        // TODO
+            bool procureready = HF.GetAfflictionStrength(infos.target, "liverremoved", 0) <= 0
+                             && HF.GetAfflictionStrength(infos.target, "liverswap", 0) >= 0.1f;
 
-        // Heart Transplant
-        // TODO
+            if (!procureready)
+            {
+                if (HF.GetSurgerySkillRequirementMet(infos.user, 40))
+                {
+                    if (HF.GetAfflictionStrength(infos.target, "liverdamage", 0) >= 100)
+                        HF.SetAffliction(infos.target, "liverremoved", 100, infos.user, 0);
+                    else
+                        HF.SetAffliction(infos.target, "liverswap", 100, infos.user, 0);
+                }
+                else
+                {
+                    HF.AddAfflictionLimb(infos.target, "bleeding", infos.targetLimb.type, 15, infos.user);
+                    HF.AddAfflictionLimb(infos.target, "organdamage", infos.targetLimb.type, 5, infos.user);
+                    HF.AddAffliction(infos.target, "liverdamage", 20, infos.user);
+                }
+                HF.GiveItem(infos.target, "ntsfx_slash");
+            }
+            else
+            {
+                float damage = HF.GetAfflictionStrength(infos.target, "liverdamage", 0);
+                if (damage >= 100) return;
+                if (!HF.GetSurgerySkillRequirementMet(infos.user, 50)) return;
 
-        // Brain Transplant
-        // TODO
+                HF.SetAffliction(infos.target, "liverremoved", 100, infos.user, 0);
+                HF.SetAffliction(infos.target, "liverswap", 0, infos.user, 0);
+                HF.SetAffliction(infos.target, "liverdamage", 100, infos.user, 0);
+                HF.AddAffliction(infos.target, "organdamage", (100 - damage) / 5, infos.user);
+
+                if (damage < 90)
+                {
+                    string transplantID = "livertransplant_q1";
+                    // TODO: if (NTC.HasTag(infos.user, "organssellforfull")) transplantID = "livertransplant";
+                    SpawnOrganTransplant(transplantID, infos.user, 100 - damage);
+                }
+            }
+        });
+
+        // Lung Transplant Scalpel
+        RegisterItemUseFunction("organscalpel_lungs", infos =>
+        {
+            // Stasis check
+            if (HF.HasAffliction(infos.target, "stasis", 0.1f)) return;
+
+            if (infos.targetLimb.type != LimbType.Torso) return;
+            if (!HF.HasAfflictionLimb(infos.target, "retractedskin", infos.targetLimb.type, 1)) return;
+
+            bool procureready = HF.GetAfflictionStrength(infos.target, "lungremoved", 0) <= 0
+                             && HF.GetAfflictionStrength(infos.target, "lungswap", 0) >= 0.1f;
+
+            if (!procureready)
+            {
+                if (HF.GetSurgerySkillRequirementMet(infos.user, 40))
+                {
+                    if (HF.GetAfflictionStrength(infos.target, "lungdamage", 0) >= 100)
+                        HF.SetAffliction(infos.target, "lungremoved", 100, infos.user, 0);
+                    else
+                        HF.SetAffliction(infos.target, "lungswap", 100, infos.user, 0);
+                }
+                else
+                {
+                    HF.AddAfflictionLimb(infos.target, "bleeding", infos.targetLimb.type, 15, infos.user);
+                    HF.AddAfflictionLimb(infos.target, "organdamage", infos.targetLimb.type, 5, infos.user);
+                    HF.AddAffliction(infos.target, "lungdamage", 20, infos.user);
+                }
+                HF.GiveItem(infos.target, "ntsfx_slash");
+            }
+            else
+            {
+                float damage = HF.GetAfflictionStrength(infos.target, "lungdamage", 0);
+                if (damage >= 100) return;
+
+                HF.SetAffliction(infos.target, "lungremoved", 100, infos.user, 0);
+                HF.SetAffliction(infos.target, "lungswap", 0, infos.user, 0);
+                HF.SetAffliction(infos.target, "lungdamage", 100, infos.target, 0);
+                HF.SetAffliction(infos.target, "respiratoryarrest", 100, infos.target, 0);
+                HF.SetAffliction(infos.target, "pneumothorax", 0, infos.target, 0);
+                HF.SetAffliction(infos.target, "needlec", 0, infos.target, 0);
+                HF.AddAffliction(infos.target, "organdamage", (100 - damage) / 5, infos.target);
+
+                if (damage < 90)
+                {
+                    string transplantID = "lungtransplant_q1";
+                    // TODO: if (NTC.HasTag(infos.user, "organssellforfull")) transplantID = "lungtransplant";
+                    SpawnOrganTransplant(transplantID, infos.user, 100 - damage);
+                }
+            }
+        });
+
+        // Heart Transplant Scalpel
+        RegisterItemUseFunction("organscalpel_heart", infos =>
+        {
+            // Stasis check
+            if (HF.HasAffliction(infos.target, "stasis", 0.1f)) return;
+
+            if (infos.targetLimb.type != LimbType.Torso) return;
+            if (!HF.HasAfflictionLimb(infos.target, "retractedskin", infos.targetLimb.type, 1)) return;
+
+            bool procureready = HF.GetAfflictionStrength(infos.target, "heartremoved", 0) <= 0
+                             && HF.GetAfflictionStrength(infos.target, "heartswap", 0) >= 0.1f;
+
+            if (!procureready)
+            {
+                if (HF.GetSurgerySkillRequirementMet(infos.user, 40))
+                {
+                    if (HF.GetAfflictionStrength(infos.target, "heartdamage", 0) >= 100)
+                        HF.SetAffliction(infos.target, "heartremoved", 100, infos.user, 0);
+                    else
+                        HF.SetAffliction(infos.target, "heartswap", 100, infos.user, 0);
+                }
+                else
+                {
+                    HF.AddAfflictionLimb(infos.target, "bleeding", infos.targetLimb.type, 15, infos.user);
+                    HF.AddAfflictionLimb(infos.target, "organdamage", infos.targetLimb.type, 5, infos.user);
+                    HF.AddAffliction(infos.target, "heartdamage", 20, infos.user);
+                }
+                HF.GiveItem(infos.target, "ntsfx_slash");
+            }
+            else
+            {
+                float damage = HF.GetAfflictionStrength(infos.target, "heartdamage", 0);
+                if (damage >= 100) return;
+
+                HF.SetAffliction(infos.target, "heartremoved", 100, infos.user, 0);
+                HF.SetAffliction(infos.target, "heartswap", 0, infos.user, 0);
+                HF.SetAffliction(infos.target, "heartdamage", 100, infos.target, 0);
+                HF.SetAffliction(infos.target, "cardiacarrest", 100, infos.target, 0);
+                HF.SetAffliction(infos.target, "tamponade", 0, infos.target, 0);
+                HF.SetAffliction(infos.target, "heartattack", 0, infos.target, 0);
+                HF.AddAffliction(infos.target, "organdamage", (100 - damage) / 5, infos.target);
+
+                if (damage < 90)
+                {
+                    string transplantID = "hearttransplant_q1";
+                    // TODO: if (NTC.HasTag(infos.user, "organssellforfull")) transplantID = "hearttransplant";
+                    SpawnOrganTransplant(transplantID, infos.user, 100 - damage);
+                }
+            }
+        });
+
+        // Kidney Transplant Scalpel
+        RegisterItemUseFunction("organscalpel_kidneys", infos =>
+        {
+            // Stasis check
+            if (HF.HasAffliction(infos.target, "stasis", 0.1f)) return;
+
+            if (infos.targetLimb.type != LimbType.Torso) return;
+            if (!HF.HasAfflictionLimb(infos.target, "retractedskin", infos.targetLimb.type, 1)) return;
+
+            bool procureready = HF.GetAfflictionStrength(infos.target, "kidneyremoved", 0) <= 0
+                             && HF.GetAfflictionStrength(infos.target, "kidneyswap", 0) >= 0.1f;
+
+            if (!procureready)
+            {
+                if (HF.GetSurgerySkillRequirementMet(infos.user, 40))
+                {
+                    if (HF.GetAfflictionStrength(infos.target, "kidneydamage", 0) >= 100)
+                        HF.SetAffliction(infos.target, "kidneyremoved", 100, infos.user, 0);
+                    else
+                        HF.SetAffliction(infos.target, "kidneyswap", 100, infos.user, 0);
+                }
+                else
+                {
+                    HF.AddAfflictionLimb(infos.target, "bleeding", infos.targetLimb.type, 15, infos.user);
+                    HF.AddAfflictionLimb(infos.target, "organdamage", infos.targetLimb.type, 5, infos.user);
+                    HF.AddAffliction(infos.target, "kidneydamage", 10, infos.user);
+                }
+                HF.GiveItem(infos.target, "ntsfx_slash");
+            }
+            else
+            {
+                float damage = HF.GetAfflictionStrength(infos.target, "kidneydamage", 0);
+                if (damage >= 100) return;
+
+                string transplantID = "kidneytransplant_q1";
+                // TODO: if (NTC.HasTag(infos.user, "organssellforfull")) transplantID = "kidneytransplant";
+
+                if (damage < 50)
+                {
+                    // First kidney
+                    HF.SetAffliction(infos.target, "kidneydamage", 50, infos.user, 0);
+                    HF.AddAffliction(infos.target, "organdamage", (100 - damage) / 5, infos.user);
+                    SpawnOrganTransplant(transplantID, infos.user, 100);
+                }
+                else if (damage < 95)
+                {
+                    // Second kidney
+                    HF.SetAffliction(infos.target, "kidneyremoved", 100, infos.user, 0);
+                    HF.SetAffliction(infos.target, "kidneyswap", 0, infos.user, 0);
+                    HF.SetAffliction(infos.target, "kidneydamage", 100, infos.user, 0);
+                    HF.AddAffliction(infos.target, "organdamage", (100 - damage) / 5, infos.user);
+                    SpawnOrganTransplant(transplantID, infos.user, 100 - (damage - 50) * 2);
+                }
+            }
+        });
+
+        // Brain Transplant Scalpel
+        RegisterItemUseFunction("organscalpel_brain", infos =>
+        {
+            // Stasis check
+            if (HF.HasAffliction(infos.target, "stasis", 0.1f)) return;
+
+            if (infos.targetLimb.type != LimbType.Head) return;
+            if (!HF.HasAfflictionLimb(infos.target, "retractedskin", infos.targetLimb.type, 1)) return;
+
+            bool procureready = HF.GetAfflictionStrength(infos.target, "brainremoved", 0) <= 0
+                             && HF.GetAfflictionStrength(infos.target, "brainswap", 0) >= 0.1f;
+
+            if (!procureready)
+            {
+                if (HF.GetSurgerySkillRequirementMet(infos.user, 40))
+                {
+                    if (HF.GetAfflictionStrength(infos.target, "cerebralhypoxia", 0) >= 100)
+                        HF.SetAffliction(infos.target, "brainremoved", 100, infos.user, 0);
+                    else
+                        HF.SetAffliction(infos.target, "brainswap", 100, infos.user, 0);
+                }
+                else
+                {
+                    HF.AddAfflictionLimb(infos.target, "bleeding", infos.targetLimb.type, 15, infos.user);
+                    HF.AddAffliction(infos.target, "cerebralhypoxia", 50, infos.user);
+                }
+                HF.GiveItem(infos.target, "ntsfx_slash");
+            }
+            else
+            {
+                float damage = HF.GetAfflictionStrength(infos.target, "cerebralhypoxia", 0);
+                if (damage >= 100) return;
+
+                HF.AddAffliction(infos.target, "cerebralhypoxia", 100, infos.user);
+                HF.SetAffliction(infos.target, "brainremoved", 100, infos.user, 0);
+                HF.SetAffliction(infos.target, "brainswap", 0, infos.user, 0);
+
+                // TODO: NTSP artificialbrain check
+                // if (HF.HasAffliction(infos.target, "artificialbrain"))
+                // {
+                //     HF.SetAffliction(infos.target, "artificialbrain", 0, infos.user, 0);
+                //     damage = 100;
+                // }
+
+                if (damage < 90)
+                {
+                    float finalCondition = 100 - damage;
+                    var client = HF.CharacterToClient(infos.target);
+                    var capturedTarget = infos.target;
+                    var capturedUser = infos.user;
+
+                    var container = infos.user.Inventory.GetItemInLimbSlot(InvSlotType.RightHand);
+                    if (container == null || container.OwnInventory == null || container.OwnInventory.IsFull())
+                        container = infos.user.Inventory.GetItemInLimbSlot(InvSlotType.LeftHand);
+                    var capturedContainer = container;
+
+                    if (capturedContainer != null && capturedContainer.OwnInventory != null && !capturedContainer.OwnInventory.IsFull())
+                    {
+                        HF.SpawnItemPlusFunction("braintransplant", capturedContainer.OwnInventory, InvSlotType.Any, capturedUser.WorldPosition, (args) =>
+                        {
+                            Item item = (Item)args[0];
+                            item.Condition = finalCondition;
+
+                            #if SERVER
+                                if (client != null) item.Description = client.Name;
+                                if (client != null) client.SetClientCharacter(null);
+                            #endif
+                        });
+                    }
+                    else
+                    {
+                        HF.GiveItemPlusFunction("braintransplant", capturedUser, (args) =>
+                        {
+                            Item item = (Item)args[0];
+                            item.Condition = finalCondition;
+
+                            #if SERVER
+                                if (client != null) item.Description = client.Name;
+                                if (client != null) client.SetClientCharacter(null);
+                            #endif
+                        });
+                    }
+                }
+            }
+        });
 
         // Extremity Transplants
         // TODO
@@ -1202,7 +1505,7 @@ public class NTItemMethods
 
         // Surgery Related
 
-        SutureAfflictions["clampedbleeders"] = new ItemsAfflictionInfos("clampedbleeders", 0, infos => {
+        SutureAfflictions["clampedbleeding"] = new ItemsAfflictionInfos("clampedbleeding", 0, infos => {
             return true;
         });
 
@@ -1487,8 +1790,8 @@ public class NTItemMethods
         // Scalpel
         RegisterItemUseFunction("advscalpel", infos =>
         {
-            // Not in stasis
-            if (HF.HasAffliction(infos.target, "stasis", (float)0.1)) { return; }
+            // Stasis check
+            if (HF.HasAffliction(infos.target, "stasis", 0.1f)) return;
 
             if (!HF.CanPerformSurgeryOn(infos.target) || HF.HasAfflictionLimb(infos.target, "surgeryincision", infos.targetLimb.type, 1)) { return; }
 
@@ -1515,26 +1818,34 @@ public class NTItemMethods
         // Hemostat
         RegisterItemUseFunction("advhemostat", infos =>
         {
-            if (HF.HasAffliction(infos.target, "stasis", (float)0.1)) { return; }
+            // Stasis check
+            if (HF.HasAffliction(infos.target, "stasis", 0.1f)) return;
 
-            if (!HF.CanPerformSurgeryOn(infos.target)) { return; }
+            if (!HF.CanPerformSurgeryOn(infos.target)) return;
 
-            if (!HF.HasAffliction(infos.target, "surgeryincision", 99) || HF.HasAffliction(infos.target, "clampedbleeders", 1)) { return; }
+            if (!HF.HasAfflictionLimb(infos.target, "surgeryincision", infos.targetLimb.type, 99) || HF.HasAfflictionLimb(infos.target, "clampedbleeding", infos.targetLimb.type, 1)) return;
 
-            HF.AddAfflictionLimb(infos.target, "clampedbleeders", infos.targetLimb.type, 1 + HF.GetSurgerySkill(infos.user) / 2, infos.user);
-
+            HF.AddAfflictionLimb(infos.target, "clampedbleeding", infos.targetLimb.type, 1 + HF.GetSurgerySkill(infos.user) / 2, infos.user);
         });
 
         // Skin Retractors
         RegisterItemUseFunction("advretractors", infos =>
         {
-            if (HF.HasAffliction(infos.target, "stasis", (float)0.1)) { return; }
+            // Stasis check
+            if (HF.HasAffliction(infos.target, "stasis", 0.1f)) return;
 
-            if (!HF.CanPerformSurgeryOn(infos.target)) { return; }
+            if (!HF.CanPerformSurgeryOn(infos.target)) return;
 
-            if (!HF.HasAffliction(infos.target, "clampedbleeders", 99) || HF.HasAffliction(infos.target, "retractedskin", 1)) { return; }
+            if (!HF.HasAfflictionLimb(infos.target, "clampedbleeding", infos.targetLimb.type, 99) || HF.HasAfflictionLimb(infos.target, "retractedskin", infos.targetLimb.type, 1)) return;
 
-            HF.AddAfflictionLimb(infos.target, "retractedskin", infos.targetLimb.type, 1 + HF.GetSurgerySkill(infos.user) / 2, infos.user);
+            if (HF.GetSurgerySkillRequirementMet(infos.user, 30))
+            {
+                HF.AddAfflictionLimb(infos.target, "retractedskin", infos.targetLimb.type, 1 + HF.GetSurgerySkill(infos.user) / 2, infos.user);
+            }
+            else
+            {
+                HF.AddAfflictionLimb(infos.target, "internaldamage", infos.targetLimb.type, 10, infos.user);
+            }
         });
 
         // Surgical Drill

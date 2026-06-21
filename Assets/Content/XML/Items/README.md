@@ -3,16 +3,16 @@
 
 ## Blood:
 Hematology Analyzer: DONE
-Bloodpacks: Todo C#
+Bloodpacks: DONE
 Empty Blood Pack: DONE
 Blood Type Cards: DONE (Add to Health UI?)
 
 ## BodyParts:
-Liver Transplant: Deterioration in XML, rest todo C#
-Lung Transplant: Deterioration in XML, rest todo C#
-Kidney Transplant: Deterioration in XML, rest todo C#
-Heart Transplant: Deterioration in XML, rest todo C#
-Brain Transplant: Deterioration in XML, rest todo C#
+Liver Transplant Surgery: DONE
+Lung Transplant Surgery: DONE
+Kidney Transplant Surgery: DONE
+Heart Transplant Surgery: DONE
+Brain Transplant Surgery: DONE
 Right Arm: Deterioration in XML, rest todo C#
 Left Arm: Deterioration in XML, rest todo C#
 Right Leg: Deterioration in XML, rest todo C#
