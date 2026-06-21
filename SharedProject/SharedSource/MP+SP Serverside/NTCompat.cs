@@ -63,7 +63,7 @@ namespace Neurotrauma
 
         public static Dictionary<HumanUpdate.NTHuman, double> CharacterSpeedMultipliers = new();
 
-        public static void MultiplySpeed(HumanUpdate.NTHuman Character, double Multiplier)
+        public static void MultiplySpeed(HumanUpdate.NTHuman Character, double Multiplier) // Im not gonna lie, I have no clue where this is used at.
         {
             if (CharacterSpeedMultipliers.ContainsKey(Character))
             {
@@ -71,6 +71,26 @@ namespace Neurotrauma
                 return;
             }
             CharacterSpeedMultipliers[Character] = Multiplier;
+        }
+
+        public static void DivideSpeed(HumanUpdate.NTHuman Character, double Multiplier)
+        {
+            if (CharacterSpeedMultipliers.ContainsKey(Character))
+            {
+                CharacterSpeedMultipliers[Character] /= Multiplier;
+                return;
+            }
+            CharacterSpeedMultipliers[Character] = Multiplier;
+        }
+
+        public static double GetSpeed(HumanUpdate.NTHuman Character)
+        {
+            return (CharacterSpeedMultipliers.ContainsKey(Character)) ? CharacterSpeedMultipliers[Character]: 1 ; // W C# moment
+        }
+
+        public static void SetSpeed(HumanUpdate.NTHuman Character, double Amount)
+        {
+            CharacterSpeedMultipliers[Character] = Amount;
         }
 
         public static void AddHematologyAffliction(string Identifier)

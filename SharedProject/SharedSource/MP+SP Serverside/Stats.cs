@@ -1,3 +1,5 @@
+using static System.Math;
+
 namespace Neurotrauma
 {
     public static class NTStats
@@ -9,37 +11,60 @@ namespace Neurotrauma
             // This isnt done, just a basic template.
             Stats["healingrate"] = new NTStatDouble("healingrate",0,100,1, (C) =>
             {
-                return 1;
+                return NTC.GetMultiplier(C,"healingrate");
             });
-            Stats["neworgandamage"] = new NTStatDouble("healingrate", 0, 100, 1, (C) => 
+            Stats["anyspecificorgandamage"] = new NTStatDouble("anyspecificorgandamage", 0, 100, 1, (C) =>
             {
-                return 1;
+                return NTC.GetMultiplier(C, "anyspecificorgandamage") 
+                        + Clamp(C.GetBloodAffStrength("afthiamine"),0,1) * 4;
             });
-            Stats["clottingrate"] = new NTStatDouble("healingrate", 0, 100, 1, (C) => 
+            Stats["neworgandamage"] = new NTStatDouble("neworgandamage", 0, 100, 1, (C) => 
             {
-                return 1;
+                return (
+                    C.GetBloodAffStrength("sepsis") / 300
+                    + C.GetBloodAffStrength("hypoxemia") / 400
+                    + Max(C.GetAffStrength("radiationsickness") - 25, 0) / 400
+                   )
+                    * NTC.GetMultiplier(C,"anyorgandamage")
+                    * NTConfig.Get("NT_OrganDamageGain",1)
+                    * NTAfflictions.DeltaTime;
             });
-            Stats["bloodamount"] = new NTStatDouble("healingrate", 0, 100, 1, (C) => 
+            Stats["clottingrate"] = new NTStatDouble("clottingrate", 0, 100, 1, (C) => 
             {
-                return Math.Clamp(100 - C.GetAffDatas()["bloodloss"].Strength,0,100);
+                return Clamp(1 - C.GetAffStrength("liverdamage") / 100, 0, 1)
+                        * C.GetDoubleStatStrength("healingrate")
+                        * Clamp(1 - C.GetAffStrength("afstreptokinase"), 0, 1)
+                        * NTC.GetMultiplier(C, "clottingrate");
+            });
+            Stats["bloodamount"] = new NTStatDouble("bloodamount", 0, 100, 1, (C) => 
+            {
+                return Math.Clamp(100 - C.GetAffStrength("bloodloss"),0,100);
             });
             Stats["stasis"] = new NTStatBool("stasis",false, (C) => 
             {
-                return true;
+                return C.GetAffStrength("stasis") > 0;
             });
             Stats["sedated"] = new NTStatBool("sedated",false, (C) => 
             {
-                return true;
+                return C.GetAffStrength("analgesia") > 0
+                        || C.GetAffStrength("anesthesia") > 10
+                        || C.GetAffStrength("drunk") > 20
+                        || C.GetAffStrength("stasis") > 0;
             });
-            Stats["withdrawal"] = new NTStatDouble("healingrate", 0, 100, 1, (C) => 
+            Stats["withdrawal"] = new NTStatDouble("withdrawal", 0, 100, 1, (C) => 
             {
-                return 1;
+                return Max(Max(C.GetAffStrength("opiatewithdrawal"), C.GetAffStrength("chemwithdrawal")), C.GetAffStrength("alcoholwithdrawal"));
             });
-            Stats["availableoxygen"] = new NTStatDouble("healingrate", 0, 100, 1, (C) => 
+            Stats["availableoxygen"] = new NTStatDouble("availableoxygen", 0, 100, 1, (C) => 
             {
-                return 1;
+                double Res = Clamp(C.Human.Oxygen,0,100);
+                // heart isnt pumping blood? no new oxygen is getting into the bloodstream, no matter how oxygen rich the air in the lungs
+                Res *= (C.GetAffStrength("fibrillation") / 100);
+                // and uuuh, maybe also dont let people without lungs or broken lungs use the oxygen where their lungs should be
+                if (C.GetAffStrength("cardiacarrest") > 1 || C.GetAffStrength("lungdamage") == 100 || C.GetAffStrength("lungremoved") > 0.1) Res = 0;
+                return Res;
             });
-            Stats["speedmultiplier"] = new NTStatDouble("healingrate", 0, 100, 1, (C) => 
+            Stats["speedmultiplier"] = new NTStatDouble("speedmultiplier", 0, 100, 1, (C) => 
             {
                 return 1;
             });
@@ -59,15 +84,15 @@ namespace Neurotrauma
             {
                 return true;
             });
-            Stats["wheelchaired"] = new NTStatDouble("healingrate", 0, 100, 1, (C) => 
+            Stats["wheelchaired"] = new NTStatDouble("wheelchaired", 0, 100, 1, (C) => 
             {
                 return 1;
             });
-            Stats["bonegrowthCount"] = new NTStatDouble("healingrate", 0, 100, 1, (C) => 
+            Stats["bonegrowthCount"] = new NTStatDouble("bonegrowthCount", 0, 100, 1, (C) => 
             {
                 return 1;
             });
-            Stats["burndamage"] = new NTStatDouble("healingrate", 0, 100, 1, (C) => 
+            Stats["burndamage"] = new NTStatDouble("burndamage", 0, 100, 1, (C) => 
             {
                 return 1;
             });

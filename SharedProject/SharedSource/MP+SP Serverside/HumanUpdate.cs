@@ -6,6 +6,7 @@ using MonoMod.RuntimeDetour;
 using MoonSharp.Interpreter;
 using static Barotrauma.Networking.MessageFragment;
 using static Neurotrauma.NTC;
+using static Neurotrauma.HF;
 
 namespace Neurotrauma;
 
@@ -381,12 +382,15 @@ public class HumanUpdate
             LocalStats = new CharacterStats(this);
             LocalAfflictions = new CharacterAfflictions(NewHuman, this);
             LocalTags = new CharacterTags();
+            SetSpeed(this,1);
         }
 
         public Character Human; // Our Human Ref
         public CharacterStats LocalStats;
         public CharacterAfflictions LocalAfflictions;
         public CharacterTags LocalTags;
+
+        // -------------------------------- Start of afflictions -------------------------------- \\
 
         public Dictionary<string, NTHumanNonLimbAffData> GetAffDatas()
         {
@@ -396,6 +400,11 @@ public class HumanUpdate
         public NTHumanNonLimbAffData GetAffData(string Identifier)
         {
             return LocalAfflictions.UpdatingAfflictions[Identifier];
+        }
+
+        public double GetAffStrength(string Identifier) // SHOULD ONLY BE USED FOR READING. NOT SETTING.
+        {
+            return (LocalAfflictions.UpdatingAfflictions.ContainsKey(Identifier)) ? LocalAfflictions.UpdatingAfflictions[Identifier].Strength : 0;
         }
 
         public Dictionary<string, NTHumanLimbAffData> GetLimbAffDatas()
@@ -408,6 +417,11 @@ public class HumanUpdate
             return LocalAfflictions.UpdatingLimbAfflictions[Identifier];
         }
 
+        public double GetLimbAffStrength(string Identifier, LimbType Limb) // SHOULD ONLY BE USED FOR READING. NOT SETTING.
+        {
+            return (LocalAfflictions.UpdatingLimbAfflictions.ContainsKey(Identifier)) ? LocalAfflictions.UpdatingLimbAfflictions[Identifier].Strength[Limb] : 0;
+        }
+
         public Dictionary<string, NTHumanBloodAffData> GetBloodAffDatas()
         {
             return LocalAfflictions.UpdatingBloodAfflictions;
@@ -416,6 +430,11 @@ public class HumanUpdate
         public NTHumanBloodAffData GetBloodAffData(string Identifier)
         {
             return LocalAfflictions.UpdatingBloodAfflictions[Identifier];
+        }
+
+        public double GetBloodAffStrength(string Identifier) // SHOULD ONLY BE USED FOR READING. NOT SETTING.
+        {
+            return (LocalAfflictions.UpdatingBloodAfflictions.ContainsKey(Identifier)) ? LocalAfflictions.UpdatingBloodAfflictions[Identifier].Strength : 0;
         }
 
         public Dictionary<string,NTHumanSymptomData> GetSymptomAffDatas()
@@ -428,22 +447,53 @@ public class HumanUpdate
             return LocalAfflictions.UpdatingSymptoms[Identifier];
         }
 
+        public double GetSymptomStrength(string Identifier) // SHOULD ONLY BE USED FOR READING. NOT SETTING.
+        {
+            return (LocalAfflictions.UpdatingSymptoms.ContainsKey(Identifier)) ? LocalAfflictions.UpdatingSymptoms[Identifier].Strength : 0;
+        }
+
         public CharacterAfflictions? GetAfflictions()
         {
             return LocalAfflictions;
         }
+
+        // -------------------------------- Start of stats -------------------------------- \\
 
         public CharacterStats? GetStats()
         {
             return LocalStats;
         }
 
+        public CharacterStats.NTHumanStatBoolData GetBoolStat(string Identifier)
+        {
+            return LocalStats.BoolStats[Identifier];
+        }
+
+        public bool GetBoolStatStrength(string Identifier)
+        {
+            return (LocalStats.BoolStats.ContainsKey(Identifier)) ? LocalStats.BoolStats[Identifier].Strength: false;
+        }
+
+        public CharacterStats.NTHumanStatDoubleData GetDoubleStat(string Identifier)
+        {
+            return LocalStats.DoubleStats[Identifier];
+        }
+
+        public double GetDoubleStatStrength(string Identifier)
+        {
+            return (LocalStats.DoubleStats.ContainsKey(Identifier)) ? LocalStats.DoubleStats[Identifier].Strength: 0;
+        }
+
+        // -------------------------------- Start of tags -------------------------------- \\
+
         public CharacterTags GetTags()
         {
             return LocalTags;
         }
 
-        public void Update(List<AfflictionPriority> Priorities)
+        // -------------------------------- Start of cursed update stuff -------------------------------- \\
+
+        public void Update(List<AfflictionPriority> Priorities) // THHHHEEEE UPPPDATTEEEEE
         {
             if (Human == null) return;
 
@@ -556,6 +606,9 @@ public class HumanUpdate
             {
                 Hook.Invoke(this);
             }
+
+            Human.SpeedMultiplier = (float) GetSpeed(this);
+            CharacterSpeedMultipliers.Remove(this);
 
         }
     }
