@@ -60,7 +60,7 @@ namespace Neurotrauma
             {
                 double Res = Clamp(C.Human.Oxygen,0,100);
                 // heart isnt pumping blood? no new oxygen is getting into the bloodstream, no matter how oxygen rich the air in the lungs
-                Res *= (C.GetAffStrength("fibrillation") / 100);
+                Res *= (1 - C.GetAffStrength("fibrillation") / 100);
                 // and uuuh, maybe also dont let people without lungs or broken lungs use the oxygen where their lungs should be
                 if (C.GetAffStrength("cardiacarrest") > 1 || C.GetAffStrength("lungdamage") == 100 || C.GetAffStrength("lungremoved") > 0.1) Res = 0;
                 return Res;
@@ -106,22 +106,27 @@ namespace Neurotrauma
 
                 return Res;
             });
+
             Stats["lockleftarm"] = new NTStatBool("lockleftarm",false, (C) => 
             {
-                return LimbLockedIntial(C,LimbType.LeftArm,"lockleftarm");
+                return LimbLockedInitial(C,LimbType.LeftArm,"lockleftarm");
             });
+
             Stats["lockrightarm"] = new NTStatBool("lockrightarm",false, (C) => 
             {
-                return LimbLockedIntial(C, LimbType.RightArm, "lockrightarm");
+                return LimbLockedInitial(C, LimbType.RightArm, "lockrightarm");
             });
+
             Stats["lockleftleg"] = new NTStatBool("lockleftleg",false, (C) => 
             {
-                return LimbLockedIntial(C, LimbType.LeftLeg, "lockleftleg");
+                return LimbLockedInitial(C, LimbType.LeftLeg, "lockleftleg");
             });
+
             Stats["lockrightleg"] = new NTStatBool("lockrightleg",false, (C) => 
             {
-                return LimbLockedIntial(C, LimbType.RightLeg, "lockrightleg");
+                return LimbLockedInitial(C, LimbType.RightLeg, "lockrightleg");
             });
+
             Stats["wheelchaired"] = new NTStatBool("wheelchaired", false, (C) => 
             {
                 Item OutWearItem = GetItemInOuterWear(C.Human);
@@ -159,13 +164,24 @@ namespace Neurotrauma
 
                 return Res;
             });
-            Stats["bonegrowthCount"] = new NTStatDouble("bonegrowthCount", 0, 100, 1, (C) => 
+            Stats["bonegrowthCount"] = new NTStatDouble("bonegrowthCount", 0, 100, 0, (C) =>
             {
-                return 1;
+                double count = 0;
+                foreach (LimbType Limb in HF.LimbsToCheck)
+                {
+                    if (GetAfflictionStrengthLimb(C.Human, Limb, "bonegrowth", 0) > 0) count++;
+                }
+                return count;
             });
-            Stats["burndamage"] = new NTStatDouble("burndamage", 0, 100, 1, (C) => 
+
+            Stats["burndamage"] = new NTStatDouble("burndamage", 0, 100, 0, (C) =>
             {
-                return 1;
+                double total = 0;
+                foreach (LimbType Limb in HF.LimbsToCheck)
+                {
+                    total += GetAfflictionStrengthLimb(C.Human, Limb, "burn", 0);
+                }
+                return total;
             });
         }
 

@@ -1146,12 +1146,12 @@ namespace Neurotrauma
             SetAffliction(Character, "fibrillation", Fibrillation, Character, 0);
         }
 
-        public static bool LimbLockedIntial(HumanUpdate.NTHuman C, LimbType Limb, string Key)
+        public static bool LimbLockedInitial(HumanUpdate.NTHuman C, LimbType Limb, string Key)
         {
             return !NTC.HasSymptomFalse(C, Key)
                    && (
                        NTC.HasSymptom(C, Key)
-                       || LimbIsAmputated(C.Human, Limb)
+                || LimbIsAmputated(C.Human, Limb)
                        || (GetAfflictionStrengthLimb(C.Human, Limb, "bandaged") <= 0 && GetAfflictionStrengthLimb(
                            C.Human,
                            Limb,
@@ -1161,8 +1161,8 @@ namespace Neurotrauma
                                 Limb,
                                 Limb == LimbType.LeftArm || Limb == LimbType.RightArm
                            )
-                      )
-                      || (
+                )
+                || (
                             GetAfflictionStrengthLimb(C.Human,Limb,"gypsumcast") <= 0 
                             && GetAfflictionStrength(C.Human, "afadrenaline") <= 0
                             && LimbIsBroken(

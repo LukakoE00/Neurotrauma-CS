@@ -5,7 +5,9 @@ using static Barotrauma.Networking.MessageFragment;
 namespace Neurotrauma
 {
 
-    // The priority defines at wich frequency the affliction gets updated. 
+    /// <summary>
+    /// Determines how often an affliction gets updated; Low every 6 seconds, Medium every 4 seconds and High every 2 seconds.
+    /// </summary>
     public enum AfflictionPriority : int
     {
         LOW = 6 * 60,  // Every 6s
@@ -125,31 +127,38 @@ namespace Neurotrauma
         /// Should this affliction always be running? If on, regardless of current affliction strength, this will update.
         /// </summary>
         public bool Const = false;
+
         /// <summary>
         /// The minimum strength the affliction can have.
         /// </summary>
         public double MinStrength { get; set; }
+
         /// <summary>
         /// The maximum strength the affliction can have.
         /// </summary>
         public double MaxStrength { get; set; }
 
+
         /// <summary>
         /// The strength of the affliction on creation.
         /// </summary>
         public double DefaultStrength { get; set; }
+
         /// <summary>
-        /// The priority of our affliction, higher intervals meaner more updates.
+        /// The priority of our affliction, higher intervals mean more updates.
         /// </summary>
         public AfflictionPriority Priority { get; set; }
+
         /// <summary>
         /// If false, doesnt update on stasis.
         /// </summary>
         public bool IgnoreStasis { get; set; } = true;
+
         /// <summary>
         /// The ID of the affliction.
         /// </summary>
         public string ID = "";
+
         /// <summary>
         /// The main update function of our affliction.
         /// </summary>
@@ -284,11 +293,11 @@ namespace Neurotrauma
     public class  NTAfflictionsToAdd : AfflictionsPackage
     {
 
-        // Human Updates update functons have 
+        // Human Updates update functions have 
         // Param 1: NTHuman (The character we updating) [C]
         // Param 2: String (The affliction Identifier) [I]
         // Param 3: LimbType (The limb the aff is on) [L]
-        // Param 4: Type???? Idk I forgot what this one is.
+        // Param 4: AfflictionData
 
         Dictionary<string, NTNonLimbAffliction> AfflictionsToAdd =
                                 new Dictionary<string, NTNonLimbAffliction>();
@@ -309,10 +318,9 @@ namespace Neurotrauma
 
         private void AddAfflictions() // Create your afflictions in here.
         {
-
             // EXAMPLE AFFLICTION
 
-            AfflictionsToAdd["respiratoryarrest"] = new("respiratoryarrest", 0,100,0,AfflictionPriority.HIGH);
+            AfflictionsToAdd["respiratoryarrest"] = new("respiratoryarrest", 0, 100, 0, AfflictionPriority.HIGH);
             AfflictionsToAdd["respiratoryarrest"].Const = true; // This affliction should always run
             AfflictionsToAdd["respiratoryarrest"].UpdateAction = // The update function of the affliction, like how it is in Lua
                 (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanNonLimbAffData AffData) =>
@@ -339,122 +347,337 @@ namespace Neurotrauma
                     }
                 };
 
-            // Calcium Composite Material Imjuries
-            AfflictionsToAdd["fracturedribs"] = new("fracturedribs");
-            AfflictionsToAdd["fracturedneck"] = new("fracturedneck");
-            AfflictionsToAdd["fracturedskull"] = new("fracturedskull");
-            // Drugs//
+            // Rib Fractures
+            AfflictionsToAdd["fracturedribs"] = new("fracturedribs", 0, 100, 0, AfflictionPriority.MEDIUM);
+            AfflictionsToAdd["fracturedribs"].Const = false;
+            AfflictionsToAdd["fracturedribs"].UpdateAction =
+                (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanNonLimbAffData AffData) =>
+                {
+                    AffData.Strength += 2 * NTAfflictions.DeltaTime;
+                };
+
+            // Neck Fracture
+            AfflictionsToAdd["fracturedneck"] = new("fracturedneck", 0, 100, 0, AfflictionPriority.MEDIUM);
+            AfflictionsToAdd["fracturedneck"].Const = false;
+            AfflictionsToAdd["fracturedneck"].UpdateAction =
+                (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanNonLimbAffData AffData) =>
+                {
+                    AffData.Strength += 2 * NTAfflictions.DeltaTime;
+                };
+
+            // Skull Fracture
+            AfflictionsToAdd["fracturedskull"] = new("fracturedskull", 0, 100, 0, AfflictionPriority.MEDIUM);
+            AfflictionsToAdd["fracturedskull"].Const = false;
+            AfflictionsToAdd["fracturedskull"].UpdateAction =
+                (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanNonLimbAffData AffData) =>
+                {
+                    AffData.Strength += 2 * NTAfflictions.DeltaTime;
+                };
+
+
+            // =============== Drugs =============== //
+            // Opiate Overdose
             AfflictionsToAdd["opiateoverdose"] = new("opiateoverdose");
-            // Organs //
+
+            // =============== Organs =============== //
+            // Lung Damage
             AfflictionsToAdd["lungdamage"] = new("lungdamage");
+
+            // Lung Removed
             AfflictionsToAdd["lungremoved"] = new("lungremoved");
-            AfflictionsToAdd["brainremoved"] = new("brainremoved");
-            AfflictionsToAdd["brainswap"] = new("brainswap");
-            AfflictionsToAdd["tamponade"] = new("tamponade");
-            AfflictionsToAdd["increasedheartrate"] = new("increasedheartrate");
-            AfflictionsToAdd["fibrillation"] = new("fibrillation");
-            AfflictionsToAdd["cardiacarrest"] = new("cardiacarrest");
-            AfflictionsToAdd["heartattack"] = new("heartattack");
-            AfflictionsToAdd["heartdamage"] = new("heartdamage");
-            AfflictionsToAdd["heartremoved"] = new("heartremoved");
-            AfflictionsToAdd["heartswap"] = new("heartswap");
-            AfflictionsToAdd["kidneydamage"] = new("kidneydamage");
-            AfflictionsToAdd["kidneyremoved"] = new("kidneyremoved");
-            AfflictionsToAdd["kidneyswap"] = new("kidneyswap");
-            AfflictionsToAdd["liverdamage"] = new("liverdamage");
-            AfflictionsToAdd["liverremoved"] = new("liverremoved");
-            AfflictionsToAdd["liverswap"] = new("liverswap");
-            AfflictionsToAdd["hyperventilation"] = new("hyperventilation");
-            AfflictionsToAdd["hypoventilation"] = new("hypoventilation");
-            AfflictionsToAdd["shortnessofbreath"] = new("shortnessofbreath"); // Ain't this a symptom?
-            AfflictionsToAdd["pneumothorax"] = new("pneumothorax"); // Riding the hog or Hogging the rider?
+
+            // Lung Swap
             AfflictionsToAdd["lungswap"] = new("lungswap");
-            // Limbs //
+
+            // Brain Removed
+            AfflictionsToAdd["brainremoved"] = new("brainremoved");
+
+            // Brain Swap
+            AfflictionsToAdd["brainswap"] = new("brainswap");
+
+            // Cardiac Tamponade
+            AfflictionsToAdd["tamponade"] = new("tamponade");
+
+            // Increased Heartrate
+            AfflictionsToAdd["increasedheartrate"] = new("increasedheartrate");
+
+            // Fibrillation
+            AfflictionsToAdd["fibrillation"] = new("fibrillation");
+
+            // Cardiac Arrest
+            AfflictionsToAdd["cardiacarrest"] = new("cardiacarrest");
+
+            // Heart Attack
+            AfflictionsToAdd["heartattack"] = new("heartattack");
+
+            // Heart Damage
+            AfflictionsToAdd["heartdamage"] = new("heartdamage");
+
+            // Heart Removed
+            AfflictionsToAdd["heartremoved"] = new("heartremoved");
+
+            // Heart Swap
+            AfflictionsToAdd["heartswap"] = new("heartswap");
+
+            // Kidney Damage
+            AfflictionsToAdd["kidneydamage"] = new("kidneydamage");
+
+            // Kidney Removed
+            AfflictionsToAdd["kidneyremoved"] = new("kidneyremoved");
+
+            // Kidney Swap
+            AfflictionsToAdd["kidneyswap"] = new("kidneyswap");
+
+            // Liver Damage
+            AfflictionsToAdd["liverdamage"] = new("liverdamage");
+
+            // Liver Removed
+            AfflictionsToAdd["liverremoved"] = new("liverremoved");
+
+            // Liver Swap
+            AfflictionsToAdd["liverswap"] = new("liverswap");
+
+            // Hyperventilation
+            AfflictionsToAdd["hyperventilation"] = new("hyperventilation");
+
+            // Hypoventilation
+            AfflictionsToAdd["hypoventilation"] = new("hypoventilation");
+
+            // Pneumothorax
+            AfflictionsToAdd["pneumothorax"] = new("pneumothorax");
+
+            // =============== Limbs =============== //
+            // Traumatic Right Arm Amputation
             AfflictionsToAdd["tra_amputation"] = new("tra_amputation");
+
+            // Traumatic Left Arm Amputation
             AfflictionsToAdd["tla_amputation"] = new("tla_amputation");
+
+            // Traumatic Right Leg Amputation
             AfflictionsToAdd["trl_amputation"] = new("trl_amputation");
+
+            // Traumatic Left Leg Amputation
             AfflictionsToAdd["tll_amputation"] = new("tll_amputation");
+
+            // Traumatic Head Amputation
             AfflictionsToAdd["th_amputation"] = new("th_amputation");
+
+            // Surgical Right Arm Amputation
             AfflictionsToAdd["sra_amputation"] = new("sra_amputation");
+
+            // Surgical Left Arm Amputation
             AfflictionsToAdd["sla_amputation"] = new("sla_amputation");
+
+            // Surgical Right Leg Amputation
             AfflictionsToAdd["srl_amputation"] = new("srl_amputation");
+
+            // Surgical Left Leg Amputation
             AfflictionsToAdd["sll_amputation"] = new("sll_amputation");
+
+            // Surgical Head Amputation
             AfflictionsToAdd["sh_amputation"] = new("sh_amputation");
-            // Utility
+
+            // =============== Utility =============== //
+            // Luabotomy
             AfflictionsToAdd["luabotomy"] = new("luabotomy");
+
+            // Luabotomy Purger
             AfflictionsToAdd["luabotomypurger"] = new("luabotomypurger");
-            AfflictionsToAdd["stopcreatureabuse"] = new("stopcreatureabuse"); // ??????????
+
+            // StopCreatureAbuse
+            AfflictionsToAdd["stopcreatureabuse"] = new("stopcreatureabuse");
+
+            // ModConflict
             AfflictionsToAdd["modconflict"] = new("modconflict");
+
+            // TShockTimeout
             AfflictionsToAdd["tshocktimeout"] = new("tshocktimeout");
+
+            // GiveIn
             AfflictionsToAdd["givein"] = new("givein");
+
+            // CPR Buff
             AfflictionsToAdd["cpr_buff"] = new("cpr_buff");
+
+            // CPR Buff AutoPulse
             AfflictionsToAdd["cpr_buff_auto"] = new("cpr_buff_auto");
+
+            // CPR Fracture Buff
             AfflictionsToAdd["cpr_fracturebuff"] = new("cpr_fracturebuff");
+
+            // Force Prone
             AfflictionsToAdd["forceprone"] = new("forceprone");
+
+            // On Wheelchair
             AfflictionsToAdd["onwheelchair"] = new("onwheelchair");
+
+            // Stasis Bag Overlay
             AfflictionsToAdd["stasisbagoverlay"] = new("stasisbagoverlay");
+
+            // BodyBag Overlay
             AfflictionsToAdd["bodybagoverlay"] = new("bodybagoverlay");
+
+            // Stretchers
             AfflictionsToAdd["stretchers"] = new("stretchers");
+
+            // Stasis
             AfflictionsToAdd["stasis"] = new("stasis");
+
+            // Locked Hands
             AfflictionsToAdd["lockedhands"] = new("lockedhands");
+
+            // Slowdown
             AfflictionsToAdd["slowdown"] = new("slowdown");
-            AfflictionsToAdd["ra_cyber"] = new("ra_cyber");
-            AfflictionsToAdd["la_cyber"] = new("la_cyber");
-            AfflictionsToAdd["rl_cyber"] = new("rl_cyber");
-            AfflictionsToAdd["ll_cyber"] = new("ll_cyber");
+
+            // TraumaticAmputating + Item
             AfflictionsToAdd["gate_ta_ll"] = new("gate_ta_ll");
+
+            // TraumaticAmputating + Item
             AfflictionsToAdd["gate_ta_rl"] = new("gate_ta_rl");
+
+            // TraumaticAmputating + Item
             AfflictionsToAdd["gate_ta_la"] = new("gate_ta_la");
+
+            // TraumaticAmputating + Item
             AfflictionsToAdd["gate_ta_ra"] = new("gate_ta_ra");
+
+            // TraumaticAmputating + Item
             AfflictionsToAdd["gate_ta_h"] = new("gate_ta_h");
+
+            // TraumaticAmputating
             AfflictionsToAdd["gate_ta_ll_2"] = new("gate_ta_ll_2");
+
+            // TraumaticAmputating
             AfflictionsToAdd["gate_ta_rl_2"] = new("gate_ta_rl_2");
+
+            // TraumaticAmputating
             AfflictionsToAdd["gate_ta_la_2"] = new("gate_ta_la_2");
+
+            // TraumaticAmputating
             AfflictionsToAdd["gate_ta_ra_2"] = new("gate_ta_ra_2");
+
+            // TraumaticAmputating
             AfflictionsToAdd["gate_ta_h_2"] = new("gate_ta_h_2");
+
+            // Opioids in Blood
             AfflictionsToAdd["afopioid"] = new("afopioid");
+
+            // Anaesthetic in Blood
             AfflictionsToAdd["afanaesthetic"] = new("afanaesthetic");
+
+            // Safe Surgery (via Surgery Table)
             AfflictionsToAdd["safesurgery"] = new("safesurgery");
+
+            // Artificial Ventilation (via Surgery Table)
             AfflictionsToAdd["artificialventilation"] = new("artificialventilation");
+
+            // Alcohol Addiction
             AfflictionsToAdd["alcoholaddiction"] = new("alcoholaddiction");
+
+            // Alcohol Withdrawal
             AfflictionsToAdd["alcoholwithdrawal"] = new("alcoholwithdrawal");
+
+            // On Fire!
             AfflictionsToAdd["onfire"] = new("onfire");
+
+            // Screaming
             AfflictionsToAdd["screaming"] = new("screaming");
+
+            // Severe Pain
             AfflictionsToAdd["severepain"] = new("severepain");
+
+            // Pain
             AfflictionsToAdd["pain"] = new("pain");
+
+            // Shock Pain
             AfflictionsToAdd["shockpain"] = new("shockpain");
+
+            // Analgesia
             AfflictionsToAdd["analgesia"] = new("analgesia");
+
+            // Anesthesia
             AfflictionsToAdd["anesthesia"] = new("anesthesia");
-            // Head!!!???!!!!???
+
+            // =============== Head =============== //
+            // Stroke
             AfflictionsToAdd["stroke"] = new("stroke");
+
+            // Neurotrauma
             AfflictionsToAdd["neurotrauma"] = new("neurotrauma");
+
+            // Seizure
             AfflictionsToAdd["seizure"] = new("seizure");
+
+            // Coma
             AfflictionsToAdd["coma"] = new("coma");
+
+            // Spinal Cord Injury
             AfflictionsToAdd["spinalcordinjury"] = new("spinalcordinjury");
+
+            // Carotid Arterial Cut
             AfflictionsToAdd["carotidarterialcut"] = new("carotidarterialcut");
-            // ITEM DERRRIIVVVVVATIVEEEE (Calclus reference?????) Late night in the Visual Studio, Im tired but we be going
+
+            // =============== Item Derived =============== //
+            // Adrenaline in Blood
             AfflictionsToAdd["afadrenaline"] = new("afadrenaline");
+
+            // Needle in Chest
             AfflictionsToAdd["needlec"] = new("needlec");
+
+            // Saline in Blood
             AfflictionsToAdd["afsaline"] = new("afsaline");
+
+            // Ringers Solution in Blood
             AfflictionsToAdd["afringerssolution"] = new("afringerssolution");
+
+            // Mannitol in Blood
             AfflictionsToAdd["afmannitol"] = new("afmannitol");
+
+            // Immunosuppressants in Blood
             AfflictionsToAdd["afimmunosuppressant"] = new("afimmunosuppressant");
+
+            // Pressure-increasing drugs in Blood
             AfflictionsToAdd["afpressuredrug"] = new("afpressuredrug");
+
+            // Thiamine in Blood
             AfflictionsToAdd["afthiamine"] = new("afthiamine");
+
+            // Streptokinase in Blood
             AfflictionsToAdd["afstreptokinase"] = new("afstreptokinase");
+
+            // Antibiotics in Blood
             AfflictionsToAdd["afantibiotics"] = new("afantibiotics");
-            // Surgical (Divine Cooke blessing, Cyanide?) The night eats once more, for the demon core? Is that a bar? Idk???? zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+
+            // =============== Surgical =============== //
+            // Surgical Incision
             AfflictionsToAdd["surgeryincision"] = new("surgeryincision");
+
+            // Clamped Bleeding
             AfflictionsToAdd["clampedbleeding"] = new("clampedbleeding");
+
+            // Drilled Bones
             AfflictionsToAdd["drilledbones"] = new("drilledbones");
+
+            // Retracted Skin
             AfflictionsToAdd["retractedskin"] = new("retractedskin");
+
+            // Sutured Incision
             AfflictionsToAdd["suturedi"] = new("suturedi");
+
+            // Sutured Wound
             AfflictionsToAdd["suturedw"] = new("suturedw");
+
+            // Sawed Bones
             AfflictionsToAdd["sawedbones"] = new("sawedbones");
-            AfflictionsToAdd["suturedw"] = new("suturedw");
+
+            // Traumatic Shock
             AfflictionsToAdd["traumaticshock"] = new("traumaticshock");
+
+            // Ballooned Aorta
             AfflictionsToAdd["balloonedaorta"] = new("balloonedaorta");
-            // THEEE TOOOOOOORRRRRSOOOOOOO 
+
+            // =============== Torso =============== //
+            // Aortic Rupture
             AfflictionsToAdd["aorticrupture"] = new("aorticrupture");
 
 
@@ -467,31 +690,72 @@ namespace Neurotrauma
 
         private void AddLimbAfflictions()
         {
-            
-
+            // Bleeding
             LimbAfflictionsToAdd["bleeding"] = new("bleeding");
             LimbAfflictionsToAdd["bleeding"].UpdateAction =
                 (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanLimbAffData AffData) =>
                 {
                 };
+
+            // Bone Damage
             LimbAfflictionsToAdd["bonedamage"] = new("bonedamage");
+
+            // Stimulated Bone Growth
             LimbAfflictionsToAdd["stimulatedbonegrowth"] = new("stimulatedbonegrowth");
+
+            // Fractures
+            // Should only update when actually present; get applied OnDamaged or via ItemApplication.
+            // Arm + Leg Fractures
             LimbAfflictionsToAdd["fracturedextremity"] = new("fracturedextremity");
+            LimbAfflictionsToAdd["fracturedextremity"].Const = false;
+            LimbAfflictionsToAdd["fracturedextremity"].UpdateAction = 
+                (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanLimbAffData AffData) =>
+                {
+                };
+
+            // Arm + Leg Dislocation
             LimbAfflictionsToAdd["dislocation"] = new("dislocation");
+
+            // Tourniquet around Extremity
             LimbAfflictionsToAdd["tourniqueted"] = new("tourniqueted");
+
+            // Plaster Cast
             LimbAfflictionsToAdd["plastercast"] = new("plastercast");
-            LimbAfflictionsToAdd["plastercast"] = new("plastercast");
+
+            // Arterial Cut on Extremity
             LimbAfflictionsToAdd["arterialcut"] = new("arterialcut");
+
+            // Gangrene
             LimbAfflictionsToAdd["gangrene"] = new("gangrene");
+
+            // Bandage applied to Limb
             LimbAfflictionsToAdd["bandaged"] = new("bandaged");
+
+            // Dirty Bandage around Limb
             LimbAfflictionsToAdd["bandageddirty"] = new("bandageddirty");
+
+            // Gel Coolant Pack applied to Limb
             LimbAfflictionsToAdd["iced"] = new("iced");
+
+            // Antibiotic Ointment applied to Limb
             LimbAfflictionsToAdd["ointmented"] = new("ointmented");
+
+            // Infected Wound
             LimbAfflictionsToAdd["infectedwound"] = new("infectedwound");
+
+            // Foreign Body
             LimbAfflictionsToAdd["foreignbody"] = new("foreignbody");
+
+            // First-degree Burn
             LimbAfflictionsToAdd["firstdegreeburn"] = new("firstdegreeburn");
+
+            // Second-degree Burn
             LimbAfflictionsToAdd["seconddegreeburn"] = new("seconddegreeburn");
+
+            // Third-degree Burn
             LimbAfflictionsToAdd["thirddegreeburn"] = new("thirddegreeburn");
+
+
             // I did it ... I added all the template afflictions. Good luck Lukako, this is all you. :peace: :crying emoji:
 
             foreach (KeyValuePair<string, NTLimbAffliction> Pair in LimbAfflictionsToAdd)
@@ -502,12 +766,25 @@ namespace Neurotrauma
 
         private void AddBloodAfflictions()
         {
+            // Blood Pressure
             BloodAfflictionsToAdd["bloodpressure"] = new("bloodpressure");
+
+            // Hypoxemia
             BloodAfflictionsToAdd["hypoxemia"] = new("hypoxemia");
+
+            // Alkalosis
             BloodAfflictionsToAdd["alkalosis"] = new("alkalosis");
+
+            // Acidosis
             BloodAfflictionsToAdd["acidosis"] = new("acidosis");
+
+            // Hemotransfusion Shock
             BloodAfflictionsToAdd["hemotransfusionshock"] = new("hemotransfusionshock");
+
+            // Sepsis
             BloodAfflictionsToAdd["sepsis"] = new("sepsis");
+
+            // Immunity
             BloodAfflictionsToAdd["immunity"] = new("immunity");
 
             foreach (KeyValuePair<string, NTBloodAffliction> Pair in BloodAfflictionsToAdd)
@@ -518,31 +795,83 @@ namespace Neurotrauma
 
         private void AddSymptoms()
         {
+            // Cough
             SymptomsToAdd["cough"] = new("cough");
+
+            // Pale Skin
             SymptomsToAdd["paleskin"] = new("paleskin");
+
+            // Lightheadedness
             SymptomsToAdd["lightheadedness"] = new("lightheadedness");
+
+            // Blurred Vision
             SymptomsToAdd["blurredvision"] = new("blurredvision");
+
+            // Confusion
             SymptomsToAdd["confusion"] = new("confusion");
+
+            // Headache
             SymptomsToAdd["headache"] = new("headache");
+
+            // Leg Swelling
             SymptomsToAdd["legswelling"] = new("legswelling");
+
+            // Weakness
             SymptomsToAdd["weakness"] = new("weakness");
+
+            // Wheezing
             SymptomsToAdd["wheezing"] = new("wheezing");
+
+            // Vomiting
             SymptomsToAdd["vomiting"] = new("vomiting");
+
+            // Vomiting Blood
             SymptomsToAdd["vomitingblood"] = new("vomitingblood");
+
+            // Fever
             SymptomsToAdd["fever"] = new("fever");
+
+            // Abdominal Discomfort
             SymptomsToAdd["abdominaldiscomfort"] = new("abdominaldiscomfort");
+
+            // Bloating
             SymptomsToAdd["bloating"] = new("bloating");
+
+            // Jaundice
             SymptomsToAdd["jaundice"] = new("jaundice");
+
+            // Sweating
             SymptomsToAdd["sweating"] = new("sweating");
+
+            // Palpitations
             SymptomsToAdd["palpitations"] = new("palpitations");
+
+            // Unconsciousness
             SymptomsToAdd["unconsciousness"] = new("unconsciousness");
+
+            // Inflammation
             SymptomsToAdd["inflammation"] = new("inflammation");
+
+            // Spasms
             SymptomsToAdd["spasm"] = new("spasm");
+
+            // Craving
             SymptomsToAdd["craving"] = new("craving");
+
+            // Nausea
             SymptomsToAdd["nausea"] = new("nausea");
+
+            // Chest Pain
             SymptomsToAdd["chestpain"] = new("chestpain");
+
+            // Abdominal Pain
             SymptomsToAdd["abdominalpain"] = new("abdominalpain");
+
+            // Intense Pain
             SymptomsToAdd["intensepain"] = new("intensepain");
+
+            // Shortness of Breath
+            SymptomsToAdd["shortnessofbreath"] = new("shortnessofbreath");
 
             foreach (KeyValuePair<string, NTSymptom> Pair in SymptomsToAdd)
             {
@@ -551,6 +880,3 @@ namespace Neurotrauma
         }
     }
 }
-
-
-// wtf am i doing with my life

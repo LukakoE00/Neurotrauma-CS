@@ -127,18 +127,20 @@ namespace Neurotrauma
             }
         }
 
-        public static bool HasSymptom(HumanUpdate.NTHuman Character, string SymIdentifier) // Formerly "GetSymptom", renamed to "HasSymptom" for a more accurate name.
+        public static bool HasSymptom(HumanUpdate.NTHuman Character, string SymIdentifier)
         {
             if (Character == null) return false;
             HumanUpdate.NTHumanSymptomData Symptom = Character.GetSymptomAffData(SymIdentifier);
+            if (Symptom == null) return false;
             if (Symptom.Strength > 0) return true;
             return false;
         }
 
-        public static bool HasSymptomFalse(HumanUpdate.NTHuman Character, string SymIdentifier) // Formerly "GetSymptom", renamed to "HasSymptom" for a more accurate name.
+        public static bool HasSymptomFalse(HumanUpdate.NTHuman Character, string SymIdentifier)
         {
             if (Character == null) return false;
             HumanUpdate.NTHumanSymptomData Symptom = Character.GetSymptomAffData(SymIdentifier);
+            if (Symptom == null) return false;
             if (Symptom.HumanUpdateStoptime <= 0) return true;
             return false;
         }

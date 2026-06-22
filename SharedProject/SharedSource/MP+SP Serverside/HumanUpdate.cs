@@ -399,6 +399,7 @@ public class HumanUpdate
         public CharacterAfflictions LocalAfflictions;
         public CharacterTags LocalTags;
 
+
         // -------------------------------- Start of afflictions -------------------------------- \\
 
         public Dictionary<string, NTHumanNonLimbAffData> GetAffDatas()
@@ -408,7 +409,16 @@ public class HumanUpdate
 
         public NTHumanNonLimbAffData GetAffData(string Identifier)
         {
-            return LocalAfflictions.UpdatingAfflictions[Identifier];
+            if (string.IsNullOrEmpty(Identifier))
+                return null;
+
+            if (LocalAfflictions?.UpdatingAfflictions == null)
+                return null;
+
+            if (LocalAfflictions.UpdatingAfflictions.TryGetValue(Identifier, out var aff))
+                return aff;
+
+            return null;
         }
 
         public double GetAffStrength(string Identifier) // SHOULD ONLY BE USED FOR READING. NOT SETTING.
@@ -453,7 +463,16 @@ public class HumanUpdate
 
         public NTHumanSymptomData GetSymptomAffData(string Identifier)
         {
-            return LocalAfflictions.UpdatingSymptoms[Identifier];
+            if (string.IsNullOrEmpty(Identifier))
+                return null;
+
+            if (LocalAfflictions.UpdatingSymptoms == null)
+                return null;
+
+            if (LocalAfflictions.UpdatingSymptoms.TryGetValue(Identifier, out var symptom))
+                return symptom;
+
+            return null;
         }
 
         public double GetSymptomStrength(string Identifier) // SHOULD ONLY BE USED FOR READING. NOT SETTING.
@@ -571,12 +590,14 @@ public class HumanUpdate
 
                     if (!Priorities.Contains(Aff.Priority)) continue; // Skip to the next affliction, we don't have the same priority currently.
 
+                    double PrevStrength = AffData.Strength;
+
                     double CurrentStrength = GetAfflictionStrength(Human, ID);
                     AffData.Strength = CurrentStrength;
+                    AffData.PrevStrength = PrevStrength;
 
-                    if (!Aff.Const && CurrentStrength < Aff.MinStrength) continue; // Our second check to see if we should run this affliction. Basically, if this affliction isn't active on the limb, and not constant, don't update.
+                    if (!Aff.Const && CurrentStrength <= Aff.MinStrength) continue; // Our second check to see if we should run this affliction. Basically, if this affliction isn't active on the limb, and not constant, don't update.
 
-                    double PrevStrength = AffData.Strength;
                     Aff.UpdateAction(this, ID, LimbType.Torso, AffData);
                     ApplyAfflictionChange(Human, ID, (float)AffData.Strength, (float)PrevStrength, (float)AffData.AffTemplate.MinStrength, (float)AffData.AffTemplate.MaxStrength);
                 }
@@ -596,12 +617,15 @@ public class HumanUpdate
 
                         if (!Priorities.Contains(Aff.Priority) || (!Aff.IgnoreStasis && GetBoolStatStrength("stasis"))) continue;
 
+                        double PrevStrength = AffData.Strength[Limb];
+
                         double CurrentStrength = GetAfflictionStrengthLimb(Human, Limb, ID);
                         AffData.Strength[Limb] = CurrentStrength;
 
-                        if (!Aff.Const && CurrentStrength < Aff.MinStrength) continue; // Our second check to see if we should run this affliction. Basically, if this affliction isn't active on the limb, and not constant, don't update.
+                        AffData.PrevStrength[Limb] = PrevStrength;
 
-                        double PrevStrength = AffData.Strength[Limb];
+                        if (!Aff.Const && CurrentStrength <= Aff.MinStrength) continue; // Our second check to see if we should run this affliction. Basically, if this affliction isn't active on the limb, and not constant, don't update.
+
                         Aff.UpdateAction(this, ID, Limb, AffData);
                         ApplyAfflictionChangeLimb(Human, Limb, ID, (float)AffData.Strength[Limb], (float)PrevStrength, (float)AffData.AffTemplate.MinStrength, (float)AffData.AffTemplate.MaxStrength);
                     }
@@ -619,12 +643,14 @@ public class HumanUpdate
 
                     if (!Priorities.Contains(Aff.Priority)) continue;
 
+                    double PrevStrength = AffData.Strength;
+
                     double CurrentStrength = GetAfflictionStrength(Human, ID);
                     AffData.Strength = CurrentStrength;
+                    AffData.PrevStrength = PrevStrength;
 
-                    if (!Aff.Const && CurrentStrength < Aff.MinStrength) continue; // Our second check to see if we should run this affliction. Basically, if this affliction isn't active on the limb, and not constant, don't update.
+                    if (!Aff.Const && CurrentStrength <= Aff.MinStrength) continue; // Our second check to see if we should run this affliction. Basically, if this affliction isn't active on the limb, and not constant, don't update.
 
-                    double PrevStrength = AffData.Strength;
                     Aff.UpdateAction(this, ID, LimbType.Torso, AffData);
                     ApplyAfflictionChange(Human, ID, (float)AffData.Strength, (float)PrevStrength, (float)AffData.AffTemplate.MinStrength, (float)AffData.AffTemplate.MaxStrength);
                 }
@@ -644,7 +670,7 @@ public class HumanUpdate
                     double CurrentStrength = GetAfflictionStrength(Human, ID);
                     SymData.Strength = CurrentStrength;
 
-                    if (!Sym.Const && CurrentStrength < Sym.MinStrength) continue; // Our second check to see if we should run this affliction. Basically, if this affliction isn't active on the limb, and not constant, don't update.
+                    if (!Sym.Const && CurrentStrength <= Sym.MinStrength) continue; // Our second check to see if we should run this affliction. Basically, if this affliction isn't active on the limb, and not constant, don't update.
 
                     if (SymData.HumanUpdateTime <= 0) SymData.Strength = 0;
                     else SymData.Strength = 100; SymData.HumanUpdateTime--;
