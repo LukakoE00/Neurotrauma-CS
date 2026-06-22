@@ -303,13 +303,13 @@ public class HumanUpdate
 
         public class NTHumanStatDoubleData(NTStatDouble Stat, NTHuman C) // Stores our characters Stat Data
         {
-            NTStatDouble StatRef = Stat; // Stores our template.
+            public NTStatDouble StatRef = Stat; // Stores our template.
             public double Strength = 0;
         }
 
         public class NTHumanStatBoolData(NTStatBool Stat, NTHuman C) // Stores our characters Stat Data
         {
-            NTStatBool StatRef = Stat; // Stores our template.
+            public NTStatBool StatRef = Stat; // Stores our template.
             public bool Strength = false;
         }
 
@@ -469,9 +469,22 @@ public class HumanUpdate
             return LocalStats.BoolStats[Identifier];
         }
 
+        public bool GetBoolStatUpdate(NTHuman C, string Identifier)
+        {
+            return (LocalStats.BoolStats.ContainsKey(Identifier)) ? LocalStats.BoolStats[Identifier].StatRef.Get(C) : false;
+        }
+
         public bool GetBoolStatStrength(string Identifier)
         {
             return (LocalStats.BoolStats.ContainsKey(Identifier)) ? LocalStats.BoolStats[Identifier].Strength: false;
+        }
+
+        public void SetBoolStatStrength(string Identifier, bool Strength)
+        {
+            if (LocalStats.BoolStats.ContainsKey(Identifier))
+            {
+                LocalStats.BoolStats[Identifier].Strength = Strength;
+            }
         }
 
         public CharacterStats.NTHumanStatDoubleData GetDoubleStat(string Identifier)
@@ -479,9 +492,22 @@ public class HumanUpdate
             return LocalStats.DoubleStats[Identifier];
         }
 
+        public double GetDoubleStatUpdate(NTHuman C, string Identifier)
+        {
+            return (LocalStats.DoubleStats.ContainsKey(Identifier)) ? LocalStats.DoubleStats[Identifier].StatRef.Get(C) : 0;
+        }
+
         public double GetDoubleStatStrength(string Identifier)
         {
             return (LocalStats.DoubleStats.ContainsKey(Identifier)) ? LocalStats.DoubleStats[Identifier].Strength: 0;
+        }
+
+        public void SetDoubleStatStrength(string Identifier, double Strength)
+        {
+            if (LocalStats.DoubleStats.ContainsKey(Identifier))
+            {
+                LocalStats.DoubleStats[Identifier].Strength = Strength;
+            }
         }
 
         // -------------------------------- Start of tags -------------------------------- \\
@@ -502,6 +528,24 @@ public class HumanUpdate
                 Hook.Invoke(this);
             }
 
+            // ----------------------------------------- Stat updates ----------------------------------------- \\
+
+            foreach (KeyValuePair<string,CharacterStats.NTHumanStatDoubleData> Pair in LocalStats.DoubleStats) // Update all of out 
+            {
+                string ID = Pair.Key;
+                CharacterStats.NTHumanStatDoubleData StatData = Pair.Value;
+                SetDoubleStatStrength(Pair.Key, GetDoubleStatUpdate(this, ID));
+            }
+
+            foreach (KeyValuePair<string, CharacterStats.NTHumanStatBoolData> Pair in LocalStats.BoolStats) // Update all of out 
+            {
+                string ID = Pair.Key;
+                CharacterStats.NTHumanStatBoolData StatData = Pair.Value;
+                SetBoolStatStrength(Pair.Key, GetBoolStatUpdate(this, ID));
+            }
+
+            // ----------------------------------------- Affliction updates ----------------------------------------- \\
+
             foreach (KeyValuePair<string, NTHumanNonLimbAffData> Pair in LocalAfflictions.UpdatingAfflictions) // Update Non Limb Afflictions
             {
                 if (Pair.Key != null)
@@ -513,14 +557,14 @@ public class HumanUpdate
 
                     if (!Priorities.Contains(Aff.Priority)) continue; // Skip to the next affliction, we don't have the same priority currently.
 
-                    double CurrentStrength = HF.GetAfflictionStrength(Human, ID);
+                    double CurrentStrength = GetAfflictionStrength(Human, ID);
                     AffData.Strength = CurrentStrength;
 
                     if (!Aff.Const && CurrentStrength < Aff.MinStrength) continue; // Our second check to see if we should run this affliction. Basically, if this affliction isn't active on the limb, and not constant, don't update.
 
                     double PrevStrength = AffData.Strength;
                     Aff.UpdateAction(this, ID, LimbType.Torso, AffData);
-                    HF.ApplyAfflictionChange(Human, ID, (float)AffData.Strength, (float)PrevStrength, (float)AffData.AffTemplate.MinStrength, (float)AffData.AffTemplate.MaxStrength);
+                    ApplyAfflictionChange(Human, ID, (float)AffData.Strength, (float)PrevStrength, (float)AffData.AffTemplate.MinStrength, (float)AffData.AffTemplate.MaxStrength);
                 }
             }
 
@@ -528,9 +572,8 @@ public class HumanUpdate
             {
                 if (Pair.Key != null)
                 {
-                    double TotalStrength = 0;
 
-                    foreach (LimbType Limb in HF.LimbsToCheck)
+                    foreach (LimbType Limb in LimbsToCheck)
                     {
                         // Fetch the data of the affliction
                         string ID = Pair.Key;
@@ -539,15 +582,14 @@ public class HumanUpdate
 
                         if (!Priorities.Contains(Aff.Priority)) continue;
 
-                        double CurrentStrength = HF.GetAfflictionStrengthLimb(Human, Limb, ID);
+                        double CurrentStrength = GetAfflictionStrengthLimb(Human, Limb, ID);
                         AffData.Strength[Limb] = CurrentStrength;
 
                         if (!Aff.Const && CurrentStrength < Aff.MinStrength) continue; // Our second check to see if we should run this affliction. Basically, if this affliction isn't active on the limb, and not constant, don't update.
 
                         double PrevStrength = AffData.Strength[Limb];
                         Aff.UpdateAction(this, ID, Limb, AffData);
-                        HF.ApplyAfflictionChangeLimb(Human, Limb, ID, (float)AffData.Strength[Limb], (float)PrevStrength, (float)AffData.AffTemplate.MinStrength, (float)AffData.AffTemplate.MaxStrength);
-                        TotalStrength += AffData.Strength[Limb];
+                        ApplyAfflictionChangeLimb(Human, Limb, ID, (float)AffData.Strength[Limb], (float)PrevStrength, (float)AffData.AffTemplate.MinStrength, (float)AffData.AffTemplate.MaxStrength);
                     }
                 }
             }
@@ -563,14 +605,14 @@ public class HumanUpdate
 
                     if (!Priorities.Contains(Aff.Priority)) continue;
 
-                    double CurrentStrength = HF.GetAfflictionStrength(Human, ID);
+                    double CurrentStrength = GetAfflictionStrength(Human, ID);
                     AffData.Strength = CurrentStrength;
 
                     if (!Aff.Const && CurrentStrength < Aff.MinStrength) continue; // Our second check to see if we should run this affliction. Basically, if this affliction isn't active on the limb, and not constant, don't update.
 
                     double PrevStrength = AffData.Strength;
                     Aff.UpdateAction(this, ID, LimbType.Torso, AffData);
-                    HF.ApplyAfflictionChange(Human, ID, (float)AffData.Strength, (float)PrevStrength, (float)AffData.AffTemplate.MinStrength, (float)AffData.AffTemplate.MaxStrength);
+                    ApplyAfflictionChange(Human, ID, (float)AffData.Strength, (float)PrevStrength, (float)AffData.AffTemplate.MinStrength, (float)AffData.AffTemplate.MaxStrength);
                 }
             }
 
@@ -585,7 +627,7 @@ public class HumanUpdate
 
                     if (!Priorities.Contains(Sym.Priority)) continue;
 
-                    double CurrentStrength = HF.GetAfflictionStrength(Human, ID);
+                    double CurrentStrength = GetAfflictionStrength(Human, ID);
                     SymData.Strength = CurrentStrength;
 
                     if (!Sym.Const && CurrentStrength < Sym.MinStrength) continue; // Our second check to see if we should run this affliction. Basically, if this affliction isn't active on the limb, and not constant, don't update.
@@ -598,9 +640,11 @@ public class HumanUpdate
 
                     double PrevStrength = SymData.Strength;
                     Sym.UpdateAction(this, ID, LimbType.Torso, SymData);
-                    HF.ApplyAfflictionChange(Human, ID, (float)SymData.Strength, (float)PrevStrength, (float)SymData.SymTemplate.MinStrength, (float)SymData.SymTemplate.MaxStrength);
+                    ApplyAfflictionChange(Human, ID, (float)SymData.Strength, (float)PrevStrength, (float)SymData.SymTemplate.MinStrength, (float)SymData.SymTemplate.MaxStrength);
                 }
             }
+
+            // ----------------------------------------- Clearing ----------------------------------------- \\
 
             foreach (Action<NTHuman> Hook in PostHumanUpdateHooks) // Post hooks.
             {

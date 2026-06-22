@@ -1,4 +1,5 @@
 using static System.Math;
+using static Neurotrauma.HF;
 
 namespace Neurotrauma
 {
@@ -66,27 +67,97 @@ namespace Neurotrauma
             });
             Stats["speedmultiplier"] = new NTStatDouble("speedmultiplier", 0, 100, 1, (C) => 
             {
-                return 1;
+                double Res = 1;
+                if (C.GetAffStrength("t_paralysis") > 0) Res = -9001; // Wow, I find this to be a bit overkill
+                if (C.GetAffStrength("sym_vomiting") > 0) Res *= .8;
+                if (C.GetAffStrength("sym_nausea") > 0) Res *= .9;
+                if (C.GetAffStrength("anesthesia") > 0) Res *= .5;
+                if (C.GetAffStrength("opiateoverdose") > 50) Res *= .5;
+
+                if (C.GetDoubleStatStrength("withdrawal") > 80)
+                {
+                    Res *= .5;
+                }
+                else if (C.GetDoubleStatStrength("withdrawal") > 40)
+                {
+                    Res *= .7;
+                }
+                else if (C.GetDoubleStatStrength("withdrawal") > 20)
+                {
+                    Res *= .9;
+                }
+
+                if (C.GetAffStrength("drunk") > 80)
+                {
+                    Res *= .5;
+                }
+                else if (C.GetAffStrength("drunk") > 40)
+                {
+                    Res *= .7;
+                }
+                else if (C.GetAffStrength("drunk") > 20)
+                {
+                    Res *= .8;
+                }
+
+                Res += C.GetAffStrength("afadrenaline") / 100;
+
+                Res *= NTC.GetSpeed(C);
+
+                return Res;
             });
             Stats["lockleftarm"] = new NTStatBool("lockleftarm",false, (C) => 
             {
-                return true;
+                return LimbLockedIntial(C,LimbType.LeftArm,"lockleftarm");
             });
             Stats["lockrightarm"] = new NTStatBool("lockrightarm",false, (C) => 
             {
-                return true;
+                return LimbLockedIntial(C, LimbType.RightArm, "lockrightarm");
             });
             Stats["lockleftleg"] = new NTStatBool("lockleftleg",false, (C) => 
             {
-                return true;
+                return LimbLockedIntial(C, LimbType.LeftLeg, "lockleftleg");
             });
             Stats["lockrightleg"] = new NTStatBool("lockrightleg",false, (C) => 
             {
-                return true;
+                return LimbLockedIntial(C, LimbType.RightLeg, "lockrightleg");
             });
-            Stats["wheelchaired"] = new NTStatDouble("wheelchaired", 0, 100, 1, (C) => 
+            Stats["wheelchaired"] = new NTStatBool("wheelchaired", false, (C) => 
             {
-                return 1;
+                Item OutWearItem = GetItemInOuterWear(C.Human);
+                bool Res = (OutWearItem != null && OutWearItem.Prefab.Identifier.Value == "wheelchair") ? true : false;
+
+                if (Res)
+                {
+                    C.SetBoolStatStrength("lockleftleg", C.GetBoolStatStrength("lockleftarm"));
+                    C.SetBoolStatStrength("lockrightleg", C.GetBoolStatStrength("lockrightarm"));
+                }
+
+                if (C.GetBoolStatStrength("lockleftleg") || C.GetBoolStatStrength("lockrightleg")) 
+                {
+                    if (C.GetAffStrength("afadrenaline") < 0.1 || Res)
+                    {
+                        C.SetDoubleStatStrength("speedmultiplier", C.GetDoubleStatStrength("speedmultiplier") * .5);
+                    }
+                }
+
+                bool IsProne = C.GetBoolStatStrength("lockleftleg") && C.GetBoolStatStrength("lockrightleg");
+
+                if (IsProne && C.Human.IsClimbing)
+                {
+                    C.SetDoubleStatStrength("speedmultiplier", C.GetDoubleStatStrength("speedmultiplier") * .5);
+                }
+
+                if ((IsProne || Res) && C.GetBoolStatStrength("lockleftarm") && C.GetBoolStatStrength("lockrightarm"))
+                {
+                    C.SetDoubleStatStrength("speedmultiplier", -9001);
+                }
+                else if (IsProne && (C.GetBoolStatStrength("lockleftarm") || C.GetBoolStatStrength("lockrightarm")))
+                {
+                    C.SetDoubleStatStrength("speedmultiplier", C.GetDoubleStatStrength("speedmultiplier") * .8);
+                }
+
+                return Res;
             });
             Stats["bonegrowthCount"] = new NTStatDouble("bonegrowthCount", 0, 100, 1, (C) => 
             {

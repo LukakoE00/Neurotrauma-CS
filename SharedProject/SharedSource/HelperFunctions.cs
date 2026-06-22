@@ -1103,6 +1103,34 @@ namespace Neurotrauma
             SetAffliction(Character, "fibrillation", Fibrillation, Character, 0);
         }
 
+        public static bool LimbLockedIntial(HumanUpdate.NTHuman C, LimbType Limb, string Key)
+        {
+            return !NTC.HasSymptomFalse(C, Key)
+                   && (
+                       NTC.HasSymptom(C, Key)
+                       || LimbIsAmputated(C.Human, Limb)
+                       || (GetAfflictionStrengthLimb(C.Human, Limb, "bandaged") <= 0 && GetAfflictionStrengthLimb(
+                           C.Human,
+                           Limb,
+                           "dirtybandage"
+                           ) <= 0 && GetAfflictionStrength(C.Human, "afadrenaline") <= 0 && LimbIsDislocated(
+                                C.Human,
+                                Limb,
+                                Limb == LimbType.LeftArm || Limb == LimbType.RightArm
+                           )
+                      )
+                      || (
+                            GetAfflictionStrengthLimb(C.Human,Limb,"gypsumcast") <= 0 
+                            && GetAfflictionStrength(C.Human, "afadrenaline") <= 0
+                            && LimbIsBroken(
+                                C.Human,
+                                Limb,
+                                Limb == LimbType.LeftArm || Limb == LimbType.RightArm
+                         )
+                    )
+                );
+        }
+
         // ---------------------------------------- Client Related Helper Functions -------------------------------------------------- \\
 
         // Both these functions were returning null. - Lukako
