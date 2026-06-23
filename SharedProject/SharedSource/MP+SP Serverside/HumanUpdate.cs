@@ -7,6 +7,7 @@ using MoonSharp.Interpreter;
 using static Barotrauma.Networking.MessageFragment;
 using static Neurotrauma.NTC;
 using static Neurotrauma.HF;
+using System.Threading.Tasks;
 
 namespace Neurotrauma;
 
@@ -91,10 +92,11 @@ public class HumanUpdate
         public Character Human { get; set; } // Our Human Ref
         public NTHuman CharacterNT { get; set; } // Our NTHuman Ref
 
-        public Dictionary<string, NTHumanNonLimbAffData> UpdatingAfflictions = new(); // Stores the ID's of our updating afflictions.
-        public Dictionary<string, NTHumanLimbAffData> UpdatingLimbAfflictions = new(); // Stores the ID's of our updating (Limb) afflictions.
+        public Dictionary<string, NTHumanNonLimbAffData> UpdatingAfflictions = new();    // Stores the ID's of our updating afflictions.
+        public Dictionary<string, NTHumanLimbAffData> UpdatingLimbAfflictions = new();   // Stores the ID's of our updating (Limb) afflictions.
         public Dictionary<string, NTHumanBloodAffData> UpdatingBloodAfflictions = new(); // Stores the ID's of our updating (blood) afflictions.
-        public Dictionary<string, NTHumanSymptomData> UpdatingSymptoms = new(); // Stores the ID's of our symptoms.
+        public Dictionary<string, NTHumanSymptomData> UpdatingSymptoms = new();          // Stores the ID's of our symptoms.
+        public Dictionary<string, NTHumanLimbSymptomData> UpdatingLimbSymptoms = new();  // Stores the ID's of our limb symptoms.
 
         public void RegisterAffliction(string ID, NTAffliction Aff, double Strength)
         {
@@ -111,6 +113,10 @@ public class HumanUpdate
                 if (Aff is NTLimbAffliction)
                 {
                     RegisterLimbAffliction(ID, (NTLimbAffliction)Aff, new Dictionary<LimbType, double>() { });
+                }
+                if (Aff is NTSymptom)
+                {
+                    RegisterSymptom(ID, (NTSymptom)Aff);
                 }
             }
         }
@@ -249,19 +255,23 @@ public class HumanUpdate
 
         private string NTAfflictionToType(NTAffliction Aff)
         {
-            if (Aff is NTNonLimbAffliction)
+            if (Aff is NTSymptom)
+            {
+                return "NTSymptom";
+            }
+            else if (Aff is NTNonLimbAffliction)
             {
                 return "NTNonLimbAffliction";
             }
-            else if (Aff is NTBloodAffliction)
+            else if (Aff is NTLimbAffliction)
             {
-                return "NTBloodAffliction";
+                return "NTLimbAffliction";
             }
             else if (Aff is NTBloodAffliction)
             {
                 return "NTBloodAffliction";
             }
-            return "NTSymptom";
+            return "NTNonLimbAffliction";
         }
 
         private void AddAfflictions()
@@ -283,6 +293,10 @@ public class HumanUpdate
 
                     case "NTBloodAffliction":
                         RegisterBloodAffliction(ID, (NTBloodAffliction)Aff, 0);
+                        break;
+
+                    case "NTSymptom":
+                        RegisterSymptom(ID, (NTSymptom)Aff);
                         break;
                 }
             }
@@ -463,16 +477,7 @@ public class HumanUpdate
 
         public NTHumanSymptomData GetSymptomAffData(string Identifier)
         {
-            if (string.IsNullOrEmpty(Identifier))
-                return null;
-
-            if (LocalAfflictions.UpdatingSymptoms == null)
-                return null;
-
-            if (LocalAfflictions.UpdatingSymptoms.TryGetValue(Identifier, out var symptom))
-                return symptom;
-
-            return null;
+            return LocalAfflictions.UpdatingSymptoms[Identifier];
         }
 
         public double GetSymptomStrength(string Identifier) // SHOULD ONLY BE USED FOR READING. NOT SETTING.
@@ -730,19 +735,21 @@ public class HumanUpdate
         return UpdatingHumans[Character];
     }
 
-    public static void AddCharacterToUpdate(CharacterPrefab prefab, Vector2 position, string seed, CharacterInfo characterInfo, ushort id, bool isRemotePlayer, bool hasAi, bool createNetworkEvent, RagdollParams ragdoll, bool spawnInitialItems)
+    public static void AddCharacterToUpdate(ContentXElement element, Character character, ContentXElement limbHealthElement)
     {
-        if (characterInfo == null) { return; }
-        Character NewCharacter = characterInfo.Character;
-        if (NewCharacter == null) { return; }
-        if (NewCharacter.IsHuman)
+        if (character != null)
         {
-            HF.Print($"Adding the following Character {NewCharacter.Name} !");
-            AddHumanToUpdate(NewCharacter);
-        }
-        else
-        {
-            AddMonsterToUpdate(NewCharacter);
+            if (UpdatingHumans.ContainsKey(character)) return;
+            Print("Adding: " + character.Name);
+            if (character.IsHuman)
+            {
+                AddHumanToUpdate(character);
+                //CleanBotomy(character); This breaks everything for some reason. May somebody investigate?
+            }
+            else
+            {
+                AddMonsterToUpdate(character);
+            }
         }
     }
 
@@ -750,7 +757,7 @@ public class HumanUpdate
     {
         if (target is Character)
         {
-            Character NewCharacter = (Character)target;
+            Character NewCharacter = target;
             if (NewCharacter.IsHuman)
             {
                 HF.Print($"Removed the following Character {NewCharacter.Name} !");
@@ -844,7 +851,7 @@ public class HumanUpdate
 
         Tick--; // Decrement our tick.
         if (!(Tick < 0)) { return; }
-        else { Tick = Interval; HF.Print("Human Update Tick"); }
+        else { Tick = Interval; }
 
         if (!NTConfig.Get("NT_Calculations", true)) return; // Check the config.
 
@@ -854,25 +861,34 @@ public class HumanUpdate
         if (checkedPriorities.Count == 3) UpdateCooldown = 0;
         else if (checkedPriorities.Count == 0) return;
 
-        HF.Print("Actually Update");
         NTAfflictions.DeltaTime = NTDeltaTime;
         Update(checkedPriorities);
     }
 
     private void Update(List<AfflictionPriority> priorities)
     {
-        UpdateHumans(priorities);
+        Print("Update");
 
-        UpdateMonsters();
+        if (UpdatingMonsters.Count > 0)
+        {
+            Thread MonsterUpdateThread = new(UpdateMonsters); // We create a new thread to run monsters along humans. This should help greatly with mods such as barotraumatic.
+            MonsterUpdateThread.Start(); // Update.
+            UpdateHumans(priorities);
+            MonsterUpdateThread.Join(); // Syncs our threads.
+        }
+        else 
+        {
+            UpdateHumans(priorities);
+        }
+
+        Print("Threads synced");
     }
 
     private void UpdateHumans(List<AfflictionPriority> priorities)
     {
         foreach (KeyValuePair<Character,NTHuman> Pair in UpdatingHumans)
         {
-
             Pair.Value.Update(priorities);
-
         }
     }
 
@@ -882,6 +898,7 @@ public class HumanUpdate
         {
             Monster.Update();
         }
+        return;
     }
 
     public static void CleanBotomy(Character C)

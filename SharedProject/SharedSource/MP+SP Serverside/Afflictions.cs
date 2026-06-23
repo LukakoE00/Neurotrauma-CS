@@ -267,6 +267,8 @@ namespace Neurotrauma
                                 new Dictionary<string, Action<HumanUpdate.NTHuman, string, LimbType>>();
         Dictionary<string, Action<HumanUpdate.NTHuman, string, LimbType>> BloodAfflictionsToAdd =
                                 new Dictionary<string, Action<HumanUpdate.NTHuman, string, LimbType>>();
+        Dictionary<string, Action<HumanUpdate.NTHuman, string, LimbType>> SymptomsToAdd =
+                                new Dictionary<string, Action<HumanUpdate.NTHuman, string, LimbType>>();
 
         private void AddAfflictions() // Create your afflictions in here.
         {
@@ -326,11 +328,10 @@ namespace Neurotrauma
                 (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanNonLimbAffData AffData) =>
                 {
                     AffData.Strength -= (0.05 + HF.BoolToNum(C.GetSymptomAffData("unconsciousness").Strength < .1, .45f)) * NTAfflictions.DeltaTime;
-
                     if
-                        (!NTC.HasSymptomFalse(C, "respiratoryarrest")
-                        && (
-                        C.GetBoolStatStrength("stasis")
+                        (!NTC.HasSymptomFalse(C, "triggersym_respiratoryarrest")
+                        && (NTC.HasSymptomFalse(C, "triggersym_respiratoryarrest")
+                        || C.GetBoolStatStrength("stasis")
                         || C.GetAffData("lungremoved").Strength > 0
                         || C.GetAffData("brainremoved").Strength > 0
                         || C.GetAffData("opiateoverdose").Strength > 50
@@ -889,6 +890,14 @@ namespace Neurotrauma
 
             // Shortness of Breath
             SymptomsToAdd["shortnessofbreath"] = new("shortnessofbreath", 0, 100, 0, AfflictionPriority.HIGH);
+
+            SymptomsToAdd["lockleftarm"] = new("lockleftarm", 0, 100, 0, AfflictionPriority.HIGH);
+            SymptomsToAdd["lockrightarm"] = new("lockleftarm", 0, 100, 0, AfflictionPriority.HIGH);
+            SymptomsToAdd["lockleftleg"] = new("lockleftarm", 0, 100, 0, AfflictionPriority.HIGH);
+            SymptomsToAdd["lockrightleg"] = new("lockleftarm", 0, 100, 0, AfflictionPriority.HIGH);
+
+            SymptomsToAdd["triggersym_respiratoryarrest"] = new("triggersym_respiratoryarrest", 0, 100, 0, AfflictionPriority.HIGH);
+            SymptomsToAdd["triggersym_respiratoryarrest"].Const = true;
 
             foreach (KeyValuePair<string, NTSymptom> Pair in SymptomsToAdd)
             {

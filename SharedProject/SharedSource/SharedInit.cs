@@ -1,3 +1,8 @@
+using Barotrauma;
+using FarseerPhysics.Dynamics;
+using MonoGame.Utilities;
+using static Barotrauma.Networking.MessageFragment;
+
 namespace Neurotrauma
 {
     // Server-side AND Singleplayer code ONLY!
@@ -40,8 +45,8 @@ namespace Neurotrauma
             harmony.Patch(originalApplyTreatment, prefix: new HarmonyMethod(typeof(NTItemMethods), nameof(NTItemMethods.Override_ApplyTreatment)));
 
             // Character Patches
-            var characterCreation = AccessTools.Method(typeof(Character), "Create",
-                [typeof(CharacterPrefab), typeof(Vector2), typeof(string), typeof(CharacterInfo), typeof(ushort), typeof(bool), typeof(bool), typeof(bool), typeof(RagdollParams), typeof(bool)]);
+            var characterCreation = AccessTools.Constructor(typeof(CharacterHealth), // Server Side Version
+                [typeof(ContentXElement),typeof(Character),typeof(ContentXElement)]);
             harmony.Patch(characterCreation, postfix: new HarmonyMethod(typeof(HumanUpdate), nameof(HumanUpdate.AddCharacterToUpdate))); // The Character Created hook.
 
             var characterDeath = AccessTools.Method(typeof(Character), "RecordKill",

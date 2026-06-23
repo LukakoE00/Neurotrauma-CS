@@ -780,6 +780,8 @@ namespace Neurotrauma
 
         public static void SetAfflictionLimb(Character Character, string Identifier, LimbType GivenLimbType, float Strength, Character Aggressor, float PreviousStrength)
         {
+            if (Character == null) return;
+
             dynamic Check = AfflictionPrefab.Prefabs.TryGet(Identifier, out AfflictionPrefab Result); // Most likely a better way to acheive this but basically I don't know what this will return.
             if (Result == null) { return; }
             AfflictionPrefab Prefab = Result;
