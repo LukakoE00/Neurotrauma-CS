@@ -2,7 +2,12 @@
 <img width="512" height="512" alt="NTCS" src="https://github.com/user-attachments/assets/2a5ad40e-df70-42fd-9f27-e17ef4b86fc2" />
 </p>
 
-A complete re-write of Neurotrauma in C# (with a dash of Lua). This overhaul aims to remain faithful to the original mod while adding QOL features and much needed performance! New content is few and far between.
+A complete re-write of Neurotrauma in C# (with a dash of Lua).
+- Better performance, less stuttering and efficent memory usage.
+- Brand new QOL features.
+- Bug fixes.
+- New additions.
+- Full addon compatibility.
 <hr>
 
 Google Doc with codebase can be found [here](https://docs.google.com/document/d/1AJDsnBTOf8GZjzLwk0Dm6FDzZSp3U4sCgUFjvv2a_uo/edit?tab=t.0#heading=h.w01ukn2d7564)
@@ -10,6 +15,8 @@ Google Doc with codebase can be found [here](https://docs.google.com/document/d/
 C# Documentation (for Barotrauma) can be found [here](https://luatrauma.github.io/Luatrauma.Docs/api/cs/client/html/)
 
 Lua Documentation (for Barotrauma) can be found [here](https://evilfactory.github.io/LuaCsForBarotrauma/lua-docs/)
+
+NT Repository (Lua version) can be found [here](https://github.com/OlegBSTU/Neurotrauma)
 
 - Namespace: _Neurotrauma_
   
