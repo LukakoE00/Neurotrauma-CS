@@ -19,8 +19,6 @@ namespace Neurotrauma
     // We should provide functions to Lua to add Afflictions here. 
     public static class NTAfflictions
     {
-        public static double DeltaTime = 2;
-
         public static Dictionary<string, NTAffliction> Afflictions { get; } = new Dictionary<string, NTAffliction>(); // Stores all of our registered afflictions (regardless of categeory)
 
         private static List<string> AfflictionsLOW = [];
@@ -388,7 +386,7 @@ namespace Neurotrauma
             AfflictionsToAdd["respiratoryarrest"].UpdateAction = // The update function of the affliction, like how it is in Lua
                 (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanNonLimbAffData AffData) =>
                 {
-                    AffData.Strength -= (0.05 + HF.BoolToNum(C.GetSymptomAffData("unconsciousness").Strength < .1, .45f)) * NTAfflictions.DeltaTime;
+                    AffData.Strength -= (0.05 + HF.BoolToNum(C.GetSymptomAffData("unconsciousness").Strength < .1, .45f)) * NT.DeltaTime;
                     if
                         (!NTC.HasSymptomFalse(C, "triggersym_respiratoryarrest")
                         && (NTC.HasSymptomFalse(C, "triggersym_respiratoryarrest")
@@ -411,29 +409,26 @@ namespace Neurotrauma
 
             // Rib Fractures
             AfflictionsToAdd["fracturedribs"] = new("fracturedribs", 0, 100, 0, AfflictionPriority.MEDIUM);
-            AfflictionsToAdd["fracturedribs"].Const = false;
             AfflictionsToAdd["fracturedribs"].UpdateAction =
                 (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanNonLimbAffData AffData) =>
                 {
-                    AffData.Strength += 2 * NTAfflictions.DeltaTime;
+                    AffData.Strength += 2 * NT.DeltaTime;
                 };
 
             // Neck Fracture
             AfflictionsToAdd["fracturedneck"] = new("fracturedneck", 0, 100, 0, AfflictionPriority.MEDIUM);
-            AfflictionsToAdd["fracturedneck"].Const = false;
             AfflictionsToAdd["fracturedneck"].UpdateAction =
                 (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanNonLimbAffData AffData) =>
                 {
-                    AffData.Strength += 2 * NTAfflictions.DeltaTime;
+                    AffData.Strength += 2 * NT.DeltaTime;
                 };
 
             // Skull Fracture
             AfflictionsToAdd["fracturedskull"] = new("fracturedskull", 0, 100, 0, AfflictionPriority.MEDIUM);
-            AfflictionsToAdd["fracturedskull"].Const = false;
             AfflictionsToAdd["fracturedskull"].UpdateAction =
                 (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanNonLimbAffData AffData) =>
                 {
-                    AffData.Strength += 2 * NTAfflictions.DeltaTime;
+                    AffData.Strength += 2 * NT.DeltaTime;
                 };
 
 
@@ -742,6 +737,15 @@ namespace Neurotrauma
             // Aortic Rupture
             AfflictionsToAdd["aorticrupture"] = new("aorticrupture");
 
+            // =============== Bones =============== //
+            // Bone Damage
+            AfflictionsToAdd["bonedamage"] = new("bonedamage");
+            AfflictionsToAdd["bonedamage"].UpdateAction =
+                (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanNonLimbAffData AffData) =>
+                {
+                    if (C.GetBoolStatStrength("stasis")) return;
+                };
+
 
             // Now add these afflictions.
             foreach (KeyValuePair<string,NTNonLimbAffliction> Pair in AfflictionsToAdd)
@@ -757,11 +761,8 @@ namespace Neurotrauma
             LimbAfflictionsToAdd["bleeding"].UpdateAction =
                 (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanLimbAffData AffData) =>
                 {
-                    AffData.Strength[Limb] -= (C.GetDoubleStatStrength("clottingrate") * .1 * NTAfflictions.DeltaTime);
+                    AffData.Strength[Limb] -= (C.GetDoubleStatStrength("clottingrate") * .1 * NT.DeltaTime);
                 };
-
-            // Bone Damage
-            LimbAfflictionsToAdd["bonedamage"] = new("bonedamage");
 
             // Stimulated Bone Growth
             LimbAfflictionsToAdd["stimulatedbonegrowth"] = new("stimulatedbonegrowth");
@@ -830,7 +831,7 @@ namespace Neurotrauma
                                 + Math.Clamp(C.GetLimbAffStrength("skinointmented", Limb), 0, 1) * .12
                                 )
                                 * C.GetDoubleStatStrength("healingrate")
-                                * NTAfflictions.DeltaTime;
+                                * NT.DeltaTime;
                     }
                 };
 
@@ -946,12 +947,26 @@ namespace Neurotrauma
 
             // Unconsciousness
             SymptomsToAdd["unconsciousness"] = new("unconsciousness", 0, 100, 0, AfflictionPriority.HIGH);
+            SymptomsToAdd["unconsciousness"].Const = true;
+            SymptomsToAdd["unconsciousness"].UpdateAction =
+                (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanSymptomData AffData) =>
+                {
+                    bool IsUnc = !NTC.HasSymptomFalse(C, ID)
+                        && (NTC.HasSymptom(C, ID)
+                        || C.GetBoolStatStrength("stasis")
+                        || C.GetAffStrength("brainremoved") > 0
+                        || C.GetAffStrength("neurotrauma") > 100
+                        || C.GetAffStrength("coma") > 15
+                        || C.Human.Vitality <= 0
+                        || C.GetAffStrength("hypoxemia") > 80
+                        || C.GetAffStrength("t_arterialcut") > 0
+                        || C.GetAffStrength("seizure") > 0.1
+                        || C.GetAffStrength("opiateoverdose") > 60
+                    )
+                    && !C.Human.HasAbilityFlag(AbilityFlags.AlwaysStayConscious);
+                    AffData.Strength = HF.BoolToNum(IsUnc, 100);
 
-            // Inflammation
-            SymptomsToAdd["inflammation"] = new("inflammation", 0, 100, 0, AfflictionPriority.HIGH);
-
-            // Spasms
-            SymptomsToAdd["spasm"] = new("spasm", 0, 100, 0, AfflictionPriority.HIGH);
+                };
 
             // Craving
             SymptomsToAdd["craving"] = new("craving", 0, 100, 0, AfflictionPriority.HIGH);
@@ -987,6 +1002,12 @@ namespace Neurotrauma
 
         private void AddLimbSymptoms()
         {
+
+            // Inflammation
+            LimbSymptomsToAdd["inflammation"] = new("inflammation", 0, 100, 0, AfflictionPriority.HIGH);
+
+            // Spasms
+            LimbSymptomsToAdd["spasm"] = new("spasm", 0, 100, 0, AfflictionPriority.HIGH);
 
             foreach (KeyValuePair<string, NTSymptom> Pair in SymptomsToAdd)
             {

@@ -1176,6 +1176,12 @@ namespace Neurotrauma
                 );
         }
 
+        public static double OrganDamageCalc(HumanUpdate.NTHuman C, double DamageValue, bool NoMaxStrength = false)
+        {
+            if (DamageValue >= 99 && !NoMaxStrength) return 100;
+            return DamageValue - 0.01 * C.GetDoubleStatStrength("healingrate") * C.GetDoubleStatStrength("anyspecificorgandamage") * NT.DeltaTime;
+        }
+
         // ---------------------------------------- Client Related Helper Functions -------------------------------------------------- \\
 
         // Both these functions were returning null. - Lukako

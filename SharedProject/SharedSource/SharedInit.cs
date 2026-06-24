@@ -45,7 +45,7 @@ namespace Neurotrauma
             harmony.Patch(originalApplyTreatment, prefix: new HarmonyMethod(typeof(NTItemMethods), nameof(NTItemMethods.Override_ApplyTreatment)));
 
             // Character Patches
-            var characterCreation = AccessTools.Constructor(typeof(CharacterHealth), // Server Side Version
+            var characterCreation = AccessTools.Constructor(typeof(CharacterHealth), // Server Side Version. In singleplayer this doesn't account for Humans for some reason.
                 [typeof(ContentXElement),typeof(Character),typeof(ContentXElement)]);
             harmony.Patch(characterCreation, postfix: new HarmonyMethod(typeof(HumanUpdate), nameof(HumanUpdate.AddCharacterToUpdate))); // The Character Created hook.
 

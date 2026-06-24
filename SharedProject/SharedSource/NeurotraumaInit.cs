@@ -93,4 +93,10 @@ namespace Neurotrauma
             #endif
         }
     }
+
+    // Stores our random shit.
+    public static class NT
+    {
+        public static double DeltaTime = 2;
+    }
 }

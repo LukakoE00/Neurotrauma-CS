@@ -28,7 +28,7 @@ namespace Neurotrauma
                    )
                     * NTC.GetMultiplier(C,"anyorgandamage")
                     * NTConfig.Get("NT_OrganDamageGain",1)
-                    * NTAfflictions.DeltaTime;
+                    * NT.DeltaTime;
             });
             Stats["clottingrate"] = new NTStatDouble("clottingrate", 0, 100, 1, (C) => 
             {
