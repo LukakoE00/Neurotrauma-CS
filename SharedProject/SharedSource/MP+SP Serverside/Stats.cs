@@ -24,7 +24,7 @@ namespace Neurotrauma
                 return (
                     C.GetBloodAffStrength("sepsis") / 300
                     + C.GetBloodAffStrength("hypoxemia") / 400
-                    + Max(C.GetAffStrength("radiationsickness") - 25, 0) / 400
+                    + Max(C.GetNonLimbAffStrength("radiationsickness") - 25, 0) / 400
                    )
                     * NTC.GetMultiplier(C,"anyorgandamage")
                     * NTConfig.Get("NT_OrganDamageGain",1)
@@ -32,47 +32,47 @@ namespace Neurotrauma
             });
             Stats["clottingrate"] = new NTStatDouble("clottingrate", 0, 100, 1, (C) => 
             {
-                return Clamp(1 - C.GetAffStrength("liverdamage") / 100, 0, 1)
+                return Clamp(1 - C.GetNonLimbAffStrength("liverdamage") / 100, 0, 1)
                         * C.GetDoubleStatStrength("healingrate")
-                        * Clamp(1 - C.GetAffStrength("afstreptokinase"), 0, 1)
+                        * Clamp(1 - C.GetNonLimbAffStrength("afstreptokinase"), 0, 1)
                         * NTC.GetMultiplier(C, "clottingrate");
             });
             Stats["bloodamount"] = new NTStatDouble("bloodamount", 0, 100, 1, (C) => 
             {
-                return Math.Clamp(100 - C.GetAffStrength("bloodloss"),0,100);
+                return Math.Clamp(100 - C.GetNonLimbAffStrength("bloodloss"),0,100);
             });
             Stats["stasis"] = new NTStatBool("stasis",false, (C) => 
             {
-                return C.GetAffStrength("stasis") > 0;
+                return C.GetNonLimbAffStrength("stasis") > 0;
             });
             Stats["sedated"] = new NTStatBool("sedated",false, (C) => 
             {
-                return C.GetAffStrength("analgesia") > 0
-                        || C.GetAffStrength("anesthesia") > 10
-                        || C.GetAffStrength("drunk") > 20
-                        || C.GetAffStrength("stasis") > 0;
+                return C.GetNonLimbAffStrength("analgesia") > 0
+                        || C.GetNonLimbAffStrength("anesthesia") > 10
+                        || C.GetNonLimbAffStrength("drunk") > 20
+                        || C.GetNonLimbAffStrength("stasis") > 0;
             });
             Stats["withdrawal"] = new NTStatDouble("withdrawal", 0, 100, 1, (C) => 
             {
-                return Max(Max(C.GetAffStrength("opiatewithdrawal"), C.GetAffStrength("chemwithdrawal")), C.GetAffStrength("alcoholwithdrawal"));
+                return Max(Max(C.GetNonLimbAffStrength("opiatewithdrawal"), C.GetNonLimbAffStrength("chemwithdrawal")), C.GetNonLimbAffStrength("alcoholwithdrawal"));
             });
             Stats["availableoxygen"] = new NTStatDouble("availableoxygen", 0, 100, 1, (C) => 
             {
                 double Res = Clamp(C.Human.Oxygen,0,100);
                 // heart isnt pumping blood? no new oxygen is getting into the bloodstream, no matter how oxygen rich the air in the lungs
-                Res *= (1 - C.GetAffStrength("fibrillation") / 100);
+                Res *= (1 - C.GetNonLimbAffStrength("fibrillation") / 100);
                 // and uuuh, maybe also dont let people without lungs or broken lungs use the oxygen where their lungs should be
-                if (C.GetAffStrength("cardiacarrest") > 1 || C.GetAffStrength("lungdamage") == 100 || C.GetAffStrength("lungremoved") > 0.1) Res = 0;
+                if (C.GetNonLimbAffStrength("cardiacarrest") > 1 || C.GetNonLimbAffStrength("lungdamage") == 100 || C.GetNonLimbAffStrength("lungremoved") > 0.1) Res = 0;
                 return Res;
             });
             Stats["speedmultiplier"] = new NTStatDouble("speedmultiplier", 0, 100, 1, (C) => 
             {
                 double Res = 1;
-                if (C.GetAffStrength("t_paralysis") > 0) Res = -9001; // Wow, I find this to be a bit overkill
-                if (C.GetAffStrength("sym_vomiting") > 0) Res *= .8;
-                if (C.GetAffStrength("sym_nausea") > 0) Res *= .9;
-                if (C.GetAffStrength("anesthesia") > 0) Res *= .5;
-                if (C.GetAffStrength("opiateoverdose") > 50) Res *= .5;
+                if (C.GetNonLimbAffStrength("t_paralysis") > 0) Res = -9001; // Wow, I find this to be a bit overkill
+                if (C.GetNonLimbAffStrength("sym_vomiting") > 0) Res *= .8;
+                if (C.GetNonLimbAffStrength("sym_nausea") > 0) Res *= .9;
+                if (C.GetNonLimbAffStrength("anesthesia") > 0) Res *= .5;
+                if (C.GetNonLimbAffStrength("opiateoverdose") > 50) Res *= .5;
 
                 if (C.GetDoubleStatStrength("withdrawal") > 80)
                 {
@@ -87,20 +87,20 @@ namespace Neurotrauma
                     Res *= .9;
                 }
 
-                if (C.GetAffStrength("drunk") > 80)
+                if (C.GetNonLimbAffStrength("drunk") > 80)
                 {
                     Res *= .5;
                 }
-                else if (C.GetAffStrength("drunk") > 40)
+                else if (C.GetNonLimbAffStrength("drunk") > 40)
                 {
                     Res *= .7;
                 }
-                else if (C.GetAffStrength("drunk") > 20)
+                else if (C.GetNonLimbAffStrength("drunk") > 20)
                 {
                     Res *= .8;
                 }
 
-                Res += C.GetAffStrength("afadrenaline") / 100;
+                Res += C.GetNonLimbAffStrength("afadrenaline") / 100;
 
                 Res *= NTC.GetSpeed(C);
 
@@ -140,7 +140,7 @@ namespace Neurotrauma
 
                 if (C.GetBoolStatStrength("lockleftleg") || C.GetBoolStatStrength("lockrightleg")) 
                 {
-                    if (C.GetAffStrength("afadrenaline") < 0.1 || Res)
+                    if (C.GetNonLimbAffStrength("afadrenaline") < 0.1 || Res)
                     {
                         C.SetDoubleStatStrength("speedmultiplier", C.GetDoubleStatStrength("speedmultiplier") * .5);
                     }

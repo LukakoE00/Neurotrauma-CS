@@ -117,6 +117,16 @@ namespace Neurotrauma
 
     }
 
+    public enum NTAfflictionType : int
+    {
+        ABSTRACT = 1,
+        NONLIMB = 2,
+        LIMB = 3,
+        BLOOD = 4,
+        SYMPTOM = 5,
+        LIMBSYMPTOM = 6
+    }
+
     /// <summary>
     /// The abstract template of our Afflictions. This class and any of it's descendants are never instantiated for a player class. Rather, we use the outline of this affliction class
     /// determine the results of the affliction. The strength is stored seperately in the NTHuman character class!
@@ -159,6 +169,8 @@ namespace Neurotrauma
         /// </summary>
         public string ID = "";
 
+        public NTAfflictionType Type = NTAfflictionType.ABSTRACT;
+        public int AffSortID = 0;
         /// <summary>
         /// The main update function of our affliction.
         /// </summary>
@@ -180,6 +192,10 @@ namespace Neurotrauma
 
     public class NTNonLimbAffliction : NTAffliction
     {
+
+        new public NTAfflictionType Type = NTAfflictionType.NONLIMB;
+        new public int AffSortID = 1;
+
         public Action<HumanUpdate.NTHuman, string, LimbType, HumanUpdate.NTHumanNonLimbAffData> UpdateAction =
             (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanNonLimbAffData AffData) =>
             {
@@ -199,6 +215,10 @@ namespace Neurotrauma
 
     public class NTLimbAffliction : NTAffliction
     {
+
+        new public NTAfflictionType Type = NTAfflictionType.LIMB;
+        new public int AffSortID = 2;
+
         public Action<HumanUpdate.NTHuman, string, LimbType, HumanUpdate.NTHumanLimbAffData> UpdateAction =
             (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanLimbAffData AffData) =>
             {
@@ -221,6 +241,10 @@ namespace Neurotrauma
 
     public class NTBloodAffliction : NTAffliction
     {
+
+        new public NTAfflictionType Type = NTAfflictionType.BLOOD;
+        new public int AffSortID = 3;
+
         public Action<HumanUpdate.NTHuman, string, LimbType, HumanUpdate.NTHumanBloodAffData> UpdateAction =
             (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanBloodAffData AffData) =>
             {
@@ -240,6 +264,9 @@ namespace Neurotrauma
 
     public class NTSymptom : NTNonLimbAffliction
     {
+
+        new public NTAfflictionType Type = NTAfflictionType.SYMPTOM;
+        new public int AffSortID = 4;
 
         public Action<HumanUpdate.NTHuman, string, LimbType, HumanUpdate.NTHumanSymptomData> UpdateAction =
             (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanSymptomData SymData) =>
@@ -332,13 +359,13 @@ namespace Neurotrauma
                         (!NTC.HasSymptomFalse(C, "triggersym_respiratoryarrest")
                         && (NTC.HasSymptomFalse(C, "triggersym_respiratoryarrest")
                         || C.GetBoolStatStrength("stasis")
-                        || C.GetAffData("lungremoved").Strength > 0
-                        || C.GetAffData("brainremoved").Strength > 0
-                        || C.GetAffData("opiateoverdose").Strength > 50
-                        || C.GetAffData("lungdamage").Strength > 99 && HF.Chance(.8f)
-                        || C.GetAffData("traumaticshock").Strength > 30 && HF.Chance(.2f)
+                        || C.GetNonLimbAffData("lungremoved").Strength > 0
+                        || C.GetNonLimbAffData("brainremoved").Strength > 0
+                        || C.GetNonLimbAffData("opiateoverdose").Strength > 50
+                        || C.GetNonLimbAffData("lungdamage").Strength > 99 && HF.Chance(.8f)
+                        || C.GetNonLimbAffData("traumaticshock").Strength > 30 && HF.Chance(.2f)
                         || (
-                            (C.GetAffData("neurotrauma").Strength > 100 || C.GetAffData("neurotrauma").Strength > 70
+                            (C.GetNonLimbAffData("neurotrauma").Strength > 100 || C.GetNonLimbAffData("neurotrauma").Strength > 70
                             && HF.Chance(.05f))
                         )
                       )
@@ -824,12 +851,12 @@ namespace Neurotrauma
                     AffData.Strength = HF.BoolToNum(
                         !NTC.HasSymptomFalse(C, ID)
                         && C.GetSymptomAffData("unconsciousness").Strength <= 0
-                        && C.GetAffData("lungremoved").Strength <= 0
+                        && C.GetNonLimbAffData("lungremoved").Strength <= 0
                         && (
                             NTC.HasSymptom(C, ID)
-                            || C.GetAffData("lungdamage").Strength > 50
-                            || C.GetAffData("heartdamage").Strength > 50
-                            || C.GetAffData("tamponade").Strength > 20
+                            || C.GetNonLimbAffData("lungdamage").Strength > 50
+                            || C.GetNonLimbAffData("heartdamage").Strength > 50
+                            || C.GetNonLimbAffData("tamponade").Strength > 20
                         ),
                         100
                     );
