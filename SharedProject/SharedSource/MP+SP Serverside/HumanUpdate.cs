@@ -877,7 +877,6 @@ public class HumanUpdate
                     if (!LocalAfflictions.UpdatingAfflictions.ContainsKey(RealAff.Identifier.ToString())) continue;
                     NTHumanAffData Data = LocalAfflictions.UpdatingAfflictions[RealAff.Identifier.ToString()];
                     if (Data.AffTemplate.Const) continue;
-
                     NTAfflictionType AffType = Data.AffTemplate.Type;
                     switch (AffType)
                     {
@@ -895,8 +894,6 @@ public class HumanUpdate
                             double CurrentStrength = GetAfflictionStrength(Human, ID);
                             AffData.Strength = CurrentStrength;
                             AffData.PrevStrength = PrevStrength;
-
-                            if (!Aff.Const && CurrentStrength <= Aff.MinStrength) continue; // Our second check to see if we should run this affliction. Basically, if this affliction isn't active on the limb, and not constant, don't update.
 
                             Aff.UpdateAction(this, ID, LimbType.Torso, AffData);
                             ApplyAfflictionChange(Human, ID, (float)AffData.Strength, (float)PrevStrength, (float)AffData.AffTemplate.MinStrength, (float)AffData.AffTemplate.MaxStrength);
@@ -921,8 +918,6 @@ public class HumanUpdate
 
                                 LimbAffData.PrevStrength[Limb] = LimbPrevStrength;
 
-                                if (!LimbAff.Const && LimbCurrentStrength <= LimbAff.MinStrength) continue; // Our second check to see if we should run this affliction. Basically, if this affliction isn't active on the limb, and not constant, don't update.
-
                                 LimbAff.UpdateAction(this, LimbID, Limb, LimbAffData);
                                 ApplyAfflictionChangeLimb(Human, Limb, LimbID, (float)LimbAffData.Strength[Limb], (float)LimbPrevStrength, (float)LimbAffData.AffTemplate.MinStrength, (float)LimbAffData.AffTemplate.MaxStrength);
                             }
@@ -944,8 +939,6 @@ public class HumanUpdate
                             BloodAffData.Strength = BloodCurrentStrength;
                             BloodAffData.PrevStrength = BloodPrevStrength;
 
-                            if (!BloodAff.Const && BloodCurrentStrength <= BloodAff.MinStrength) continue; // Our second check to see if we should run this affliction. Basically, if this affliction isn't active on the limb, and not constant, don't update.
-
                             BloodAff.UpdateAction(this, BloodID, LimbType.Torso, BloodAffData);
                             ApplyAfflictionChange(Human, BloodID, (float)BloodAffData.Strength, (float)BloodPrevStrength, (float)BloodAffData.AffTemplate.MinStrength, (float)BloodAffData.AffTemplate.MaxStrength);
 
@@ -962,17 +955,21 @@ public class HumanUpdate
 
                             double SymCurrentStrength = GetAfflictionStrength(Human, SymID);
                             SymData.Strength = SymCurrentStrength;
-
-                            if (!Sym.Const && SymCurrentStrength <= Sym.MinStrength) continue; // Our second check to see if we should run this affliction. Basically, if this affliction isn't active on the limb, and not constant, don't update.
-
-                            if (SymData.HumanUpdateTime <= 0) SymData.Strength = 0;
+                            double SymPrevStrength = SymData.Strength;
+                            if (SymData.HumanUpdateTime <= 0)
+                            {
+                                SymData.Strength = 0;
+                                SymData.HumanUpdateTime--;
+                            }
                             else SymData.Strength = 100; SymData.HumanUpdateTime--;
 
-                            if (SymData.HumanUpdateStoptime > 0) SymData.Strength = 0;
-                            else SymData.HumanUpdateStoptime--;
+                            if (SymData.HumanUpdateStoptime > 0)
+                            {
+                                SymData.Strength = 0;
+                                SymData.HumanUpdateStoptime--;
+                            }
 
-                            double SymPrevStrength = SymData.Strength;
-                            Sym.UpdateAction(this, SymID, LimbType.Torso, SymData);
+                            if (SymData.HumanUpdateStoptime <= 0) Sym.UpdateAction(this, SymID, LimbType.Torso, SymData);
                             ApplyAfflictionChange(Human, SymID, (float)SymData.Strength, (float)SymPrevStrength, (float)SymData.SymTemplate.MinStrength, (float)SymData.SymTemplate.MaxStrength);
 
                             break;
@@ -1070,17 +1067,23 @@ public class HumanUpdate
 
                             double SymCurrentStrength = GetAfflictionStrength(Human, SymID);
                             SymData.Strength = SymCurrentStrength;
-
+                            double SymPrevStrength = SymData.Strength;
                             if (!Sym.Const && SymCurrentStrength <= Sym.MinStrength) continue; // Our second check to see if we should run this affliction. Basically, if this affliction isn't active on the limb, and not constant, don't update.
 
-                            if (SymData.HumanUpdateTime <= 0) SymData.Strength = 0;
+                            if (SymData.HumanUpdateTime <= 0)
+                            {
+                                SymData.Strength = 0;
+                                SymData.HumanUpdateTime--;
+                            }
                             else SymData.Strength = 100; SymData.HumanUpdateTime--;
 
-                            if (SymData.HumanUpdateStoptime > 0) SymData.Strength = 0;
-                            else SymData.HumanUpdateStoptime--;
+                            if (SymData.HumanUpdateStoptime > 0)
+                            {
+                                SymData.Strength = 0;
+                                SymData.HumanUpdateStoptime--;
+                            }
 
-                            double SymPrevStrength = SymData.Strength;
-                            Sym.UpdateAction(this, SymID, LimbType.Torso, SymData);
+                            if (SymData.HumanUpdateStoptime <= 0) Sym.UpdateAction(this, SymID, LimbType.Torso, SymData);
                             ApplyAfflictionChange(Human, SymID, (float)SymData.Strength, (float)SymPrevStrength, (float)SymData.SymTemplate.MinStrength, (float)SymData.SymTemplate.MaxStrength);
 
                             break;
@@ -1252,7 +1255,7 @@ public class HumanUpdate
         if (checkedPriorities.Count == 3) UpdateCooldown = 0;
         else if (checkedPriorities.Count == 0) return;
 
-        NTAfflictions.DeltaTime = NTDeltaTime;
+        NT.DeltaTime = NTDeltaTime;
         Update(checkedPriorities);
     }
 

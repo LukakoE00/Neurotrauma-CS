@@ -191,9 +191,6 @@ namespace Neurotrauma
     public class NTNonLimbAffliction : NTAffliction
     {
 
-        new public NTAfflictionType Type = NTAfflictionType.NONLIMB;
-        new public int AffSortID = 1;
-
         public Action<HumanUpdate.NTHuman, string, LimbType, HumanUpdate.NTHumanNonLimbAffData> UpdateAction =
             (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanNonLimbAffData AffData) =>
             {
@@ -208,15 +205,13 @@ namespace Neurotrauma
             MaxStrength = NewMaxStrength;
             DefaultStrength = Math.Clamp(NewDefaultStrength, NewMinStrength, NewMaxStrength);
             Priority = NewPriority;
+            AffSortID = 1;
+            Type = NTAfflictionType.NONLIMB;
         }
     }
 
     public class NTLimbAffliction : NTAffliction
     {
-
-        new public NTAfflictionType Type = NTAfflictionType.LIMB;
-        new public int AffSortID = 2;
-
         public Action<HumanUpdate.NTHuman, string, LimbType, HumanUpdate.NTHumanLimbAffData> UpdateAction =
             (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanLimbAffData AffData) =>
             {
@@ -232,6 +227,8 @@ namespace Neurotrauma
             DefaultStrength = Math.Clamp(NewDefaultStrength, NewMinStrength, NewMaxStrength);
             Priority = NewPriority;
             IgnoreStasis = false;
+            AffSortID = 2;
+            Type = NTAfflictionType.LIMB;
         }
 
         public List<LimbType> AllowedLimbs { get; set; } = HF.LimbsToCheck; // I'll add this one later.
@@ -239,9 +236,6 @@ namespace Neurotrauma
 
     public class NTBloodAffliction : NTAffliction
     {
-
-        new public NTAfflictionType Type = NTAfflictionType.BLOOD;
-        new public int AffSortID = 3;
 
         public Action<HumanUpdate.NTHuman, string, LimbType, HumanUpdate.NTHumanBloodAffData> UpdateAction =
             (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanBloodAffData AffData) =>
@@ -257,6 +251,8 @@ namespace Neurotrauma
             MaxStrength = NewMaxStrength;
             DefaultStrength = Math.Clamp(NewDefaultStrength, NewMinStrength, NewMaxStrength);   
             Priority = NewPriority;
+            AffSortID = 3;
+            Type = NTAfflictionType.BLOOD;
             if (NewAddToHematology)
             {
                 NTC.AddHematologyAffliction(ID);
@@ -266,9 +262,6 @@ namespace Neurotrauma
 
     public class NTSymptom : NTNonLimbAffliction
     {
-
-        new public NTAfflictionType Type = NTAfflictionType.SYMPTOM;
-        new public int AffSortID = 4;
 
         public Action<HumanUpdate.NTHuman, string, LimbType, HumanUpdate.NTHumanSymptomData> UpdateAction =
             (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanSymptomData SymData) =>
@@ -284,15 +277,13 @@ namespace Neurotrauma
             MaxStrength = NewMaxStrength;
             DefaultStrength = Math.Clamp(NewDefaultStrength, NewMinStrength, NewMaxStrength);
             Priority = NewPriority;
-        }
+            Type = NTAfflictionType.SYMPTOM;
+            AffSortID = 4;
+    }
     }
 
     public class NTLimbSymptom : NTLimbAffliction
     {
-
-        new public NTAfflictionType Type = NTAfflictionType.LIMBSYMPTOM;
-        new public int AffSortID = 5;
-
         public Action<HumanUpdate.NTHuman, string, LimbType, HumanUpdate.NTHumanLimbSymptomData> UpdateAction =
             (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanLimbSymptomData SymData) =>
             {
@@ -307,6 +298,8 @@ namespace Neurotrauma
             MaxStrength = NewMaxStrength;
             DefaultStrength = Math.Clamp(NewDefaultStrength, NewMinStrength, NewMaxStrength);
             Priority = NewPriority;
+            AffSortID = 5;
+            Type = NTAfflictionType.LIMBSYMPTOM;
         }
     }
 
@@ -762,6 +755,7 @@ namespace Neurotrauma
                 (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanLimbAffData AffData) =>
                 {
                     AffData.Strength[Limb] -= (C.GetDoubleStatStrength("clottingrate") * .1 * NT.DeltaTime);
+                    NTC.SetSymptomFalse(C,"vomitingblood",10);
                 };
 
             // Stimulated Bone Growth
