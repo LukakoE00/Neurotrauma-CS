@@ -17,12 +17,15 @@ namespace Neurotrauma;
 
 public class HumanUpdate
 {
+
     private static int UpdateCooldown = 0;
     private static readonly int UpdateIntervalHigh = (int)AfflictionPriority.HIGH; // 120 = 2s
     private static readonly int UpdateIntervalMedium = (int)AfflictionPriority.MEDIUM; // 240 = 4s
     private static readonly int UpdateIntervalLow = (int)AfflictionPriority.LOW; // 480 = 8s
     static private Dictionary<Character, NTHuman> UpdatingHumans = new();
+
     static private List<NTMonster> UpdatingMonsters = new();
+    Thread MonsterUpdateThread = new(UpdateMonsters); // We create a new thread to run monsters along humans. This should help greatly with mods such as barotraumatic.
 
     public Dictionary<Character, NTHuman> GetUpdatingCharacters()
     {
@@ -1206,7 +1209,6 @@ public class HumanUpdate
     {
         if (UpdatingMonsters.Count > 0)
         {
-            Thread MonsterUpdateThread = new(UpdateMonsters); // We create a new thread to run monsters along humans. This should help greatly with mods such as barotraumatic.
             MonsterUpdateThread.Start(); // Update.
             UpdateHumans(priorities);
             MonsterUpdateThread.Join(); // Syncs our threads.
@@ -1225,7 +1227,7 @@ public class HumanUpdate
         }
     }
 
-    private void UpdateMonsters()
+    private static void UpdateMonsters()
     {
         foreach (NTMonster Monster in UpdatingMonsters)
         {
