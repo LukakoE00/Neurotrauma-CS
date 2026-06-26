@@ -1,9 +1,14 @@
 ﻿// Disable the Hook warning
 #pragma warning disable CS0618
 
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using Barotrauma;
 using Barotrauma.Items.Components;
 using Barotrauma.LuaCs.Compatibility;
 using Barotrauma.Networking;
+using HarmonyLib;
 
 namespace Neurotrauma
 {
@@ -33,19 +38,56 @@ namespace Neurotrauma
         // Fetch config multipliers
         private static float GetItemMultiplier(string identifier)
         {
-            if (string.IsNullOrEmpty(identifier)) return 1.0f;
+            try
+            {
+                if (string.IsNullOrEmpty(identifier)) return 1.0f;
 
-            // Add grouping so blood bags don't fucking kill me
-            string configKey = ItemVariants.GetValueOrDefault(identifier, "NT_ItemPrice_" + identifier);
+                // Add grouping so blood bags don't fucking kill me
+                string configKey = ItemVariants.GetValueOrDefault(identifier, "NT_ItemPrice_" + identifier);
 
-            if (!NTConfig.Entries.ContainsKey(configKey)) return 1.0f;
+                if (!NTConfig.Entries.ContainsKey(configKey)) return 1.0f;
 
-            float value = NTConfig.Get(configKey, 1.0f);
-            return value;
+                float value = NTConfig.Get(configKey, 1.0f);
+                return value;
+            }
+            catch (Exception e)
+            {
+                HF.Print($"Error in GetItemMultiplier for {identifier}: {e.Message}");
+                return 1.0f;
+            }
         }
 
         public static void InitDynamicItemsClient()
         {
+            // Manual harmony patch for fabricators cause it decided to say fuck you
+            try
+            {
+                var harmony = new Harmony("com.neurotrauma.dynamicitems");
+                var targetMethod = typeof(Fabricator).GetMethod("FilterEntities", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+
+                if (targetMethod != null)
+                {
+                    var postfix = typeof(DynamicItems).GetMethod(nameof(FilterEntitiesPostfix), BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
+
+                    if (postfix != null)
+                    {
+                        harmony.Patch(targetMethod, postfix: new HarmonyMethod(postfix));
+                    }
+                    else
+                    {
+                        LuaCsLogger.LogError($"NT Dynamic Items Harmony patch failed at step 3.");
+                    }
+                }
+                else
+                {
+                    LuaCsLogger.LogError($"NT Dynamic Items Harmony patch failed at step 2.");
+                }
+            }
+            catch (Exception ex)
+            {
+                LuaCsLogger.LogError($"NT Dynamic Items Harmony patch failed at step 1, Exception: {ex}");
+            }
+
             // PRICE CHANGING
             // Hook into the price-determining function and add a multiplier
             LuaCsSetup.Instance.Hook.Patch(
@@ -56,66 +98,44 @@ namespace Neurotrauma
 
                 new LuaCsPatchFunc((object instance, LuaPatcherService.ParameterTable ptable) =>
                 {
-                    Item item = (Item)ptable["item"];
-                    if (item == null || item.Prefab.Identifier == null) return null;
-
-                    Identifier id = item.Prefab.Identifier;
-                    if (id == null) return null;
-
-                    float mult = GetItemMultiplier(id.value);
-
-                    // Don't do extra math if the item value is unchanged
-                    if (mult == 1.0f) return null;
-
-                    // Get the 'actual price' after the game is done with it's calculations
-                    var baseVal = ptable.OriginalReturnValue;
-                    if (baseVal == null) return null;
-
-                    // Convert baseVal to int
-                    int price = Convert.ToInt32(baseVal);
-
-                    // Apply config-determined multiplier
-                    int result = (int)Math.Floor(price * mult + 0.5f);
-
-                    ptable.ReturnValue = result;
-                    return null;
-                }),
-                ILuaCsHook.HookMethodType.After
-            );
-
-            // FABRICATOR CHANGES
-            // You cannot fabricate the item; this is accomplished by taking the Filter that gets made whenever you open a fabricator, and hiding the specific item IDs we want to hide.
-            LuaCsSetup.Instance.Hook.Patch(
-                "NT.Fabricator.FilterEntities",             // identifier for our Patch
-                "Barotrauma.Items.Components.Fabricator",   // className
-                "FilterEntities",                           // methodName
-                null,                                       // parameterTypes (this one has none)
-
-                new LuaCsPatchFunc((object instance, LuaPatcherService.ParameterTable ptable) =>
-                {
-                    var fabricator = instance as Barotrauma.Items.Components.Fabricator;
-                    if (fabricator == null) return null;
-
-                    LuaCsSetup.Instance.Timer.Wait((params object[] args) =>
+                    try
                     {
-                        var blockedItems = HF.DynamicUnavailableItems();
+                        // Get the item from the parameter table with null checks to avoid crashes
+                        object itemObj = ptable["item"];
+                        if (itemObj == null) return null;
 
-                        // Get private UI items via reflection
-                        var itemListPrivate = typeof(Barotrauma.Items.Components.Fabricator).GetField("itemList", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-                        var itemList = itemListPrivate?.GetValue(fabricator) as GUIListBox;
-
-                        foreach (var child in itemList?.Content?.Children ?? Array.Empty<GUIComponent>()) // Loop execution null check for stupid CS8602
+                        ItemPrefab? itemPrefab = itemObj as ItemPrefab;
+                        if (itemPrefab == null)
                         {
-                            var recipe = child.UserData as FabricationRecipe;
-
-                            if (recipe != null)
-                            {
-                                // Check if the recipe's target item is in the blocked items list and hides it if so
-                                string id = recipe.TargetItem.Identifier.Value;
-                                if (blockedItems.ContainsKey(id)) child.Visible = false;
-                            }
+                            Item? item = itemObj as Item;
+                            if (item != null) itemPrefab = item.Prefab;
                         }
-                    }, 1); // Wait 1ms for UI to fully load
+
+                        if (itemPrefab == null || itemPrefab.Identifier == null) return null;
+
+                        string id = itemPrefab.Identifier.Value;
+
+                        float mult = GetItemMultiplier(id);
+
+                        // Don't do extra math if the item value is unchanged
+                        if (mult == 1.0f) return null;
+
+                        // Get the 'actual price' after the game is done with it's calculations
+                        var baseVal = ptable.OriginalReturnValue;
+                        if (baseVal == null) return null;
+
+                        // Convert baseVal to int
+                        int price = Convert.ToInt32(baseVal);
+
+                        // Apply config-determined multiplier
+                        int result = (int)Math.Floor(price * mult + 0.5f);
+
+                        ptable.ReturnValue = result;
+                    }
+                    catch (Exception e)
+                    {
+                        HF.Print($"Error in GetAdjustedItemBuyPrice patch: {e.Message}");
+                    }
 
                     return null;
                 }),
@@ -133,41 +153,48 @@ namespace Neurotrauma
 
                 new LuaCsPatchFunc((object instance, LuaPatcherService.ParameterTable ptable) =>
                 {
-                    var store = instance as Barotrauma.Store;
-                    if (store == null) return null;
-
-                    LuaCsSetup.Instance.Timer.Wait((params object[] args) =>
+                    try
                     {
-                        // Fetch items to hide
-                        var blockedItems = HF.DynamicUnavailableItems();
+                        var store = instance as Barotrauma.Store;
+                        if (store == null) return null;
 
-                        // Get private UI items via reflection
-                        var storeBuyListPrivate = typeof(Barotrauma.Store).GetField("storeBuyList", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-                        var storeList = storeBuyListPrivate?.GetValue(store) as GUIListBox;
-
-                        foreach (var child in storeList?.Content?.Children ?? new List<GUIComponent>()) // Loop execution null check for stupid CS8602
+                        LuaCsSetup.Instance.Timer.Wait((params object[] args) =>
                         {
-                            var item = child.UserData;
+                            // Fetch items to hide
+                            var blockedItems = HF.DynamicUnavailableItems();
 
-                            if (item != null)
+                            // Get private UI items via reflection
+                            var storeBuyListPrivate = typeof(Barotrauma.Store).GetField("storeBuyList", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+                            var storeList = storeBuyListPrivate?.GetValue(store) as GUIListBox;
+
+                            foreach (var child in storeList?.Content?.Children ?? new List<GUIComponent>()) // Loop execution null check for stupid CS8602
                             {
-                                // Get private UI items via reflection, fallback if property can't be found (fields)
-                                var itemElem = item.GetType().GetProperty("ItemPrefab", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic) ?? item.GetType().GetField("ItemPrefab", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic) as MemberInfo; // bigass line lmfoa
+                                var item = child.UserData;
 
-                                // Get ItemPrefab from either property or field
-                                ItemPrefab? itemPrefab = null;
-                                if (itemElem is PropertyInfo pInfo) itemPrefab = pInfo.GetValue(item) as ItemPrefab;
-                                else if (itemElem is FieldInfo fInfo) itemPrefab = fInfo.GetValue(item) as ItemPrefab;
-
-                                if (itemPrefab != null)
+                                if (item != null)
                                 {
-                                    string id = itemPrefab.Identifier.Value;
-                                    // Hide items within the table every refresh
-                                    if (blockedItems.ContainsKey(id)) child.Visible = false;
+                                    // Get private UI items via reflection, fallback if property can't be found (fields)
+                                    var itemElem = item.GetType().GetProperty("ItemPrefab", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic) ?? item.GetType().GetField("ItemPrefab", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic) as MemberInfo; // bigass line lmfoa
+
+                                    // Get ItemPrefab from either property or field
+                                    ItemPrefab? itemPrefab = null;
+                                    if (itemElem is PropertyInfo pInfo) itemPrefab = pInfo.GetValue(item) as ItemPrefab;
+                                    else if (itemElem is FieldInfo fInfo) itemPrefab = fInfo.GetValue(item) as ItemPrefab;
+
+                                    if (itemPrefab != null)
+                                    {
+                                        string id = itemPrefab.Identifier.Value;
+                                        // Hide items within the table every refresh
+                                        if (blockedItems.ContainsKey(id)) child.Visible = false;
+                                    }
                                 }
                             }
-                        }
-                    }, 10); // Wait 10ms for stuff to fully load
+                        }, 10); // Wait 10ms for stuff to fully load
+                    }
+                    catch (Exception e)
+                    {
+                        HF.Print($"Error in Store.FilterStoreItems patch: {e.Message}");
+                    }
 
                     return null;
                 }),
@@ -177,13 +204,64 @@ namespace Neurotrauma
             // Force config sync on round start to ensure everything syncs cleanly
             LuaCsSetup.Instance.Hook.Add("roundStart", "forcesyncconfig", (params object[] args) =>
             {
-                if (GameMain.IsMultiplayer)
+                try
                 {
-                    IWriteMessage msg = LuaCsSetup.Instance.Networking.Start("NT.ConfigRequest");
-                    LuaCsSetup.Instance.Networking.Send(msg);
+                    if (GameMain.IsMultiplayer)
+                    {
+                        IWriteMessage msg = LuaCsSetup.Instance.Networking.Start("NT.ConfigRequest");
+                        LuaCsSetup.Instance.Networking.Send(msg);
+                    }
                 }
+                catch (Exception e)
+                {
+                    HF.Print($"Error in roundStart forcesyncconfig hook: {e.Message}");
+                }
+
                 return null;
             });
+        }
+
+        // Manual Harmony Postfix for type-reflections, preventing crash when opening a fabricator etc
+        private static void FilterEntitiesPostfix(Fabricator __instance)
+        {
+            try
+            {
+                if (__instance == null) return;
+
+                LuaCsSetup.Instance.Timer.Wait((params object[] args) =>
+                {
+                    try
+                    {
+                        var blockedItems = HF.DynamicUnavailableItems();
+
+                        // Get private UI items via reflection
+                        var itemListPrivate = typeof(Fabricator).GetField("itemList", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+                        var itemList = itemListPrivate?.GetValue(__instance) as GUIListBox;
+
+                        if (itemList?.Content?.Children != null)
+                        {
+                            foreach (var child in itemList.Content.Children)
+                            {
+                                var recipe = child.UserData as FabricationRecipe;
+                                if (recipe != null)
+                                {
+                                    // Check if the recipe's target item is in the blocked items list and hides it if so
+                                    string id = recipe.TargetItem.Identifier.Value;
+                                    if (blockedItems.ContainsKey(id)) child.Visible = false;
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        LuaCsLogger.LogError($"NT Dynamic Items Harmony patch filter entities failed at step 2, Exception; {ex}");
+                    }
+                }, 1); // Wait 1ms for UI to fully load
+            }
+            catch (Exception ex)
+            {
+                LuaCsLogger.LogError($"NT Dynamic Items Harmony patch filter entities failed at step 1, Exception; {ex}");
+            }
         }
     }
 }
