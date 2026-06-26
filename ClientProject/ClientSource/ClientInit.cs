@@ -6,6 +6,7 @@
         public void InitClientOnly()
         {
             ConfigurationMenu.AddConfigToPauseMenu();
+            DynamicItems.InitDynamicItemsClient();
         }
     }
 }

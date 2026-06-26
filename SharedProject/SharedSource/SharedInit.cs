@@ -28,6 +28,7 @@ namespace Neurotrauma
             CPRHooks.InitCPRHooks(); // Add the CPR Success/Failure hooks
             LootCrates.Init(); // Add MedSpawnerCrate + JobItems Hooks
             NTMultiscalpel.RegisterMultiscalpel(); // Add the Multiscalpel hooks
+            DynamicItems.InitDynamicItems(); // Add the DynamicItems hooks
             InitLuaHooks(); // Initializes the Lua hooks at the bottom of this file
 
             // What a mess. - Lukako (holy old status)

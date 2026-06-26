@@ -1226,5 +1226,36 @@ namespace Neurotrauma
 
             return null;
         }
+
+        public static Dictionary<string, bool> DynamicUnavailableItems()
+        {
+            Dictionary<string, bool> blockedItems = new Dictionary<string, bool>();
+
+            // Hardmode Aortic Rupture; enable/disable stent + balloon
+            if (!NTConfig.Get("NT_HardmodeAorticRupture", false))
+            {
+                blockedItems["medstent"] = true;
+                blockedItems["endovascballoon"] = true;
+            }
+
+            // Sodium Nitroprusside
+            if (!NTConfig.Get("NT_DoNitroprusside", false))
+            {
+                blockedItems["pressuremeds"] = true;
+            }
+
+            // Organ scalpels
+            if (!NTConfig.Get("NT_DoOrganScalpels", false))
+            {
+                blockedItems["organscalpel_liver"] = true;
+                blockedItems["organscalpel_kidneys"] = true;
+                blockedItems["organscalpel_heart"] = true;
+                blockedItems["organscalpel_lungs"] = true;
+                blockedItems["organscalpel_brain"] = true;
+                blockedItems["surgerytoolboxsetscalpel"] = true;
+            }
+
+            return blockedItems;
+        }
     }
 }
