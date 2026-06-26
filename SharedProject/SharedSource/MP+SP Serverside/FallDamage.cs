@@ -2,6 +2,7 @@
 using Barotrauma.Items.Components;
 using Barotrauma.LuaCs.Events;
 using FarseerPhysics.Common;
+using System;
 using Voronoi2;
 using static Neurotrauma.HF;
 using static Neurotrauma.NTC;
@@ -176,7 +177,134 @@ namespace Neurotrauma
 
         public static void CauseFallDamage(Character character, LimbType limbtype, double strength)
         {
+            Item Armor1 = GetItemInOuterWear(character);
+            Item Armor2= GetItemInInnerWear(character);
+            if (limbtype != LimbType.Head)
+            {
+                strength = Math.Max(
+                    strength
+                        - GetCalculatedReductionSuit(Armor1, strength, limbtype)
+                        - GetCalculatedReductionHelmet(Armor2, strength, limbtype),
+                    0
+                );
+            }
+            else
+            {
+                Armor2 = GetItemInHeadWear(character);
+                strength = Math.Max(
+                    strength
+                        - GetCalculatedReductionSuit(Armor1, strength, limbtype)
+                        - GetCalculatedReductionHelmet(Armor2, strength, limbtype),
+                    0
+                );
+            }
 
+            // additionally calculate the affliction reduced damage
+            AfflictionPrefab prefab = AfflictionPrefab.Prefabs["blunttrauma"];
+            double resistance = character.CharacterHealth.GetResistance(prefab, limbtype);
+            if (resistance >= 1) return;
+            strength *= (1 - resistance);
+            AddAfflictionLimb(character, "blunttrauma", limbtype, (float)strength, character);
+
+            // return earlier if the strength value is not high enough for damage checks
+            if (strength < 1) return;
+
+            bool FractureImmune = false;
+
+            double InjuryChanceMultiplier = NTConfig.Get("NT_falldamageSeriousInjuryChance", 1);
+
+            HumanUpdate.NTHuman NTCharacter = HumanUpdate.CharacterToNTHuman(character);
+
+            // torso
+            if ((!FractureImmune) && strength >= 1 && limbtype == LimbType.Torso)
+            {
+                if (Chance((float)(
+                        (strength - 15)
+                            / 100
+                            * GetMultiplier(NTCharacter, "anyfracturechance")
+                            * NTConfig.Get("NT_fractureChance", 1)
+                            * InjuryChanceMultiplier
+                        )))
+                {
+                    BreakLimb(character, limbtype);
+                    if (HasLungs(character) && strength >= 5 && Chance((float)(strength/70*GetMultiplier(NTCharacter, "pneumothoraxchance") * NTConfig.Get("NT_pneumothoraxChance", 1))))
+                    {
+                        AddAffliction(character, "pneumothorax", 5, character);
+                    }
+                }
+            }
+
+            // head
+            if ((!FractureImmune) && strength >= 1 && limbtype == LimbType.Head)
+            {
+                if (strength >= 15 && Chance((float)Math.Min(strength / 100, .7)))
+                {
+                    AddAfflictionResisted(
+                        character,
+                        "concussion",
+                        (float)
+                        Math.Max(
+                        Math.Max(
+                            10,
+                                -GetCalculatedConcussionReduction(Armor1, 10, limbtype)
+                                - GetCalculatedConcussionReduction(Armor2, 10, limbtype)),
+                        0), 
+                    character);
+                } 
+
+                if (strength >= 15 
+                    && Chance((float)(
+                        Math.Min((strength - 15) / 100, .7)
+                            * GetMultiplier(NTCharacter, "anyfracturechance")
+                            * NTConfig.Get("NT_fractureChance", 1)
+                            * InjuryChanceMultiplier)))
+                {
+                    BreakLimb(character, limbtype);
+                }
+                if (strength >= 55
+                    && Chance((float)(
+                        Math.Min((strength - 15) / 100, .7)
+                            * GetMultiplier(NTCharacter, "anyfracturechance")
+                            * NTConfig.Get("NT_fractureChance", 1)
+                            * InjuryChanceMultiplier)))
+                {
+                    AddAffliction(character, "fracturedneck", 5, character);
+                }
+                if (strength >= 5 && Chance(.7f)) ;
+                {
+                    AddAffliction(character, "neurotrauma", (float) (strength * Rand.Range(0.1, 0.4)), character);
+                }
+            }
+
+            // extremeties
+            if ((!FractureImmune) && strength >= 1 && LimbIsExtremity(limbtype))
+            {
+                if (Chance((float)(
+                        (strength - 15)
+                            / 100
+                            * NTC.GetMultiplier(NTCharacter, "anyfracturechance")
+                            * NTConfig.Get("NT_fractureChance", 1)
+                            * InjuryChanceMultiplier)))
+                {
+                    BreakLimb(character, limbtype);
+                    if (Chance((float) (strength - 2) / 60))
+                    {
+                        //this is here to simulate open fractures
+                        ArteryCutLimb(character, limbtype);
+                    }
+                }
+
+                if (Chance((float)(
+                    (strength - 15)
+                        / 100
+                        * NTC.GetMultiplier(NTCharacter, "anyfracturechance")
+                        * NTConfig.Get("NT_fractureChance", 1)
+                        * InjuryChanceMultiplier
+                        )))
+                {
+                    DislocateLimb(character, limbtype);
+                }
+            }
         }
 
     }
