@@ -1206,6 +1206,25 @@ public class HumanUpdate
 
     private void Update(List<AfflictionPriority> priorities)
     {
+        // Our Single Player check for fetching humans.
+        if (GameIsSingleplayer() && (UpdatingHumans.Count + UpdatingMonsters.Count > Character.CharacterList.Count))
+        {
+            UpdatingHumans.Clear();
+            UpdatingMonsters.Clear();
+
+            foreach (Character character in Character.CharacterList)
+            {
+                if (character.IsHuman)
+                {
+                    AddHumanToUpdate(character);
+                }
+                else if (!character.IsHuman)
+                {
+                    AddMonsterToUpdate(character);
+                }
+            }
+        }
+
         if (UpdatingMonsters.Count > 0)
         {
             Task MonsterUpdateTask = new(UpdateMonsters); // We create a new task to run monsters along humans. This should help greatly with mods such as barotraumatic.
