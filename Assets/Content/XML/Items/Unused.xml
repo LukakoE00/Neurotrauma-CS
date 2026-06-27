@@ -112,7 +112,7 @@
             <StatusEffect type="OnWearing" target="Character" HideFace="true" ObstructVision="true" PressureProtection="7000.0" SpeedMultiplier="-10.0" LowPassMultiplier="0.1" setvalue="true" disabledeltatime="true">
                 <Sound file="Content/Items/Diving/DivingSuitLoop1.ogg" range="500" />
                 <Sound file="Content/Items/Diving/DivingSuitLoop2.ogg" range="500" />
-                <Affliction identifier="table" amount="2"/>
+                <Affliction identifier="safesurgery" amount="2"/>
             </StatusEffect>
 
             <StatusEffect type="OnWearing" target="Character" interval="0.25" disabledeltatime="true">

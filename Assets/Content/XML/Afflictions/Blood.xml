@@ -98,9 +98,7 @@
         <StatusEffect target="character" multiplyafflictionsbymaxvitality="true" disabledeltatime="true" comparison="and" checkconditionalalways="false">
           <Conditional hemotransfusionshock="lt 70"/>
           <Conditional hemotransfusionshock="gte 15"/>
-          <Affliction identifier="
-
-" amount="1"/>
+          <Affliction identifier="bloodloss" amount="1"/>
           <Affliction identifier="organdamage" amount="0.25"/>
           <Affliction identifier="liverdamage" amount="0.25"/>
           <Affliction identifier="kidneydamage" amount="0.25"/>

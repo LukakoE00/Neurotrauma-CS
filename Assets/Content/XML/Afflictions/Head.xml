@@ -16,6 +16,14 @@
       showiconthreshold="0"
       maxstrength="100">
 
+      <Effect minstrength="0" maxstrength="100">
+        <StatusEffect target="Character" multiplyafflictionsbymaxvitality="true" comparison="and">
+          <Conditional analgesia="lte 4.5" />
+          <Conditional ishuman="true" />
+          <Affliction identifier="analgesia" amount="1" />
+        </StatusEffect>
+      </Effect>
+
       <icon texture="%ModDir%/Images/AfflictionIcons2.png" sheetindex="6,0" sheetelementsize="128,128" origin="0,0"/>
     </Affliction>
 
@@ -34,6 +42,21 @@
       showinhealthscannerthreshold="0"
       showiconthreshold="0"
       maxstrength="100">
+
+      <Effect minstrength="0" maxstrength="100" strengthchange="1" />
+
+      <PeriodicEffect mininterval="1" maxinterval="3">
+        <StatusEffect target="Character" disabledeltatime="true" stackable="false" delay="1" checkconditionalalways="false">
+          <Conditional ishuman="false" />
+          <ReduceAffliction identifier="t_arterialcut" amount="1000"/>
+        </StatusEffect>
+        
+        <StatusEffect target="Character" multiplyafflictionsbymaxvitality="true" disabledeltatime="true" stackable="false" delay="1" checkconditionalalways="false">
+          <Conditional balloonedaorta="lte 1"/>
+          <Affliction identifier="internalbleeding" strength="8" />
+          <Affliction identifier="bloodloss" strength="4" />
+        </StatusEffect>
+      </PeriodicEffect>
 
       <icon texture="%ModDir%/Images/AfflictionIcons.png" sheetindex="3,3" sheetelementsize="128,128" origin="0,0"/>
     </Affliction>

@@ -112,7 +112,6 @@
       showiconthreshold="90"
       maxstrength="100">
 
-
       <Effect minstrength="0" maxstrength="6">
         <StatusEffect target="Character">
           <sound file="%ModDir%/Sounds/Bones/bonebreak4.ogg"  selectionmode="random"/>
@@ -189,6 +188,24 @@
       showinhealthscannerthreshold="5"
       showiconthreshold="30"
       maxstrength="100">
+
+      <Effect minstrength="0" maxstrength="6" strengthchange="10">
+        <StatusEffect target="Character" multiplyafflictionsbymaxvitality="true">
+          <sound file="%ModDir%/Sound/bonebreak4.ogg"  selectionmode="random"/>
+          <sound file="%ModDir%/Sound/bonebreak3.ogg"/>
+          <sound file="%ModDir%/Sound/bonebreak2.ogg"/>
+          <sound file="%ModDir%/Sound/bonebreak1.ogg"/>
+          <Affliction identifier="severepain" amount="1" />
+        </StatusEffect>
+      </Effect>
+      <Effect minstrength="6" maxstrength="100" strengthchange="1.5"/>
+
+      <PeriodicEffect mininterval="1" maxinterval="1">
+        <StatusEffect target="Character" disabledeltatime="true" stackable="false" delay="1" checkconditionalalways="false">
+          <Conditional ishuman="false" />
+          <ReduceAffliction identifier="dislocation1" amount="1000"/>
+        </StatusEffect>
+      </PeriodicEffect>
 
       <icon texture="%ModDir%/Images/AfflictionIcons.png" sheetindex="0,3" sheetelementsize="128,128" origin="0,0"/>
     </Affliction>

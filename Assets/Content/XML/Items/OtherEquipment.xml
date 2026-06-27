@@ -411,20 +411,13 @@
             
             <StatusEffect type="OnWearing" target="Character" HideFace="true" ObstructVision="true" SpeedMultiplier="0.8" LowPassMultiplier="0.2" setvalue="true" disabledeltatime="true" />
             
-            <StatusEffect type="OnWearing" target="Character" disabledeltatime="true" stackable="false" duration="1">
+            <StatusEffect type="OnWearing" target="Character" disabledeltatime="true" stackable="false" interval="1">
                 <Affliction identifier="bodybagoverlay" amount="3"/>
             </StatusEffect>
             
             <StatusEffect type="OnWearing" target="Character" interval="0.25" disabledeltatime="true">
                 <LuaHook name="bodybag.dragfast" custom="Character" />
             </StatusEffect>
-
-            <!--
-            <StatusEffect type="OnWearing" target="NearbyCharacters" range="100" stackable="true" setvalue="true">
-                <Conditional ishuman="true"/>
-                <Affliction identifier="stretchers" amount="100" />
-            </StatusEffect>
-            -->
         </Wearable>
         
         <aitarget maxsightrange="50" />
@@ -491,8 +484,7 @@
             
             <StatusEffect settags="stasis" type="OnWearing" target="Character" duration="1" stackable="false" />
             
-            <StatusEffect type="OnWearing" target="Character" disabledeltatime="true" stackable="false" duration="1">
-                <!--<Affliction identifier="givein" amount="10" />-->
+            <StatusEffect type="OnWearing" target="Character" disabledeltatime="true" stackable="false" interval="1">
                 <Affliction identifier="stasis" amount="3"/>
                 <Affliction identifier="stasisbagoverlay" amount="3"/>
             </StatusEffect>
@@ -511,12 +503,6 @@
             
             <damagemodifier armorsector="0.0,360.0" afflictionidentifiers="bloodloss,hypoxemia,neurotrauma,organdamage,gangrene,sepsis,psychosis" damagemultiplier="0.0" damagesound="LimbArmor" />
             <StatValue stattype="FlowResistance" value="0.9" />
-
-            <!-- 
-            <StatusEffect type="OnWearing" target="NearbyCharacters" range="150" stackable="true" setvalue="true">
-                <Affliction identifier="stretchers" amount="100" />
-            </StatusEffect> 
-            -->
         </Wearable>
         
         <Holdable canBeCombined="true" slots="Any" handle1="0,0" msg="ItemMsgPickUpSelect" />
@@ -894,6 +880,10 @@
         <Wearable slots="Any,OuterClothes" msg="ItemMsgEquipSelect" autoequipwhenfull="true">
             <sprite texture="%ModDir%/Images/InGameItemIconAtlas.png" limb="Waist" hidelimb="false" inherittexturescale="true" hideotherwearables="false" inheritorigin="false" sourcerect="0,768,256,256" inheritlimbdepth="false" depth="0.10003" />
             <!-- depth="0.11504" -->
+
+            <StatusEffect type="OnWearing" target="Character" targetlimb="Torso" interval="2">
+                <Affliction identifier="onwheelchair" amount="2.0"  />
+            </StatusEffect>
         </Wearable>
 
         <Controller UserPos="0,-300" direction="Right" hidehud="false" canbeselected="true">
@@ -924,6 +914,7 @@
             <Attack stun="0.3" targetimpulse="2">
                 <Affliction identifier="stopcreatureabuse" strength="2"/>
             </Attack>
+
             <StatusEffect type="OnUse" target="This" disabledeltatime="true">
                 <Sound file="%ModDir%/Sounds/ItemApplication/Tools/squeak1.ogg" type="OnUse" range="500"/>
                 <Sound file="%ModDir%/Sounds/ItemApplication/Tools/squeak2.ogg" type="OnUse" range="500"/>
@@ -935,7 +926,7 @@
     </Item>
 
     <!-- ============================================== Beds ============================================== -->
-    <!-- Surgery table -->
+    <!-- Surgery safesurgery -->
     <Item name="" identifier="operatingtable" scale="0.4" Tags="operatingtable" maxstacksize="1" category="medical" description="" isshootable="true">
 
         <Upgrade gameversion="0.12.0.0" noninteractable="false"/>

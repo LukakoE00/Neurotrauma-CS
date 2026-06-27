@@ -17,6 +17,18 @@
       showiconthreshold="999"
       maxstrength="100">
 
+      <Effect minstrength="0" maxstrength="100" strengthchange="0">
+        <StatusEffect target="Character">
+          <StatValue stattype="MeleeAttackMultiplier" minvalue="0.2" maxvalue="0.2" />
+        </StatusEffect>
+
+        <StatusEffect target="Character" multiplyafflictionsbymaxvitality="true" comparison="and">
+          <Conditional analgesia="lte 4.5" />
+          <Conditional ishuman="true" />
+          <Affliction identifier="analgesia" amount="1" />
+        </StatusEffect>
+      </Effect>
+
       <icon texture="Content/UI/MainIconsAtlas.png" sourcerect="256,896,128,128" color="10,193,114,255" origin="0,0"/>
     </Affliction>
 

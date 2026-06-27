@@ -79,7 +79,7 @@
       <Effect minstrength="0" maxstrength="100" strengthchange="15">
 
       <StatusEffect target="Character" multiplyafflictionsbymaxvitality="true" comparison="and">
-        <Conditional table="eq 0" unconsciousness="lte 0.1"/>
+        <Conditional safesurgery="eq 0" unconsciousness="lte 0.1"/>
         <Affliction identifier="traumaticshock" amount="1.5"/>
       </StatusEffect>
     </Effect>
@@ -105,7 +105,7 @@
       <Effect minstrength="0" maxstrength="100" strengthchange="10">
 
       <StatusEffect target="Character" multiplyafflictionsbymaxvitality="true" comparison="and">
-        <Conditional table="eq 0" unconsciousness="lte 0.1"/>
+        <Conditional safesurgery="eq 0" unconsciousness="lte 0.1"/>
         <Affliction identifier="traumaticshock" amount="2"/>
       </StatusEffect>
     </Effect>
@@ -128,7 +128,7 @@
       showiconthreshold="0"
       maxstrength="100">
 
-      <Effect minstrength="0" maxstrength="100" strengthchange="-1" />
+      <Effect minstrength="0" maxstrength="100" strengthchange="0" />
 
       <icon texture="%ModDir%/Images/AfflictionIcons.png" sheetindex="3,7" sheetelementsize="128,128" origin="0,0"/>
     </Affliction>
@@ -148,7 +148,7 @@
       showiconthreshold="0"
       maxstrength="100">
 
-      <Effect minstrength="0" maxstrength="100" strengthchange="-0.2" multiplybymaxvitality="true" minvitalitydecrease="0" maxvitalitydecrease="0.8"/>
+      <Effect minstrength="0" maxstrength="100" strengthchange="0" multiplybymaxvitality="true" minvitalitydecrease="0" maxvitalitydecrease="0.8"/>
 
       <icon texture="%ModDir%/Images/AfflictionIcons.png" sheetindex="5,3" sheetelementsize="128,128" origin="0,0"/>
     </Affliction>
@@ -170,7 +170,7 @@
 
       <Effect minstrength="0" maxstrength="100" strengthchange="10">
         <StatusEffect target="Character" multiplyafflictionsbymaxvitality="true" comparison="and">
-          <Conditional table="eq 0" unconsciousness="lte 0.1"/>
+          <Conditional safesurgery="eq 0" unconsciousness="lte 0.1"/>
           <Affliction identifier="traumaticshock" amount="1.5"/>
         </StatusEffect>
       </Effect>
@@ -235,12 +235,6 @@
 
         <StatusEffect target="Character" targetlimb="RightLeg">
           <ReduceAffliction type="bleeding" strength="2"/>
-        </StatusEffect>
-
-        <StatusEffect target="Character" multiplyafflictionsbymaxvitality="true">
-          <Affliction identifier="organdamage" strength="0.5"/>
-          <Affliction identifier="liverdamage" strength="0.5"/>
-          <Affliction identifier="kidneydamage" strength="0.5"/>
         </StatusEffect>
       </Effect>
 

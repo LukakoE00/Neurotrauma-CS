@@ -77,9 +77,9 @@ namespace Neurotrauma
             Stats["speedmultiplier"] = new NTStatDouble("speedmultiplier", 0, 100, 1, (C) => 
             {
                 double Res = 1;
-                if (C.GetNonLimbAffStrength("t_paralysis") > 0) Res = -9001; // Wow, I find this to be a bit overkill
-                if (C.GetNonLimbAffStrength("sym_vomiting") > 0) Res *= .8;
-                if (C.GetNonLimbAffStrength("sym_nausea") > 0) Res *= .9;
+                if (C.GetNonLimbAffStrength("spinalcordinjury") > 0) Res = -9001; // Wow, I find this to be a bit overkill
+                if (C.GetNonLimbAffStrength("vomiting") > 0) Res *= .8;
+                if (C.GetNonLimbAffStrength("nausea") > 0) Res *= .9;
                 if (C.GetNonLimbAffStrength("anesthesia") > 0) Res *= .5;
                 if (C.GetNonLimbAffStrength("opiateoverdose") > 50) Res *= .5;
 
@@ -114,6 +114,11 @@ namespace Neurotrauma
                 Res *= NTC.GetSpeed(C);
 
                 return Res;
+            });
+
+            Stats["slowdown"] = new NTStatDouble("slowdown", 0, 100, 0, (C) =>
+            {
+                return Math.Clamp(100 * (1 - C.GetDoubleStatStrength("speedmultiplier")), 0, 100);
             });
 
             Stats["lockleftarm"] = new NTStatBool("lockleftarm",false, (C) => 

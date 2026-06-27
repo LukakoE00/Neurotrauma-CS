@@ -69,7 +69,7 @@
 
       showinhealthscannerthreshold="0"
       showiconthreshold="0"
-      maxstrength="10">
+      maxstrength="100">
 
       <icon texture="%ModDir%/Images/AfflictionIcons.png" sheetindex="0,1" sheetelementsize="128,128" origin="0,0"/>
     </Affliction>
