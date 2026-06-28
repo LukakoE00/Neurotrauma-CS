@@ -2817,7 +2817,7 @@ namespace Neurotrauma
                     {
                         AffData.Strength[Limb] -= (C.GetBloodAffData("immunity").PrevStrength / 3000
                             + Math.Clamp(C.GetLimbAffStrength("bandaged", Limb), 0, 1) * 0.1
-                            + Math.Clamp(C.GetLimbAffStrength("ointmented", Limb), 0, 1) * 0.12) 
+                            + Math.Clamp(C.GetLimbAffStrength("skinointmented", Limb), 0, 1) * 0.12) 
                         * C.GetDoubleStatStrength("healingrate") * NT.DeltaTime;
                     }
                         
@@ -2913,7 +2913,7 @@ namespace Neurotrauma
                         AffData.Strength[Limb] -= (
                             C.GetBloodAffData("immunity").PrevStrength / 3000
                             + Math.Clamp(C.GetLimbAffStrength("bandaged", Limb), 0, 1) * 0.1
-                            + Math.Clamp(C.GetLimbAffStrength("ointmented", Limb), 0, 1) * 0.12
+                            + Math.Clamp(C.GetLimbAffStrength("skinointmented", Limb), 0, 1) * 0.12
                         ) * C.GetDoubleStatStrength("healingrate") * NT.DeltaTime;
                     }
 
@@ -2949,7 +2949,7 @@ namespace Neurotrauma
                         AffData.Strength[Limb] -= (
                             C.GetBloodAffData("immunity").PrevStrength / 3000
                             + Math.Clamp(C.GetLimbAffStrength("bandaged", Limb), 0, 1) * 0.1
-                            + Math.Clamp(C.GetLimbAffStrength("ointmented", Limb), 0, 1) * 0.12
+                            + Math.Clamp(C.GetLimbAffStrength("skinointmented", Limb), 0, 1) * 0.12
                         ) * C.GetDoubleStatStrength("healingrate") * NT.DeltaTime;
                     }
 
