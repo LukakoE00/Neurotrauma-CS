@@ -600,17 +600,22 @@ namespace Neurotrauma
 
         public static void Print(string Message) // Yes I'm lazy
         {
-            LuaCsLogger.Log("[Neurotrauma 2] " + Message);
+            LuaCsLogger.Log("[Neurotrauma C#] " + Message);
         }
 
         public static void PrintError(string Message)
         {
-            LuaCsLogger.Log("[Neurotrauma 2] " + Message, Color.Red);
+            LuaCsLogger.Log("[Neurotrauma C#] " + Message, Color.Red);
         }
 
         public static void PrintWarning(string Message)
         {
-            LuaCsLogger.Log("[Neurotrauma 2] " + Message, Color.Orange);
+            LuaCsLogger.Log("[Neurotrauma C#] " + Message, Color.Orange);
+        }
+
+        public static void PrintUtility(string Message)
+        {
+            LuaCsLogger.Log("[Neurotrauma C#] " + Message, Color.SkyBlue);
         }
 
         // ---------------------------------------- Character Related Helper Functions -------------------------------------------------- \\

@@ -524,20 +524,15 @@ public class HumanUpdate
 
         public NTHumanAffData GetAffData(string Identifier)
         {
-            if (string.IsNullOrEmpty(Identifier))
-                return null;
+            if (!LocalAfflictions.UpdatingAfflictions.ContainsKey(Identifier)) PrintError($"The following identifier of {Identifier} wasn't found in UpdatingAfflictions!");
 
-            if (LocalAfflictions?.UpdatingAfflictions == null)
-                return null;
-
-            if (LocalAfflictions.UpdatingAfflictions.TryGetValue(Identifier, out var aff))
-                return aff;
-
-            return null;
+            return LocalAfflictions.UpdatingAfflictions[Identifier];
         }
 
         public double GetAffStrength(string Identifier) // SHOULD ONLY BE USED FOR READING. NOT SETTING.
         {
+            if (!LocalAfflictions.UpdatingAfflictions.ContainsKey(Identifier)) PrintError($"The following identifier of {Identifier} wasn't found in UpdatingAfflictions!");
+
             return (LocalAfflictions.UpdatingAfflictions.ContainsKey(Identifier)) ? LocalAfflictions.UpdatingAfflictions[Identifier].Strength : 0;
         }
 
@@ -548,20 +543,15 @@ public class HumanUpdate
 
         public NTHumanNonLimbAffData GetNonLimbAffData(string Identifier)
         {
-            if (string.IsNullOrEmpty(Identifier))
-                return null;
+            if (!LocalAfflictions.UpdatingNonLimbAfflictions.ContainsKey(Identifier)) PrintError($"The following identifier of {Identifier} wasn't found in UpdatingNonLimbAfflictions!");
 
-            if (LocalAfflictions?.UpdatingNonLimbAfflictions == null)
-                return null;
-
-            if (LocalAfflictions.UpdatingNonLimbAfflictions.TryGetValue(Identifier, out var aff))
-                return aff;
-
-            return null;
+            return LocalAfflictions.UpdatingNonLimbAfflictions[Identifier];
         }
 
         public double GetNonLimbAffStrength(string Identifier) // SHOULD ONLY BE USED FOR READING. NOT SETTING.
         {
+            if (!LocalAfflictions.UpdatingNonLimbAfflictions.ContainsKey(Identifier)) PrintError($"The following identifier of {Identifier} wasn't found in UpdatingNonLimbAfflictions!");
+
             return (LocalAfflictions.UpdatingNonLimbAfflictions.ContainsKey(Identifier)) ? LocalAfflictions.UpdatingNonLimbAfflictions[Identifier].Strength : 0;
         }
 
@@ -572,11 +562,15 @@ public class HumanUpdate
 
         public NTHumanLimbAffData GetLimbAffData(string Identifier)
         {
+            if (!LocalAfflictions.UpdatingLimbAfflictions.ContainsKey(Identifier)) PrintError($"The following identifier of {Identifier} wasn't found in UpdatingLimbAfflictions!");
+
             return LocalAfflictions.UpdatingLimbAfflictions[Identifier];
         }
 
         public double GetLimbAffStrength(string Identifier, LimbType Limb) // SHOULD ONLY BE USED FOR READING. NOT SETTING.
         {
+            if (!LocalAfflictions.UpdatingLimbAfflictions.ContainsKey(Identifier)) PrintError($"The following identifier of {Identifier} wasn't found in UpdatingLimbAfflictions!");
+
             return (LocalAfflictions.UpdatingLimbAfflictions.ContainsKey(Identifier)) ? LocalAfflictions.UpdatingLimbAfflictions[Identifier].Strength[Limb] : 0;
         }
 
@@ -587,26 +581,35 @@ public class HumanUpdate
 
         public NTHumanBloodAffData GetBloodAffData(string Identifier)
         {
+            if (!LocalAfflictions.UpdatingBloodAfflictions.ContainsKey(Identifier)) PrintError($"The following identifier of {Identifier} wasn't found in UpdatingBloodAfflictions!");
+
             return LocalAfflictions.UpdatingBloodAfflictions[Identifier];
         }
 
         public double GetBloodAffStrength(string Identifier) // SHOULD ONLY BE USED FOR READING. NOT SETTING.
         {
+            if (!LocalAfflictions.UpdatingBloodAfflictions.ContainsKey(Identifier)) PrintError($"The following identifier of {Identifier} wasn't found in UpdatingBloodAfflictions!");
+
             return (LocalAfflictions.UpdatingBloodAfflictions.ContainsKey(Identifier)) ? LocalAfflictions.UpdatingBloodAfflictions[Identifier].Strength : 0;
         }
 
         public Dictionary<string,NTHumanSymptomData> GetSymptomAffDatas()
         {
+
             return LocalAfflictions.UpdatingSymptoms;
         }
 
         public NTHumanSymptomData GetSymptomAffData(string Identifier)
         {
+            if (!LocalAfflictions.UpdatingSymptoms.ContainsKey(Identifier)) PrintError($"The following identifier of {Identifier} wasn't found in UpdatingSymptoms!");
+
             return LocalAfflictions.UpdatingSymptoms[Identifier];
         }
 
         public double GetSymptomStrength(string Identifier) // SHOULD ONLY BE USED FOR READING. NOT SETTING.
         {
+            if (!LocalAfflictions.UpdatingSymptoms.ContainsKey(Identifier)) PrintError($"The following identifier of {Identifier} wasn't found in UpdatingSymptoms!");
+
             return (LocalAfflictions.UpdatingSymptoms.ContainsKey(Identifier)) ? LocalAfflictions.UpdatingSymptoms[Identifier].Strength : 0;
         }
 
@@ -617,11 +620,15 @@ public class HumanUpdate
 
         public NTHumanLimbSymptomData GetLimbSymptomData(string Identifier)
         {
+            if (!LocalAfflictions.UpdatingLimbSymptoms.ContainsKey(Identifier)) PrintError($"The following identifier of {Identifier} wasn't found in UpdatingLimbSymptoms!");
+
             return LocalAfflictions.UpdatingLimbSymptoms[Identifier];
         }
 
         public double GetLimbSymptomStrength(string Identifier, LimbType Limb)
         {
+            if (!LocalAfflictions.UpdatingLimbSymptoms.ContainsKey(Identifier)) PrintError($"The following identifier of {Identifier} wasn't found in UpdatingLimbSymptoms!");
+
             return (LocalAfflictions.UpdatingLimbSymptoms.ContainsKey(Identifier)) ? LocalAfflictions.UpdatingLimbSymptoms[Identifier].Strength[Limb] : 0;
         }
 
@@ -744,7 +751,7 @@ public class HumanUpdate
 
             // ----------------------------------------- Affliction updates ----------------------------------------- \\
 
-            UpdateAfflictions([AfflictionPriority.HIGH,AfflictionPriority.MEDIUM,AfflictionPriority.LOW]);
+            UpdateAfflictions(Priorities);
 
             // ----------------------------------------- Clearing ----------------------------------------- \\
 
@@ -1113,7 +1120,7 @@ public class HumanUpdate
         if (character != null)
         {
             if (UpdatingHumans.ContainsKey(character)) return;
-            Print("Adding: " + character.Name);
+            PrintUtility("Adding: " + character.Name + "!");
             if (character.IsHuman)
             {
                 AddHumanToUpdate(character);
@@ -1133,7 +1140,7 @@ public class HumanUpdate
             Character NewCharacter = target;
             if (NewCharacter.IsHuman)
             {
-                HF.Print($"Removed the following Character {NewCharacter.Name} !");
+                PrintUtility($"Removing: {NewCharacter.Name}!");
                 RemoveHumanFromUpdate(NewCharacter);
             }
             else
@@ -1188,33 +1195,42 @@ public class HumanUpdate
     }
 
     // Returns a list 
-    private  List<AfflictionPriority> GetLowestPriority(int cd)
+    private  List<AfflictionPriority> GetLowestPriority(List<AfflictionPriority> CurrentPriorities)
     {
-        List<AfflictionPriority> output = [];
+        List<AfflictionPriority> NewPriorities = CurrentPriorities;
 
-        if (cd % UpdateIntervalLow == 0)
+        switch (CurrentPriorities.Count)
         {
-            output.Add(AfflictionPriority.LOW);
-            output.Add(AfflictionPriority.MEDIUM);
-            output.Add(AfflictionPriority.HIGH);
-            UpdateCooldown = 0;
+            case 0:
+                NewPriorities.Add(AfflictionPriority.HIGH);
+                break;
 
-        } else if (cd % UpdateIntervalMedium == 0)
-        {
-            output.Add(AfflictionPriority.MEDIUM);
-            output.Add(AfflictionPriority.HIGH);
+            case 1:
+                NewPriorities.Add(AfflictionPriority.MEDIUM);
+                break;
 
-        } else // This isnt really a fix but it works for now.
-        {
-            output.Add(AfflictionPriority.HIGH);
+            case 2:
+                NewPriorities.Add(AfflictionPriority.LOW);
+                break;
+
+            case 3:
+                NewPriorities.Clear();
+                NewPriorities.Add(AfflictionPriority.HIGH);
+                break;
+
+            default:
+                NewPriorities.Clear();
+                NewPriorities.Add(AfflictionPriority.HIGH);
+                break;
         }
 
-        return output;
+        return NewPriorities;
     }
 
     private int Interval = 120;
     private int Tick = 0;
     private double NTDeltaTime = UpdateIntervalHigh / 120;
+    List<AfflictionPriority> Priorities = new();
     // Gets called 60 times a second
     public void ThinkUpdate()
     {
@@ -1227,14 +1243,10 @@ public class HumanUpdate
 
         if (!NTConfig.Get("NT_Calculations", true)) return; // Check the config.
 
-        // We check if timer is up
-        List<AfflictionPriority> checkedPriorities = GetLowestPriority(UpdateCooldown);
-        UpdateCooldown++;
-        if (checkedPriorities.Count == 3) UpdateCooldown = 0;
-        else if (checkedPriorities.Count == 0) return;
+        Priorities = GetLowestPriority(Priorities);
 
         NT.DeltaTime = NTDeltaTime;
-        Update(checkedPriorities);
+        Update(Priorities);
     }
 
     private void Update(List<AfflictionPriority> priorities)
@@ -1260,17 +1272,17 @@ public class HumanUpdate
 
         if (UpdatingMonsters.Count > 0)
         {
-            Task MonsterUpdateTask = new(UpdateMonsters); // We create a new task to run monsters along humans. This should help greatly with mods such as barotraumatic.
-            MonsterUpdateTask.Start();
+            //Task MonsterUpdateTask = new(UpdateMonsters); // We create a new task to run monsters along humans. This should help greatly with mods such as barotraumatic.
+           // MonsterUpdateTask.Start();
+           UpdateMonsters();
             UpdateHumans(priorities);
-            MonsterUpdateTask.Wait();
+            //MonsterUpdateTask.Wait();
         }
         else 
         {
             UpdateHumans(priorities);
         }
 
-        Print("Try Sync");
         LuaCsSetup.Instance.EventService.PublishEvent<IEventSyncLuaHumanUpdate>(x => x.SyncLuaHumanUpdate());
         LuaCsSetup.Instance.EventService.PublishEvent<IEventSyncLuaCharacters>(x => x.SyncLuaCharacters());
     }

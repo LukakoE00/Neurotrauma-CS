@@ -18,7 +18,7 @@ namespace Neurotrauma
             Stats["anyspecificorgandamage"] = new NTStatDouble("anyspecificorgandamage", 0, 100, 1, (C) =>
             {
                 return NTC.GetMultiplier(C, "anyspecificorgandamage") 
-                        + Clamp(C.GetBloodAffStrength("afthiamine"),0,1) * 4;
+                        + Clamp(C.GetAffStrength("afthiamine"),0,1) * 4;
             });
 
             Stats["neworgandamage"] = new NTStatDouble("neworgandamage", 0, 100, 1, (C) => 
@@ -43,7 +43,7 @@ namespace Neurotrauma
 
             Stats["bloodamount"] = new NTStatDouble("bloodamount", 0, 100, 1, (C) => 
             {
-                return Math.Clamp(100 - C.GetNonLimbAffStrength("bloodloss"),0,100);
+                return Math.Clamp(100 - C.GetBloodAffStrength("bloodloss"),0,100);
             });
 
             Stats["stasis"] = new NTStatBool("stasis",false, (C) => 
@@ -78,8 +78,8 @@ namespace Neurotrauma
             {
                 double Res = 1;
                 if (C.GetNonLimbAffStrength("spinalcordinjury") > 0) Res = -9001; // Wow, I find this to be a bit overkill
-                if (C.GetNonLimbAffStrength("vomiting") > 0) Res *= .8;
-                if (C.GetNonLimbAffStrength("nausea") > 0) Res *= .9;
+                if (C.GetSymptomStrength("vomiting") > 0) Res *= .8;
+                if (C.GetSymptomStrength("nausea") > 0) Res *= .9;
                 if (C.GetNonLimbAffStrength("anesthesia") > 0) Res *= .5;
                 if (C.GetNonLimbAffStrength("opiateoverdose") > 50) Res *= .5;
 
@@ -137,6 +137,11 @@ namespace Neurotrauma
             });
 
             Stats["lockrightleg"] = new NTStatBool("lockrightleg",false, (C) => 
+            {
+                return LimbLockedInitial(C, LimbType.RightLeg, "lockrightleg");
+            });
+
+            Stats["forceprone"] = new NTStatBool("forceprone", false, (C) =>
             {
                 return LimbLockedInitial(C, LimbType.RightLeg, "lockrightleg");
             });

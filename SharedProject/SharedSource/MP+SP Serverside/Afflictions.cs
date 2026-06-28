@@ -373,6 +373,17 @@ namespace Neurotrauma
 
         private void AddAfflictions()
         {
+            // Drunk
+            // Not constant; gets applied by other sources.
+            // Type: Non-Limb Specific, Vanilla Override
+            // Caused By: ROOOTT BEEERRRRRR.
+            // Effects: idk.
+            AfflictionsToAdd["drunk"] = new("drunk", 0, 200, 0, AfflictionPriority.MEDIUM);
+            AfflictionsToAdd["drunk"].UpdateAction =
+                (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanNonLimbAffData AffData) =>
+                {
+                };
+
             // Radiation Sickness
             // Not constant; gets applied by other sources.
             // Type: Damage, Vanilla Override
@@ -1636,6 +1647,20 @@ namespace Neurotrauma
                    // Reduce Oxygen Low if lungs are present
                    if (C.GetAffData("lungremoved").Strength <= 0) HF.AddAffliction(C.Human, "oxygenlow", -40, null);
                };
+
+
+            AfflictionsToAdd["chemwithdrawal"] = new("chemwithdrawal");
+            AfflictionsToAdd["chemwithdrawal"].UpdateAction =
+                (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanNonLimbAffData AffData) =>
+                {
+                };
+
+
+            AfflictionsToAdd["opiatewithdrawal"] = new("opiatewithdrawal");
+            AfflictionsToAdd["opiatewithdrawal"].UpdateAction =
+                (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanNonLimbAffData AffData) =>
+                {
+                };
 
             // Alcohol Addiction
             // Not constant; gets applied by other sources.
@@ -3018,6 +3043,12 @@ namespace Neurotrauma
                     }
                 };
 
+            LimbAfflictionsToAdd["skinointmented"] = new("skinointmented", 0, 200, 0, AfflictionPriority.HIGH);
+            LimbAfflictionsToAdd["skinointmented"].UpdateAction =
+                (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanLimbAffData AffData) =>
+                {
+                };
+
             foreach (KeyValuePair<string, NTLimbAffliction> Pair in LimbAfflictionsToAdd)
             {
                 NTAfflictions.RegisterAffliction(Pair.Key, Pair.Value);
@@ -3033,7 +3064,7 @@ namespace Neurotrauma
             // Type: Non-Limb Specific
             // Caused By: Bleeding, Damage.
             // Effects: Changes Blood Pressure.
-            AfflictionsToAdd["bloodloss"] = new("bloodloss", 0, 200, 0);
+            BloodAfflictionsToAdd["bloodloss"] = new("bloodloss", 0, 200, 0);
 
             // Blood Pressure
             // Constant; too complicated otherwise.
