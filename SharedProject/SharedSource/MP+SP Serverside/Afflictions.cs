@@ -2597,17 +2597,20 @@ namespace Neurotrauma
                         + Math.Clamp(WoundDamage / 100, 0, 0.4)
                         + C.GetLimbAffStrength("bleeding", Limb) / 20;
 
-                    // Dirtify bandage over time
-                    AffData.Strength[Limb] -= BandageDirtifySpeed * NT.DeltaTime;
-
-                    // Transition to dirty bandage
-                    if (AffData.Strength[Limb] <= 0)
+                    if (AffData.Strength[Limb] > 0)
                     {
-                        AffData.Strength[Limb] = 0;
-                        HF.AddAfflictionLimb(C.Human, "bandageddirty", Limb, (float)Math.Max(C.GetLimbAffStrength("bandageddirty", Limb), 1), null);
+                        // Dirtify bandage over time
+                        AffData.Strength[Limb] -= BandageDirtifySpeed * NT.DeltaTime;
+
+                        // Transition to dirty bandage
+                        if (AffData.Strength[Limb] <= 0)
+                        {
+                            AffData.Strength[Limb] = 0;
+                            HF.AddAfflictionLimb(C.Human, "bandageddirty", Limb, (float)Math.Max(C.GetLimbAffStrength("bandageddirty", Limb), 1), null);
+                        }
+
+                        HF.AddAfflictionLimb(C.Human, "bandageddirty", Limb, (float)(BandageDirtifySpeed * NT.DeltaTime), null);
                     }
-                    
-                    HF.AddAfflictionLimb(C.Human, "bandageddirty", Limb, (float)(BandageDirtifySpeed * NT.DeltaTime), null);
 
                     // Effects:
                     // Slowdown
