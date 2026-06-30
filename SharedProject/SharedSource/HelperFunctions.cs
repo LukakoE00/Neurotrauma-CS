@@ -855,7 +855,8 @@ namespace Neurotrauma
             if (!AfflictionPrefab.Prefabs.TryGet(Identifier, out AfflictionPrefab Prefab) || Prefab == null) { return; }
 
             float Resistance = Character.CharacterHealth.GetResistance(Prefab, GivenLimbType);
-            if (Resistance > 1) { return; }
+
+            if (Resistance >= 1) { return; }
 
             float ScaledStrength = Strength * Character.CharacterHealth.MaxVitality / 100 / (1 - Resistance);
             Affliction Affliction = Prefab.Instantiate(ScaledStrength, Aggressor);
