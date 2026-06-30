@@ -280,13 +280,31 @@ namespace Neurotrauma
             return Math.Pow((Math.Pow(Vector.X, 2) + Math.Pow(Vector.Y, 2)), .5);
         }
 
-        public static bool Chance(float Chance)
-        {
-            float RandomChance = new Random().Range(0, 1);
-            return RandomChance < Chance;
-        }
+		// Randomization
+		private static readonly Random Random = new Random();
 
-        public static float BoolToNum(bool Value, float Out = 1)
+        /// <summary>
+        /// Returns an unrounded, random number within a specific range.
+        /// </summary>
+        /// <param name="min">Minimum value</param>
+        /// <param name="max">Maximum value</param>
+        /// <returns>Float within the given range.</returns>
+		public static float RandomRange(float Min, float Max)
+		{
+			return Min + (float)Random.NextDouble() * (Max - Min);
+		}
+
+        /// <summary>
+        /// Determines whether or not a 'chance' check passed.
+        /// </summary>
+        /// <param name="Chance"></param>
+        /// <returns>True if the chance check passed; else False.</returns>
+		public static bool Chance(float Chance)
+		{
+			return Random.NextDouble() < Chance;
+		}
+
+		public static float BoolToNum(bool Value, float Out = 1)
         {
             if (Value) { return Out; }
             return 0;
