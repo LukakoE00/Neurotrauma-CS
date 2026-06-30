@@ -789,7 +789,8 @@ public class HumanUpdate
                 Hook.Invoke(this);
             }
 
-            Human.SpeedMultiplier = (float)GetSpeed(this);
+            HF.SetAffliction(Human,"slowdown", Math.Clamp(100 * (1 - (float)GetDoubleStatStrength("speedmultiplier")), 0, 100));
+            SetDoubleStatStrength("speedmultiplier", 1);
             CharacterSpeedMultipliers.Remove(this);
         }
 

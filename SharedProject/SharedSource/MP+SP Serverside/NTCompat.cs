@@ -19,6 +19,15 @@ namespace Neurotrauma
             Sym.Strength = 100;
         }
 
+        public static void SetSymptomTrue(Character Char, string SymptomIdentifier, int Duration = 2)
+        {
+            HumanUpdate.NTHuman Human = HumanUpdate.CharacterToNTHuman(Char);
+            Dictionary<string, HumanUpdate.NTHumanSymptomData> Afflictions = Human.LocalAfflictions.UpdatingSymptoms;
+            HumanUpdate.NTHumanSymptomData Sym = Afflictions[SymptomIdentifier];
+            Sym.HumanUpdateTime = Duration;
+            Sym.Strength = 100;
+        }
+
         /// <summary>
         /// Sets the symptom to true for a certain amount of human updates.
         /// </summary>
@@ -28,6 +37,15 @@ namespace Neurotrauma
         /// <param name="Duration"> The duration of human updates the symptom should be true for.</param>
         public static void SetLimbSymptomTrue(HumanUpdate.NTHuman Human, string SymptomIdentifier, LimbType Limb, int Duration = 2)
         {
+            Dictionary<string, HumanUpdate.NTHumanLimbSymptomData> Afflictions = Human.LocalAfflictions.UpdatingLimbSymptoms;
+            HumanUpdate.NTHumanLimbSymptomData Sym = Afflictions[SymptomIdentifier];
+            Sym.HumanUpdateTime[Limb] = Duration;
+            Sym.Strength[Limb] = 100;
+        }
+
+        public static void SetLimbSymptomTrue(Character Char, string SymptomIdentifier, LimbType Limb, int Duration = 2)
+        {
+            HumanUpdate.NTHuman Human = HumanUpdate.CharacterToNTHuman(Char);
             Dictionary<string, HumanUpdate.NTHumanLimbSymptomData> Afflictions = Human.LocalAfflictions.UpdatingLimbSymptoms;
             HumanUpdate.NTHumanLimbSymptomData Sym = Afflictions[SymptomIdentifier];
             Sym.HumanUpdateTime[Limb] = Duration;
@@ -48,6 +66,15 @@ namespace Neurotrauma
             Sym.Strength = 0;
         }
 
+        public static void SetSymptomFalse(Character Char, string SymptomIdentifier, int Duration = 2)
+        {
+            HumanUpdate.NTHuman Human = HumanUpdate.CharacterToNTHuman(Char);
+            Dictionary<string, HumanUpdate.NTHumanSymptomData> Afflictions = Human.LocalAfflictions.UpdatingSymptoms;
+            HumanUpdate.NTHumanSymptomData Sym = Afflictions[SymptomIdentifier];
+            Sym.HumanUpdateStoptime = Duration;
+            Sym.Strength = 0;
+        }
+
         /// <summary>
         /// Sets the symptom to false for a certain amount of human updates.
         /// </summary>
@@ -57,6 +84,15 @@ namespace Neurotrauma
         /// <param name="Duration"> The duration of human updates the symptom should be false for.</param>
         public static void SetLimbSymptomFalse(HumanUpdate.NTHuman Human, string SymptomIdentifier, LimbType Limb, int Duration = 2)
         {
+            Dictionary<string, HumanUpdate.NTHumanLimbSymptomData> Afflictions = Human.LocalAfflictions.UpdatingLimbSymptoms;
+            HumanUpdate.NTHumanLimbSymptomData Sym = Afflictions[SymptomIdentifier];
+            Sym.HumanUpdateStoptime[Limb] = Duration;
+            Sym.Strength[Limb] = 0;
+        }
+
+        public static void SetLimbSymptomFalse(Character Char, string SymptomIdentifier, LimbType Limb, int Duration = 2)
+        {
+            HumanUpdate.NTHuman Human = HumanUpdate.CharacterToNTHuman(Char);
             Dictionary<string, HumanUpdate.NTHumanLimbSymptomData> Afflictions = Human.LocalAfflictions.UpdatingLimbSymptoms;
             HumanUpdate.NTHumanLimbSymptomData Sym = Afflictions[SymptomIdentifier];
             Sym.HumanUpdateStoptime[Limb] = Duration;
@@ -172,6 +208,17 @@ namespace Neurotrauma
             CharacterSpeedMultipliers[Character] = Multiplier;
         }
 
+        public static void MultiplySpeed(Character Char, double Multiplier) // Im not gonna lie, I have no clue where this is used at.
+        {
+            HumanUpdate.NTHuman Human = HumanUpdate.CharacterToNTHuman(Char);
+            if (CharacterSpeedMultipliers.ContainsKey(Human))
+            {
+                CharacterSpeedMultipliers[Human] *= Multiplier;
+                return;
+            }
+            CharacterSpeedMultipliers[Human] = Multiplier;
+        }
+
         public static void DivideSpeed(HumanUpdate.NTHuman Character, double Multiplier)
         {
             if (CharacterSpeedMultipliers.ContainsKey(Character))
@@ -182,14 +229,37 @@ namespace Neurotrauma
             CharacterSpeedMultipliers[Character] = Multiplier;
         }
 
+        public static void DivideSpeed(Character Char, double Multiplier)
+        {
+            HumanUpdate.NTHuman Human = HumanUpdate.CharacterToNTHuman(Char);
+            if (CharacterSpeedMultipliers.ContainsKey(Human))
+            {
+                CharacterSpeedMultipliers[Human] /= Multiplier;
+                return;
+            }
+            CharacterSpeedMultipliers[Human] = Multiplier;
+        }
+
         public static double GetSpeed(HumanUpdate.NTHuman Character)
         {
             return (CharacterSpeedMultipliers.ContainsKey(Character)) ? CharacterSpeedMultipliers[Character]: 1 ; // W C# moment
         }
 
+        public static double GetSpeed(Character Char)
+        {
+            HumanUpdate.NTHuman Human = HumanUpdate.CharacterToNTHuman(Char);
+            return (CharacterSpeedMultipliers.ContainsKey(Human)) ? CharacterSpeedMultipliers[Human] : 1; // W C# moment
+        }
+
         public static void SetSpeed(HumanUpdate.NTHuman Character, double Amount)
         {
             CharacterSpeedMultipliers[Character] = Amount;
+        }
+
+        public static void SetSpeed(Character Char, double Amount)
+        {
+            HumanUpdate.NTHuman Human = HumanUpdate.CharacterToNTHuman(Char);
+            CharacterSpeedMultipliers[Human] = Amount;
         }
 
         public static void AddHematologyAffliction(string Identifier)
@@ -235,6 +305,16 @@ namespace Neurotrauma
             return false;
         }
 
+        public static bool HasSymptom(Character Char, string SymIdentifier)
+        {
+            HumanUpdate.NTHuman Human = HumanUpdate.CharacterToNTHuman(Char);
+            if (Human == null) return false;
+            HumanUpdate.NTHumanSymptomData Symptom = Human.GetSymptomAffData(SymIdentifier);
+            if (Symptom == null) return false;
+            if (Symptom.Strength > 0) return true;
+            return false;
+        }
+
         public static bool HasLimbSymptom(HumanUpdate.NTHuman Character, string SymIdentifier, LimbType Limb)
         {
             if (Character == null) return false;
@@ -244,10 +324,31 @@ namespace Neurotrauma
             return false;
         }
 
+        public static bool HasLimbSymptom(Character Char, string SymIdentifier, LimbType Limb)
+        {
+            HumanUpdate.NTHuman Human = HumanUpdate.CharacterToNTHuman(Char);
+            if (Human == null) return false;
+            HumanUpdate.NTHumanLimbSymptomData Symptom = Human.GetLimbSymptomData(SymIdentifier);
+            if (Symptom == null) return false;
+            if (Symptom.Strength[Limb] > 0) return true;
+            return false;
+        }
+
         public static bool HasSymptomFalse(HumanUpdate.NTHuman Character, string SymIdentifier)
         {
             if (Character == null) return false;
             HumanUpdate.NTHumanSymptomData Symptom = Character.GetSymptomAffData(SymIdentifier);
+            if (Symptom == null) return false;
+
+            if (Symptom.HumanUpdateStoptime <= 0) return true;
+            return false;
+        }
+
+        public static bool HasSymptomFalse(Character Char, string SymIdentifier)
+        {
+            HumanUpdate.NTHuman Human = HumanUpdate.CharacterToNTHuman(Char);
+            if (Human == null) return false;
+            HumanUpdate.NTHumanSymptomData Symptom = Human.GetSymptomAffData(SymIdentifier);
             if (Symptom == null) return false;
 
             if (Symptom.HumanUpdateStoptime <= 0) return true;
@@ -264,10 +365,29 @@ namespace Neurotrauma
             return false;
         }
 
+        public static bool HasLimbSymptomFalse(Character Char, string SymIdentifier, LimbType Limb)
+        {
+            HumanUpdate.NTHuman Human = HumanUpdate.CharacterToNTHuman(Char);
+            if (Human == null) return false;
+            HumanUpdate.NTHumanLimbSymptomData Symptom = Human.GetLimbSymptomData(SymIdentifier);
+            if (Symptom == null) return false;
+
+            if (Symptom.HumanUpdateStoptime[Limb] <= 0) return true;
+            return false;
+        }
+
         public static void SetMultiplier(HumanUpdate.NTHuman Character, string MultiplierIdentifier, double Multiplier)
         {
             HumanUpdate.CharacterTags Tags = Character.GetTags();
             double CurrentMultiplier = GetMultiplier(Character, MultiplierIdentifier);
+            Tags.SetTag("mult", MultiplierIdentifier, CurrentMultiplier * Multiplier);
+        }
+
+        public static void SetMultiplier(Character Char, string MultiplierIdentifier, double Multiplier)
+        {
+            HumanUpdate.NTHuman Human = HumanUpdate.CharacterToNTHuman(Char);
+            HumanUpdate.CharacterTags Tags = Human.GetTags();
+            double CurrentMultiplier = GetMultiplier(Human, MultiplierIdentifier);
             Tags.SetTag("mult", MultiplierIdentifier, CurrentMultiplier * Multiplier);
         }
 
@@ -278,9 +398,23 @@ namespace Neurotrauma
             return Tags.GetTag("mult", MultiplierIdentifier);
         }
 
+        public static double GetMultiplier(Character Char, string MultiplierIdentifier)
+        {
+            HumanUpdate.NTHuman Human = HumanUpdate.CharacterToNTHuman(Char);
+            HumanUpdate.CharacterTags Tags = Human.GetTags();
+            if (!Tags.HasTag("mult", MultiplierIdentifier)) return 1;
+            return Tags.GetTag("mult", MultiplierIdentifier);
+        }
+
         public static void SetTag(HumanUpdate.NTHuman Character, string TagIdentifier)
         {
             Character.GetTags().SetTag("tag", TagIdentifier);
+        }
+
+        public static void SetTag(Character Char, string TagIdentifier)
+        {
+            HumanUpdate.NTHuman Human = HumanUpdate.CharacterToNTHuman(Char);
+            Human.GetTags().SetTag("tag", TagIdentifier);
         }
 
         public static bool HasTag(HumanUpdate.NTHuman Character, string TagIdentifier)
