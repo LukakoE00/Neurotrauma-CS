@@ -134,7 +134,6 @@ namespace Neurotrauma
         {
             if (HU != null)
             {
-                HF.Print($"{HU}");
                 HU.ThinkUpdate();
             }
         }
@@ -146,7 +145,6 @@ namespace Neurotrauma
 
         public void OnCharacterDeath(Character character, Affliction causeOfDeathAffliction, CauseOfDeathType causeOfDeathType)
         {
-            HF.Print("Character died");
             HU.RemoveCharacterFromUpdate(character);
         }
     }

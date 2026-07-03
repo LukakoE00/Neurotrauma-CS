@@ -1,16 +1,104 @@
 -- Basically we have to trick our Lua NT Addons into using this human update.
 
+local CSHumanUpdate = nil -- stores our class ref
 
---LuaUserData.MakeMethodAccessible(Descriptors["Neurotrauma.HumanUpdateLuaSync"], "PostSync")
+NT.NonLimbAfflictionTranslations = 
+{
+	-- Bones
+	["fracturedribs"] = "t_fracture",
+	["fracturedskull"] = "h_fracture",
+	["fracturedneck"] = "n_fracture",
+
+	-- Head
+	["spinalcordinjury"] = "t_paralysis",
+	["neurotrauma"] = "cerebralhypoxia",
+
+	-- Limbs
+	["tourniqueted"] = "clampedarteries",
+
+	-- Heart
+	["increasedheartrate"] = "tachycardia",
+
+	-- Torso
+	["aorticrupture"] = "t_arterialcut",
+	
+	-- Symptoms
+	["cough"] = "sym_cough",
+	["paleskin"] = "sym_paleskin",
+	["lightheadedness"] = "sym_lightheadedness",
+	["blurredvision"] = "sym_blurredvision",
+	["confusion"] = "sym_confusion",
+	["headache"] = "sym_headache",
+	["legswelling"] = "sym_legswelling",
+	["weakness"] = "sym_weakness",
+	["wheezing"] = "sym_wheezing",
+	["vomiting"] = "sym_vomiting",
+	["vomitingblood"] = "sym_hematemesis",
+	["abdominaldiscomfort"] = "sym_abdomdiscomfort ",
+	["bloating"] = "sym_bloating",
+	["sweating"] = "sym_sweating",
+	["palpitations"] = "sym_palpitations",
+	["unconsciousness"] = "sym_unconsciousness ",
+	["craving"] = "sym_craving",
+	["nausea"] = "sym_nausea",
+	["shortnessofbreath"] = "dyspnea",
+	["jaundice"] = "sym_jaundice",
+
+	-- Pain
+	["chestpain"] = "pain_chest",
+
+	-- Mechanics
+	["artificialventilation"] = "alv",
+}
+
+NT.LimbAfflictionTranslations = 
+{
+	["bandageddirty"] = "dirtybandage",
+	["firstdegreeburn"] = "burn_deg1",
+	["seconddegreeburn"] = "burn_deg2",
+	["thirddegreeburn"] = "burn_deg3",
+
+	["fracturedextremity"] = {[LimbType.LeftArm] = "la_fracture", [LimbType.RightArm] = "ra_fracture", [LimbType.LeftLeg] = "ll_fracture",[LimbType.RightLeg] = "rl_fracture"},
+	["arterialbleeding"] = {[LimbType.LeftLeg] = "ll_arterialcut",[LimbType.RightLeg] = "rl_arterialcut",[LimbType.LeftArm] = "la_arterialcut",[LimbType.RightArm] = "ra_arterialcut"},
+}
+
+NT.ConvertToLimbLegacy = function (Identifier, Limb)
+	if NT.LimbAfflictionTranslations[Identifier] ~= nil then
+		
+		if NT.LimbAfflictionTranslations[Identifier][Limb] ~= nil then
+			return NT.LimbAfflictionTranslations[Identifier][Limb]
+		end
+
+		return NT.LimbAfflictionTranslations[Identifier]
+	end
+
+	return Identifier
+end
+
+NT.ConvertToLegacy = function (Identifier)
+
+	if NT.NonLimbAfflictionTranslations[Identifier] ~= nil then
+		return NT.NonLimbAfflictionTranslations[Identifier]
+	end
+
+	return Identifier
+end
+
 
 Hook.Patch("Neurotrauma.HumanUpdateLuaSync","SyncLuaAfflictions", function (GameSession, ptable)
 
 end, Hook.HookMethodType.After)
 
-
 Hook.Patch("Neurotrauma.HumanUpdateLuaSync","SyncLuaCharacters", function (GameSession, ptable)
-
+	for NTHuman in ptable["CharacterList"] do
+		NTC.AddEmptyCharacterData(NTHuman.Human)
+	end
 end, Hook.HookMethodType.After)
+
+Hook.Patch("Neurotrauma.HumanUpdateLuaSync","FetchHumanUpdate", function (GameSession, ptable)
+	CSHumanUpdate = ptable["HU"]
+end, Hook.HookMethodType.After)
+
 
 -- Neurotrauma human update functions
 -- Hooks Lua event "think" to update and use for applying NT specific character data (its called 'c') with

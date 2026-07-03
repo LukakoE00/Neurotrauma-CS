@@ -15,17 +15,6 @@ namespace Neurotrauma
     public static class HumanUpdateLuaSync
     {
 
-        static bool ScriptsHaveBeenFetched = false;
-
-        static Script NTCompatScript = new Script();
-        static Script DummyHumanUpdate = new Script();
-        static Script HelperFunctions = new Script();
-
-
-        static public void FetchLuaScripts()
-        {
-        }
-
         static public void Update()
         {
 
@@ -34,10 +23,10 @@ namespace Neurotrauma
         /// <summary>
         /// Syncs our C# human update with our Lua human update, syncs our C# characters with our lua characters
         /// </summary>
-        static public void PreSync(List<HumanUpdate.NTHuman> CharacterList)
+        static public void PreSync(IEnumerable<HumanUpdate.NTHuman> CharacterList)
         {
-            SyncLuaAfflictions(CharacterList);
             SyncLuaCharacters(CharacterList);
+            SyncLuaAfflictions(CharacterList);
         }
 
         /// <summary>
@@ -48,11 +37,15 @@ namespace Neurotrauma
 
         }
 
-        static public void SyncLuaAfflictions(List<HumanUpdate.NTHuman> CharacterList)
+        static public void SyncLuaAfflictions(IEnumerable<HumanUpdate.NTHuman> CharacterList)
         {
         }
 
-        static public void SyncLuaCharacters(List<HumanUpdate.NTHuman> CharacterList)
+        static public void SyncLuaCharacters(IEnumerable<HumanUpdate.NTHuman> CharacterList)
+        {
+        }
+
+        static public void FetchHumanUpdate(HumanUpdate HU)
         {
         }
 

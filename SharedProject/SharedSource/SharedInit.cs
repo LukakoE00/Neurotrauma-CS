@@ -14,6 +14,7 @@ namespace Neurotrauma
             NTAfflictions.DefineAllAfflictions();
             NTStats.DefineAllStats();
             NTItemMethods.DefineAllItems();
+            HumanUpdateLuaSync.FetchHumanUpdate(HU);
         }
 
         public void OnLoadCompletedServerside()
