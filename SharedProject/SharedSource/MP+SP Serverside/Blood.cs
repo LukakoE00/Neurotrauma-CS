@@ -122,11 +122,11 @@ namespace Neurotrauma
                 // See if Colored Scanner is enabled; then adjust colors accordingly.
                 bool UseColor = NTConfig.Get("NTSCAN_enablecoloredscanner", true);
 
-                Color BaseColor = UseColor ? HF.GetColor("NTSCAN_basecolor") : new Color(127, 255, 255);
-                Color NameColor = UseColor ? HF.GetColor("NTSCAN_namecolor") : new Color(127, 255, 255);
-                Color LowColor = UseColor ? HF.GetColor("NTSCAN_lowcolor") : new Color(127, 255, 255);
-                Color HighColor = UseColor ? HF.GetColor("NTSCAN_highcolor") : new Color(127, 255, 255);
-                Color VitalColor = UseColor ? HF.GetColor("NTSCAN_vitalcolor") : new Color(127, 255, 255);
+                Color BaseColor = UseColor ? HF.GetColorFromConfigEntry("NTSCAN_basecolor") : new Color(127, 255, 255);
+                Color NameColor = UseColor ? HF.GetColorFromConfigEntry("NTSCAN_namecolor") : new Color(127, 255, 255);
+                Color LowColor = UseColor ? HF.GetColorFromConfigEntry("NTSCAN_lowcolor") : new Color(127, 255, 255);
+                Color HighColor = UseColor ? HF.GetColorFromConfigEntry("NTSCAN_highcolor") : new Color(127, 255, 255);
+                Color VitalColor = UseColor ? HF.GetColorFromConfigEntry("NTSCAN_vitalcolor") : new Color(127, 255, 255);
                 
                 LuaCsSetup.Instance.Timer.Wait((params object[] _) =>
                 {

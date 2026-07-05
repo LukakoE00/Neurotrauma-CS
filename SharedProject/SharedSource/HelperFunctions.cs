@@ -1,64 +1,63 @@
-﻿
-using Barotrauma;
-using Barotrauma.Networking;
-using FluentResults;
-using System;
-using System.Collections.ObjectModel;
-using System.Data.SqlTypes;
-using System.Text;
+﻿using Barotrauma.Networking;
 using System.Xml.Linq;
-using static System.Net.Mime.MediaTypeNames;
-// What shit was Tina/Mannatu smoking. How do you write this many functions. - GreenBean
-// The majority of these functions are direct translations into C#. Due to the fact that most of the C# methods were already exposed in lua, we can easily do this.
-
-// Also due to this fact of being in C#, many functions are now irrelevant.
-// Lerp (Rest in Peace lil bro, you were the king).
-// Clamp (My goat).
-// Minimum
-// Maximum
-// Distance Between
-
 
 namespace Neurotrauma
 {
 
     public static class HF // The HelperFunctions class
     {
-        // ---------------------------------------- Limb Related Helper Functions -------------------------------------------------- \\
+        private static readonly Random Random = new Random();
 
+        // Lists & Dictionaries
+        // List containing Arm + Leg LimbTypes.
         public static readonly List<LimbType> ArmsLegsToCheck = [LimbType.LeftArm, LimbType.RightArm, LimbType.LeftLeg, LimbType.RightLeg];
+
+        // List containing Leg LimbTypes.
         public static readonly List<LimbType> LegsToCheck = [LimbType.LeftLeg, LimbType.RightLeg];
+
+        // List containing Arm LimbTypes.
         public static readonly List<LimbType> ArmsToCheck = [LimbType.LeftArm, LimbType.RightArm];
+
+        // All HealthUI Limbs
         public static readonly List<LimbType> LimbsToCheck = [LimbType.LeftArm, LimbType.RightArm, LimbType.LeftLeg, LimbType.RightLeg, LimbType.Torso, LimbType.Head];
         
-        // GreenBean fucked this one up! - Lukako
+        // Limb Dictionaries
         public static readonly Dictionary<LimbType, string> StringLimbsToCheck = new Dictionary<LimbType, string>() 
         {
-            { LimbType.LeftArm, "LeftArm" }, { LimbType.RightArm, "RightArm" },
-            { LimbType.LeftLeg, "LeftLeg" }, { LimbType.RightLeg, "RightLeg" },
-            { LimbType.Torso, "Torso" }, { LimbType.Head, "Head" }
+            { LimbType.LeftArm, "LeftArm" }, 
+            { LimbType.RightArm, "RightArm" },
+            { LimbType.LeftLeg, "LeftLeg" }, 
+            { LimbType.RightLeg, "RightLeg" },
+            { LimbType.Torso, "Torso" }, 
+            { LimbType.Head, "Head" }
         };
 
         public static readonly Dictionary<LimbType, string> ShortHandLimbsToCheck = new Dictionary<LimbType, string>() 
         {
-            { LimbType.LeftArm, "la" }, { LimbType.RightArm, "ra" },
-            { LimbType.LeftLeg, "ll" }, { LimbType.RightLeg, "rl" },
-            { LimbType.Torso, "t" }, { LimbType.Head, "h" }
+            { LimbType.LeftArm, "la" },
+            { LimbType.RightArm, "ra" },
+            { LimbType.LeftLeg, "ll" }, 
+            { LimbType.RightLeg, "rl" },
+            { LimbType.Torso, "t" },
+            { LimbType.Head, "h" }
         };
 
         public static readonly Dictionary<LimbType, double> DefaultLimbAffStrengths = new Dictionary<LimbType, double>() 
         { 
-            { LimbType.Head, 0 }, { LimbType.Torso, 0 }, 
-            { LimbType.LeftArm, 0 }, { LimbType.RightArm, 0 }, 
-            { LimbType.LeftLeg, 0 }, { LimbType.RightLeg, 0 } 
+            { LimbType.Head, 0 }, 
+            { LimbType.Torso, 0 }, 
+            { LimbType.LeftArm, 0 }, 
+            { LimbType.RightArm, 0 }, 
+            { LimbType.LeftLeg, 0 }, 
+            { LimbType.RightLeg, 0 } 
         };
 
         /// <summary>
         /// Returns the limb of a character given the LimbType.
         /// </summary>
-        /// <param name="Character"></param>
-        /// <param name="GivenLimbType"></param>
-        /// <returns></returns>
+        /// <param name="Character">Character to check.</param>
+        /// <param name="GivenLimbType">LimbType to check.</param>
+        /// <returns>The given limb on a character, else null.</returns>
         public static Limb GetCharacterLimb(Character Character, LimbType GivenLimbType)
         {
             return Character.AnimController.GetLimb(GivenLimbType);
@@ -67,8 +66,8 @@ namespace Neurotrauma
         /// <summary>
         /// Converts a limbtype into it's more common type. I.E LeftHand becomes LeftArm and RightFoot becomes RightArm. So on so forth.
         /// </summary>
-        /// <param name="GivenLimbType"></param>
-        /// <returns></returns>
+        /// <param name="GivenLimbType">LimbType to check.</param>
+        /// <returns>One of the Left/Right, Arm/Leg or Head/Torso Limbs.</returns>
         public static LimbType NormalizeLimbType(LimbType GivenLimbType) // Our beloved one and only normalize limb type.
         {
             if (LimbsToCheck.Contains(GivenLimbType)) { return GivenLimbType; }
@@ -104,8 +103,8 @@ namespace Neurotrauma
         /// <summary>
         /// Converts our limbtype into a string.
         /// </summary>
-        /// <param name="GivenLimbType"></param>
-        /// <returns></returns>
+        /// <param name="GivenLimbType">LimbType to check.</param>
+        /// <returns>A LimbType as a string, else null.</returns>
         public static string LimbToString(LimbType GivenLimbType)
         {
             LimbType NormalizedLimb = NormalizeLimbType(GivenLimbType);
@@ -114,10 +113,10 @@ namespace Neurotrauma
         }
 
         /// <summary>
-        /// Validates if a string is valid for a search.
+        /// Validates if a string Identifier is valid for a search.
         /// </summary>
-        /// <param name="Identifier"></param>
-        /// <returns></returns>
+        /// <param name="Identifier">Any identifier that needs to be checked.</param>
+        /// <returns>True if the Identifier is valid, else False.</returns>
         public static bool IsValidIdentifier(string Identifier)
         {
             return !(Identifier == null || Identifier == "");
@@ -126,82 +125,94 @@ namespace Neurotrauma
         /// <summary>
         /// Converts our affliction ID into an affliction with our limb prefix.
         /// </summary>
-        /// <param name="limbType"></param>
-        /// <param name="identifier"></param>
-        /// <returns></returns>
-        public static string CreateLimbAfflictionID(LimbType limbType, string identifier)
+        /// <param name="GivenLimbType">LimbType to convert to a prefix.</param>
+        /// <param name="Identifier">Affliction Identifier to append to a limb prefix.</param>
+        /// <returns>A concatenated string composed of the limb and the affliction identifier, else null.</returns>
+        public static string CreateLimbAfflictionID(LimbType GivenLimbType, string Identifier)
         {
-            limbType = NormalizeLimbType(limbType);
+            GivenLimbType = NormalizeLimbType(GivenLimbType);
 
-            if (!ShortHandLimbsToCheck.TryGetValue(limbType, out string value))
+            if (!ShortHandLimbsToCheck.TryGetValue(GivenLimbType, out string Value))
+            {
                 return null;
+            }
 
-            return $"{value}_{identifier}";
+            return $"{Value}_{Identifier}";
         }
 
         /// <summary>
         /// Checks our limb to see if it's an extremity.
         /// </summary>
-        /// <param name="GivenLimbType"></param>
-        /// <returns></returns>
+        /// <param name="GivenLimbType">LimbType to check.</param>
+        /// <returns>True if it is an extremity, else False.</returns>
         public static bool LimbIsExtremity(LimbType GivenLimbType)
         {
             return GivenLimbType != LimbType.Torso && GivenLimbType != LimbType.Head;
         }
 
         /// <summary>
-        /// Forces our arm to lock.
+        /// Locks an Arm by force-occupying that inventory slot.
         /// </summary>
-        /// <param name="Character"></param>
-        /// <param name="Identifier"></param>
-        public static void ForceArmLock(Character Character, string Identifier) // This took me an hour to translate btw lol
+        /// <param name="Character">The character whose arm to lock.</param>
+        /// <param name="ArmToLock">The arm to lock, either "LeftArm" or "RightArm".</param>
+        public static void ForceArmLock(Character Character, string ArmToLock)
         {
-            // HostSide Only
-#if SHARED
-#if CLIENT
-            if (LuaGame.IsMultiplayer())
+            // In Multiplayer, only run on the host.
+            #if CLIENT
+                if (GameMain.IsMultiplayer)
+                {
+                    return;
+                }
+            #endif
+
+            // Safety check!
+            if (ArmToLock != "LeftArm" && ArmToLock != "RightArm")
             {
                 return;
             }
-#endif
+
+            // If the Entity Spawner isn't initialized yet, skip a game tick and try again!
             if (Entity.Spawner == null)
             {
-                LuaCsTimer.Wait((params object[] _) => { ForceArmLock(Character, Identifier); }, 35);
+                LuaCsSetup.Instance.Timer.Wait((params object[] _) => { ForceArmLock(Character, ArmToLock); }, 35);
                 return;
             }
 
-            int HandIndex = 6;
-            if (Identifier == "armlock2") {HandIndex = 5;}
-            Item PrevItem = Character.Inventory.GetItemAt(HandIndex)
-            if (PrevItem != null) { PrevItem.Drop(Character,true);}
+            // Determine which Arm should be locked, then set the Inventory Slot accordingly.
+            bool IsLeft = ArmToLock == "LeftArm";
+            int HandIndex = IsLeft ? 5 : 6;
+            InvSlotType Slot = IsLeft ? InvSlotType.LeftHand : InvSlotType.RightHand;
 
-            LuaCsTimer.Wait((params object[] _) => 
-            { 
-            ItemPrefab IPrefab = ItemPrefab.GetItemPrefab(Identifier);
-            Entity.Spawner.AddItemToSpawnQueue(IPrefab, Character.WorldPosition, null, null, (Item) => {
-                                                                                                            if (Character.Inventory != null && Identifier == "armlock1") 
-                                                                                                            {
-                                                                                                                Character.Inventory.TryPutItem(Item, null, [InvSlotType.RightHand]); 
-                                                                                                            }
-                                                                                                            if (Character.Inventory != null && Identifier == "armlock2") 
-                                                                                                            {
-                                                                                                                Character.Inventory.TryPutItem(Item, null, [InvSlotType.LeftHand]); 
-                                                                                                            }
-                                                                                                        }
-            );
+            // Drop the previously held item.
+            Item PrevItem = Character.Inventory.GetItemAt(HandIndex);
+
+            if (PrevItem != null)
+            {
+                PrevItem.Drop(Character, true);
+            }
+
+            LuaCsSetup.Instance.Timer.Wait((params object[] _) =>
+            {
+                ItemPrefab ArmLock = ItemPrefab.Find(null, "armlock");
+
+                Entity.Spawner.AddItemToSpawnQueue(ArmLock, Character.WorldPosition, null, null, (Item spawnedItem) =>
+                {
+                    if (Character.Inventory != null)
+                    {
+                        Character.Inventory.TryPutItem(spawnedItem, null, [Slot]);
+                    }
+                });
             }, 35);
+
             return;
-#endif
         }
 
-        // ---------------------------------------- Utility Related Helper Functions -------------------------------------------------- \\
-
         /// <summary>
-        /// Returns the health resistance to an affliction.
+        /// Returns the damage resistance to an affliction for a Character.
         /// </summary>
-        /// <param name="Character"></param>
-        /// <param name="Identifier"></param>
-        /// <param name="GivenLimbType"></param>
+        /// <param name="Character">Character to check for resistances.</param>
+        /// <param name="Identifier">Affliction Identifier whose resistance we want checked.</param>
+        /// <param name="GivenLimbType">LimbType to check in case of limb-specific resistances.</param>
         /// <returns></returns>
         public static float GetResistance(Character Character, string Identifier, LimbType GivenLimbType = LimbType.Torso) // Only returns health Resistance
         {
@@ -210,11 +221,11 @@ namespace Neurotrauma
         }
 
         /// <summary>
-        /// Returns the physical resistance to an affliction.
+        /// Returns the damage resistance to an affliction present on an Item.
         /// </summary>
-        /// <param name="Item"></param>
-        /// <param name="ResistanceID"></param>
-        /// <returns></returns>
+        /// <param name="Item">The item to check for resistances.</param>
+        /// <param name="ResistanceID">The identifier of the Resistance we're checking for.</param>
+        /// <returns>Actual damage multiplier for a type of resistance, else 1.</returns>
         public static float GetItemAfflictionResistance(Barotrauma.Item Item, string ResistanceID) // I thought this was a useful helper function. Credit to Antinous for the original method.
         {
             IEnumerable<ContentXElement> ItemElements = Item.Prefab.ConfigElement.Elements();
@@ -239,120 +250,197 @@ namespace Neurotrauma
         }
 
         /// <summary>
-        /// Returns the depth of an item.
+        /// Returns the depth of an item in the world; not to be confused with Sprite Depth.
         /// </summary>
-        /// <param name="Item"></param>
-        /// <returns></returns>
-        public static float FindDepth(Barotrauma.Item Item) // I butchered this function lol
+        /// <param name="Item">Item to check.</param>
+        /// <returns>Y-coordinate value of the given item</returns>
+        public static float FindDepth(Barotrauma.Item Item)
         {
-            return Item.WorldPosition.Y * Physics.DisplayToRealWorldRatio;
+            return Level.Loaded.GetRealWorldDepth(Item.WorldPosition.Y);
         }
 
-        public static Barotrauma.Item GetItemInRightHand(Character Character)
-        {
-            return GetCharacterInventorySlot(Character, 6);
-        }
-
-        public static Barotrauma.Item GetItemInLeftHand(Character Character)
-        {
-            return GetCharacterInventorySlot(Character, 5);
-        }
-
-        public static Barotrauma.Item GetItemInOuterWear(Character Character)
-        {
-            return GetCharacterInventorySlot(Character, 4);
-        }
-
-        public static Barotrauma.Item GetItemInInnerWear(Character Character)
-        {
-            return GetCharacterInventorySlot(Character, 3);
-        }
-
-        public static Barotrauma.Item GetItemInHeadWear(Character Character)
-        {
-            return GetCharacterInventorySlot(Character, 2);
-        }
-
+        /// <summary>
+        /// Checks a character's inventory for a Barotrauma Item in a specific slot returns it.
+        /// <para>If you want the Item Identifier, use GetCharacterInventorySlotIdentifier instead.</para>
+        /// <para>Premade functions exist for Outer-, Head- and Innerwear; GetItemIn(LeftHand/RightHand/OuterWear/InnerWear/HeadWear/HeadSet) respectively.</para>
+        /// </summary>
+        /// <param name="Character">Character whose inventory to check.</param>
+        /// <param name="Slot">Inventory slot index number.</param>
+        /// <returns>The Item if present, else null.</returns>
         public static Barotrauma.Item GetCharacterInventorySlot(Character Character, int Slot)
         {
             return Character.Inventory.GetItemAt(Slot);
         }
 
-        public static string GetCharacterInventorySlotIdentifer(Character Character, int Slot)
+        /// <summary>
+        /// Checks the Right Hand inventory slot of a character for an item.
+        /// </summary>
+        /// <param name="Character">The character to check.</param>
+        /// <returns>The item if present, else null.</returns>
+        public static Barotrauma.Item GetItemInRightHand(Character Character)
+        {
+            return GetCharacterInventorySlot(Character, 6);
+        }
+
+        /// <summary>
+        /// Checks the Left Hand inventory slot of a character for an item.
+        /// </summary>
+        /// <param name="Character">The character to check.</param>
+        /// <returns>The item if present, else null.</returns>
+        public static Barotrauma.Item GetItemInLeftHand(Character Character)
+        {
+            return GetCharacterInventorySlot(Character, 5);
+        }
+
+        /// <summary>
+        /// Checks the Outerwear inventory slot of a character for an item.
+        /// </summary>
+        /// <param name="Character">The character to check.</param>
+        /// <returns>The item if present, else null.</returns>
+        public static Barotrauma.Item GetItemInOuterWear(Character Character)
+        {
+            return GetCharacterInventorySlot(Character, 4);
+        }
+
+        /// <summary>
+        /// Checks the InnerWear inventory slot of a character for an item.
+        /// </summary>
+        /// <param name="Character">The character to check.</param>
+        /// <returns>The item if present, else null.</returns>
+        public static Barotrauma.Item GetItemInInnerWear(Character Character)
+        {
+            return GetCharacterInventorySlot(Character, 3);
+        }
+
+        /// <summary>
+        /// Checks the HeadWear inventory slot of a character for an item.
+        /// </summary>
+        /// <param name="Character">The character to check.</param>
+        /// <returns>The item if present, else null.</returns>
+        public static Barotrauma.Item GetItemInHeadWear(Character Character)
+        {
+            return GetCharacterInventorySlot(Character, 2);
+        }
+
+        /// <summary>
+        /// Checks the HeadSet inventory slot of a character for an item.
+        /// </summary>
+        /// <param name="Character">The character to check.</param>
+        /// <returns>The item if present, else null.</returns>
+        public static Barotrauma.Item GetItemInHeadSet(Character Character)
+        {
+            return GetCharacterInventorySlot(Character, 1);
+        }
+
+        /// <summary>
+        /// Checks a character's inventory for a Barotrauma Item in a specific slot and returns the Identifier.
+        /// <para>If you want the item itself, use GetCharacterInventorySlot instead.</para>
+        /// <para>Premade functions exist for Outer-, Head- and Innerwear; Get(Outer/Head/Inner)WearIdentifier respectively.</para>
+        /// </summary>
+        /// <param name="Character">The character to check.</param>
+        /// <param name="Slot">Inventory slot index number.</param>
+        /// <returns>Item Identifier, else 'null' as a string.</returns>
+        public static string GetCharacterInventorySlotIdentifier(Character Character, int Slot)
         {
             Barotrauma.Item Item = GetCharacterInventorySlot(Character, Slot);
-            if (Item == null) { return "null"; }
+            if (Item == null) 
+            { 
+                return "null"; 
+            }
+
             return Item.Prefab.Identifier.Value;
         }
 
+        /// <summary>
+        /// Checks the OuterWear inventory slot of a character for an item and pulls its identifier.
+        /// </summary>
+        /// <param name="Character">The character to check.</param>
+        /// <returns>The Item's Identifier if present, else 'null' as a string.</returns>
         public static string GetOuterWearIdentifier(Character Character)
         {
-            return GetCharacterInventorySlotIdentifer(Character, 4);
+            return GetCharacterInventorySlotIdentifier(Character, 4);
         }
 
+        /// <summary>
+        /// Checks the InnerWear inventory slot of a character for an item and pulls its identifier.
+        /// </summary>
+        /// <param name="Character">The character to check.</param>
+        /// <returns>The Item's Identifier if present, else 'null' as a string.</returns>
         public static string GetInnerWearIdentifier(Character Character)
         {
-            return GetCharacterInventorySlotIdentifer(Character, 3);
+            return GetCharacterInventorySlotIdentifier(Character, 3);
         }
 
+        /// <summary>
+        /// Checks the HeadWear inventory slot of a character for an item and pulls its identifier.
+        /// </summary>
+        /// <param name="Character">The character to check.</param>
+        /// <returns>The Item's Identifier if present, else 'null' as a string.</returns>
         public static string GetHeadWearIdentifier(Character Character)
         {
-            return GetCharacterInventorySlotIdentifer(Character, 2);
+            return GetCharacterInventorySlotIdentifier(Character, 2);
         }
 
-        // You have no fucking clue how long it took me to figure this one out. - Lukako
-        public static void DMClient(Client client, string message, Color? color)
+        /// <summary>
+        /// Prints a message in the chatbox for a client.
+        /// </summary>
+        /// <param name="Client">The client to whom the message should be sent.</param>
+        /// <param name="Message">The actual message to send.</param>
+        /// <param name="Color">Color that the message should be.</param>
+        public static void DMClient(Client Client, string Message, Color? Color)
         {
-            var chatMessage = ChatMessage.Create("", message, ChatMessageType.Server, null);
-            if (color.HasValue) chatMessage.Color = color.Value;
+            var chatMessage = ChatMessage.Create("", Message, ChatMessageType.Server, null);
+            if (Color.HasValue) chatMessage.Color = Color.Value;
 
 #if SERVER
-            if (client == null) return;
+            if (Client == null) return;
+
             LuaGame.SendMessage(chatMessage.Text, ChatMessageType.Server, null);
 #else
             if (GameMain.GameSession?.CrewManager != null)
-            GameMain.GameSession.CrewManager.AddSinglePlayerChatMessage("", chatMessage.Text, ChatMessageType.Server, Character.Controlled);
+            {
+                GameMain.GameSession.CrewManager.AddSinglePlayerChatMessage("", chatMessage.Text, ChatMessageType.Server, Character.Controlled);
+            }
 #endif
         }
 
-        // Pulls a ConfigData entry that holds an RGB value, and turns it into a color.
-        // It's in here since the Hematology Analyzer and Health Scanner in Items ánd in Blood.cs use it.
-        // It's like the table.concat but not; there has to be a better way for this. - Lukako
-        public static Color GetColor(string key)
+        /// <summary>
+        /// // Pulls a ConfigData entry that holds an RGB value, and turns it into a color.
+        /// </summary>
+        /// <param name="ConfigKey">Identifier corresponding to a config entry, specifically one with comma-seperated RGB values.</param>
+        /// <returns>RGB color value.</returns>
+        public static Color GetColorFromConfigEntry(string ConfigEntry)
         {
-            var rgbList = NTConfig.Get<List<string>>(key, null);
+            var rgbList = NTConfig.Get<List<string>>(ConfigEntry, null);
             if (rgbList == null || rgbList.Count == 0) return new Color(127, 255, 255);
 
             var rgbString = rgbList[0];
             var rgb = rgbString.Split(',');
 
-            if (rgb.Length < 3) return new Color(127, 255, 255);
+            if (rgb.Length < 3)
+            {
+                return new Color(127, 255, 255);
+            }
 
-            return new Color(
-                byte.Parse(rgb[0]),
-                byte.Parse(rgb[1]),
-                byte.Parse(rgb[2])
+            return new Color(byte.Parse(rgb[0]), byte.Parse(rgb[1]), byte.Parse(rgb[2])
             );
         }
 
         /// <summary>
-        /// Returns the magnitude of a vector 2.
+        /// Returns the Length / Magnitude of a Vector2.
         /// </summary>
-        /// <param name="Vector"></param>
-        /// <returns></returns>
+        /// <param name="Vector">Vector whose length needs to be known.</param>
+        /// <returns>Length / Magnitude value, else null.</returns>
         public static double Magnitude(Vector2 Vector)
         {
-            return Math.Pow((Math.Pow(Vector.X, 2) + Math.Pow(Vector.Y, 2)), .5);
+            return (double)Vector.Length();
         }
-
-		// Randomization
-		private static readonly Random Random = new Random();
 
         /// <summary>
         /// Returns an unrounded, random number within a specific range.
         /// </summary>
-        /// <param name="min">Minimum value</param>
-        /// <param name="max">Maximum value</param>
+        /// <param name="Min">Minimum value</param>
+        /// <param name="Max">Maximum value</param>
         /// <returns>Float within the given range.</returns>
 		public static float RandomRange(float Min, float Max)
 		{
@@ -362,7 +450,7 @@ namespace Neurotrauma
         /// <summary>
         /// Determines whether or not a 'chance' check passed.
         /// </summary>
-        /// <param name="Chance"></param>
+        /// <param name="Chance">Numerical value to denote chance; i.e. 0.5 = 50%.</param>
         /// <returns>True if the chance check passed; else False.</returns>
 		public static bool Chance(float Chance)
 		{
@@ -377,10 +465,18 @@ namespace Neurotrauma
         /// <returns></returns>
 		public static float BoolToNum(bool Value, float Out = 1)
         {
-            if (Value) { return Out; }
+            if (Value) 
+            { 
+                return Out; 
+            }
+
             return 0;
         }
 
+        /// <summary>
+        /// Checks if the game is currently paused. Multiplayer instances can never be paused.
+        /// </summary>
+        /// <returns>True if the game is paused, else False.</returns>
         public static bool GameIsPaused()
         {
 #if SERVER
@@ -394,12 +490,15 @@ namespace Neurotrauma
 #endif
         }
 
+        /// <summary>
+        /// Checkes to see if a level is running.
+        /// </summary>
+        /// <returns>True if in a level, else false.</returns>
         public static bool InGame()
         {
 #if SERVER
             if (GameMain.Server == null) return false;
             return GameMain.Server.GameStarted;
-            //return GameMain.GameSession.IsRunning;
 #elif SHARED
             return LuaGame.RoundStarted;
 #endif
@@ -407,24 +506,36 @@ namespace Neurotrauma
             return GameMain.GameSession.IsRunning;
         }
 
+        /// <summary>
+        /// Checks to see if a game is Multiplayer.
+        /// </summary>
+        /// <returns>True if Multiplayer, else False.</returns>
         public static bool GameIsMultiplayer()
         {
             return GameMain.IsMultiplayer;
         }
 
+        /// <summary>
+        /// Checks to see if a game is Singleplayer.
+        /// </summary>
+        /// <returns>True if Singleplayer, else False.</returns>
         public static bool GameIsSingleplayer()
         {
             return GameMain.IsSingleplayer;
         }
 
-        // This took me an hour to translate btw lol
-        // Yeah add another hour cause it was BROKEN!!! - Lukako
+        /// <summary>
+        /// Gives an item to a character at a specific condition.
+        /// </summary>
+        /// <param name="Character">The character who will recieve the item.</param>
+        /// <param name="ItemIdentifier">The identifier for the item to give.</param>
+        /// <param name="Condition">The condition at which the item should be given.</param>
         public static void GiveItem(Character Character, string ItemIdentifier, float Condition = 100)
         {
             // HostSide Only
-            #if CLIENT
+#if CLIENT
                 if (HF.GameIsMultiplayer()) return;
-            #endif
+#endif
 
             if (Entity.Spawner == null)
             {
@@ -449,25 +560,20 @@ namespace Neurotrauma
             return;
         }
 
-        public static void GiveItemAtCondition(Character Character, string ItemIdentifier, float Condition) // DEPRECATED: Shouldn't be used, use GiveItem instead and the condition paramter.
-        {
-            GiveItem(Character, ItemIdentifier, Condition);
-        }
-
         /// <summary>
-        /// Spawns an item with a function on spawn.
+        /// Spawns an item that runs a function on spawn-in.
         /// </summary>
-        /// <param name="ItemIdentifier"></param>
-        /// <param name="Inventory"></param>
-        /// <param name="Slot"></param>
-        /// <param name="Position"></param>
-        /// <param name="Function"></param>
-        /// <param name="Parameters"></param>
+        /// <param name="ItemIdentifier">The identifier for the item to spawn.</param>
+        /// <param name="Inventory">The inventory in which to spawn the item.</param>
+        /// <param name="Slot">The slot in which to put the item.</param>
+        /// <param name="Position">The position in the world where to spawn the item.</param>
+        /// <param name="Function">The function to run when the item is spawned.</param>
+        /// <param name="Parameters">The parameters for the function used by the item.</param>
         public static void SpawnItemPlusFunction(string ItemIdentifier, Inventory Inventory, InvSlotType Slot, Vector2 Position, LuaCsAction Function, params object[] Parameters)
         {
-            #if CLIENT
+#if CLIENT
                 if (HF.GameIsMultiplayer()) return;
-            #endif
+#endif
 
             if (Entity.Spawner == null)
             {
@@ -503,15 +609,15 @@ namespace Neurotrauma
         /// <summary>
         /// Gives an item to a specified character, and takes a function to run on spawn.
         /// </summary>
-        /// <param name="ItemIdentifier"></param>
-        /// <param name="Character"></param>
-        /// <param name="Function"></param>
-        /// <param name="Parameters"></param>
+        /// <param name="ItemIdentifier">The identifier for the item to give.</param>
+        /// <param name="Character">The character to which the item should be given.</param>
+        /// <param name="Function">The function to run when the item is spawned.</param>
+        /// <param name="Parameters">The parameters for the function used by the item.</param>
         public static void GiveItemPlusFunction(string ItemIdentifier, Character Character, LuaCsAction Function, params object[] Parameters)
         {
-            #if CLIENT
+#if CLIENT
                 if (HF.GameIsMultiplayer()) return;
-            #endif
+#endif
 
             if (Entity.Spawner == null)
             {
@@ -547,13 +653,13 @@ namespace Neurotrauma
         /// <summary>
         /// Spawns an item at a given position.
         /// </summary>
-        /// <param name="ItemIdentifier"></param>
-        /// <param name="Position"></param>
+        /// <param name="ItemIdentifier">The identifier for the item to spawn.</param>
+        /// <param name="Position">The position in the world where the item will be spawned.</param>
         public static void SpawnItemAt(string ItemIdentifier, Vector2 Position)
         {
-            #if CLIENT
+#if CLIENT
                 if (HF.GameIsMultiplayer()) return;
-            #endif
+#endif
 
             if (Entity.Spawner == null)
             {
@@ -576,33 +682,33 @@ namespace Neurotrauma
         /// <summary>
         /// Removes an item from the session.
         /// </summary>
-        /// <param name="item"></param>
-        public static void RemoveItem(Item item)
+        /// <param name="Item">A specific Item to be removed.</param>
+        public static void RemoveItem(Item Item)
         {
-            #if CLIENT
+#if CLIENT
                 if (HF.GameIsMultiplayer()) return;
-            #endif
+#endif
 
-            if (item == null || item.Removed) return;
+            if (Item == null || Item.Removed) return;
 
             if (Entity.Spawner == null)
             {
                 LuaCsSetup.Instance.Timer.Wait((params object[] _) =>
                 {
-                    RemoveItem(item);
+                    RemoveItem(Item);
                 }, 35);
 
                 return;
             }
 
-            Entity.Spawner.AddEntityToRemoveQueue(item);
+            Entity.Spawner.AddEntityToRemoveQueue(Item);
         }
 
         /// <summary>
         /// Checks an item to see if it has a specified tag.
         /// </summary>
-        /// <param name="Item"></param>
-        /// <param name="Tag"></param>
+        /// <param name="Item">The item to check for a tag.</param>
+        /// <param name="Tag">The tag that gets checked for.</param>
         /// <returns></returns>
         public static bool ItemHasTag(Item Item, string Tag)
         {
@@ -612,14 +718,14 @@ namespace Neurotrauma
         /// <summary>
         /// Moves an item into a specified container.
         /// </summary>
-        /// <param name="Container"></param>
-        /// <param name="Identifier"></param>
-        /// <param name="Index"></param>
+        /// <param name="Container">The container in which the item shall be put.</param>
+        /// <param name="Identifier">The identifier of the item that should be put into the container.</param>
+        /// <param name="Index">The inventory slot index into which the item gets put.</param>
         public static void PutItemInContainer(Item Container, string Identifier, int Index = 0)
         {
-            #if CLIENT
+#if CLIENT
                 if (HF.GameIsMultiplayer()) return;
-            #endif
+#endif
 
             if (Entity.Spawner == null)
             {
@@ -657,7 +763,7 @@ namespace Neurotrauma
         /// <summary>
         /// Removes a character from the session.
         /// </summary>
-        /// <param name="Character"></param>
+        /// <param name="Character">The character that gets removed.</param>
         public static void RemoveCharacter(Character Character)
         {
 #if SHARED
@@ -682,8 +788,8 @@ namespace Neurotrauma
         /// <summary>
         /// Converts our cause of death to a string.
         /// </summary>
-        /// <param name="COD"></param>
-        /// <returns></returns>
+        /// <param name="COD">The Cause-Of-Death.</param>
+        /// <returns>A string containing the cause-of-death</returns>
         public static string CauseOfDeathToString(CauseOfDeath COD) // COD Zombies?????
         {
             string Res;
@@ -702,23 +808,23 @@ namespace Neurotrauma
         /// <summary>
         /// Explodes a person into itty bitty pieces.
         /// </summary>
-        /// <param name="GivenEntity"></param>
-        /// <param name="Range"></param>
-        /// <param name="Force"></param>
-        /// <param name="Damage"></param>
-        /// <param name="StructureDamage"></param>
-        /// <param name="ItemDamage"></param>
-        /// <param name="EmpStrength"></param>
-        /// <param name="BallastFloraStrength"></param>
+        /// <param name="GivenEntity">Entity to explode.</param>
+        /// <param name="Range">Range of the explosion.</param>
+        /// <param name="Force">Force of the explosion; used for knockback.</param>
+        /// <param name="Damage">Amount of damage the explosion does to characters.</param>
+        /// <param name="StructureDamage">Amount of damage the explosion does to structures.</param>
+        /// <param name="ItemDamage">Amount of damage the explosion does to items.</param>
+        /// <param name="EmpStrength">Strength of the EMP caused by the explosion.</param>
+        /// <param name="BallastFloraStrength">Amount of damage the explosion does to Ballast Flora</param>
         public static void Explode(Entity GivenEntity, float Range = 0, float Force = 0, float Damage = 0, float StructureDamage = 0, float ItemDamage = 0, float EmpStrength = 0, float BallastFloraStrength = 0)
         {
             LuaGame.Explode(GivenEntity.WorldPosition, Range, Force, Damage, StructureDamage, ItemDamage, EmpStrength, BallastFloraStrength);
         }
 
         /// <summary>
-        /// Converts an Identifier type into localized text.
+        /// Converts an Identifier type into a String.
         /// </summary>
-        /// <param name="Identifier"></param>
+        /// <param name="Identifier">The identifier that should be turned into a string.</param>
         /// <returns></returns>
         public static string GetText(Identifier Identifier)
         {
@@ -727,9 +833,9 @@ namespace Neurotrauma
         }
 
         /// <summary>
-        /// Returns the count of people using a certain type of job.
+        /// Returns a count of alive characters that have a certain type of job.
         /// </summary>
-        /// <param name="JobIdentifier"></param>
+        /// <param name="JobIdentifier">The identifier of the job that will get its members tallied.</param>
         /// <returns></returns>
         public static int JobMemberCount(string JobIdentifier)
         {
@@ -745,7 +851,7 @@ namespace Neurotrauma
         }
 
         /// <summary>
-        /// Sends a message to a client in the radio/chat box.
+        /// Sends a message to a client that pops into the GUI.
         /// </summary>
         /// <param name="Header"></param>
         /// <param name="Msg"></param>
@@ -760,45 +866,79 @@ namespace Neurotrauma
         }
 
         /// <summary>
-        /// Shorthand for LuaCsLogger
+        /// Shorthand for LuaCsLogger; prints a message into the console. Prefixed by [Neurotrauma C#].
         /// </summary>
-        /// <param name="Message"></param>
-        public static void Print(string Message) // Yes I'm lazy
+        /// <param name="Message">The message to print.</param>
+        public static void Print(string Message)
         {
             LuaCsLogger.Log("[Neurotrauma C#] " + Message);
         }
 
+        /// <summary>
+        /// Shorthand for LuaCsLogger; prints a red message into the console. Prefixed by [Neurotrauma C#].
+        /// </summary>
+        /// <param name="Message">The message to print.</param>
         public static void PrintError(string Message)
         {
             LuaCsLogger.Log("[Neurotrauma C#] " + Message, Color.Red);
         }
 
+        /// <summary>
+        /// Shorthand for LuaCsLogger; prints an orange message into the console. Prefixed by [Neurotrauma C#].
+        /// </summary>
+        /// <param name="Message">The message to print.</param>
         public static void PrintWarning(string Message)
         {
             LuaCsLogger.Log("[Neurotrauma C#] " + Message, Color.Orange);
         }
 
+        /// <summary>
+        /// Shorthand for LuaCsLogger; prints a blue message into the console. Prefixed by [Neurotrauma C#].
+        /// </summary>
+        /// <param name="Message">The message to print.</param>
         public static void PrintUtility(string Message)
         {
             LuaCsLogger.Log("[Neurotrauma C#] " + Message, Color.SkyBlue);
         }
 
-        // ---------------------------------------- Character Related Helper Functions -------------------------------------------------- \\
-
+        /// <summary>
+        /// Gets the skill level of a character for a certain skill-type.
+        /// </summary>
+        /// <param name="Character">The character to check.</param>
+        /// <param name="SkillType">The skill type to check.</param>
+        /// <returns>The skill level if present, else 0.</returns>
         public static float GetSkillLevel(Character Character, Identifier SkillType)
         {
             return Character.GetSkillLevel(SkillType);
         }
 
+        /// <summary>
+        /// Gets the default skill level of a character for a certain skill-type.
+        /// </summary>
+        /// <param name="Character">The character to check.</param>
+        /// <param name="SkillType">The skill type to check.</param>
+        /// <returns>The skill level's default value.</returns>
         public static float GetBaseSkillLevel(Character Character, Identifier SkillType)
         {
             return Character.Info.Job.GetSkillLevel(SkillType);
         }
 
+        /// <summary>
+        /// Rums a chance function to see if a skillcheck is passed.
+        /// </summary>
+        /// <param name="Character">The character to check.</param>
+        /// <param name="SkillType">The skill type to check.</param>
+        /// <param name="RequiredAmount">The required amount of skill to guarantee a passed skillcheck.</param>
+        /// <returns>True if the skill-check was passed, else False.</returns>
         public static bool GetSkillRequirementMet(Character Character, Identifier SkillType, float RequiredAmount)
         {
             float SkillLevel = GetSkillLevel(Character, SkillType);
-            // Need to implement our NTConfig part here.
+            
+            if (NTConfig.Get("NT_VanillaSkillCheck", false))
+            {
+                return Chance(Math.Clamp((100 - (RequiredAmount - SkillLevel)) / 100, 0, 1));
+            }
+
             return Chance(Math.Clamp(SkillLevel / RequiredAmount, 0, 1));
         }
 
@@ -1389,7 +1529,7 @@ namespace Neurotrauma
         // Both these functions were returning null. - Lukako
         public static Client CharacterToClient(Character character)
         {
-            #if SERVER
+#if SERVER
                 foreach (Client client in GameMain.Server.ConnectedClients)
                 {
                     if (client.Character == character)
@@ -1397,14 +1537,14 @@ namespace Neurotrauma
                         return client;
                     }
                 }
-            #endif
+#endif
 
             return null;
         }
 
         public static Client ClientFromName(string Name)
         {
-            #if SERVER
+#if SERVER
                 foreach (Client client in GameMain.Server.ConnectedClients)
                 {
                     if (client.Name == Name)
@@ -1412,7 +1552,7 @@ namespace Neurotrauma
                         return client;
                     }
                 }
-            #endif
+#endif
 
             return null;
         }

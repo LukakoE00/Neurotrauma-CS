@@ -296,10 +296,10 @@ public class OnDamaged
             // Concussion (Armor-Reduced)
             if (Strength >= 15 && HF.Chance(Math.Min(Strength / 60f, 0.7f)))
             {
-                var Armor1 = Character.Inventory.GetItemInLimbSlot(InvSlotType.OuterClothes);
-                var Armor2 = Character.Inventory.GetItemInLimbSlot(InvSlotType.Head);
+                var OuterClothes = HF.GetItemInOuterWear(Character);
+                var HeadWear = HF.GetItemInHeadWear(Character);
 
-                float Reduction = Math.Max(10f - GetCalculatedConcussionReduction(Armor1, 10f) - GetCalculatedConcussionReduction(Armor2, 10f), 0f);
+                float Reduction = Math.Max(10f - GetCalculatedConcussionReduction(OuterClothes, 10f) - GetCalculatedConcussionReduction(HeadWear, 10f), 0f);
 
                 HF.AddAfflictionResisted(Character, "concussion", Reduction);
             }
@@ -319,12 +319,8 @@ public class OnDamaged
             // Remove the head
             if (Strength >= 75 && HF.Chance(0.25f))
             {
-                var previtem = HF.GetItemInHeadWear(Character);
-
-                if (previtem != null)
-                {
-                    previtem.Drop(Character, true);
-                }
+                HF.GetItemInHeadWear(Character)?.Drop(Character, true);
+                HF.GetItemInHeadSet(Character)?.Drop(Character, true);
 
                 HF.TraumamputateLimb(Character, LimbType, null);
             }
@@ -392,10 +388,10 @@ public class OnDamaged
             // Concussion (Armor-Reduced)
             if (Strength >= 15 && HF.Chance(Math.Min(Strength / 60f, 0.7f)))
             {
-                var Armor1 = Character.Inventory.GetItemInLimbSlot(InvSlotType.OuterClothes);
-                var Armor2 = Character.Inventory.GetItemInLimbSlot(InvSlotType.Head);
+                var OuterClothes = HF.GetItemInOuterWear(Character);
+                var HeadWear = HF.GetItemInHeadWear(Character);
 
-                float Reduction = Math.Max(10f - GetCalculatedConcussionReduction(Armor1, 10f) - GetCalculatedConcussionReduction(Armor2, 10f), 0f);
+                float Reduction = Math.Max(10f - GetCalculatedConcussionReduction(OuterClothes, 10f) - GetCalculatedConcussionReduction(HeadWear, 10f), 0f);
 
                 HF.AddAfflictionResisted(Character, "concussion", Reduction);
             }
@@ -532,10 +528,10 @@ public class OnDamaged
             // Concussion (Armor-Reduced)
             if (Strength >= 15 && HF.Chance(Math.Min(Strength / 60f, 0.7f)))
             {
-                var Armor1 = Character.Inventory.GetItemInLimbSlot(InvSlotType.OuterClothes);
-                var Armor2 = Character.Inventory.GetItemInLimbSlot(InvSlotType.Head);
+                var OuterClothes = HF.GetItemInOuterWear(Character);
+                var HeadWear = HF.GetItemInHeadWear(Character);
 
-                float Reduction = Math.Max(10f - GetCalculatedConcussionReduction(Armor1, 10f) - GetCalculatedConcussionReduction(Armor2, 10f), 0f);
+                float Reduction = Math.Max(10f - GetCalculatedConcussionReduction(OuterClothes, 10f) - GetCalculatedConcussionReduction(HeadWear, 10f), 0f);
 
                 HF.AddAfflictionResisted(Character, "concussion", Reduction);
             }
@@ -627,10 +623,10 @@ public class OnDamaged
             // Concussion (Armor-Reduced)
             if (Strength >= 15 && HF.Chance(Math.Min(Strength / 60f, 0.7f)))
             {
-                var Armor1 = Character.Inventory.GetItemInLimbSlot(InvSlotType.OuterClothes);
-                var Armor2 = Character.Inventory.GetItemInLimbSlot(InvSlotType.Head);
+                var OuterClothes = HF.GetItemInOuterWear(Character);
+                var HeadWear = HF.GetItemInHeadWear(Character);
 
-                float Reduction = Math.Max(10f - GetCalculatedConcussionReduction(Armor1, 10f) - GetCalculatedConcussionReduction(Armor2, 10f), 0f);
+                float Reduction = Math.Max(10f - GetCalculatedConcussionReduction(OuterClothes, 10f) - GetCalculatedConcussionReduction(HeadWear, 10f), 0f);
 
                 HF.AddAfflictionResisted(Character, "concussion", Reduction);
             }

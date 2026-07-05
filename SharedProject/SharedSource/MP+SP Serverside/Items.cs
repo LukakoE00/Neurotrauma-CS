@@ -384,14 +384,14 @@ public class NTItemMethods
 
             bool useColoredScanner = NTConfig.Get("NTSCAN_enablecoloredscanner", true);
 
-            Color baseColor = useColoredScanner ? HF.GetColor("NTSCAN_basecolor") : new Color(127, 255, 255);
-            Color nameColor = useColoredScanner ? HF.GetColor("NTSCAN_namecolor") : new Color(127, 255, 255);
-            Color lowColor = useColoredScanner ? HF.GetColor("NTSCAN_lowcolor") : new Color(127, 255, 255);
-            Color medColor = useColoredScanner ? HF.GetColor("NTSCAN_medcolor") : new Color(127, 255, 255);
-            Color highColor = useColoredScanner ? HF.GetColor("NTSCAN_highcolor") : new Color(127, 255, 255);
-            Color vitalColor = useColoredScanner ? HF.GetColor("NTSCAN_vitalcolor") : new Color(127, 255, 255);
-            Color removalColor = useColoredScanner ? HF.GetColor("NTSCAN_removalcolor") : new Color(127, 255, 255);
-            Color customColor = useColoredScanner ? HF.GetColor("NTSCAN_customcolor") : new Color(127, 255, 255);
+            Color baseColor = useColoredScanner ? HF.GetColorFromConfigEntry("NTSCAN_basecolor") : new Color(127, 255, 255);
+            Color nameColor = useColoredScanner ? HF.GetColorFromConfigEntry("NTSCAN_namecolor") : new Color(127, 255, 255);
+            Color lowColor = useColoredScanner ? HF.GetColorFromConfigEntry("NTSCAN_lowcolor") : new Color(127, 255, 255);
+            Color medColor = useColoredScanner ? HF.GetColorFromConfigEntry("NTSCAN_medcolor") : new Color(127, 255, 255);
+            Color highColor = useColoredScanner ? HF.GetColorFromConfigEntry("NTSCAN_highcolor") : new Color(127, 255, 255);
+            Color vitalColor = useColoredScanner ? HF.GetColorFromConfigEntry("NTSCAN_vitalcolor") : new Color(127, 255, 255);
+            Color removalColor = useColoredScanner ? HF.GetColorFromConfigEntry("NTSCAN_removalcolor") : new Color(127, 255, 255);
+            Color customColor = useColoredScanner ? HF.GetColorFromConfigEntry("NTSCAN_customcolor") : new Color(127, 255, 255);
 
             // Floats
             float lowMedThreshold = NTConfig.Get<float>("NTSCAN_lowmedThreshold", 1);
@@ -1130,14 +1130,14 @@ public class NTItemMethods
 
             bool useColoredScanner = NTConfig.Get("NTSCAN_enablecoloredscanner", true);
 
-            Color baseColor = useColoredScanner ? HF.GetColor("NTSCAN_basecolor") : new Color(127, 255, 255);
-            Color nameColor = useColoredScanner ? HF.GetColor("NTSCAN_namecolor") : new Color(127, 255, 255);
-            Color lowColor = useColoredScanner ? HF.GetColor("NTSCAN_lowcolor") : new Color(127, 255, 255);
-            Color medColor = useColoredScanner ? HF.GetColor("NTSCAN_medcolor") : new Color(127, 255, 255);
-            Color highColor = useColoredScanner ? HF.GetColor("NTSCAN_highcolor") : new Color(127, 255, 255);
-            Color vitalColor = useColoredScanner ? HF.GetColor("NTSCAN_vitalcolor") : new Color(127, 255, 255);
-            Color removalColor = useColoredScanner ? HF.GetColor("NTSCAN_removalcolor") : new Color(127, 255, 255);
-            Color customColor = useColoredScanner ? HF.GetColor("NTSCAN_customcolor") : new Color(127, 255, 255);
+            Color baseColor = useColoredScanner ? HF.GetColorFromConfigEntry("NTSCAN_basecolor") : new Color(127, 255, 255);
+            Color nameColor = useColoredScanner ? HF.GetColorFromConfigEntry("NTSCAN_namecolor") : new Color(127, 255, 255);
+            Color lowColor = useColoredScanner ? HF.GetColorFromConfigEntry("NTSCAN_lowcolor") : new Color(127, 255, 255);
+            Color medColor = useColoredScanner ? HF.GetColorFromConfigEntry("NTSCAN_medcolor") : new Color(127, 255, 255);
+            Color highColor = useColoredScanner ? HF.GetColorFromConfigEntry("NTSCAN_highcolor") : new Color(127, 255, 255);
+            Color vitalColor = useColoredScanner ? HF.GetColorFromConfigEntry("NTSCAN_vitalcolor") : new Color(127, 255, 255);
+            Color removalColor = useColoredScanner ? HF.GetColorFromConfigEntry("NTSCAN_removalcolor") : new Color(127, 255, 255);
+            Color customColor = useColoredScanner ? HF.GetColorFromConfigEntry("NTSCAN_customcolor") : new Color(127, 255, 255);
 
             // Floats
             float lowMedThreshold = NTConfig.Get<float>("NTSCAN_lowmedThreshold", 1);

@@ -707,8 +707,8 @@ Can give blood to: AB+</entitydescription.ab_positivecard>
 <entitydescription.braintransplant>A human brain. To transplant an organ, the old one must be removed and the new one placed in. The brain will decay even if refrigrated and is extremely fragile, and it is also tasty treat for pets.</entitydescription.braintransplant>
 
 <!-- Arm Locks -->
-<entityname.armlock1>Non-working right hand</entityname.armlock1>
-<entityname.armlock2>Non-working left hand</entityname.armlock2>
+<entityname.armlock>Non-working Arm</entityname.armlock>
+<entitydescription.armlock>This arm has become unusable! \nThis could be because of a ‖color:gui.red‖Dislocation‖end‖, a ‖color:gui.red‖Fracture‖end‖ or an ‖color:gui.red‖Amputation‖end‖.</entitydescription.armlock>
 
 <!-- ================================================= Consumables ================================================= -->
   
@@ -1635,5 +1635,6 @@ Can give blood to: AB+</entitydescription.ab_positivecard>
 <!-- Enable Organ Scalpels -->
 <ntconfigname_doorganscalpels>Enable Organ Scalpels</ntconfigname_doorganscalpels>
 <ntconfigdescription_doorganscalpels>Allow Organ scalpels and Surgery Box Scalpel set to be fabricated, bought and found.</ntconfigdescription_doorganscalpels>
+
 
 </infotexts>

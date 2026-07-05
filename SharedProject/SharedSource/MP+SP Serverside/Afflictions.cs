@@ -1431,12 +1431,12 @@ namespace Neurotrauma
 
                     if (!LeftArmLocked && C.GetBoolStatStrength("lockleftarm"))
                     {
-                        HF.ForceArmLock(C.Human, "armlock2");
+                        HF.ForceArmLock(C.Human, "LeftArm");
                     }
 
                     if (!RightArmLocked && C.GetBoolStatStrength("lockrightarm"))
                     {
-                        HF.ForceArmLock(C.Human, "armlock1");
+                        HF.ForceArmLock(C.Human, "RightArm");
                     }
 
                     AffData.Strength = HF.BoolToNum((C.GetBoolStatStrength("lockleftarm") && C.GetBoolStatStrength("lockrightarm")) || Handcuffed, 100);
