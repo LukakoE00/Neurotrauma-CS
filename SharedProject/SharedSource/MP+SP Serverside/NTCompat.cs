@@ -102,7 +102,7 @@ namespace Neurotrauma
         public static void DebugPrintAllData() // UNFINISHED
         {
             string Res = "Neurotrauma Compatibility Data:\n";
-            foreach (KeyValuePair<Character, HumanUpdate.NTHuman> Pair in NeurotraumaInit.HU.GetUpdatingCharacters())
+            foreach (KeyValuePair<Character, HumanUpdate.NTHuman> Pair in HumanUpdate.GetUpdatingCharacters())
             {
                 Character Char = Pair.Key;
                 HumanUpdate.NTHuman NTHum = Pair.Value;
@@ -116,7 +116,7 @@ namespace Neurotrauma
         public static void DebugPrintAllAffStrengths()
         {
             string Res = "Neurotrauma Affliction Strength Data:\n";
-            foreach (KeyValuePair<Character, HumanUpdate.NTHuman> Pair in NeurotraumaInit.HU.GetUpdatingCharacters())
+            foreach (KeyValuePair<Character, HumanUpdate.NTHuman> Pair in HumanUpdate.GetUpdatingCharacters())
             {
                 Character Char = Pair.Key;
                 HumanUpdate.NTHuman NTHum = Pair.Value;

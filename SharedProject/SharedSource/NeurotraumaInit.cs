@@ -16,9 +16,6 @@ namespace Neurotrauma
         public ILuaScriptManagementService luaScriptManagementService = LuaCsSetup.Instance.LuaScriptManagementService;
         private Harmony harmony;
 
-        // --------------------------- Global Variables/Classes --------------------------- \\
-        public static readonly HumanUpdate HU = new HumanUpdate(); // Create our local Human Update class.
-
         // ---------------------------        Functions        --------------------------- \\
         // Called right after the constructor
         public void PreInitPatching()
@@ -34,6 +31,8 @@ namespace Neurotrauma
         {
 
             UserData.RegisterType(typeof(HF));
+            UserData.RegisterType(typeof(NTConfig));
+            UserData.RegisterType(typeof(NTConfigData));
 
             if (HF.GameIsMultiplayer())
             {
@@ -132,20 +131,17 @@ namespace Neurotrauma
 
         public void OnUpdate(double deltaTime) // Unused
         {
-            if (HU != null)
-            {
-                HU.ThinkUpdate();
-            }
+            HumanUpdate.ThinkUpdate();
         }
 
         public void OnCharacterCreated(Character character)
         {
-            HU.AddCharacterToUpdate(character);
+            HumanUpdate.AddCharacterToUpdate(character);
         }
 
         public void OnCharacterDeath(Character character, Affliction causeOfDeathAffliction, CauseOfDeathType causeOfDeathType)
         {
-            HU.RemoveCharacterFromUpdate(character);
+            HumanUpdate.RemoveCharacterFromUpdate(character);
         }
     }
 

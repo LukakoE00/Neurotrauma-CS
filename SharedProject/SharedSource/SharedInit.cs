@@ -14,7 +14,6 @@ namespace Neurotrauma
             NTAfflictions.DefineAllAfflictions();
             NTStats.DefineAllStats();
             NTItemMethods.DefineAllItems();
-            HumanUpdateLuaSync.FetchHumanUpdate(HU);
         }
 
         public void OnLoadCompletedServerside()
@@ -70,7 +69,7 @@ namespace Neurotrauma
             LuaCsSetup.Instance.Hook.Add("think", "NTCS.ThinkUpdate", (params object[] _) => // The Hook details (TODO, make this in C#)
             { // Start of our Function
 
-                HU.ThinkUpdate();
+                HumanUpdate.ThinkUpdate();
                 return null;
             }); // End of our Function
 

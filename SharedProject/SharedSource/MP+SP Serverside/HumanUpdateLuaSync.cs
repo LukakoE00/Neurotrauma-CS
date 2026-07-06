@@ -45,9 +45,5 @@ namespace Neurotrauma
         {
         }
 
-        static public void FetchHumanUpdate(HumanUpdate HU)
-        {
-        }
-
     }
 }

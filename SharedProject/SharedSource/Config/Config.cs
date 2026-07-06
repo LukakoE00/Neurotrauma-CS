@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.Json;
 using Barotrauma;
 using Barotrauma.Networking;
+using MoonSharp.Interpreter;
 
 namespace Neurotrauma
 {
@@ -46,6 +47,49 @@ namespace Neurotrauma
 
         private static readonly string ConfigDirectoryPath = Path.Combine(SaveUtil.DefaultSaveFolder, "ModConfigs").Replace('\\', '/');
         private static readonly string ConfigFilePath = Path.Combine(ConfigDirectoryPath, "Neurotrauma.json").Replace('\\', '/');
+
+        private static ConfigEntryType StringToConfigEntry(string Type)
+        {
+            switch (Type)
+            {
+                case "category":
+                    return ConfigEntryType.Category;
+                case "float":
+                    return ConfigEntryType.Float;
+                case "bool":
+                    return ConfigEntryType.Bool;
+                case "string":
+                    return ConfigEntryType.String;
+                default:
+                    return ConfigEntryType.Category;
+            }
+        }
+
+        public static void AddConfigOptions(Table Expansion)
+        {
+            //if (Expansions.Any(e => e.Name == expansion.RawGet("name")) return;
+
+            //Expansions.Add(expansion);
+            foreach (TablePair kvp in Expansion.Get("ConfigData").Table.Pairs)
+            {
+                ConfigEntry entry = new();
+                Table SubInfo = kvp.Value.Table;
+                IEnumerable<DynValue> Values = SubInfo.Values;
+                entry.Value = entry.Default;
+
+                foreach (DynValue Value in Values)
+                {
+                    string ValueKey = Value.CastToString();
+                    HF.Print(ValueKey);
+                    if (ValueKey == "type") continue;
+                    
+                }
+
+                entry.Type = StringToConfigEntry(SubInfo.Get("type").ToString());
+                entry.Expansion = Expansion.Get("name").ToString();
+                Entries[kvp.Key.ToString()] = entry;
+            }
+        }
 
         public static void AddConfigOptions(ConfigExpansion expansion)
         {

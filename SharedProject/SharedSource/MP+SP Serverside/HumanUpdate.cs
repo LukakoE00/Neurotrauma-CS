@@ -15,7 +15,7 @@ using static Neurotrauma.NTC;
 
 namespace Neurotrauma;
 
-public class HumanUpdate
+public static class HumanUpdate
 {
 
     private static int UpdateCooldown = 0;
@@ -25,12 +25,12 @@ public class HumanUpdate
     static private Dictionary<Character, NTHuman> UpdatingHumans = new();
     static private List<NTMonster> UpdatingMonsters = new();
 
-    public Dictionary<Character, NTHuman> GetUpdatingCharacters()
+    public static Dictionary<Character, NTHuman> GetUpdatingCharacters()
     {
         return UpdatingHumans;
     }
 
-    public List<NTMonster> GetUpdatingMonsters()
+    public static List<NTMonster> GetUpdatingMonsters()
     {
         return UpdatingMonsters;
     }
@@ -1312,7 +1312,7 @@ public class HumanUpdate
         return UpdatingHumans[Character];
     }
 
-    public void AddCharacterToUpdate(Character character)
+    public static void AddCharacterToUpdate(Character character)
     {
         if (character != null)
         {
@@ -1330,7 +1330,7 @@ public class HumanUpdate
         }
     }
 
-    public void RemoveCharacterFromUpdate(Character target)
+    public static void RemoveCharacterFromUpdate(Character target)
     {
         if (target is Character)
         {
@@ -1347,7 +1347,7 @@ public class HumanUpdate
         }
     }
 
-    public void AddHumanToUpdate(Character AddedCharacter)
+    public static void AddHumanToUpdate(Character AddedCharacter)
     {
         if (!UpdatingHumans.ContainsKey(AddedCharacter))
         {
@@ -1356,13 +1356,13 @@ public class HumanUpdate
         }
     }
 
-    public void RemoveHumanFromUpdate(Character RemovingCharacter) // Probably a better way to do this.
+    public static void RemoveHumanFromUpdate(Character RemovingCharacter) // Probably a better way to do this.
     {
         if (!UpdatingHumans.ContainsKey(RemovingCharacter)) return;
         UpdatingHumans.Remove(RemovingCharacter);
     }
 
-    public void AddMonsterToUpdate(Character AddedMonster)
+    public static void AddMonsterToUpdate(Character AddedMonster)
     {
         if (!AddedMonster.IsHuman)
         {
@@ -1374,7 +1374,7 @@ public class HumanUpdate
         }
     }
 
-    public void RemoveMonsterFromUpdate(Character RemovingMonster) // Probably a better way to do this.
+    public static void RemoveMonsterFromUpdate(Character RemovingMonster) // Probably a better way to do this.
     {
         NTMonster MonsterToRemove = null; // We store the index of what to remove so we don't remove while iterating.
         foreach (NTMonster Monster in UpdatingMonsters)
@@ -1392,7 +1392,7 @@ public class HumanUpdate
     }
 
     // Returns a list 
-    private  List<AfflictionPriority> GetLowestPriority(List<AfflictionPriority> CurrentPriorities)
+    private static  List<AfflictionPriority> GetLowestPriority(List<AfflictionPriority> CurrentPriorities)
     {
         List<AfflictionPriority> NewPriorities = CurrentPriorities;
 
@@ -1424,12 +1424,12 @@ public class HumanUpdate
         return NewPriorities;
     }
 
-    private int Interval = 120;
-    private int Tick = 0;
-    private double NTDeltaTime = UpdateIntervalHigh / 120;
-    List<AfflictionPriority> Priorities = new();
+    private static int Interval = 120;
+    private static int Tick = 0;
+    private static double NTDeltaTime = UpdateIntervalHigh / 120;
+    private static List<AfflictionPriority> Priorities = new();
     // Gets called 60 times a second
-    public void ThinkUpdate()
+    public static void ThinkUpdate()
     {
         // If game paused we just skip
         if ((!HF.InGame()) || HF.GameIsPaused()) return;
@@ -1446,7 +1446,7 @@ public class HumanUpdate
         Update(Priorities);
     }
 
-    private void Update(List<AfflictionPriority> priorities)
+    private static void Update(List<AfflictionPriority> priorities)
     {
         // Our Single Player check for fetching humans.
         if (GameIsSingleplayer() && (UpdatingHumans.Count + UpdatingMonsters.Count > Character.CharacterList.Count))
@@ -1483,7 +1483,7 @@ public class HumanUpdate
         HumanUpdateLuaSync.PreSync(UpdatingHumans.Values.ToList());
     }
 
-    private void UpdateHumans(List<AfflictionPriority> priorities)
+    private static void UpdateHumans(List<AfflictionPriority> priorities)
     {
         List<Character> QueuedCharacters = new();
 
@@ -1505,7 +1505,7 @@ public class HumanUpdate
         }
     }
 
-    private void UpdateMonsters()
+    private static void UpdateMonsters()
     {
         List<NTMonster> QueuedCharacters = new();
 
@@ -1529,7 +1529,7 @@ public class HumanUpdate
         return;
     }
 
-    public void CleanBotomy(Character C)
+    public static void CleanBotomy(Character C)
     {
         if (HasAffliction(C, "surgeryincision")) SetAffliction(C, "tshocktimeout", 15, C, 0);
 

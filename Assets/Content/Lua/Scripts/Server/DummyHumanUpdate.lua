@@ -9,7 +9,7 @@ local limbtypes = {
 	LimbType.RightLeg,
 }
 
-local CSHumanUpdate = nil -- stores our class ref
+local CSHumanUpdate = LuaUserData.CreateStatic("Neurotrauma.HumanUpdate",false)-- stores our class ref
 
 NT.NonLimbAfflictionTranslations = 
 {
@@ -99,11 +99,6 @@ NT.CreateLimbTables = function (CharData)
 				CharData[keystring] = {}
 		end
 end
-
-Hook.Patch("Neurotrauma.HumanUpdateLuaSync","FetchHumanUpdate", function(GameSession, ptable)
-	if #NTC.RegisteredExpansions == 0 then return end
-	CSHumanUpdate = ptable["HU"]
-end,  Hook.HookMethodType.After)
 
 Hook.Patch("Neurotrauma.HumanUpdateLuaSync","SyncLuaAfflictions", function(GameSession, ptable)
 	if #NTC.RegisteredExpansions == 0 then return end
