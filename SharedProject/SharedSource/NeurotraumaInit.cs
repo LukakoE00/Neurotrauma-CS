@@ -30,7 +30,6 @@ namespace Neurotrauma
         // No fucking clue what should go here for now tbh. - Lukako
         public void Initialize()
         {
-            
             UserData.RegisterType(typeof(HF));
             UserData.RegisterType(typeof(NTConfig));
             UserData.RegisterType(typeof(NTConfigData));

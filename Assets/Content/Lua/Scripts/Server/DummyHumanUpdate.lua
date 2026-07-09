@@ -13,7 +13,7 @@ local CSHumanUpdate = LuaUserData.CreateStatic("Neurotrauma.HumanUpdate",false)-
 local Init = LuaUserData.CreateStatic("Neurotrauma.NT",false)-- stores our class ref
 
 NT.UsingAddons = function ()
-	return #NTC.RegisteredExpansions == 0
+	return #NTC.RegisteredExpansions > 0
 end
 
 NT.NonLimbAfflictionTranslations = 
@@ -107,6 +107,7 @@ end
 
 Hook.Patch("Neurotrauma.HumanUpdateLuaSync","SyncLuaAfflictions", function(GameSession, ptable)
 	if not NT.UsingAddons()  then return end
+
 	NT.Deltatime = Init.DeltaTime
 	for NTHuman in ptable["CharacterList"] do
 		local CharData = { character = NTHuman.Human, afflictions = {}, stats = {} }
@@ -211,7 +212,6 @@ function NT.UpdateHuman(character, currentCharData)
 	-- update and apply limb specific stuff
 	local function FetchLimbData(type)
 		local keystring = tostring(type) .. "afflictions"
-		charData[keystring] = {}
 		for identifier, data in pairs(NT.LimbAfflictions) do
 			if NT.LegacyLimbAfflictions[identifier] == nil and not NT.LimbAfflictions[identifier].legacy then
 				local strength = HF.GetAfflictionStrengthLimb(character, type, identifier, data.default or 0)
@@ -241,7 +241,7 @@ function NT.UpdateHuman(character, currentCharData)
 	local function ApplyLimb(type, stasisflag)
 		local keystring = tostring(type) .. "afflictions"
 		for identifier, data in pairs(charData[keystring]) do
-			if NT.LegacyLimbAfflictions[identifier] == nil and not NT.LimbAfflictions[identifier].legacy then
+			if NT.LegacyLimbAfflictions[identifier] == nil and NT.LimbAfflictions[identifier] and not NT.LimbAfflictions[identifier].legacy then
 				local newval = HF.Clamp(
 					data.strength,
 					NT.LimbAfflictions[identifier].min or 0,

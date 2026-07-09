@@ -36,7 +36,13 @@ NTC.CharacterData = {}
 ---@param symptomidentifer string The identifier of the symptom.
 ---@param duration integer The number of human updates it lasts for.
 function NTC.SetSymptomTrue(character, symptomidentifer, duration)
-	CSNTCompat.SetSymptomTrue(character,symptomidentifer,duration)
+	if duration == nil then duration = 2 end
+
+	NTC.AddEmptyCharacterData(character)
+	local data = NTC.GetCharacterData(character)
+	data[symptomidentifer] = duration
+
+	NTC.CharacterData[character.ID] = data
 end
 
 -- use this function to suppress symptoms temporarily. this takes precedence over NTC.SetSymptomTrue.
@@ -45,7 +51,13 @@ end
 ---@param symptomidentifer string The identifier of the symptom.
 ---@param duration integer The number of human updates it lasts for.
 function NTC.SetSymptomFalse(character, symptomidentifer, duration)
-	CSNTCompat.SetSymptomFalse(character,symptomidentifer,duration)
+	if duration == nil then duration = 2 end
+
+	NTC.AddEmptyCharacterData(character)
+	local data = NTC.GetCharacterData(character)
+	data["!" .. symptomidentifer] = duration
+
+	NTC.CharacterData[character.ID] = data
 end
 
 -- usage example: anywhere in your lua code, cause 4 seconds (2 humanupdates) of pale skin with this:
@@ -204,14 +216,28 @@ end
 ---@param symptomidentifer string The identifier of the symptom.
 ---@return boolean
 function NTC.GetSymptom(character, symptomidentifer)
-	return CSNTCompat.HasSymptom(character, symptomidentifer)
+	local chardata = NTC.GetCharacterData(character)
+	if chardata == nil then return false end
+
+	local durationleft = chardata[symptomidentifer]
+
+	if durationleft == nil then return false end
+
+	return true
 end
 
 ---@param character Character The character to check the symptom false on.
 ---@param symptomidentifer string The identifier of the symptom false.
 ---@return boolean
 function NTC.GetSymptomFalse(character, symptomidentifer)
-	return CSNTCompat.HasSymptomFalse(character, symptomidentifer)
+	local chardata = NTC.GetCharacterData(character)
+	if chardata == nil then return false end
+
+	local durationleft = chardata["!" .. symptomidentifer]
+
+	if durationleft == nil then return false end
+
+	return true
 end
 
 -- sets multiplier data for one humanupdate, should be called from within a humanupdate hook
