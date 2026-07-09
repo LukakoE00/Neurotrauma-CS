@@ -1,3 +1,5 @@
+using Barotrauma.LuaCs.Data;
+
 namespace Neurotrauma
 {
     // This takes the place of the init.lua information and can be used during Initialization (see NeurotraumaInit)
@@ -22,7 +24,7 @@ namespace Neurotrauma
             RegisteredAddons.Add(addon);
         }
 
-        public static void PrintNTInitInfo()
+        public static void PrintNTInitInfo(ImmutableArray<ILuaScriptResourceInfo> executionOrder, bool enableSandbox)
         {
             // New string with the first line of the init print; the $ allows the string to interpolate
             string consolePrint = $"\n\n/// Running Neurotrauma V {NTInfo.Version} ///\n";
@@ -43,7 +45,8 @@ namespace Neurotrauma
             }
 
             consolePrint += "\n";
-            if (!hasAddons) consolePrint += "- Not running any C# expansions\n";
+            if (!hasAddons) consolePrint += "- Not running any C# addons\n";
+            consolePrint += "- Not running any Lua addons\n";
 
             HF.Print(consolePrint);
         }

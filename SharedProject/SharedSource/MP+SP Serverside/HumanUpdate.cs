@@ -1317,7 +1317,6 @@ public static class HumanUpdate
         if (character != null)
         {
             if (UpdatingHumans.ContainsKey(character)) return;
-            PrintUtility("Adding: " + character.Name + "!");
             if (character.IsHuman)
             {
                 AddHumanToUpdate(character);
@@ -1337,7 +1336,6 @@ public static class HumanUpdate
             Character NewCharacter = target;
             if (NewCharacter.IsHuman)
             {
-                PrintUtility($"Removing: {NewCharacter.Name}!");
                 RemoveHumanFromUpdate(NewCharacter);
             }
             else

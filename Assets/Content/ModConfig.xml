@@ -10,13 +10,13 @@
     <Config File="%ModDir%/Config/SettingsServer.xml" Target="Server" />
 
 	<!-- Auto Run files -->
+	<!-- Shared -->
+	<Lua Folder="%ModDir%/Lua/Shared" Target="Any" IsAutorun="true" />
+
 	<!-- Serverside -->
 	<Lua Folder="%ModDir%/Lua/Server" Target="Server" IsAutorun="true" />
 
 	<!-- Clientside -->
 	<Lua Folder="%ModDir%/Lua/Client" Target="Client" IsAutorun="true" />
-
-	<!-- Shared -->
-	<Lua Folder="%ModDir%/Lua/Shared" Target="Any" IsAutorun="true" />
 	
 </ModConfig>

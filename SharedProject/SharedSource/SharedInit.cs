@@ -1,5 +1,7 @@
 using Barotrauma;
+using Barotrauma.LuaCs.Data;
 using FarseerPhysics.Dynamics;
+using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Utilities;
 using static Barotrauma.Networking.MessageFragment;
 
@@ -19,7 +21,7 @@ namespace Neurotrauma
         public void OnLoadCompletedServerside()
         {
             HF.Print("Running OnLoadCompletedServerside");
-            NTInfo.PrintNTInitInfo(); // Prints the current Neurotrauma information in the console.
+            //NTInfo.PrintNTInitInfo(); // Prints the current Neurotrauma information in the console.
             NTBloodTypes.InitializeBloodHooks(); // Initializes LuaHooks needed for Blood.cs
             CharacterPatches.InitCharacterPatches(); // Add the HarmonyPatches to change aiming
             CauseScreams.InitScreamsHook(); // Initializes LuaHooks needed to toggle Screams
@@ -39,11 +41,13 @@ namespace Neurotrauma
                 typeof(Character), typeof(float), typeof(bool), typeof(float), typeof(bool), typeof(bool), typeof(bool)]);
             var originalUse = AccessTools.Method(typeof(Item), "Use", [typeof(float), typeof(Character), typeof(Limb), typeof(Entity), typeof(Character)]);
             var originalApplyTreatment = AccessTools.Method(typeof(Item), "ApplyTreatment", [typeof(Character), typeof(Character), typeof(Limb)]);
+            var originalRoundStart = AccessTools.Method(typeof(LuaScriptManagementService), "ExecuteLoadedScripts", [typeof(ImmutableArray < ILuaScriptResourceInfo >), typeof(bool)]);
 
             harmony.Patch(originalApplyDamage, prefix: new HarmonyMethod(typeof(OnDamaged), nameof(OnDamaged.Override_ApplyDamage)));
             harmony.Patch(originalDamageLimb, prefix: new HarmonyMethod(typeof(OnDamaged), nameof(OnDamaged.Override_DamageLimb)));
             harmony.Patch(originalUse, prefix: new HarmonyMethod(typeof(NTItemMethods), nameof(NTItemMethods.Override_Use)));
             harmony.Patch(originalApplyTreatment, prefix: new HarmonyMethod(typeof(NTItemMethods), nameof(NTItemMethods.Override_ApplyTreatment)));
+            harmony.Patch(originalRoundStart, postfix: new HarmonyMethod(typeof(NTInfo), nameof(NTInfo.PrintNTInitInfo)));
 
             // Character Patches ----------------------------------------------------------------------------------------------------------------------------------------- \\
 

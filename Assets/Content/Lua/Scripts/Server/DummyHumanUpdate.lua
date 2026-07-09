@@ -11,6 +11,10 @@ local limbtypes = {
 
 local CSHumanUpdate = LuaUserData.CreateStatic("Neurotrauma.HumanUpdate",false)-- stores our class ref
 
+NT.UsingAddons = function ()
+	return #NTC.RegisteredExpansions == 0
+end
+
 NT.NonLimbAfflictionTranslations = 
 {
 	-- Bones
@@ -101,7 +105,7 @@ NT.CreateLimbTables = function (CharData)
 end
 
 Hook.Patch("Neurotrauma.HumanUpdateLuaSync","SyncLuaAfflictions", function(GameSession, ptable)
-	if #NTC.RegisteredExpansions == 0 then return end
+	if not NT.UsingAddons()  then return end
 	for NTHuman in ptable["CharacterList"] do
 		local CharData = { character = NTHuman.Human, afflictions = {}, stats = {} }
 
@@ -142,7 +146,7 @@ Hook.Patch("Neurotrauma.HumanUpdateLuaSync","SyncLuaAfflictions", function(GameS
 end,  Hook.HookMethodType.After)
 
 Hook.Patch("Neurotrauma.HumanUpdateLuaSync","SyncLuaCharacters", function(GameSession, ptable)
-	if #NTC.RegisteredExpansions == 0 then return end
+	if not NT.UsingAddons() then return end
 	for NTHuman in ptable["CharacterList"] do
 		NTC.AddEmptyCharacterData(NTHuman.Human)
 	end
