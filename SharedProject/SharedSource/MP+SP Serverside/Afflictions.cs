@@ -4109,9 +4109,9 @@ namespace Neurotrauma
                     );
 
                     // Counteracting with Hyperventilation
-                    if (C.GetNonLimbAffData("hyperventilation").Strength > 0 && AffData.Strength > 0)
+                    if (C.GetSymptomAffData("hyperventilation").Strength > 0 && AffData.Strength > 0)
                     {
-                        C.GetNonLimbAffData("hyperventilation").Strength = 0;
+                        C.GetSymptomAffData("hyperventilation").Strength = 0;
                         AffData.Strength = 0;
                     }
 

@@ -5,10 +5,14 @@ NTServer.Path = table.pack(...)[1]
 
 LuaUserData.RegisterType("Neurotrauma.NeurotraumaInit")
 LuaUserData.RegisterType("Neurotrauma.NT")
+LuaUserData.RegisterType("Neurotrauma.NTAfflictions")
 LuaUserData.RegisterType("Neurotrauma.NTC")
 LuaUserData.RegisterType("Neurotrauma.NTInfo")
 LuaUserData.RegisterType("Neurotrauma.HumanUpdate")
 LuaUserData.RegisterType("Neurotrauma.HumanUpdate+NTHuman")
+LuaUserData.RegisterType("Neurotrauma.HumanUpdate+CharacterAfflictions")
+LuaUserData.RegisterType("Neurotrauma.HumanUpdate+CharacterStats")
+LuaUserData.RegisterType("Neurotrauma.HumanUpdate+CharacterTags")
 
 LuaUserData.RegisterType("Neurotrauma.HumanUpdate+NTHumanAffData")
 LuaUserData.RegisterType("Neurotrauma.HumanUpdate+NTHumanNonLimbAffData")

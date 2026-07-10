@@ -9,8 +9,8 @@ local limbtypes = {
 	LimbType.RightLeg,
 }
 
-local CSHumanUpdate = LuaUserData.CreateStatic("Neurotrauma.HumanUpdate",false)-- stores our class ref
-local Init = LuaUserData.CreateStatic("Neurotrauma.NT",false)-- stores our class ref
+CSHumanUpdate = LuaUserData.CreateStatic("Neurotrauma.HumanUpdate",false)-- stores our class ref
+Init = LuaUserData.CreateStatic("Neurotrauma.NT",false)-- stores our class ref
 
 NT.UsingAddons = function ()
 	return #NTC.RegisteredExpansions > 0
@@ -65,6 +65,69 @@ NT.NonLimbAfflictionTranslations =
 	["artificialventilation"] = "alv",
 }
 
+NT.NonLimbAfflictionTranslationsModern = 
+{
+	-- Bones
+	["t_fracture"] = "fracturedribs",
+	["h_fracture"] = "fracturedskull",
+	["n_fracture"] = "fracturedneck",
+
+	-- Head
+	["t_paralysis"] = "spinalcordinjury",
+	["cerebralhypoxia"] = "neurotrauma",
+
+	-- Limbs
+	["clampedarteries"] = "tourniqueted",
+
+	-- Heart
+	["tachycardia"] = "increasedheartrate",
+
+	-- Torso
+	["t_arterialcut"] = "aorticrupture",
+	
+	-- Symptoms
+	["sym_cough"] = "cough",
+	["sym_paleskin"] = "paleskin",
+	["sym_lightheadedness"] = "lightheadedness",
+	["sym_blurredvision"] = "blurredvision",
+	["sym_confusion"] = "confusion",
+	["sym_headache"] = "headache",
+	["sym_legswelling"] = "legswelling",
+	["sym_weakness"] = "weakness",
+	["sym_wheezing"] = "wheezing",
+	["sym_vomiting"] = "vomiting",
+	["sym_hematemesis"] = "vomitingblood",
+	["sym_abdomdiscomfort"] = "abdominaldiscomfort ",
+	["sym_bloating"] = "bloating",
+	["sym_sweating"] = "sweating",
+	["sym_palpitations"] = "palpitations",
+	["sym_unconsciousness"] = "unconsciousness ",
+	["sym_craving"] = "craving",
+	["sym_nausea"] = "nausea",
+	["dyspnea"] = "shortnessofbreath",
+	["sym_jaundice"] = "jaundice",
+
+	-- Pain
+	["chestpain"] = "pain_chest",
+
+	-- Mechanics
+	["artificialventilation"] = "alv",
+
+	["dirtybandage"] = "dirtybandage",
+	["burn_deg1"] = "firstdegreeburn",
+	["burn_deg2"] = "seconddegreeburn",
+	["burn_deg3"] = "thirddegreeburn",
+
+	["la_fracture"] = "fracturedextremity",
+	["ra_fracture"] = "fracturedextremity",
+	["ll_fracture"] = "fracturedextremity",
+	["rl_fracture"] = "fracturedextremity",
+	["ll_arterialcut"] = "arterialbleeding",
+	["rl_arterialcut"] = "arterialbleeding",
+	["la_arterialcut"] = "arterialbleeding",
+	["ra_arterialcut"] = "arterialbleeding",
+}
+
 NT.LimbAfflictionTranslations = 
 {
 	["bandageddirty"] = "dirtybandage",
@@ -89,10 +152,31 @@ NT.ConvertToLimbLegacy = function (Identifier, Limb)
 	return Identifier
 end
 
+NT.ConvertToLimbModern = function (Identifier, Limb)
+	if NT.LimbAfflictionTranslationsModern[Identifier] ~= nil then
+		
+		if NT.LimbAfflictionTranslationsModern[Identifier][Limb] ~= nil then
+			return NT.LimbAfflictionTranslationsModern[Identifier][Limb]
+		end
+
+		return NT.LimbAfflictionTranslationsModern[Identifier]
+	end
+
+	return Identifier
+end
+
 NT.ConvertToLegacy = function (Identifier)
 
 	if NT.NonLimbAfflictionTranslations[Identifier] ~= nil then
 		return NT.NonLimbAfflictionTranslations[Identifier]
+	end
+
+	return Identifier
+end
+
+NT.ConvertToModern = function (Identifier)
+	if NT.NonLimbAfflictionTranslationsModern[Identifier] ~= nil then
+		return NT.NonLimbAfflictionTranslationsModern[Identifier]
 	end
 
 	return Identifier
@@ -103,6 +187,25 @@ NT.CreateLimbTables = function (CharData)
 				local keystring = tostring(limb) .. "afflictions"
 				CharData[keystring] = {}
 		end
+end
+
+NT.PostSync = function (CharData)
+
+	for _, Data in pairs(CharData.afflictions) do -- Sync non limb afflictions
+		if AfflictionPrefab.Prefabs.ContainsKey(_) then
+			HF.SetAffliction(CharData.character,NT.ConvertToModern(_),Data.strength,CharData.character,Data.prev)
+		end
+	end
+
+	for limb in limbtypes do  -- Sync limb afflictions
+		local keystring = tostring(limb) .. "afflictions"
+		for _, Data in pairs(CharData[keystring]) do
+			if AfflictionPrefab.Prefabs.ContainsKey(_) then
+				HF.SetAfflictionLimb(CharData.character,NT.ConvertToModern(_),limb,Data.strength,CharData.character,Data.prev)
+			end
+		end
+	end
+
 end
 
 Hook.Patch("Neurotrauma.HumanUpdateLuaSync","SyncLuaAfflictions", function(GameSession, ptable)
@@ -145,6 +248,7 @@ Hook.Patch("Neurotrauma.HumanUpdateLuaSync","SyncLuaAfflictions", function(GameS
 		end
 
 		NT.UpdateHuman(NTHuman.Human,CharData)
+		--NT.PostSync(CharData)
 	end
 end,  Hook.HookMethodType.After)
 
