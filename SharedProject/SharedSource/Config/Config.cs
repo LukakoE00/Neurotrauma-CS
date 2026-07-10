@@ -65,45 +65,99 @@ namespace Neurotrauma
             }
         }
 
+        // This translates the Lua config options so the C# GUI can use them.
         public static void AddConfigOptions(Table Expansion)
         {
-            ConfigExpansion LuaExpansion = new();
-            LuaExpansion.Name = Expansion.Get("Name").String;
+            ConfigExpansion LuaExpansion = new() { Name = Expansion.Get("Name").IsNil() ? "Unknown" : Expansion.Get("Name").String, ConfigData = new Dictionary<string, ConfigEntry>() };
+            DynValue ConfigDataValue = Expansion.Get("ConfigData");
 
-            foreach (TablePair kvp in Expansion.Get("ConfigData").Table.Pairs)
+            if (ConfigDataValue.IsNil() || ConfigDataValue.Type != DataType.Table) return;
+
+            foreach (TablePair Kvp in ConfigDataValue.Table.Pairs)
             {
+                if (Kvp.Value.Type != DataType.Table) continue;
 
-                ConfigEntry entry = new();
-                Table SubInfo = kvp.Value.Table;
-                IEnumerable<TablePair> Values = SubInfo.Pairs;
-                entry.Value = entry.Default;
+                ConfigEntry Entry = new();
+                Table SubInfo = Kvp.Value.Table;
 
-                foreach (TablePair Value in Values) // Set the values.
+                // So, Lua tables get wrapped by DynValue (as far as I understand it) because Lua tables are just 'throw whatever the fuck we want' in there type beats.
+                // To actually use it, we have to force-convert the entries into the fields we have up above so the client's GUI script can interpret them.
+                foreach (TablePair Pair in SubInfo.Pairs)
                 {
-                    if (Value.Key == null) continue;
-                    string Key = Value.Key.String;
-                    if (Key == "type" || Key == "page") continue;
-                    Type MyType = typeof(ConfigEntry);
-                    if (!MyType.GetPropertyNames().Contains(HF.FirstCharToUpper(Key))) continue;
-                    PropertyInfo prop = MyType.GetProperty(HF.FirstCharToUpper(Key));
-                    if (prop == null) continue;
-                    prop?.SetValue(entry, Value.Value, null);
+                    if (Pair.Key == null) continue;
+
+                    string Key = Pair.Key.String;
+
+                    if (Key.Equals("type", StringComparison.OrdinalIgnoreCase) || Key.Equals("page", StringComparison.OrdinalIgnoreCase)) continue;
+
+                    FieldInfo Field = typeof(ConfigEntry).GetFields().FirstOrDefault(F => string.Equals(F.Name, Key, StringComparison.OrdinalIgnoreCase));
+                    if (Field == null) continue;
+
+                    DynValue Dyn = Pair.Value;
+
+                    // Localized String!
+                    if (Field.FieldType == typeof(LocalizedString))
+                    {
+                        Field.SetValue(Entry, TextManager.ContainsTag(Dyn.String) ? TextManager.Get(Dyn.String) : (LocalizedString)Dyn.String);
+                    }
+                    // String!
+                    else if (Field.FieldType == typeof(string))
+                    {
+                        Field.SetValue(Entry, Dyn.String);
+                    }
+                    // Bool!
+                    else if (Field.FieldType == typeof(bool))
+                    {
+                        Field.SetValue(Entry, Dyn.Boolean);
+                    }
+                    // Float / Scalar!
+                    else if (Field.FieldType == typeof(float))
+                    {
+                        Field.SetValue(Entry, (float)Dyn.Number);
+                    }
+                    // Floats but in a table! (Think the Ranges)
+                    else if (Field.FieldType == typeof(float[]) && Dyn.Type == DataType.Table)
+                    {
+                        Field.SetValue(Entry, Dyn.Table.Pairs.Select(P => (float)P.Value.Number).ToArray());
+                    }
+                    // Whatever else may appear!
+                    else if (Field.FieldType == typeof(object))
+                    {
+                        Field.SetValue(Entry, Dyn.Type switch
+                        {
+                            DataType.Number => (float)Dyn.Number,
+                            DataType.Boolean => Dyn.Boolean,
+                            DataType.String => Dyn.String,
+                            DataType.Table => Dyn.Table.Pairs.Select(P => P.Value.ToObject()).ToList(),
+                            _ => null
+                        });
+                    }
                 }
 
+                // Types! (Think Categories)
+                DynValue TypeValue = SubInfo.Get("type");
+                if (!TypeValue.IsNil())
+                {
+                    Entry.Type = StringToConfigEntry(TypeValue.String);
+                }
 
-                entry.Type = StringToConfigEntry(SubInfo.Get("type").String);
-                if (!Expansion.Get("Name").IsNil()) entry.Expansion = Expansion.Get("Name").String;
-                if (!SubInfo.Get("page").IsNil())
+                Entry.Value = Entry.Default;
+
+                // Page!
+                DynValue PageValue = SubInfo.Get("page");
+                if (!PageValue.IsNil())
                 {
-                    entry.Page = SubInfo.Get("page").String;
+                    Entry.Page = PageValue.String;
                 }
-                else
+
+                // Name!
+                if (!Expansion.Get("Name").IsNil())
                 {
-                    entry.Page = Expansion.Get("Name").String;
+                    Entry.Expansion = Expansion.Get("Name").String;
                 }
-                if (LuaExpansion.ConfigData == null) LuaExpansion.ConfigData = [];
-                LuaExpansion.ConfigData.Add(kvp.Key.String, entry);
-                Entries[kvp.Key.String] = entry;
+                
+                LuaExpansion.ConfigData.Add(Kvp.Key.String, Entry);
+                Entries[Kvp.Key.String] = Entry;
             }
 
             Expansions.Add(LuaExpansion);

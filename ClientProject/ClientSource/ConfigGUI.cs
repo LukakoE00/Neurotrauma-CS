@@ -733,7 +733,7 @@ namespace Neurotrauma
 
         public static string GetStringValue(string key, ConfigEntry entry)
         {
-            var storedObj = NTConfig.Get<object>(key, null);
+            var storedObj = NTConfig.Get(key);
 
             if (storedObj is List<string> list)
                 return string.Join(", ", list);
