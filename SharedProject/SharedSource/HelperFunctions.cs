@@ -998,6 +998,15 @@ namespace Neurotrauma
             return Vector2.Distance(Pos1, Pos2);
         }
 
+
+        public static string FirstCharToUpper(string Input)
+        {
+            string UpperFirst = Input[0].ToString().ToUpper();
+            string LowerLast = Input[1..];
+            return UpperFirst + LowerLast;
+        }
+
+
         // ---------------------------------------- Affliction Related Helper Functions -------------------------------------------------- \\
         public static bool HasAffliction(Character Character, string Identifier = "", float MinAmount = 0)
         {

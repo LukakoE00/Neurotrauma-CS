@@ -67,32 +67,46 @@ namespace Neurotrauma
 
         public static void AddConfigOptions(Table Expansion)
         {
+            ConfigExpansion LuaExpansion = new();
+            LuaExpansion.Name = Expansion.Get("Name").String;
+
             foreach (TablePair kvp in Expansion.Get("ConfigData").Table.Pairs)
             {
+
                 ConfigEntry entry = new();
                 Table SubInfo = kvp.Value.Table;
-                IEnumerable<DynValue> Values = SubInfo.Values;
+                IEnumerable<TablePair> Values = SubInfo.Pairs;
                 entry.Value = entry.Default;
 
-                foreach (DynValue Value in Values) // Set the values.
+                foreach (TablePair Value in Values) // Set the values.
                 {
-                    string ValueKey = Value.CastToString();
-                    if (ValueKey == "type") continue;
-                    
+                    if (Value.Key == null) continue;
+                    string Key = Value.Key.String;
+                    if (Key == "type" || Key == "page") continue;
+                    Type MyType = typeof(ConfigEntry);
+                    if (!MyType.GetPropertyNames().Contains(HF.FirstCharToUpper(Key))) continue;
+                    PropertyInfo prop = MyType.GetProperty(HF.FirstCharToUpper(Key));
+                    if (prop == null) continue;
+                    prop?.SetValue(entry, Value.Value, null);
                 }
 
-                entry.Type = StringToConfigEntry(SubInfo.Get("type").ToString());
-                entry.Expansion = Expansion.Get("Name").ToString();
+
+                entry.Type = StringToConfigEntry(SubInfo.Get("type").String);
+                if (!Expansion.Get("Name").IsNil()) entry.Expansion = Expansion.Get("Name").String;
                 if (!SubInfo.Get("page").IsNil())
                 {
-                    entry.Page = SubInfo.Get("page").ToString();
+                    entry.Page = SubInfo.Get("page").String;
                 }
                 else
                 {
-                    entry.Page = Expansion.Get("Name").ToString();
+                    entry.Page = Expansion.Get("Name").String;
                 }
-                Entries[kvp.Key.ToString()] = entry;
+                if (LuaExpansion.ConfigData == null) LuaExpansion.ConfigData = [];
+                LuaExpansion.ConfigData.Add(kvp.Key.String, entry);
+                Entries[kvp.Key.String] = entry;
             }
+
+            Expansions.Add(LuaExpansion);
         }
 
         public static void AddConfigOptions(ConfigExpansion Expansion)
