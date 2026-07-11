@@ -28,7 +28,7 @@
     <PropertyGroup>
         <!-- IMPORTANT: Should point to <Barotrauma_Install>\LocalMods\<MyModName>\ -->
         <!-- IMPORTANT: ModDeplyDir Path must end with '\' -->
-        <ModDeployDir>C:\Program Files (x86)\Steam\steamapps\common\Barotrauma\LocalMods\Neurotrauma2\</ModDeployDir>
+		<ModDeployDir>D:\SteamLibrary\steamapps\common\Barotrauma\LocalMods\Neurotrauma2\</ModDeployDir>
         <!-- IMPORTANT: Avoid the use of special (IE: / : ; , \ < > ?) (periods "." are good) and non-english characters in the AssemblyName and RootNamespace.-->
         <!-- You must also change the assembly.dll name in ModConfig.xml to match the AssemblyName. -->
         <AssemblyName>Neurotrauma</AssemblyName>
