@@ -386,6 +386,14 @@
       showiconthreshold="0"
       maxstrength="100">
 
+		<PeriodicEffect mininterval="0.5" maxinterval="1.5">
+			<StatusEffect target="limb" disabledeltatime="true" stackable="false" delay="1" checkconditionalalways="false">
+				<Explosion range="5.0" structuredamage="0" itemdamage="0" force="12.0" severlimbsprobability="0.0"
+				  ballastfloradamage="0" smoke="false" flash="false" flames="false" shockwave="false" sparks="false" underwaterbubble="false" />
+				<ReduceAffliction identifier="spasm" amount="10"/>
+			</StatusEffect>
+		</PeriodicEffect>
+
       <icon texture="%ModDir%/Images/AfflictionIcons.png" sheetindex="7,2" sheetelementsize="128,128" origin="0,0"/>
     </Affliction>
 
