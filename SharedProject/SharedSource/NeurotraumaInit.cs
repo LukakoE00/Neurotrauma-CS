@@ -113,8 +113,11 @@ namespace Neurotrauma
             #if SERVER
                 DisposeServer();
 #endif
+            if (harmony != null)
+            {
+                harmony.UnpatchSelf();
+            }
 
-            harmony.UnpatchSelf();
 
             this.LoggerService = null;
             this.ConfigService = null;

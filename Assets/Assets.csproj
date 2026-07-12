@@ -12,6 +12,7 @@
 
     <ItemGroup>
       <Folder Include="Content\Lua\Scripts\Client\" />
+      <Folder Include="Content\Lua\Scripts\Server\" />
     </ItemGroup>
 
     <Import Project="../Build.props" />
