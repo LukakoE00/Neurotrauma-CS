@@ -15,10 +15,9 @@ namespace Neurotrauma
                 return NTC.GetMultiplier(C,"healingrate");
             });
 
-            Stats["anyspecificorgandamage"] = new NTStatDouble("anyspecificorgandamage", 0, 100, 1, (C) =>
+            Stats["specificOrganDamageHealMultiplier"] = new NTStatDouble("specificOrganDamageHealMultiplier", 0, 100, 1, (C) =>
             {
-                return NTC.GetMultiplier(C, "anyspecificorgandamage") 
-                        + Clamp(C.GetAffStrength("afthiamine"),0,1) * 4;
+                return NTC.GetMultiplier(C, "anyspecificorgandamage") + Clamp(C.GetAffStrength("afthiamine"), 0, 1) * 4;
             });
 
             Stats["neworgandamage"] = new NTStatDouble("neworgandamage", 0, 100, 1, (C) => 

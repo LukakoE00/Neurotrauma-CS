@@ -398,7 +398,7 @@ namespace Neurotrauma
             // Type: Damage, Vanilla Override
             // Caused By: Health Scanner, Radiotoxin, Radiation, Certain Damage.
             // Effects: Burns (XML), Screen Grain (XML), Specific Organ Damage, Bone Damage.
-            AfflictionsToAdd["radiationsickness"] = new("radiationsickness", 0, 200, 0, AfflictionPriority.MEDIUM);
+            AfflictionsToAdd["radiationsickness"] = new("radiationsickness", 0, 200, 0, AfflictionPriority.HIGH);
             AfflictionsToAdd["radiationsickness"].UpdateAction =
                 (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanNonLimbAffData AffData) =>
                 {
@@ -569,8 +569,10 @@ namespace Neurotrauma
                     // Does not progress while in Stasis
                     if (C.GetBoolStatStrength("stasis")) return;
 
+                    double LungDamage = HF.OrganDamageCalc(C, AffData.Strength + NTC.GetMultiplier(C, "lungdamagegain") * C.GetDoubleStatStrength("neworgandamage"));
+
                     // Passive Regeneration / Increase
-                    AffData.Strength = HF.OrganDamageCalc(C, AffData.Strength + NTC.GetMultiplier(C, "lungdamagegain") * C.GetDoubleStatStrength("neworgandamage"));
+                    AffData.Strength = LungDamage;
 
                     // Effects:
                     // Shortness of Breath
@@ -881,8 +883,10 @@ namespace Neurotrauma
                     // Does not progress while in Stasis
                     if (C.GetBoolStatStrength("stasis")) return;
 
+                    double HeartDamage = HF.OrganDamageCalc(C, AffData.Strength + NTC.GetMultiplier(C, "heartdamagegain") * C.GetDoubleStatStrength("neworgandamage"));
+
                     // Passive Regeneration / Increase
-                    AffData.Strength = HF.OrganDamageCalc(C, AffData.Strength + NTC.GetMultiplier(C, "heartdamagegain") * C.GetDoubleStatStrength("neworgandamage"));
+                    AffData.Strength = HeartDamage;
 
                     // Effects:
                     // Cough
@@ -942,11 +946,12 @@ namespace Neurotrauma
                     // Does not progress while in Stasis
                     if (C.GetBoolStatStrength("stasis")) return;
 
-                    // Passive Regeneration / Increase
-                    AffData.Strength = HF.KidneyDamageCalc(C, AffData.Strength 
+                    double KidneyDamage = HF.KidneyDamageCalc(C, AffData.Strength
                         + NTC.GetMultiplier(C, "kidneydamagegain") * (C.GetDoubleStatStrength("neworgandamage")
-                        + Math.Clamp((C.GetBloodAffData("bloodpressure").Strength - 120) / 160, 0, 0.5) * NT.DeltaTime * 0.5)
-                    );
+                        + Math.Clamp((C.GetBloodAffData("bloodpressure").Strength - 120) / 160, 0, 0.5) * NT.DeltaTime * 0.5));
+
+                    // Passive Regeneration / Increase
+                    AffData.Strength = KidneyDamage;
 
                     // Effects:
                     // Acidosis
@@ -1010,8 +1015,10 @@ namespace Neurotrauma
                     // Does not progress in Stasis
                     if (C.GetBoolStatStrength("stasis")) return;
 
+                    double LiverDamage = HF.OrganDamageCalc(C, AffData.Strength + NTC.GetMultiplier(C, "liverdamagegain") * C.GetDoubleStatStrength("neworgandamage"));
+
                     // Passive Regeneration / Increase
-                    AffData.Strength = HF.OrganDamageCalc(C, AffData.Strength + NTC.GetMultiplier(C, "liverdamagegain") * C.GetDoubleStatStrength("neworgandamage"));
+                    AffData.Strength = LiverDamage;
 
                     // Effects:
                     // Neurotrauma
@@ -1775,9 +1782,6 @@ namespace Neurotrauma
             AfflictionsToAdd["stroke"].UpdateAction =
                 (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanNonLimbAffData AffData) =>
                 {
-                    // If not allowed to get a Stroke
-                    if (NTC.HasSymptomFalse(C, "triggersym_stroke")) return;
-
                     // Does not progress in Stasis
                     if (C.GetBoolStatStrength("stasis")) return;
 
@@ -1814,7 +1818,6 @@ namespace Neurotrauma
             AfflictionsToAdd["neurotrauma"].UpdateAction =
                 (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanNonLimbAffData AffData) =>
                 {
-
                     // Does not progress in Stasis
                     if (C.GetBoolStatStrength("stasis")) return;
 
@@ -1850,9 +1853,6 @@ namespace Neurotrauma
             AfflictionsToAdd["seizure"].UpdateAction =
                 (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanNonLimbAffData AffData) =>
                 {
-                    // If not allowed to get a Seizure
-                    if (NTC.HasSymptomFalse(C, "triggersym_seizure")) return;
-
                     // Passive Regeneration:
                     AffData.Strength -= NT.DeltaTime;
 
@@ -4190,12 +4190,12 @@ namespace Neurotrauma
             // Type: Symptom
             // Caused By: Seizure
             // Effects: Makes character twitch on the ground via XML.
-            LimbSymptomsToAdd["spasm"] = new("spasm", 0, 100, 0);
+            LimbSymptomsToAdd["spasm"] = new("spasm", 0, 100, 0, AfflictionPriority.HIGH);
             LimbSymptomsToAdd["spasm"].UpdateAction =
                 (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanLimbSymptomData AffData) =>
                 {
                     // Passive Decrease
-                    AffData.Strength[Limb] -= 100;
+                    AffData.Strength[Limb] -= 100f;
                 };
 
             foreach (KeyValuePair<string, NTLimbSymptom> Pair in LimbSymptomsToAdd)

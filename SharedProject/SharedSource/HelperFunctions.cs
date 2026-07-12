@@ -1553,8 +1553,8 @@ namespace Neurotrauma
 
         public static double OrganDamageCalc(HumanUpdate.NTHuman C, double DamageValue, bool NoMaxStrength = false)
         {
-            if (DamageValue >= 99 && !NoMaxStrength) return 100;
-            return DamageValue - 0.01 * C.GetDoubleStatStrength("healingrate") * C.GetDoubleStatStrength("anyspecificorgandamage") * NT.DeltaTime;
+            if (DamageValue >= 99 && !(NoMaxStrength)) return 100;
+            return DamageValue - 0.01 * C.GetDoubleStatStrength("healingrate") * C.GetDoubleStatStrength("specificOrganDamageHealMultiplier") * NT.DeltaTime;
         }
 
         public static double KidneyDamageCalc(HumanUpdate.NTHuman C, double DamageValue)
