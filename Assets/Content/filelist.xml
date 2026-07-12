@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<contentpackage name="Neurotrauma CS" modversion="1.0" corepackage="false">
+<contentpackage name="Neurotrauma CS" modversion="1.4" corepackage="false">
     <!-- Comments within this file get removed on upload to Steam; these are just for the Repo. - Lukako -->
-    <!-- Stupid main menu prank -->
+    <!-- Main Menu Neurotrauma -->
     <UIStyle file="%ModDir%/Style/StyleMM.xml" />
     <!-- Localization -->
     <Text file="%ModDir%/Localization/English/English.xml" />
