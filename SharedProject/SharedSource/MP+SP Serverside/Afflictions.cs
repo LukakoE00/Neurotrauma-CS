@@ -1854,7 +1854,7 @@ namespace Neurotrauma
                 (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanNonLimbAffData AffData) =>
                 {
                     // Passive Regeneration:
-                    AffData.Strength -= NT.DeltaTime;
+                    AffData.Strength -= 2f;
 
                     // Effects:
                     // Spasms
@@ -1864,7 +1864,7 @@ namespace Neurotrauma
 
                         foreach (LimbType type in Enum.GetValues<LimbType>())
                         {
-                            HF.AddAfflictionLimb(C.Human, "spasm", type, 10, null);
+                            HF.AddAfflictionLimb(C.Human, "spasm", type, 100, null);
                         }
                     }
                 };
@@ -4194,8 +4194,6 @@ namespace Neurotrauma
             LimbSymptomsToAdd["spasm"].UpdateAction =
                 (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanLimbSymptomData AffData) =>
                 {
-                    // Passive Decrease
-                    AffData.Strength[Limb] -= 100f;
                 };
 
             foreach (KeyValuePair<string, NTLimbSymptom> Pair in LimbSymptomsToAdd)

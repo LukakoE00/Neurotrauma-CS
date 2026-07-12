@@ -390,7 +390,7 @@
 			<StatusEffect target="limb" disabledeltatime="true" stackable="false" delay="1" checkconditionalalways="false">
 				<Explosion range="5.0" structuredamage="0" itemdamage="0" force="12.0" severlimbsprobability="0.0"
 				  ballastfloradamage="0" smoke="false" flash="false" flames="false" shockwave="false" sparks="false" underwaterbubble="false" />
-				<ReduceAffliction identifier="spasm" amount="10"/>
+				<ReduceAffliction identifier="spasm" amount="500"/>
 			</StatusEffect>
 		</PeriodicEffect>
 
