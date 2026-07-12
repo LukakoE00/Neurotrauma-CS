@@ -38,7 +38,7 @@ LuaUserData.RegisterType("Neurotrauma.HumanUpdate+CharacterStats+NTHumanStatBool
 
 dofile(NT.Path .. "/Lua/Scripts/Shared/ConfigData.lua") 		
 dofile(NT.Path .. "/Lua/Scripts/Shared/HelperFunctions.lua") 		
-dofile(NTServer.Path .. "/Lua/Scripts/Server/DummyHumanUpdate.lua") 	
-dofile(NTServer.Path .. "/Lua/Scripts/Server/LegacyAfflictions.lua") 	
-dofile(NTServer.Path .. "/Lua/Scripts/Server/NTCompat.lua") 	
-dofile(NTServer.Path .. "/Lua/Scripts/Server/Items.lua") 		
+dofile(NTServer.Path .. "/Lua/Scripts/Shared/DummyHumanUpdate.lua") 	
+dofile(NTServer.Path .. "/Lua/Scripts/Shared/LegacyAfflictions.lua") 	
+dofile(NTServer.Path .. "/Lua/Scripts/Shared/NTCompat.lua") 	
+dofile(NTServer.Path .. "/Lua/Scripts/Shared/Items.lua") 		
