@@ -61,7 +61,7 @@ namespace Neurotrauma
 
         public void DisposeServer()
         {
-            harmony.UnpatchSelf();
+
         }
 
         public static void InitLuaHooks() // Based off the Traumatic Presence mod by Lenny!

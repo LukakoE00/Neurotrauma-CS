@@ -103,7 +103,7 @@ namespace Neurotrauma
             // Add functions in ServerSource/ServerInit.cs
             #if SERVER
                 InitServerOnly();
-            #endif
+#endif
         }
 
         public void Dispose()
@@ -112,7 +112,12 @@ namespace Neurotrauma
 
             #if SERVER
                 DisposeServer();
-            #endif
+#endif
+            if (harmony != null)
+            {
+                harmony.UnpatchSelf();
+            }
+
 
             this.LoggerService = null;
             this.ConfigService = null;

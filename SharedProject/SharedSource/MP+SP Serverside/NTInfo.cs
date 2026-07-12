@@ -72,6 +72,27 @@ public static class NTInfo
             }
 
             HF.Print(consolePrint);
+
+            // Checking for incompatible mods
+
+            // In order : Legacy Neurotrauma, Development Neurotrauma, Neurotrauma, Neurotrauma Lite
+            List<String> incompatibleMods = ["3705482890", "3439141713", "3190189044", "3369418643"];
+            String detectedMods = "";
+
+            foreach (var item in ContentPackageManager.EnabledPackages.All)
+            {
+
+                if (item.UgcId.value != null && incompatibleMods.Contains(item.UgcId.value.ToString()))
+                {
+                    detectedMods += " - " + item.Name + "\n";
+                }
+            }
+
+            if (detectedMods != "")
+            {
+                HF.PrintError("Incompatible mods detected ! This will cause many errors and you should disable them before playing !\n" + detectedMods);
+            }
+
         }, 1000);
     }
 }
