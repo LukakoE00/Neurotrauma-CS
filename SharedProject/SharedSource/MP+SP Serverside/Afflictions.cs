@@ -385,15 +385,17 @@ namespace Neurotrauma
             // Type: Non-Limb Specific, Vanilla Override
             // Caused By: Lack of Oxygen, Respiratory Arrest
             // Effects: Hypoxemia
-            AfflictionsToAdd["oxygenlow"] = new("oxygenlow", 0, 200, 0, AfflictionPriority.MEDIUM);
+            AfflictionsToAdd["oxygenlow"] = new("oxygenlow", 0, 200, 0, AfflictionPriority.HIGH);
+            AfflictionsToAdd["oxygenlow"].Const = true;
             AfflictionsToAdd["oxygenlow"].UpdateAction =
                 (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanNonLimbAffData AffData) =>
                 {
                     if (C.GetAffStrength("respiratoryarrest") > 0)
                     {
-                        AffData.Strength += 15 * NT.DeltaTime;
+                        AffData.Strength += 30f;
                     }
                 };
+
 
             // Drunk
             // Not constant; gets applied by other sources.
@@ -471,9 +473,6 @@ namespace Neurotrauma
                         }
 
                         // Effects:
-                        // Oxygen Low
-                        HF.AddAffliction(C.Human, "oxygenlow", (float)(15 * NT.DeltaTime), null);
-
                         // Acidosis
                         // Shares increase with Cardiac Arrest
                         double AcidosisIncrease = HF.BoolToNum(C.GetAffData("cardiacarrest").Strength <= 0 
@@ -3904,7 +3903,6 @@ namespace Neurotrauma
             SymptomsToAdd["unconsciousness"].UpdateAction =
                 (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanSymptomData AffData) =>
                 {
-
                     AffData.Strength = HF.BoolToNum(
                         // Symptom must not be forced false.
                         (!NTC.HasSymptomFalse(C, ID))
@@ -3928,6 +3926,12 @@ namespace Neurotrauma
                         100
                     );
 
+                    // Effects:
+                    // Give In
+                    if (AffData.Strength > 0)
+                    {
+                        HF.AddAffliction(C.Human, "givein", 1, null);
+                    }
                 };
 
             // Craving

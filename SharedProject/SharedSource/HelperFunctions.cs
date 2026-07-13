@@ -1160,36 +1160,59 @@ namespace Neurotrauma
             return aff.Strength;
         }
 
+        public static void AddAffliction(Character Character, string Identifier, float Strength, Character Aggressor = null)
+        {
+            if (Aggressor == null)
+            {
+                Aggressor = Character;
+            }
+
+            float PrevStrength = GetAfflictionStrength(Character, Identifier, 0);
+            SetAffliction(Character, Identifier, Strength + PrevStrength, Aggressor, PrevStrength);
+        }
+
         public static void SetAffliction(Character Character, string Identifier, float Strength, Character Aggressor = null, float PreviousStrength = 0)
         {
-            if (Aggressor == null) Aggressor = Character;
-
+            if (Aggressor == null)
+            {
+                Aggressor = Character;
+            }
+                
             SetAfflictionLimb(Character, Identifier, LimbType.Torso, Strength, Aggressor, PreviousStrength);
         }
 
-        public static void SetAfflictionLimb(Character Character, string Identifier, LimbType GivenLimbType, float Strength, Character Aggressor = null, float PreviousStrength = 0)
+        public static void SetAfflictionLimb(Character Character, string Identifier, LimbType GivenLimbType, float Strength, Character Aggressor = null, float PrevStrength = 0)
         {
-            if (Aggressor == null) Aggressor = Character;
-
-            if (Character == null) return;
-
-            bool Check = AfflictionPrefab.Prefabs.TryGet(Identifier, out AfflictionPrefab Result); // Most likely a better way to acheive this but basically I don't know what this will return.
-            if (Result == null || Check == false) { return; }
-            AfflictionPrefab Prefab = Result;
+            // This Error was in the original but not ported for some reason?
+            if (!AfflictionPrefab.Prefabs.TryGet(Identifier, out AfflictionPrefab Prefab) || Prefab == null || Character == null)
+            {
+                LuaCsLogger.LogError(string.Format(
+                    "Can't apply affliction to character limb\ncharacter = {0}, limbtype = {1}, affliction = {2}, strength = {3}",
+                    Character != null ? Character.Name : "nil",
+                    GivenLimbType.ToString(),
+                    Prefab != null ? $"{Prefab.Name} ({Prefab.Identifier})" : Identifier ?? "nil",
+                    Strength.ToString("F3")
+                ));
+                return;
+            }
 
             float Resistance = Character.CharacterHealth.GetResistance(Prefab, GivenLimbType);
-            if (Resistance > 1) { return; }
+            if (Resistance >= 1) 
+            { 
+                return; 
+            }
 
-            Strength = Strength * Character.CharacterHealth.MaxVitality / 100 / (1 - Resistance);
-            Affliction Affliction = Prefab.Instantiate(Strength, Aggressor);
-
+            // Flip the resistances effects so we get the right values accounting for them
+            float ScaledStrength = Strength * Character.CharacterHealth.MaxVitality / 100 / (1 - Resistance);
+            Affliction Affliction = Prefab.Instantiate(ScaledStrength, Aggressor);
             bool RecalculateVitality = NTC.AfflictionsAffectingVitality.Contains(Identifier);
+
             Character.CharacterHealth.ApplyAffliction(
                 Character.AnimController.GetLimb(GivenLimbType),
                 Affliction,
                 false,
                 false,
-                RecalculateVitality
+                true
             );
         }
 
@@ -1222,25 +1245,13 @@ namespace Neurotrauma
             Character.CharacterHealth.ApplyAffliction(
                 Character.AnimController.GetLimb(GivenLimbType),
                 Affliction,
-                true, // allowStacking: true https://evilfactory.github.io/LuaCsForBarotrauma/lua-docs/code/characterhealth/#ApplyAffliction // Unc plugged me a link like Im gonna click it
+                true,
                 false,
                 RecalculateVitality
             );
         }
 
-        public static void AddAffliction(Character Character, string Identifier, float Strength, Character Aggressor = null)
-        {
-            if (Aggressor == null) Aggressor = Character;
-
-            if (Strength < 0)
-            {
-                float current = GetAfflictionStrength(Character, Identifier, 0);
-                SetAffliction(Character, Identifier, Math.Max(current + Strength, 0), Aggressor, 0);
-                return;
-            }
-
-            AddAfflictionLimb(Character, Identifier, LimbType.Torso, Strength, Aggressor);
-        }
+        
 
         public static void AddAfflictionResisted(Character Character, string Identifier, float Strength, Character Aggressor = null)
         {

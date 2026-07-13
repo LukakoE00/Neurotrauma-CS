@@ -109,7 +109,7 @@
       showinhealthscannerthreshold="999"
       maxstrength="2">
 
-		<Effect minstrength="0" maxstrength="2"
+		<!--<Effect minstrength="0" maxstrength="2"
 			  strengthchange="-0.5">
 			<StatusEffect statuseffecttags="medical" target="Character" multiplyafflictionsbymaxvitality="true">
 				<ReduceAffliction identifier="cardiacarrest"  amount="2" />
@@ -122,7 +122,7 @@
 				<ReduceAffliction identifier="cardiacarrest"  amount="100" />
 				<Affliction identifier="fibrillation" amount="20"/>
 			</StatusEffect>
-		</Effect>
+		</Effect>-->
 
       <icon texture="Content/UI/MainIconsAtlas.png" sourcerect="256,896,128,128" color="195,104,60,255" origin="0,0"/>
     </Affliction>
@@ -143,7 +143,7 @@
       showinhealthscannerthreshold="999"
       maxstrength="2">
 
-		<Effect minstrength="0" maxstrength="2"
+		<!--<Effect minstrength="0" maxstrength="2"
 			  strengthchange="-0.5">
 			<StatusEffect statuseffecttags="medical" target="Character" multiplyafflictionsbymaxvitality="true">
 				<ReduceAffliction identifier="cardiacarrest"  amount="1.5" />
@@ -157,7 +157,7 @@
 				<ReduceAffliction identifier="cardiacarrest"  amount="100" />
 				<Affliction identifier="fibrillation" amount="20"/>
 			</StatusEffect>
-		</Effect>
+		</Effect>-->
 		
       <icon texture="Content/UI/MainIconsAtlas.png" sourcerect="256,896,128,128" color="195,104,60,255" origin="0,0"/>
     </Affliction>
