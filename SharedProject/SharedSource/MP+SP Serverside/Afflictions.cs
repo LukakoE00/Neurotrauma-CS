@@ -386,6 +386,14 @@ namespace Neurotrauma
             // Caused By: Lack of Oxygen, Respiratory Arrest
             // Effects: Hypoxemia
             AfflictionsToAdd["oxygenlow"] = new("oxygenlow", 0, 200, 0, AfflictionPriority.MEDIUM);
+            AfflictionsToAdd["oxygenlow"].UpdateAction =
+                (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanNonLimbAffData AffData) =>
+                {
+                    if (C.GetAffStrength("respiratoryarrest") > 0)
+                    {
+                        AffData.Strength += 15 * NT.DeltaTime;
+                    }
+                };
 
             // Drunk
             // Not constant; gets applied by other sources.
@@ -2219,7 +2227,7 @@ namespace Neurotrauma
                     }
 
                     // Passive Decrease
-                    bool ShouldReduce = (C.GetBoolStatStrength("sedated") && C.GetAffData("table").Strength > 0) || C.GetAffData("anesthesia").Strength > 15;
+                    bool ShouldReduce = (C.GetBoolStatStrength("sedated") && C.GetAffData("safesurgery").Strength > 0) || C.GetAffData("anesthesia").Strength > 15;
 
                     AffData.Strength -= (0.5 + HF.BoolToNum(ShouldReduce, 1.5f)) * NT.DeltaTime;
 

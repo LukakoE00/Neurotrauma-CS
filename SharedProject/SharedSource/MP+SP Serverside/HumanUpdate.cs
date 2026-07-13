@@ -800,7 +800,10 @@ public static class HumanUpdate
 
             UpdateAfflictions(Priorities);
 
-            SyncAfflictionStrengths(); // This is our version of the late update.
+            if (!UsingLuaAddons())
+            {
+                SyncAfflictionStrengths();
+            }
 
             // ----------------------------------------- Clearing ----------------------------------------- \\
 
