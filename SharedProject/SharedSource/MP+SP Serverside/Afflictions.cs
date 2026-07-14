@@ -6,6 +6,7 @@ using static Barotrauma.Networking.MessageFragment;
 namespace Neurotrauma
 {
 
+
     /// <summary>
     /// Determines how often an affliction gets updated; Low every 6 seconds, Medium every 4 seconds and High every 2 seconds.
     /// </summary>
@@ -178,8 +179,8 @@ namespace Neurotrauma
         /// <summary>
         /// The main update function of our affliction.
         /// </summary>
-        public Action<HumanUpdate.NTHuman,string,LimbType> UpdateAction = 
-            (HumanUpdate.NTHuman C, string ID, LimbType Limb) => 
+        public Action<HumanUpdate.NTHuman,string,LimbType,HumanUpdate.NTHumanAffData> UpdateAction = 
+            (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanAffData AffData) => 
             { 
                 // Insert your Affliction Update in here.
             };

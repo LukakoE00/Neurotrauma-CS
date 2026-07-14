@@ -1042,6 +1042,11 @@ namespace Neurotrauma
             return NTInfo.RegisteredAddons.ContainsKey(ModName);
         }
 
+        public static double AffClamp(double Value, NTAffliction Aff)
+        {
+            return Math.Clamp(Value, Aff.MinStrength, Aff.MaxStrength);
+        }
+
         public static double AffClamp(double Value, NTNonLimbAffliction Aff)
         {
             return Math.Clamp(Value,Aff.MinStrength,Aff.MaxStrength);
