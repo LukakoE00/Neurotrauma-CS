@@ -1361,8 +1361,21 @@ namespace Neurotrauma
         public static void BreakLimb(Character Character, LimbType GivenLimbType, float Strength = 1)
         {
             GivenLimbType = NormalizeLimbType(GivenLimbType);
-            AddAfflictionLimb(Character, "fracturedextremity", GivenLimbType, Strength, Character);
-            // Implement the gypsum cast thing here.
+
+            if (GivenLimbType == LimbType.Head)
+            {
+                AddAfflictionLimb(Character, "fracturedskull", GivenLimbType, Strength, Character);
+            } else if (GivenLimbType == LimbType.Torso) {
+                AddAfflictionLimb(Character, "fracturedribs", GivenLimbType, Strength, Character);
+            } else
+            {
+                AddAfflictionLimb(Character, "fracturedextremity", GivenLimbType, Strength, Character);
+
+                if (Strength > 0 && NTConfig.Get("NT_fracturesRemoveCasts", true))
+                {
+                    SetAfflictionLimb(Character, "plastercast", GivenLimbType, 0);
+                }
+            }
         }
         public static void ArteryCutLimb(Character Character, LimbType GivenLimbType, float Strength = 1)
         {
