@@ -783,7 +783,7 @@ public static class HumanUpdate
 
             UpdateAfflictions(Priorities);
 
-            SyncAfflictionStrengths();
+            SetAfflictionStrengths();
 
             // ----------------------------------------- Clearing ----------------------------------------- \\
 
@@ -1002,11 +1002,6 @@ public static class HumanUpdate
                         PostSymptomCheck((NTHumanSymptomData)AffData);
                     }
 
-                    if (Aff.Real)
-                    {
-                        ApplyAfflictionChange(Human, ID, (float)AffData.Strength, (float)PrevStrength, (float)Aff.MinStrength, (float)Aff.MaxStrength);
-                    }
-
                     break;
 
                 case NTAfflictionType.LIMB:
@@ -1040,11 +1035,6 @@ public static class HumanUpdate
                         if (AffType == NTAfflictionType.LIMBSYMPTOM)
                         {
                             PostSymptomCheck((NTHumanLimbSymptomData)LimbAffData, Limb);
-                        }
-
-                        if (LimbAff.Real)
-                        {
-                            ApplyAfflictionChangeLimb(Human, Limb, LimbID, (float)LimbAffData.Strength[Limb], (float)LimbPrevStrength, (float)LimbAff.MinStrength, (float)LimbAff.MaxStrength);
                         }
                         
                     }
@@ -1088,16 +1078,16 @@ public static class HumanUpdate
             }
         }
 
-        private void SyncAfflictionStrengths()
+        private void SetAfflictionStrengths()
         {
             foreach (KeyValuePair<string,NTHumanAffData> Pair in LocalAfflictions.UpdatingAfflictions)
             {
                 NTAfflictionType AffType = Pair.Value.AffTemplate.Type;
-                SyncAfflictionStrength(AffType, Pair.Key, Pair.Value);
+                SetAfflictionStrength(AffType, Pair.Key, Pair.Value);
             }
         }
 
-        private void SyncAfflictionStrength(NTAfflictionType AffType, string ID, NTHumanAffData Data)
+        private void SetAfflictionStrength(NTAfflictionType AffType, string ID, NTHumanAffData Data)
         {
 
             switch (AffType)
@@ -1109,10 +1099,12 @@ public static class HumanUpdate
                     // Fetch the data of the affliction
 
                     NTHumanAffData AffData = (NTHumanAffData)Data;
+                    NTAffliction Template = AffData.AffTemplate;
 
-                    if (AffData.Strength == 0 || (!AffData.AffTemplate.Real)) return;
+                    if (AffData.Strength == 0 || (!Template.Real)) return;
 
-                    HF.SetAffliction(Human, ID, (float)AffData.Strength);
+                    ApplyAfflictionChange(Human, ID, (float)AffData.Strength, (float)AffData.PrevStrength, (float)Template.MinStrength, (float)Template.MaxStrength);
+
                     break;
 
                 case NTAfflictionType.LIMBSYMPTOM:
@@ -1121,12 +1113,12 @@ public static class HumanUpdate
                     foreach (LimbType Limb in LimbsToCheck)
                     {
                         // Fetch the data of the affliction
-                        string LimbID = ID;
                         NTHumanLimbAffData LimbAffData = (NTHumanLimbAffData)Data;
+                        NTLimbAffliction LimbTemplate = LimbAffData.AffTemplate;
 
-                        if (LimbAffData.Strength[Limb] == 0 || (!LimbAffData.AffTemplate.Real)) return;
+                        if (LimbAffData.Strength[Limb] == 0 || (!LimbTemplate.Real)) return;
 
-                        HF.SetAfflictionLimb(Human, LimbID, Limb, (float)LimbAffData.Strength[Limb]);
+                        ApplyAfflictionChangeLimb(Human, Limb, ID, (float)LimbAffData.Strength[Limb], (float)LimbAffData.PrevStrength[Limb], (float)LimbTemplate.MinStrength, (float)LimbTemplate.MaxStrength);
                     }
 
                     break;
