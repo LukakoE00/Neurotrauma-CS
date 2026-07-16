@@ -143,7 +143,7 @@ public class NTItemMethods
 
             HF.GiveItem(infos.target, "ntsfx_smack");
         }
-        else if (!HF.HasAffliction(infos.target, "sym_unconsciousness", 0.1f))
+        else if (!HF.HasAffliction(infos.target, "unconsciousness", 0.1f))
         {
             var outerWearId = HF.GetOuterWearIdentifier(infos.target);
 
@@ -758,7 +758,7 @@ public class NTItemMethods
             float modifier = HF.GetSurgerySkillRequirementMet(infos.user, 100) ? 0f : -40f;
             float workcondition = Math.Clamp(infos.item.Condition + modifier, 0f, 100f);
 
-            HF.AddAffliction(infos.target, "cerebralhypoxia", -workcondition, infos.user);
+            HF.AddAffliction(infos.target, "neurotrauma", -workcondition, infos.user);
             HF.SetAffliction(infos.target, "brainremoved", 0f, infos.user, 0);
 
             #if SERVER
@@ -948,7 +948,7 @@ public class NTItemMethods
             if (HF.HasAffliction(infos.target, "stroke"))
             {
                 HF.AddAffliction(infos.target, "stroke", 5, infos.user);
-                HF.AddAffliction(infos.target, "cerebralhypoxia", 10, infos.user);
+                HF.AddAffliction(infos.target, "neurotrauma", 10, infos.user);
             }
 
             HF.RemoveItem(infos.item);
@@ -1021,7 +1021,7 @@ public class NTItemMethods
 
                 if (HF.Chance(successChance))
                 {
-                    HF.SetAffliction(infos.target, "tachycardia", 0f, infos.user, 0);
+                    HF.SetAffliction(infos.target, "increasedheartrate", 0f, infos.user, 0);
                     HF.SetAffliction(infos.target, "fibrillation", 0f, infos.user, 0);
                 }
 
@@ -1051,7 +1051,7 @@ public class NTItemMethods
             if (!hasVoltage) return;
 
             bool actionRequired =
-                HF.HasAffliction(infos.target, "tachycardia", 5) ||
+                HF.HasAffliction(infos.target, "increasedheartrate", 5) ||
                 HF.HasAffliction(infos.target, "fibrillation", 1) ||
                 HF.HasAffliction(infos.target, "cardiacarrest");
 
@@ -1079,7 +1079,7 @@ public class NTItemMethods
             LuaCsSetup.Instance.Timer.Wait((params object[] _) =>
             {
                 HF.AddAffliction(infos.target, "stun", 2f, infos.user);
-                HF.SetAffliction(infos.target, "tachycardia", 0f, infos.user, 0);
+                HF.SetAffliction(infos.target, "increasedheartrate", 0f, infos.user, 0);
                 HF.SetAffliction(infos.target, "fibrillation", 0f, infos.user, 0);
 
                 if (HF.Chance(arrestSuccessChance))
@@ -2273,7 +2273,7 @@ public class NTItemMethods
             {
                 if (HF.GetSurgerySkillRequirementMet(infos.user, 40))
                 {
-                    if (HF.GetAfflictionStrength(infos.target, "cerebralhypoxia", 0) >= 100)
+                    if (HF.GetAfflictionStrength(infos.target, "neurotrauma", 0) >= 100)
                         HF.SetAffliction(infos.target, "brainremoved", 100, infos.user, 0);
                     else
                         HF.SetAffliction(infos.target, "brainswap", 100, infos.user, 0);
@@ -2281,16 +2281,16 @@ public class NTItemMethods
                 else
                 {
                     HF.AddAfflictionLimb(infos.target, "bleeding", infos.targetLimb.type, 15, infos.user);
-                    HF.AddAffliction(infos.target, "cerebralhypoxia", 50, infos.user);
+                    HF.AddAffliction(infos.target, "neurotrauma", 50, infos.user);
                 }
                 HF.GiveItem(infos.target, "ntsfx_slash");
             }
             else
             {
-                float damage = HF.GetAfflictionStrength(infos.target, "cerebralhypoxia", 0);
+                float damage = HF.GetAfflictionStrength(infos.target, "neurotrauma", 0);
                 if (damage >= 100) return;
 
-                HF.AddAffliction(infos.target, "cerebralhypoxia", 100, infos.user);
+                HF.AddAffliction(infos.target, "neurotrauma", 100, infos.user);
                 HF.SetAffliction(infos.target, "brainremoved", 100, infos.user, 0);
                 HF.SetAffliction(infos.target, "brainswap", 0, infos.user, 0);
 
@@ -2350,7 +2350,7 @@ public class NTItemMethods
         CuttableAfflictions.Add("bandageddirty");
         CuttableAfflictions.Add("tourniqueted");
 
-        TraumaShearsAfflictions.Add("gypsumcast");
+        TraumaShearsAfflictions.Add("plastercast");
 
         RegisterItemUseFunction("traumashears", infos =>
         {
