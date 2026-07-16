@@ -868,14 +868,14 @@ public class NTItemMethods
 
             // Needs to be bandaged, not already in a cast, not during a surgery, and the limb needs to be extremity.
             if (!HF.HasAfflictionLimb(infos.target, "bandaged", infos.targetLimb.type, (float)0.1) ||
-            HF.HasAfflictionLimb(infos.target, "gypsumcast", infos.targetLimb.type, (float)0.1) ||
+            HF.HasAfflictionLimb(infos.target, "plastercast", infos.targetLimb.type, (float)0.1) ||
             HF.HasAfflictionLimb(infos.target, "surgeryincision", infos.targetLimb.type, (float)0.1) ||
             !HF.LimbIsExtremity(infos.targetLimb.type)) { return; }
 
             if (HF.GetSkillRequirementMet(infos.user, "medical", (float)40))
             {
                 HF.SetAfflictionLimb(infos.target, "bandaged", infos.targetLimb.type, 0, infos.user, 0);
-                HF.SetAfflictionLimb(infos.target, "gypsumcast", infos.targetLimb.type, 100, infos.user, 0);
+                HF.SetAfflictionLimb(infos.target, "plastercast", infos.targetLimb.type, 100, infos.user, 0);
                 HF.BreakLimb(infos.target, infos.targetLimb.type, -20);
                 HF.GiveSkillScaled(infos.user, "medical", 6000);
             }
@@ -1753,7 +1753,7 @@ public class NTItemMethods
                     }
                 }
 
-                HF.SetAfflictionLimb(infos.target, "bonegrowth", infos.targetLimb.type, 100f, infos.user, 0);
+                HF.SetAfflictionLimb(infos.target, "stimulatedbonegrowth", infos.targetLimb.type, 100f, infos.user, 0);
 
                 float itemUses = (1f / NTConfig.Get("NT_OsteoImplants_uses", 4)) * 100f;
 
@@ -1838,7 +1838,7 @@ public class NTItemMethods
                 HF.AddAfflictionLimb(infos.target, "surgeryincision", infos.targetLimb.type, 1 + HF.GetSurgerySkill(infos.user) / 2, infos.user); 
 
                 HF.SetAfflictionLimb(infos.target, "suturedi", infos.targetLimb.type, 0, infos.user, 0);
-                HF.SetAfflictionLimb(infos.target, "gypsumcast", infos.targetLimb.type, 0, infos.user, 0);
+                HF.SetAfflictionLimb(infos.target, "plastercast", infos.targetLimb.type, 0, infos.user, 0);
                 HF.SetAfflictionLimb(infos.target, "bandaged", infos.targetLimb.type, 0, infos.user, 0);
 
             }
