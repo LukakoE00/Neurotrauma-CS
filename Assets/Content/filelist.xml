@@ -36,4 +36,6 @@
     <Item file="%ModDir%/XML/Items/VFX.xml" />
     <!-- Character Override -->
     <Character file="%ModDir%/Characters/Human/Human.xml" />
+    <!-- HealthUI Sound Override -->
+	<Sounds file="%ModDir%/XML/SoundOverrides.xml" />
 </contentpackage>

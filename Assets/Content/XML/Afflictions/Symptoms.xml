@@ -7,7 +7,6 @@
       name=""
       description=""
       identifier="cough"
-      aliases="sym_cough"
       
       healableinmedicalclinic="false"
       limbspecific="false"
@@ -26,7 +25,6 @@
       name=""
       description=""
       identifier="paleskin"
-      aliases="sym_paleskin"
       
       healableinmedicalclinic="false"
       limbspecific="false"
@@ -50,7 +48,6 @@
       name=""
       description=""
       identifier="lightheadedness"
-      aliases="sym_lightheadedness"
       
       healableinmedicalclinic="false"
       limbspecific="false"
@@ -70,7 +67,6 @@
       name=""
       description=""
       identifier="blurredvision"
-      aliases="sym_blurredvision"
       
       healableinmedicalclinic="false"
       limbspecific="false"
@@ -89,7 +85,6 @@
       name=""
       description=""
       identifier="confusion"
-      aliases="sym_confusion"
       
       healableinmedicalclinic="false"
       limbspecific="false"
@@ -108,7 +103,6 @@
       name=""
       description=""
       identifier="headache"
-      aliases="sym_headache"
 
       healableinmedicalclinic="false"
       type="pain"
@@ -129,7 +123,6 @@
       name=""
       description=""
       identifier="legswelling"
-      aliases="sym_legswelling"
       
       healableinmedicalclinic="false"
       limbspecific="false"
@@ -148,7 +141,6 @@
       name=""
       description=""
       identifier="weakness"
-      aliases="sym_weakness"
       
       healableinmedicalclinic="false"
       limbspecific="false"
@@ -172,7 +164,6 @@
       name=""
       description=""
       identifier="wheezing"
-      aliases="sym_wheezing"
       
       healableinmedicalclinic="false"
       limbspecific="false"
@@ -191,7 +182,6 @@
       name=""
       description=""
       identifier="vomiting"
-      aliases="sym_vomiting"
       
       healableinmedicalclinic="false"
       limbspecific="false"
@@ -211,7 +201,6 @@
       name=""
       description=""
       identifier="vomitingblood"
-      aliases="sym_hematemesis"
       
       healableinmedicalclinic="false"
       limbspecific="false"
@@ -249,7 +238,6 @@
       name=""
       description=""
       identifier="abdominaldiscomfort"
-      aliases="sym_abdomdiscomfort"
       
       healableinmedicalclinic="false"
       limbspecific="false"
@@ -268,7 +256,6 @@
       name=""
       description=""
       identifier="bloating"
-      aliases="sym_bloating"
       
       healableinmedicalclinic="false"
       limbspecific="false"
@@ -287,7 +274,6 @@
       name=""
       description=""
       identifier="jaundice"
-      aliases="sym_jaundice"
       
       healableinmedicalclinic="false"
       limbspecific="false"
@@ -307,7 +293,6 @@
       name=""
       description=""
       identifier="sweating"
-      aliases="sym_sweating"
       
       healableinmedicalclinic="false"
       limbspecific="false"
@@ -328,7 +313,6 @@
       name=""
       description=""
       identifier="palpitations"
-      aliases="sym_palpitations"
       
       healableinmedicalclinic="false"
       limbspecific="false"
@@ -347,7 +331,6 @@
       name=""
       description=""
       identifier="unconsciousness"
-      aliases="sym_unconsciousness"
       
       healableinmedicalclinic="false"
       limbspecific="false"
@@ -408,7 +391,6 @@
       name=""
       description=""
       identifier="craving"
-      aliases="sym_craving"
       
       healableinmedicalclinic="false"
       targets="human"
@@ -428,7 +410,6 @@
         name=""
         description=""
         identifier="nausea"
-        aliases="sym_nausea"
         
         healableinmedicalclinic="false"
         limbspecific="false"
@@ -448,7 +429,6 @@
       name=""
       description=""
       identifier="chestpain"
-      aliases="pain_chest"
 
       healableinmedicalclinic="false"
       type="pain"

@@ -1119,7 +1119,7 @@
         <Holdable selectkey="Action" pickkey="Use" slots="RightHand+LeftHand" msg="ItemMsgDetach" PickingTime="5" aimpos="85,-10" handle1="0,0" attachable="true" aimable="true">
             <!-- Artificial Ventilation and Table afflictions -->
             <StatusEffect type="OnNotContained" target="NearbyCharacters" range="200" interval="1" stackable="true" disabledeltatime="true" >
-              <Affliction identifier="safesurgery" amount="2" />
+              <Affliction identifier="safesurgery" amount="70" />
               <Affliction identifier="artificialventilation" amount="100" />
             </StatusEffect>
             <!-- Output value update -->

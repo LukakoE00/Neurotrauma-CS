@@ -24,7 +24,6 @@
       name=""
       description=""
       identifier="neurotrauma"
-      aliases="cerebralhypoxia"
       
       healableinmedicalclinic="false"
       targets="human"

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<sounds>
+	<Override>
+		<ecg1 file="%ModDir%/Sounds/HealthUI/ecg1.ogg"/>
+		<ecg2 file="%ModDir%/Sounds/HealthUI/ecg2.ogg"/>
+		<flatline1 file="%ModDir%/Sounds/HealthUI/flatline1.ogg"/>
+		<flatline2 file="%ModDir%/Sounds/HealthUI/flatline2.ogg"/>
+		<impact_squeak file="%ModDir%/Sounds/ItemApplication/Tools/squeak1.ogg" range="500"/>
+		<impact_squeak file="%ModDir%/Sounds/ItemApplication/Tools/squeak2.ogg" range="500"/>
+		<impact_squeak file="%ModDir%/Sounds/ItemApplication/Tools/squeak3.ogg" range="500"/>
+		<impact_squeak file="%ModDir%/Sounds/ItemApplication/Tools/squeak4.ogg" range="500"/>
+		<impact_squeak file="%ModDir%/Sounds/ItemApplication/Tools/squeak5.ogg" range="500"/>
+	
+	<!-- override to remove oxygenlow heartbeat sound -->
+	  <heartbeatdiastole file="%ModDir%/Sounds/silent.ogg"/>
+	  <heartbeatdiastole file="%ModDir%/Sounds/silent.ogg"/>
+	  <heartbeatdiastole file="%ModDir%/Sounds/silent.ogg"/>
+	  <heartbeatsystole file="%ModDir%/Sounds/silent.ogg"/>
+	  <heartbeatsystole file="%ModDir%/Sounds/silent.ogg"/>
+	  <heartbeatsystole file="%ModDir%/Sounds/silent.ogg"/>
+	</Override>	
+	
+</sounds>

@@ -61,7 +61,7 @@
 
     <!-- TShockTimeout: Applied after a level changed, prevents Traumatic Shock from taking effect until it expires to counteract loading times. -->
     <Affliction
-      name=""
+      name="TShockTimeout"
       description=""
       identifier="tshocktimeout"
 
@@ -707,7 +707,6 @@
       name=""
       description=""
       identifier="artificialventilation"
-      aliases="alv"
       
       healableinmedicalclinic="false"
       targets="human"
@@ -996,7 +995,7 @@
       <PeriodicEffect mininterval="1.5" maxinterval="3">
         <StatusEffect target="Character" SpeedMultiplier="0.5" setvalue="true" duration="1" delay="0" />
         <StatusEffect target="Character" comparison="and">
-          <Conditional shockpain="gt 0.1" ishuman="true" isfemale="true" sym_unconsciousness="lte 0.1"/>
+          <Conditional shockpain="gt 0.1" ishuman="true" isfemale="true" unconsciousness="lte 0.1"/>
           <sound file="Content/Characters/Human/female_damage1.ogg"  range="500"/>
           <sound file="Content/Characters/Human/female_damage2.ogg"  range="500"/>
           <sound file="Content/Characters/Human/female_damage3.ogg"  range="500"/>
@@ -1010,7 +1009,7 @@
         </StatusEffect>
         
         <StatusEffect target="Character" comparison="and">
-          <Conditional shockpain="gt 0.1" ishuman="true" ismale="true" sym_unconsciousness="lte 0.1"/>
+          <Conditional shockpain="gt 0.1" ishuman="true" ismale="true" unconsciousness="lte 0.1"/>
           <sound file="Content/Characters/Human/male_damage1.ogg"  range="500"/>
           <sound file="Content/Characters/Human/male_damage2.ogg"  range="500"/>
           <sound file="Content/Characters/Human/male_damage3.ogg"  range="500"/>

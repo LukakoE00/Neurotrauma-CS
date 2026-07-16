@@ -1829,14 +1829,13 @@ public class NTItemMethods
             // Stasis check
             if (HF.HasAffliction(infos.target, "stasis", 0.1f)) return;
 
-            if (!HF.CanPerformSurgeryOn(infos.target) || HF.HasAfflictionLimb(infos.target, "surgeryincision", infos.targetLimb.type, 1)) { return; }
+            if (!HF.CanPerformSurgeryOn(infos.target) || HF.HasAfflictionLimb(infos.target, "surgeryincision", infos.targetLimb.type, 1)) return;
 
             bool success = HF.GetSurgerySkillRequirementMet(infos.user, 30);
 
             if (success)
             {
-                HF.AddAfflictionLimb(infos.target, "surgeryincision", infos.targetLimb.type, 1 + HF.GetSurgerySkill(infos.user) / 2, infos.user); 
-
+                HF.AddAfflictionLimb(infos.target, "surgeryincision", infos.targetLimb.type, 1 + HF.GetSurgerySkill(infos.user) / 2, infos.user);
                 HF.SetAfflictionLimb(infos.target, "suturedi", infos.targetLimb.type, 0, infos.user, 0);
                 HF.SetAfflictionLimb(infos.target, "plastercast", infos.targetLimb.type, 0, infos.user, 0);
                 HF.SetAfflictionLimb(infos.target, "bandaged", infos.targetLimb.type, 0, infos.user, 0);

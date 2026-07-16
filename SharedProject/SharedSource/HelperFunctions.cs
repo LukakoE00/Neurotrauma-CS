@@ -1544,7 +1544,7 @@ namespace Neurotrauma
         /// <returns>'True' if Surgery can be performed; otherwise 'False'.</returns>
         public static bool CanPerformSurgeryOn(Character Character)
         {
-            return HasAffliction(Character, "analgesia", 1) || HasAffliction(Character, "sym_unconsciousness", (float).1);
+            return HasAffliction(Character, "analgesia", 1) || HasAffliction(Character, "unconsciousness", (float).1);
         }
 
         public static void Fibrillate(Character Character, float Amount)

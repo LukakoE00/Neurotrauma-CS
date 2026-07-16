@@ -1694,7 +1694,7 @@ namespace Neurotrauma
                    // Reduce Oxygen Low if lungs are present
                    if (C.GetAffData("lungremoved").Strength <= 0)
                    {
-                       HF.AddAffliction(C.Human, "oxygenlow", -40, null);
+                       HF.AddAffliction(C.Human, "oxygenlow", -100, null);
                    }
                };
 
@@ -2248,71 +2248,6 @@ namespace Neurotrauma
 
             // =============== Surgical =============== //
 
-            // Surgical Incision
-            // Not constant; gets applied by other sources.
-            // Type: Limb Specific, Surgical
-            // Caused By: Scalpel.
-            // Effects: Blood Loss (XML), Traumatic Shock (XML), increases self in XML.
-            AfflictionsToAdd["surgeryincision"] = new("surgeryincision", 0, 100, 0);
-
-            // Clamped Bleeding
-            // Not constant; gets applied by other sources.
-            // Type: Limb Specific, Surgical
-            // Caused By: Hemostat.
-            // Effects: Prevents Surgery Incision Blood Loss (Scalpel XML).
-            AfflictionsToAdd["clampedbleeding"] = new("clampedbleeding", 0, 100, 0);
-
-            // Drilled Bones
-            // Not constant; gets applied by other sources.
-            // Type: Limb Specific, Surgical
-            // Caused By: Surgical Drill.
-            // Effects: Applies Traumatic Shock (XML).
-            AfflictionsToAdd["drilledbones"] = new("drilledbones", 0, 100, 0);
-
-            // Retracted Skin
-            // Not constant; gets applied by other sources.
-            // Type: Limb Specific, Surgical
-            // Caused By: Skin Retractors.
-            // Effects: Applies Traumatic Shock (XML).
-            AfflictionsToAdd["retractedskin"] = new("retractedskin", 0, 100, 0);
-
-            // Sutured Incision
-            // Not constant; gets applied by other sources.
-            // Type: Limb Specific, Surgical
-            // Caused By: Stitching a Surgical Incision.
-            // Effects: None.
-            AfflictionsToAdd["suturedi"] = new("suturedi", 0, 100, 0, AfflictionPriority.MEDIUM);
-            AfflictionsToAdd["suturedi"].UpdateAction =
-               (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanNonLimbAffData AffData) =>
-               {
-                   // Passive Decrease
-                   // Originally had a maxstrength of 100, and reduced by 1 per second in XML.
-                   // Adjusted, that became 4 per 4 seconds.
-                   AffData.Strength -= 4;
-               };
-
-            // Sutured Wound
-            // Not constant; gets applied by other sources.
-            // Type: Limb Specific, Surgical
-            // Caused By: Stitching an Open Wound.
-            // Effects: Vitality damage proportional to affliction strength.
-            AfflictionsToAdd["suturedw"] = new("suturedw", 0, 100, 0, AfflictionPriority.HIGH);
-            AfflictionsToAdd["suturedi"].UpdateAction =
-               (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanNonLimbAffData AffData) =>
-               {
-                   // Passive Decrease
-                   // Originally had a maxstrength of 100, and reduced by 1 per second in XML.
-                   // Adjusted, that became 0.44 per 2 seconds.
-                   AffData.Strength -= 0.4;
-               };
-
-            // Sawed Bones
-            // Not constant; gets applied by other sources.
-            // Type: Limb Specific, Surgical
-            // Caused By: Surgical Saw.
-            // Effects: Applies Traumatic Shock (XML).
-            AfflictionsToAdd["sawedbones"] = new("sawedbones", 0, 100, 0);
-
             // Traumatic Shock
             // Not constant; gets applied by other sources.
             // Type: Non-Limb Specific, Lethal
@@ -2323,14 +2258,22 @@ namespace Neurotrauma
                 (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanNonLimbAffData AffData) =>
                 {
                     // Removes on TShockTimeout
-                    if (C.GetNonLimbAffData("tshocktimeout").Strength > 0) 
-                    { 
-                        AffData.Strength = 0; 
-                        return; 
+                    if (C.GetAffData("tshocktimeout").Strength > 0)
+                    {
+                        AffData.Strength = 0;
+                        return;
                     }
 
                     // Passive Decrease
-                    bool ShouldReduce = (C.GetBoolStatStrength("sedated") && C.GetAffData("safesurgery").Strength > 0) || C.GetAffData("anesthesia").Strength > 15;
+                    bool IsSedated = C.GetBoolStatStrength("sedated");
+                    bool IsSafeSurgery = C.GetAffData("safesurgery").Strength > 0;
+                    bool IsAnesthesized = C.GetAffData("anesthesia").Strength > 15;
+
+                    HF.Print($"IsSedated: {IsSedated}");
+                    HF.Print($"SafeSurgery: {IsSafeSurgery}");
+                    HF.Print($"Anesthesized: {IsAnesthesized}");
+
+                    bool ShouldReduce = (IsSedated && IsSafeSurgery || IsAnesthesized);
 
                     AffData.Strength -= (0.5 + HF.BoolToNum(ShouldReduce, 1.5f)) * NT.DeltaTime;
 
@@ -2501,6 +2444,71 @@ namespace Neurotrauma
 
         private void AddLimbAfflictions()
         {
+            // Surgical Incision
+            // Not constant; gets applied by other sources.
+            // Type: Limb Specific, Surgical
+            // Caused By: Scalpel.
+            // Effects: Blood Loss, Traumatic Shock, increases self in XML.
+            LimbAfflictionsToAdd["surgeryincision"] = new("surgeryincision", 0, 100, 0);
+
+            // Clamped Bleeding
+            // Not constant; gets applied by other sources.
+            // Type: Limb Specific, Surgical
+            // Caused By: Hemostat.
+            // Effects: Prevents Surgery Incision Blood Loss (Scalpel XML).
+            LimbAfflictionsToAdd["clampedbleeding"] = new("clampedbleeding", 0, 100, 0);
+
+            // Drilled Bones
+            // Not constant; gets applied by other sources.
+            // Type: Limb Specific, Surgical
+            // Caused By: Surgical Drill.
+            // Effects: Applies Traumatic Shock (XML).
+            LimbAfflictionsToAdd["drilledbones"] = new("drilledbones", 0, 100, 0);
+
+            // Retracted Skin
+            // Not constant; gets applied by other sources.
+            // Type: Limb Specific, Surgical
+            // Caused By: Skin Retractors.
+            // Effects: Applies Traumatic Shock (XML).
+            LimbAfflictionsToAdd["retractedskin"] = new("retractedskin", 0, 100, 0);
+
+            // Sutured Incision
+            // Not constant; gets applied by other sources.
+            // Type: Limb Specific, Surgical
+            // Caused By: Stitching a Surgical Incision.
+            // Effects: None.
+            LimbAfflictionsToAdd["suturedi"] = new("suturedi", 0, 100, 0, AfflictionPriority.MEDIUM);
+            LimbAfflictionsToAdd["suturedi"].UpdateAction =
+               (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanLimbAffData AffData) =>
+               {
+                   // Passive Decrease
+                   // Originally had a maxstrength of 100, and reduced by 1 per second in XML.
+                   // Adjusted, that became 4 per 4 seconds.
+                   AffData.Strength[Limb] -= 4;
+               };
+
+            // Sutured Wound
+            // Not constant; gets applied by other sources.
+            // Type: Limb Specific, Surgical
+            // Caused By: Stitching an Open Wound.
+            // Effects: Vitality damage proportional to affliction strength.
+            LimbAfflictionsToAdd["suturedw"] = new("suturedw", 0, 100, 0, AfflictionPriority.HIGH);
+            LimbAfflictionsToAdd["suturedi"].UpdateAction =
+               (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanLimbAffData AffData) =>
+               {
+                   // Passive Decrease
+                   // Originally had a maxstrength of 100, and reduced by 1 per second in XML.
+                   // Adjusted, that became 0.44 per 2 seconds.
+                   AffData.Strength[Limb] -= 0.4;
+               };
+
+            // Sawed Bones
+            // Not constant; gets applied by other sources.
+            // Type: Limb Specific, Surgical
+            // Caused By: Surgical Saw.
+            // Effects: Applies Traumatic Shock (XML).
+            LimbAfflictionsToAdd["sawedbones"] = new("sawedbones", 0, 100, 0);
+
             // Bleeding
             // Not constant; gets applied by other sources.
             // Type: Limb Specific, Basegame Override

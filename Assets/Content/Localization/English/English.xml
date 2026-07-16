@@ -532,6 +532,10 @@
 <!-- Aortic Rupture -->
 <afflictionname.aorticrupture>Aortic Rupture</afflictionname.aorticrupture>
 
+<!-- ================================================= Invisible Afflictions ================================================= -->
+<afflictionname.safesurgery>Safe Surgery</afflictionname.safesurgery>
+<afflictionname.artificialventilation>Artificial Ventilation</afflictionname.artificialventilation>
+
 <!-- ================================================= ITEMS ================================================= -->
 
 <!-- ================================================= Blood Stuff ================================================= -->
@@ -950,7 +954,7 @@ Can give blood to: AB+</entitydescription.ab_positivecard>
 <!-- Organ procurement scalpel: Brain -->
 <entityname.organscalpel_brain>OOrgan Procurement Scalpel: Brain</entityname.organscalpel_brain>
 <entitydescription.organscalpel_brain>A specialized scalpel for the removal of the brain.</entitydescription.organscalpel_brain>
-  
+
 <!-- ================================================= Vanilla Overrides ================================================= -->
 <!-- 99% of this is by the goat ThousandFields. -->
 

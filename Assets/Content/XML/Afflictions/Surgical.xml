@@ -17,25 +17,24 @@
       showiconthreshold="0"
       maxstrength="100">
 
-      <Effect minstrength="0" maxstrength="100" strengthchange="30">
+		<Effect minstrength="0" maxstrength="100" strengthchange="30">
+			<StatusEffect target="Limb,Character">
+				<Conditional clampedbleeding="lte 0.5"/>
+				<Affliction identifier="bloodloss" strength="0.7" />
+			</StatusEffect>
 
-      <StatusEffect target="Limb,Character">
-        <Conditional clampedbleeding="lte 0.5"/>
-        <Affliction identifier="bloodloss" strength="0.7" />
-      </StatusEffect>
+			<StatusEffect target="Character" multiplyafflictionsbymaxvitality="true" comparison="and">
+				<Conditional analgesia="lte 0.5" anesthesia="lte 0.5" unconsciousness="lte 0.1"/>
+				<Affliction identifier="traumaticshock" amount="2"/>
+			</StatusEffect>
 
-      <StatusEffect target="Character" multiplyafflictionsbymaxvitality="true" comparison="and">
-        <Conditional analgesia="lte 0.5" anesthesia="lte 0.5" unconsciousness="lte 0.1"/>
-        <Affliction identifier="traumaticshock" amount="2"/>
-      </StatusEffect>
-
-      <StatusEffect target="Character" multiplyafflictionsbymaxvitality="true" interval="0.5" disabledeltatime="true" comparison="and">
-        <Conditional isonplayerteam="true"/>
-        <Conditional isbot="true"/>
-        <Conditional stun="lt 0.5"/>
-        <Affliction identifier="stun" amount="1"/>
-      </StatusEffect>
-    </Effect>
+			<StatusEffect target="Character" multiplyafflictionsbymaxvitality="true" interval="0.5" disabledeltatime="true" comparison="and">
+				<Conditional isonplayerteam="true"/>
+				<Conditional isbot="true"/>
+				<Conditional stun="lt 0.5"/>
+				<Affliction identifier="stun" amount="1"/>
+			</StatusEffect>
+		</Effect>
 
       <icon texture="%ModDir%/Images/AfflictionIcons.png" sheetindex="0,7" sheetelementsize="128,128" origin="0,0"/>
     </Affliction>
