@@ -759,7 +759,7 @@ public static class HumanUpdate
             {
                 if (Pair.Key == null || Pair.Value == null) continue;
                 NTAfflictionType AffType = Pair.Value.AffTemplate.Type;
-                SetAfflictionDefaultStrength(AffType, Pair.Key, Pair.Value);
+                SetAfflictionStrength(AffType, Pair.Key, Pair.Value, true);
             }
         }
 
@@ -894,6 +894,26 @@ public static class HumanUpdate
             LocalAfflictions.LastUpdatedAfflictions = SortedAfflictions.Where(aff => { return Human.CharacterHealth.GetAllAfflictions().Contains(aff); }).ToList();
         }
 
+        private bool PreLimbCheck(LimbType Limb, NTLimbAffliction LimbAff, NTHumanLimbAffData LimbAffData, List<AfflictionPriority> Priorities)
+        {
+            if (!LimbAff.AllowedLimbs.Contains(Limb))
+            {
+                LimbAffData.Strength[Limb] = 0;
+                if (LimbAffData is NTHumanLimbSymptomData LimbSymData)
+                {
+                    LimbSymData.HumanUpdateTime[Limb] = 0;
+                    LimbSymData.HumanUpdateStoptime[Limb] = 0;
+                }
+                return true;
+            }
+
+            if (!Priorities.Contains(LimbAff.Priority) || ((!LimbAff.IgnoreStasis) && GetBoolStatStrength("stasis")))
+            {
+                return true;
+            }
+
+            return false;
+        }
 
         private static bool PreSymptomCheck(NTHumanAffData Data)
         {
@@ -970,6 +990,7 @@ public static class HumanUpdate
                 case NTAfflictionType.NONLIMB:
                 case NTAfflictionType.BLOOD:
                 case NTAfflictionType.SYMPTOM:
+
                     // Fetch the data of the affliction
                     string ID = Key;
                     NTHumanAffData AffData = Data;
@@ -1014,10 +1035,7 @@ public static class HumanUpdate
                         NTHumanLimbAffData LimbAffData = (NTHumanLimbAffData)Data;
                         NTLimbAffliction LimbAff = LimbAffData.AffTemplate;
 
-                        if (!Priorities.Contains(LimbAff.Priority) || ((!LimbAff.IgnoreStasis) && GetBoolStatStrength("stasis")))
-                        {
-                            continue;
-                        }
+                        if (PreLimbCheck(Limb, LimbAff, LimbAffData, Priorities)) continue;
 
                         double LimbPrevStrength = AffClamp(LimbAffData.Strength[Limb], LimbAff);
                         double LimbCurrentStrength = LimbAff.Real ?  GetAfflictionStrengthLimb(Human, Limb, LimbID) : LimbPrevStrength; // If real, use the prefab strength, else use custom.
@@ -1043,41 +1061,6 @@ public static class HumanUpdate
             }
         }
 
-        private void SetAfflictionDefaultStrength(NTAfflictionType AffType, string Key, NTHumanAffData Data)
-        {
-            switch (AffType)
-            {
-                case NTAfflictionType.SYMPTOM:
-                case NTAfflictionType.BLOOD:
-                case NTAfflictionType.NONLIMB:
-
-                    // Fetch the data of the affliction
-                    string ID = Key;
-                    NTHumanAffData AffData = (NTHumanAffData)Data;
-                    NTAffliction Aff = AffData.AffTemplate;
-
-                    if (!Aff.Real) return;
-
-                    HF.SetAffliction(Human, ID, (float)Aff.DefaultStrength);
-                    break;
-
-                case NTAfflictionType.LIMBSYMPTOM:
-                case NTAfflictionType.LIMB:
-
-                    foreach (LimbType Limb in LimbsToCheck)
-                    {
-                        // Fetch the data of the affliction
-                        string LimbID = Key;
-                        NTHumanLimbAffData LimbAffData = (NTHumanLimbAffData)Data;
-                        NTLimbAffliction LimbAff = LimbAffData.AffTemplate;
-                        if (!LimbAff.Real) return;
-
-                        HF.SetAfflictionLimb(Human, LimbID, Limb, (float)LimbAff.DefaultStrength);
-                    }
-                    break;
-            }
-        }
-
         private void SetAfflictionStrengths()
         {
             foreach (KeyValuePair<string,NTHumanAffData> Pair in LocalAfflictions.UpdatingAfflictions)
@@ -1087,7 +1070,7 @@ public static class HumanUpdate
             }
         }
 
-        private void SetAfflictionStrength(NTAfflictionType AffType, string ID, NTHumanAffData Data)
+        private void SetAfflictionStrength(NTAfflictionType AffType, string ID, NTHumanAffData Data, bool Default = false)
         {
 
             switch (AffType)
@@ -1097,28 +1080,46 @@ public static class HumanUpdate
                 case NTAfflictionType.SYMPTOM:
 
                     // Fetch the data of the affliction
-
                     NTHumanAffData AffData = (NTHumanAffData)Data;
                     NTAffliction Template = AffData.AffTemplate;
 
-                    if (AffData.Strength == 0 || (!Template.Real)) return;
+                    if (!Template.Real) return;
 
-                    ApplyAfflictionChange(Human, ID, (float)AffData.Strength, (float)AffData.PrevStrength, (float)Template.MinStrength, (float)Template.MaxStrength);
+                    if (!Default)
+                    {
+                        if (AffData.Strength == 0) return;
 
+                        ApplyAfflictionChange(Human, ID, (float)AffData.Strength, (float)AffData.PrevStrength, (float)Template.MinStrength, (float)Template.MaxStrength);
+                    }
+                    else
+                    {
+                        SetAffliction(Human, ID, (float)Template.DefaultStrength);
+                    }
                     break;
 
                 case NTAfflictionType.LIMBSYMPTOM:
                 case NTAfflictionType.LIMB:
 
+                    // Fetch the data of the affliction
+                    NTHumanLimbAffData LimbAffData = (NTHumanLimbAffData)Data;
+                    NTLimbAffliction LimbTemplate = LimbAffData.AffTemplate;
+
                     foreach (LimbType Limb in LimbsToCheck)
                     {
-                        // Fetch the data of the affliction
-                        NTHumanLimbAffData LimbAffData = (NTHumanLimbAffData)Data;
-                        NTLimbAffliction LimbTemplate = LimbAffData.AffTemplate;
 
-                        if (LimbAffData.Strength[Limb] == 0 || (!LimbTemplate.Real)) return;
+                        if (!LimbTemplate.Real) return;
 
-                        ApplyAfflictionChangeLimb(Human, Limb, ID, (float)LimbAffData.Strength[Limb], (float)LimbAffData.PrevStrength[Limb], (float)LimbTemplate.MinStrength, (float)LimbTemplate.MaxStrength);
+                        if (!Default)
+                        {
+                            if (LimbAffData.Strength[Limb] == 0) return;
+
+                            ApplyAfflictionChangeLimb(Human, Limb, ID, (float)LimbAffData.Strength[Limb], (float)LimbAffData.PrevStrength[Limb], (float)LimbTemplate.MinStrength, (float)LimbTemplate.MaxStrength);
+                        }
+                        else
+                        {
+                            HF.SetAfflictionLimb(Human, ID, Limb, (float)LimbTemplate.DefaultStrength);
+                        }
+
                     }
 
                     break;
@@ -1239,33 +1240,18 @@ public static class HumanUpdate
     }
 
     // Returns a list 
-    private static  List<AfflictionPriority> GetLowestPriority(List<AfflictionPriority> CurrentPriorities)
+    private static  List<AfflictionPriority> GetLowestPriority(int Tick)
     {
-        List<AfflictionPriority> NewPriorities = CurrentPriorities;
-
-        switch (CurrentPriorities.Count)
+        List<AfflictionPriority> NewPriorities = new();
+        NewPriorities.Add(AfflictionPriority.HIGH);
+        
+        if (Tick % 2 == 0)
         {
-            case 0:
-                NewPriorities.Add(AfflictionPriority.HIGH);
-                break;
-
-            case 1:
-                NewPriorities.Add(AfflictionPriority.MEDIUM);
-                break;
-
-            case 2:
-                NewPriorities.Add(AfflictionPriority.LOW);
-                break;
-
-            case 3:
-                NewPriorities.Clear();
-                NewPriorities.Add(AfflictionPriority.HIGH);
-                break;
-
-            default:
-                NewPriorities.Clear();
-                NewPriorities.Add(AfflictionPriority.HIGH);
-                break;
+            NewPriorities.Add(AfflictionPriority.MEDIUM);
+        }
+        else if (Tick % 3 == 0)
+        {
+            NewPriorities.Add(AfflictionPriority.LOW);
         }
 
         return NewPriorities;
@@ -1273,6 +1259,7 @@ public static class HumanUpdate
 
     private static int Interval = 120;
     private static int Tick = 0;
+    private static int UpdateTick = 0;
     private static double NTDeltaTime = UpdateIntervalHigh / 120;
     private static List<AfflictionPriority> Priorities = new();
     // Gets called 60 times a second
@@ -1287,7 +1274,8 @@ public static class HumanUpdate
 
         if (!NTConfig.Get("NT_Calculations", true)) return; // Check the config.
 
-        Priorities = GetLowestPriority(Priorities);
+        Priorities = GetLowestPriority(UpdateTick);
+        UpdateTick++;
 
         NT.DeltaTime = NTDeltaTime;
         Update(Priorities);

@@ -1204,7 +1204,7 @@ namespace Neurotrauma
         public static void SetAfflictionLimb(Character Character, string Identifier, LimbType GivenLimbType, float Strength, Character Aggressor = null, float PrevStrength = 0)
         {
             // This Error was in the original but not ported for some reason?
-            if (!AfflictionPrefab.Prefabs.TryGet(Identifier, out AfflictionPrefab Prefab) || Prefab == null || Character == null)
+            if (!AfflictionPrefab.Prefabs.TryGet(Identifier, out AfflictionPrefab Prefab) || Prefab == null || Character == null || Character.CharacterHealth == null)
             {
                 LuaCsLogger.LogError(string.Format(
                     "Can't apply affliction to character limb\ncharacter = {0}, limbtype = {1}, affliction = {2}, strength = {3}",
@@ -1251,7 +1251,7 @@ namespace Neurotrauma
                 return;
             }
 
-            if (!AfflictionPrefab.Prefabs.TryGet(Identifier, out AfflictionPrefab Prefab) || Prefab == null) { return; }
+            if (!AfflictionPrefab.Prefabs.TryGet(Identifier, out AfflictionPrefab Prefab) || Prefab == null || Character == null || Character.CharacterHealth == null) { return; }
 
             float Resistance = Character.CharacterHealth.GetResistance(Prefab, GivenLimbType);
 

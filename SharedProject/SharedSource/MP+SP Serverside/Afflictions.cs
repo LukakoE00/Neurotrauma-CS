@@ -267,7 +267,7 @@ namespace Neurotrauma
             UpdateAction.Invoke(C, ID, Limb, (HumanUpdate.NTHumanLimbAffData)Data);
         }
 
-        public List<LimbType> AllowedLimbs { get; set; } = HF.LimbsToCheck; // I'll add this one later.
+        public List<LimbType> AllowedLimbs { get; set; } = HF.LimbsToCheck;
     }
 
     public class NTBloodAffliction : NTAffliction
@@ -3995,7 +3995,6 @@ namespace Neurotrauma
                     if (AffData.Strength <= 0) return;
                     HF.SetAffliction(C.Human, "cardiacarrest", 100);
                 };
-
 
             foreach (KeyValuePair<string, NTSymptom> Pair in SymptomsToAdd)
             {

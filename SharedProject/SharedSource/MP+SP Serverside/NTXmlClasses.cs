@@ -1,23 +1,45 @@
-using static Neurotrauma.HF;
 using Barotrauma.Items.Components;
+using FarseerPhysics.Collision;
 using System.Xml.Linq;
+using static Neurotrauma.HF;
 
 namespace Neurotrauma
 {
     /// <summary>
     /// Calls an NT Function Defined in the NTXmlMethods
     /// </summary>
-    public class NTCall : ItemComponent
+    public class NTCall : StatusEffect
     {
         public string MyAttribute { get; init; }
-        public NTCall(Item item, ContentXElement element) : base(item, element)
+        public ContentXElement Element;
+        public NTCall(ContentXElement element, string printDebugName) : base(element, printDebugName)
         {
+            HF.Print("init mate");
             MyAttribute = element.GetAttributeString("NTMethod", "default value");
-            Dictionary<string,object> MyValue = new();
+            Element = element;
+        }
 
-            foreach (ContentXElement X in element.Elements())
+        protected void Apply(float deltaTime, Entity entity, IReadOnlyList<ISerializableEntity> targets, Vector2? worldPosition = null)
+        {
+            HF.Print("use");
+            Dictionary<string, object> MyValue = new();
+
+            if (entity is Item EntityItem)
             {
-                if (X.Name != "NTMethod") MyValue[X.Name.ToString()] = element.GetAttributeString(X.Name.ToString(), "default value");
+                MyValue["item"] = EntityItem;
+            }
+            else if (entity is Character EntityCharacter)
+            {
+                MyValue["character"] = EntityCharacter;
+            }
+
+            MyValue["deltatime"] = deltaTime;
+            MyValue["targets"] = targets;
+            MyValue["worldposition"] = worldPosition;
+
+            foreach (ContentXElement X in Element.Elements())
+            {
+                if (X.Name != "NTMethod") MyValue[X.Name.ToString()] = Element.GetAttributeString(X.Name.ToString(), "default value");
             }
 
             if (NTXmlMethods.HasMethod(MyAttribute))
