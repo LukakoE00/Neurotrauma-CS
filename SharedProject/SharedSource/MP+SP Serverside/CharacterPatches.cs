@@ -11,6 +11,11 @@
             ApplyBurningOnFire();
         }
 
+        public static void Dispose()
+        {
+            if (harmony != null) harmony.UnpatchSelf();
+        }
+
         public static void DisableAimingPenalties()
         {
             var Method_GetAimWobble = AccessTools.Method(typeof(AnimController), "GetAimWobble", new[] { typeof(Limb), typeof(Limb), typeof(Item) });

@@ -15,6 +15,11 @@ namespace Neurotrauma
             SpeakAboutNeurotraumaIssues();
         }
 
+        public static void Dispose()
+        {
+            if ( harmony != null ) harmony.UnpatchSelf();
+        }
+
         public static void DisableBotRescueLogic()
         {
             var method_IsValidTarget = AccessTools.Method(typeof(AIObjectiveRescueAll), "IsValidTarget", new[] { typeof(Character), typeof(Character), typeof(bool).MakeByRefType() });
