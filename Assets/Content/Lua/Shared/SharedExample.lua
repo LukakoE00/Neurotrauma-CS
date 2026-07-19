@@ -15,6 +15,7 @@ NTInfo = LuaUserData.CreateStatic("Neurotrauma.NTInfo",false)
 CSNTCompat = LuaUserData.CreateStatic("Neurotrauma.NTC",false)
 CSNTAfflictions = LuaUserData.CreateStatic("Neurotrauma.NTAfflictions",false)
 CSHumanUpdate = LuaUserData.CreateStatic("Neurotrauma.HumanUpdate",false)-- stores our class ref
+NTLua = LuaUserData.CreateStatic("Neurotrauma.NTLua",false)
 AfflictionPriority = LuaUserData.CreateEnumTable("Neurotrauma.AfflictionPriority",false)
 
 dofile(NT.Path .. "/Lua/Scripts/Shared/ConfigData.lua") 		

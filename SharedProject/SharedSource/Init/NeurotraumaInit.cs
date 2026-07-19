@@ -5,7 +5,7 @@ using static Barotrauma.Networking.MessageFragment;
 
 namespace Neurotrauma
 {
-    public partial class NeurotraumaInit : IAssemblyPlugin, IEventChangeFallDamage, IEventUpdate, IEventCharacterCreated, IEventCharacterDeath
+    public partial class NeurotraumaInit : IAssemblyPlugin, IEventCharacterCreated, IEventCharacterDeath
     {
         // ---------------------------         Ydrec Shit         --------------------------- \\
 
@@ -32,6 +32,7 @@ namespace Neurotrauma
         {
             UserData.RegisterType(typeof(HF));
             UserData.RegisterType(typeof(NT));
+            UserData.RegisterType(typeof(NTLua));
             UserData.RegisterType(typeof(NTInfo));
             UserData.RegisterType(typeof(NTC));
 
@@ -82,16 +83,12 @@ namespace Neurotrauma
 
         public void AddPatches()
         {
-            //EventService.Subscribe<IEventChangeFallDamage>(this);  //subscribe your plugin
-            //EventService.Subscribe<IEventUpdate>(this);  //subscribe your plugin
             EventService.Subscribe<IEventCharacterCreated>(this);  //subscribe your plugin
             EventService.Subscribe<IEventCharacterDeath>(this);  //subscribe your plugin
         }
 
         public void RemovePatches()
         {
-            //EventService.Unsubscribe<IEventChangeFallDamage>(this); //remove your plugin
-            //EventService.Unsubscribe<IEventUpdate>(this);  //remove your plugin
             EventService.Unsubscribe<IEventCharacterCreated>(this);  //remove your plugin
             EventService.Unsubscribe<IEventCharacterDeath>(this);  //remove your plugin
         }
@@ -155,17 +152,6 @@ namespace Neurotrauma
         }
 
         // -------------------------------------- Our IEvent Plugins -------------------------------------- \\
-
-        public float? OnChangeFallDamage(float impactDamage, Character character, Vector2 impactPos, Vector2 velocity)
-        {
-            NTFallDamage.OnChangeFallDamage(impactDamage, character, impactPos, velocity);
-            return 0;
-        }
-
-        public void OnUpdate(double deltaTime) // Unused
-        {
-            HumanUpdate.ThinkUpdate();
-        }
 
         public void OnCharacterCreated(Character character)
         {

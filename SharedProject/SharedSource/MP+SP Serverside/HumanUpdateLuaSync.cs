@@ -1,6 +1,7 @@
 ﻿
 using Barotrauma;
 using Barotrauma.LuaCs.Events;
+using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Loaders;
@@ -30,18 +31,22 @@ namespace Neurotrauma
 
         static public void SyncAfflictions(IEnumerable<HumanUpdate.NTHuman> CharacterList, List<AfflictionPriority> Priorities)
         {
+            NTLua.Call("SyncAfflictions", NT.DeltaTime, CharacterList, Priorities);
         }
 
         static public void SyncCharacters(IEnumerable<HumanUpdate.NTHuman> CharacterList)
         {
+            NTLua.Call("SyncCharacters", CharacterList);
         }
 
         static public void SyncCharacterSpeed(Character Human, double Speed)
         {
+            NTLua.Call("SyncCharacterSpeed", Human, Speed);
         }
 
         static public void SyncPreHumanUpdateHooks(Character Character)
         {
+            NTLua.Call("SyncPreHumanUpdateHooks", Character);
         }
     }
 }

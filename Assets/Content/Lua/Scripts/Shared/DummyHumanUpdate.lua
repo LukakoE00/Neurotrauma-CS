@@ -205,10 +205,9 @@ NT.CreateLimbTables = function (CharData)
 		end
 end
 
-Hook.Patch("Neurotrauma.HumanUpdateLuaSync","SyncAfflictions", function(GameSession, ptable)
-
-	NT.Deltatime = Init.DeltaTime
-	for NTHuman in ptable["CharacterList"] do
+NTLua.Add("SyncAfflictions", function(deltatime, characterlist, priorities)
+	NT.Deltatime = deltatime
+	for NTHuman in characterlist do
 		local CharData = { character = NTHuman.Human, afflictions = {}, stats = {} }
 
 		for StatData in NTHuman.LocalStats.DoubleStats do
@@ -220,27 +219,27 @@ Hook.Patch("Neurotrauma.HumanUpdateLuaSync","SyncAfflictions", function(GameSess
 		end
 
 		NT.CreateLimbTables(CharData)
-		NT.UpdateHuman(NTHuman.Human,CharData,NTHuman,ptable["Priorities"])
+		NT.UpdateHuman(NTHuman.Human,CharData,NTHuman,priorities)
 
 	end
-end,  Hook.HookMethodType.After)
+end)
 
-Hook.Patch("Neurotrauma.HumanUpdateLuaSync","SyncCharacters", function(GameSession, ptable)
-	for NTHuman in ptable["CharacterList"] do
+NTLua.Add("SyncCharacters", function(characterlist)
+	for NTHuman in characterlist do
 		NTC.AddEmptyCharacterData(NTHuman.Human)
 	end
-end,  Hook.HookMethodType.After)
+end)
 
-Hook.Patch("Neurotrauma.HumanUpdateLuaSync","SyncCharacterSpeed", function(GameSession, ptable) -- I don't think this is needed anymore
-	NTC.CharacterSpeedMultipliers[ptable["Human"]] = ptable["Speed"]
-end,  Hook.HookMethodType.After)
+NTLua.Add("SyncCharacterSpeed", function(character,speed)
+	NTC.CharacterSpeedMultipliers[character] = speed
+end)
 
-Hook.Patch("Neurotrauma.HumanUpdateLuaSync","SyncPreHumanUpdateHooks", function(GameSession, ptable)
+NTLua.Add("SyncPreHumanUpdateHooks", function(character)
 	-- pre humanupdate hooks
 	for key, val in pairs(NTC.PreHumanUpdateHooks) do
-		val(ptable["Character"])
+		val(character)
 	end
-end,  Hook.HookMethodType.After)
+end)
 
 -- Neurotrauma human update functions
 -- Hooks Lua event "think" to update and use for applying NT specific character data (its called 'c') with

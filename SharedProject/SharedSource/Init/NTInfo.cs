@@ -1,10 +1,23 @@
 using Barotrauma.LuaCs.Data;
 using MoonSharp.Interpreter;
+using static Neurotrauma.NTVariants;
 
 namespace Neurotrauma;
 
 // This takes the place of the init.lua information and can be used during Initialization (see NeurotraumaInit)
 // Addons should add their own file like this which then gets used to do the old print-in-console thing
+
+/// <summary>
+/// Stores the ID's of NT variants.
+/// </summary>
+public struct NTVariants
+{
+    public static string NTOld = "3190189044";
+    public static string NTLegacy = "3705482890";
+    public static string NTDev = "3439141713";
+    public static string NTLite = "3369418643";
+}
+
 /// <summary>
 /// Stores information about the current version of NT C# and the currently used Addons.
 /// </summary>
@@ -80,8 +93,7 @@ public static class NTInfo
 
             // Checking for incompatible mods
 
-            // In order : Legacy Neurotrauma, Development Neurotrauma, Neurotrauma, Neurotrauma Lite
-            List<String> incompatibleMods = ["3705482890", "3439141713", "3190189044", "3369418643"];
+            List<String> incompatibleMods = [NTLegacy, NTDev, NTOld, NTLite];
             String detectedMods = "";
 
             String NTSPId = "3478084070";
