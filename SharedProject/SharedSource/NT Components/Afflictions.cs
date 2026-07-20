@@ -2913,7 +2913,7 @@ namespace Neurotrauma
                     // Inflammation
                     if (AffData.Strength[Limb] > 10)
                     {
-                        HF.AddAfflictionLimb(C.Human, "inflammation", Limb, (float)(0.15 * NT.DeltaTime), null);
+                        C.GetLimbSymptomData("inflammation").Strength[Limb] += .5 * NT.DeltaTime;
                     }
                 };
 
@@ -2922,7 +2922,7 @@ namespace Neurotrauma
             // Type: Limb Specific
             // Caused By: Damage, fractures.
             // Effects: Inflammation, Sepsis.
-            LimbAfflictionsToAdd["foreignbody"] = new("foreignbody");
+            LimbAfflictionsToAdd["foreignbody"] = new("foreignbody", 0, 100, 0, AfflictionPriority.HIGH);
             LimbAfflictionsToAdd["foreignbody"].UpdateAction =
                 (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanLimbAffData AffData) =>
                 {
@@ -2960,7 +2960,7 @@ namespace Neurotrauma
                     // Inflammation
                     if (AffData.Strength[Limb] > 15)
                     {
-                        HF.AddAfflictionLimb(C.Human, "inflammation", Limb, (float)(0.15 * NT.DeltaTime), null);
+                        C.GetLimbSymptomData("inflammation").Strength[Limb] += .5 * NT.DeltaTime;
                     }
 
                     // Infected Wounds
@@ -4075,7 +4075,6 @@ namespace Neurotrauma
             // Caused by: Foreign Bodies, Infected Wounds
             // Effects: Fever
             LimbSymptomsToAdd["inflammation"] = new("inflammation", 0, 100, 0, AfflictionPriority.HIGH);
-            LimbSymptomsToAdd["inflammation"].IsPartialSymptom = true;
             LimbSymptomsToAdd["inflammation"].UpdateAction =
                 (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanLimbSymptomData AffData) =>
                 {

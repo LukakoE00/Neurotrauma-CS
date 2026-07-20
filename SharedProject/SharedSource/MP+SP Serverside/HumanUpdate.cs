@@ -1,6 +1,7 @@
 ﻿using Barotrauma;
 using MonoMod.Utils;
 using System.Security.AccessControl;
+using static Barotrauma.Networking.MessageFragment;
 using static Microsoft.Xna.Framework.Graphics.VertexDeclaration;
 using static Neurotrauma.HF;
 using static Neurotrauma.NTC;
@@ -788,6 +789,8 @@ public static class HumanUpdate
 
             // ----------------------------------------- Affliction updates ----------------------------------------- \\
 
+            FetchAfflictions();
+
             UpdateAfflictions(Priorities);
 
             SetAfflictionStrengths();
@@ -857,6 +860,40 @@ public static class HumanUpdate
                 string ID = Pair.Key;
                 CharacterStats.NTHumanStatBoolData StatData = Pair.Value;
                 SetBoolStatStrength(Pair.Key, GetBoolStatUpdate(this, ID));
+            }
+        }
+
+        private void FetchAfflictions()
+        {
+            foreach (KeyValuePair<string,NTHumanAffData> kvp in LocalAfflictions.UpdatingAfflictions)
+            {
+                string ID = kvp.Key;
+                NTHumanAffData Aff = kvp.Value;
+                NTAffliction Template = Aff.AffTemplate;
+                NTAfflictionType Type = Template.Type;
+                switch (Type)
+                {
+                    case NTAfflictionType.NONLIMB:
+                    case NTAfflictionType.SYMPTOM:
+                    case NTAfflictionType.BLOOD:
+                        double CustomStrength = AffClamp(Aff.Strength, Template);
+                        double NewStrength = Template.Real ? GetAfflictionStrength(Human, ID) : CustomStrength; // If real, use the prefab strength, else use custom.
+                        Aff.Strength = NewStrength;
+                        Aff.PrevStrength = NewStrength;
+                        break;
+
+                    case NTAfflictionType.LIMBSYMPTOM:
+                    case NTAfflictionType.LIMB:
+                        foreach (LimbType Limb in HF.LimbsToCheck)
+                        {
+                            NTHumanLimbAffData LimbAff = (NTHumanLimbAffData)Aff;
+                            double CustomLimbStrength = AffClamp(LimbAff.Strength[Limb], Template);
+                            double NewLimbStrength = Template.Real ? GetAfflictionStrengthLimb(Human, Limb, ID) : CustomLimbStrength; // If real, use the prefab strength, else use custom.
+                            LimbAff.Strength[Limb] = NewLimbStrength;
+                            LimbAff.PrevStrength[Limb] = NewLimbStrength;
+                        }
+                        break;
+                }
             }
         }
 
@@ -1014,13 +1051,6 @@ public static class HumanUpdate
                         return; // Skip to the next affliction, we don't have the same priority currently.
                     }
 
-                    // Store the previous strength before reading the current value.
-                    double PrevStrength = AffClamp(AffData.Strength,Aff);
-                    double CurrentStrength = Aff.Real ? GetAfflictionStrength(Human, ID) : PrevStrength; // If real, use the prefab strength, else use custom.
-
-                    AffData.PrevStrength = CurrentStrength;
-                    AffData.Strength = CurrentStrength;
-
                     if (AffType == NTAfflictionType.SYMPTOM)
                     {
                         if (PreSymptomCheck(AffData))
@@ -1049,12 +1079,6 @@ public static class HumanUpdate
                         NTLimbAffliction LimbAff = LimbAffData.AffTemplate;
 
                         if (PreLimbCheck(Limb, LimbAff, LimbAffData, Priorities)) continue;
-
-                        double LimbPrevStrength = AffClamp(LimbAffData.Strength[Limb], LimbAff);
-                        double LimbCurrentStrength = LimbAff.Real ?  GetAfflictionStrengthLimb(Human, Limb, LimbID) : LimbPrevStrength; // If real, use the prefab strength, else use custom.
-
-                        LimbAffData.PrevStrength[Limb] = LimbCurrentStrength;
-                        LimbAffData.Strength[Limb] = LimbCurrentStrength;
 
                         if (PreSymptomCheck(LimbAffData, Limb))
                         {
