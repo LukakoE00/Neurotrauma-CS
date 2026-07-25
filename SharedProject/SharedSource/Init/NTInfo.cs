@@ -16,7 +16,14 @@ public struct NTVariants
     public static string NTLegacy = "3705482890";
     public static string NTDev = "3439141713";
     public static string NTLite = "3369418643";
+    public static string NTAi = "3741432181";
 }
+
+public struct NTLuaAddonIDs
+{
+    public static string NTSP = "3478084070";
+}
+
 
 /// <summary>
 /// Stores information about the current version of NT C# and the currently used Addons.
@@ -89,14 +96,14 @@ public static class NTInfo
                 }
             }
 
-            HF.Print(consolePrint);
+            consolePrint += "\n";
 
             // Checking for incompatible mods
 
-            List<String> incompatibleMods = [NTLegacy, NTDev, NTOld, NTLite];
-            String detectedMods = "";
-
-            String NTSPId = "3478084070";
+            List<String> incompatibleMods = [NTLegacy, NTDev, NTOld, NTLite, NTAi];
+            List<string> WorkingAddons = ["Eyes","Thermal","Cybernetics","Nanite Integration","Grafting","Lobotomy","Pharmacy","NT Surgery Plus"]; // Addons we can be sure that work. (Presuming you use the patches)
+            string detectedMods = "";
+            string warnedMods = "";
 
             foreach (var item in ContentPackageManager.EnabledPackages.All)
             {
@@ -108,19 +115,35 @@ public static class NTInfo
                         detectedMods += " - " + item.Name + "\n";
                     }
 
-                    if (item.UgcId.value.ToString() == NTSPId)
+                    if (item.UgcId.value.ToString() == NTLuaAddonIDs.NTSP)
                     {
                         NTSPEnabled = true;
                     }
                 }
             }
 
-            if (detectedMods != "")
+            foreach (KeyValuePair<string, Table> kvp in LuaRegisteredAddons)
             {
-                HF.PrintError("Incompatible mods detected ! This will cause many errors and you should disable them before playing !\n" + detectedMods);
+                Table addon = kvp.Value;
+                if (!WorkingAddons.Contains(addon.Get("Name").String))
+                {
+                    warnedMods += " - NT " + addon.Get("Name").String + "\n";
+                }
             }
 
-            if (NTSPEnabled) HF.Print("NT Surgery Plus Enabled!");
+            if (NTSPEnabled) consolePrint += "\nNT Surgery Plus Enabled!\n";
+
+            HF.Print(consolePrint);
+
+            if (detectedMods != "")
+            {
+                HF.PrintError("Incompatible mods detected! This will cause many errors and you should disable them before playing!\n" + detectedMods);
+            }
+
+            if (warnedMods != "")
+            {
+                HF.PrintWarning("Possibly incompatible addons detected! These may causes issues when using NT C#!\n" + warnedMods);
+            }
 
         }, 1000);
     }

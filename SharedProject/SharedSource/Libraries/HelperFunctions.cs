@@ -1192,7 +1192,7 @@ namespace Neurotrauma
             return Character.CharacterHealth.GetAffliction(Identifier); // No error handling on this one, gonna need someone smarter to do that.
         }
 
-        public static Affliction GetAfflictionLimb(Character Character, String Identifier = "", LimbType GivenLimbType = LimbType.Torso)
+        public static Affliction ?GetAfflictionLimb(Character Character, String Identifier = "", LimbType GivenLimbType = LimbType.Torso)
         {
             if (Character == null || Character.CharacterHealth == null) return null;
             return Character.CharacterHealth.GetAffliction(Identifier, GetCharacterLimb(Character, GivenLimbType));
@@ -1685,7 +1685,7 @@ namespace Neurotrauma
         // ---------------------------------------- Client Related Helper Functions -------------------------------------------------- \\
 
         // Both these functions were returning null. - Lukako
-        public static Client CharacterToClient(Character character)
+        public static Client ?CharacterToClient(Character character)
         {
 #if SERVER
             foreach (Client client in GameMain.Server.ConnectedClients)
@@ -1700,7 +1700,7 @@ namespace Neurotrauma
             return null;
         }
 
-        public static Client ClientFromName(string Name)
+        public static Client ?ClientFromName(string Name)
         {
 #if SERVER
             foreach (Client client in GameMain.Server.ConnectedClients)

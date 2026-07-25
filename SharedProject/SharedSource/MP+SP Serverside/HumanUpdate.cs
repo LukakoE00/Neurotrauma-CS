@@ -902,7 +902,7 @@ public static class HumanUpdate
             IReadOnlyCollection<Affliction> CurrentAfflictions = Human.CharacterHealth.GetAllAfflictions();
             IEnumerable<Affliction> FilteredAfflictions = CurrentAfflictions.Where(aff => { return LocalAfflictions.UpdatingAfflictions.ContainsKey(aff.Identifier.ToString()); });
             List < Affliction > SortedAfflictions = FilteredAfflictions.OrderBy(
-                                aff => LocalAfflictions.UpdatingAfflictions[aff.Identifier.ToString()].AffTemplate.AffSortID
+                                aff => LocalAfflictions?.UpdatingAfflictions[aff.Identifier.ToString()]?.AffTemplate?.AffSortID
                             ).ToList();
 
             SortedAfflictions = SortedAfflictions.Union(LocalAfflictions.LastUpdatedAfflictions).ToList(); // We merge our last updated afflictions with our new afflictions.
@@ -1061,11 +1061,6 @@ public static class HumanUpdate
 
                     Aff.Update(this, ID, LimbType.Torso, AffData);
 
-                    if (AffType == NTAfflictionType.SYMPTOM)
-                    {
-                        PostSymptomCheck((NTHumanSymptomData)AffData);
-                    }
-
                     break;
 
                 case NTAfflictionType.LIMB:
@@ -1086,11 +1081,6 @@ public static class HumanUpdate
                         }
 
                         LimbAff.Update(this, LimbID, Limb, LimbAffData);
-
-                        if (AffType == NTAfflictionType.LIMBSYMPTOM)
-                        {
-                            PostSymptomCheck((NTHumanLimbSymptomData)LimbAffData, Limb);
-                        }
                         
                     }
 
@@ -1124,6 +1114,11 @@ public static class HumanUpdate
 
                     if (!Default)
                     {
+                        if (AffType == NTAfflictionType.SYMPTOM)
+                        {
+                            PostSymptomCheck((NTHumanSymptomData)AffData);
+                        }
+
                         if (AffData.Strength == AffData.PrevStrength) return;
 
                         HF.SetAffliction(Human, ID, (float)Math.Clamp(AffData.Strength, Template.MinStrength, Template.MaxStrength));
@@ -1149,6 +1144,11 @@ public static class HumanUpdate
 
                         if (!Default)
                         {
+
+                            if (AffType == NTAfflictionType.LIMBSYMPTOM)
+                            {
+                                PostSymptomCheck((NTHumanLimbSymptomData)LimbAffData, Limb);
+                            }
 
                             if (LimbAffData.Strength[Limb] == LimbAffData.PrevStrength[Limb]) continue;
 

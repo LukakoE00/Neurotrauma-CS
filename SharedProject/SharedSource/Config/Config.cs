@@ -361,7 +361,7 @@ namespace Neurotrauma
             }
             return defaultValue;
         }
-        public static object Get(string key)
+        public static object ?Get(string key)
         {
             if (Entries.TryGetValue(key, out ConfigEntry ?entry))
             {

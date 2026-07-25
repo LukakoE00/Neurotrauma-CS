@@ -272,7 +272,7 @@ namespace Neurotrauma
                 {
                     AddAffliction(character, "fracturedneck", 5, character);
                 }
-                if (strength >= 5 && Chance(.7f)) ;
+                if (strength >= 5 && Chance(.7f))
                 {
                     AddAffliction(character, "neurotrauma", (float) (strength * Rand.Range(0.1, 0.4)), character);
                 }

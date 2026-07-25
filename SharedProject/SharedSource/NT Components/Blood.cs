@@ -42,7 +42,7 @@ namespace Neurotrauma
         }
 
         // Check if character has a BloodType. If not, then apply one; else return the already existing one.
-        public static string GetBloodType(Character character)
+        public static string ?GetBloodType(Character character)
         {
             foreach (var (identifier, _) in BloodTypes)
             {

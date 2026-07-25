@@ -122,7 +122,7 @@ namespace Neurotrauma
             return Afflictions[id];
         }
 
-        public static NTAffliction IDToNTAff(string id)
+        public static NTAffliction ?IDToNTAff(string id)
         {
             if (Afflictions.ContainsKey(id))
             {
@@ -551,6 +551,10 @@ namespace Neurotrauma
                         * 0.18 * NT.DeltaTime;
 
                         HF.AddAffliction(C.Human, "acidosis", (float)AcidosisIncrease, null);
+
+                        NTC.SetSymptomFalse(C.Human, "hypoventilation", 2);
+                        NTC.SetSymptomFalse(C.Human, "hyperventilation", 2);
+                        NTC.SetSymptomFalse(C.Human, "shortnessofbreath", 2);
                     };
 
             // Rib Fractures
@@ -1240,7 +1244,7 @@ namespace Neurotrauma
                     // Hyperventilation
                     if (AffData.Strength > 15)
                     {
-                        HF.AddAffliction(C.Human, "hyperventilation", 100, null);
+                        NTC.SetSymptomTrue(C.Human, "hyperventilation", 2);
 
                         // Shortness of Breath
                         if (AffData.Strength > 40 && C.GetAffData("respiratoryarrest").Strength <= 0)
@@ -1671,7 +1675,7 @@ namespace Neurotrauma
                     // Hypoventilation
                     if (AffData.Strength > 1)
                     {
-                        HF.AddAffliction(C.Human, "hypoventilation", 100, null);
+                        NTC.SetSymptomTrue(C.Human, "hypoventilation", 2);
                     }
 
                 };
@@ -1693,7 +1697,7 @@ namespace Neurotrauma
                     // Hypoventilation
                     if (AffData.Strength > 1)
                     {
-                        HF.AddAffliction(C.Human, "hypoventilation", 100, null);
+                        NTC.SetSymptomTrue(C.Human, "hypoventilation", 2);
                     }
 
                 };
@@ -3920,6 +3924,12 @@ namespace Neurotrauma
             SymptomsToAdd["shortnessofbreath"].UpdateAction =
                 (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanSymptomData AffData) =>
                 {
+                    if (C.GetAffData("respiratoryarrest").Strength > 0)
+                    {
+                        AffData.Strength = 0;
+                        NTC.SetSymptomFalse(C.Human, ID, 2);
+                        return;
+                    }
                 };
 
             // On Wheelchair
@@ -3977,8 +3987,12 @@ namespace Neurotrauma
             SymptomsToAdd["hyperventilation"].UpdateAction =
                 (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanSymptomData AffData) =>
                 {
-                    // Effects:
-                    // Alkalosis
+                    if (C.GetAffData("respiratoryarrest").Strength > 0)
+                    {
+                        AffData.Strength = 0;
+                        NTC.SetSymptomFalse(C.Human, ID, 2);
+                        return;
+                    }
                     HF.AddAffliction(C.Human, "alkalosis", (float)(Math.Clamp(AffData.Strength, 0, 1) * 0.09 * NT.DeltaTime), null);
                 };
 
@@ -3991,6 +4005,12 @@ namespace Neurotrauma
             SymptomsToAdd["hypoventilation"].UpdateAction =
                 (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanSymptomData AffData) =>
                 {
+                    if (C.GetAffData("respiratoryarrest").Strength > 0)
+                    {
+                        AffData.Strength = 0;
+                        NTC.SetSymptomFalse(C.Human, ID, 2);
+                        return;
+                    }
                     // Counteracting with Hyperventilation
                     if (C.GetSymptomAffData("hyperventilation").Strength > 0 && AffData.Strength > 0)
                     {

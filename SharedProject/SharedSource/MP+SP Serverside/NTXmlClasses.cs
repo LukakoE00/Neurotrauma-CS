@@ -19,7 +19,7 @@ namespace Neurotrauma
             Element = element;
         }
 
-        protected void Apply(float deltaTime, Entity entity, IReadOnlyList<ISerializableEntity> targets, Vector2? worldPosition = null)
+        new protected void Apply(float deltaTime, Entity entity, IReadOnlyList<ISerializableEntity> targets, Vector2? worldPosition = null)
         {
             HF.Print("use");
             Dictionary<string, object> MyValue = new();
