@@ -16,9 +16,9 @@ namespace Neurotrauma;
             LuaCsSetup.Instance.Hook.Add("character.giveJobItems", "NT.giveHealthScannersBatteries", OnGiveJobItems);
         }
 
-        private static object OnMedStarterCrateSpawn(object[] args)
+        private static object ?OnMedStarterCrateSpawn(object[] args)
         {
-            Item item = args.Length > 2 ? args[2] as Item : null;
+            Item ?item = args.Length > 2 ? args[2] as Item : null;
             if (item == null) return null;
 
             LuaCsSetup.Instance.Timer.Wait((object[] _) =>
@@ -35,7 +35,7 @@ namespace Neurotrauma;
 
                 HF.SpawnItemPlusFunction("healthscanner", item.OwnInventory, InvSlotType.Any, Vector2.Zero, p =>
                     {
-                        Item scanner = p[^1] as Item;
+                        Item ?scanner = p[^1] as Item;
                         if (scanner?.OwnInventory == null) return;
 
                         ItemPrefab prefab = ItemPrefab.Find(null, "batterycell");
@@ -106,9 +106,9 @@ namespace Neurotrauma;
             );
         }
 
-        private static object OnGiveJobItems(object[] args)
+        private static object ?OnGiveJobItems(object[] args)
         {
-            Character character = args.Length > 0 ? args[0] as Character : null;
+            Character ?character = args.Length > 0 ? args[0] as Character : null;
             if (character == null) return null;
 
             LuaCsSetup.Instance.Timer.Wait((object[] _) =>

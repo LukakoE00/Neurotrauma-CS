@@ -2568,7 +2568,7 @@ public class NTItemMethods
     /// <summary>
     /// The function patching the base game Item.Use
     /// </summary>
-    public static void Override_Use(Barotrauma.Item __instance, float deltaTime, Character user = null, Limb targetLimb = null, Entity useTarget = null, Character userForOnUsedEvent = null)
+    public static void Override_Use(Barotrauma.Item __instance, float deltaTime, Character ?user = null, Limb ?targetLimb = null, Entity ?useTarget = null, Character ?userForOnUsedEvent = null)
     {
        // LuaCsLogger.Log("use");
     }

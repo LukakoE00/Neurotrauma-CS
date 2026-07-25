@@ -1,4 +1,4 @@
-print("[NT2] This is the SharedExample init print!")
+print("[NT2] Loaded Shared Side!")
 
 NT = {}
 NT.Name = "Neurotrauma"

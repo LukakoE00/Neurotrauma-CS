@@ -225,7 +225,7 @@ namespace Neurotrauma
     public class NTNonLimbAffliction : NTAffliction
     {
 
-        public Action<HumanUpdate.NTHuman, string, LimbType, HumanUpdate.NTHumanNonLimbAffData> UpdateAction =
+        new public Action<HumanUpdate.NTHuman, string, LimbType, HumanUpdate.NTHumanNonLimbAffData> UpdateAction =
             (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanNonLimbAffData AffData) =>
             {
                 // Insert your Affliction Update in here.
@@ -251,7 +251,7 @@ namespace Neurotrauma
 
     public class NTLimbAffliction : NTAffliction
     {
-        public Action<HumanUpdate.NTHuman, string, LimbType, HumanUpdate.NTHumanLimbAffData> UpdateAction =
+        new public Action<HumanUpdate.NTHuman, string, LimbType, HumanUpdate.NTHumanLimbAffData> UpdateAction =
             (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanLimbAffData AffData) =>
             {
                 // Insert your Affliction Update in here.
@@ -281,7 +281,7 @@ namespace Neurotrauma
     public class NTBloodAffliction : NTAffliction
     {
 
-        public Action<HumanUpdate.NTHuman, string, LimbType, HumanUpdate.NTHumanBloodAffData> UpdateAction =
+        new public Action<HumanUpdate.NTHuman, string, LimbType, HumanUpdate.NTHumanBloodAffData> UpdateAction =
             (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanBloodAffData AffData) =>
             {
                 // Insert your Affliction Update in here.
@@ -312,7 +312,7 @@ namespace Neurotrauma
     public class NTSymptom : NTNonLimbAffliction
     {
 
-        public Action<HumanUpdate.NTHuman, string, LimbType, HumanUpdate.NTHumanSymptomData> UpdateAction =
+        new public Action<HumanUpdate.NTHuman, string, LimbType, HumanUpdate.NTHumanSymptomData> UpdateAction =
             (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanSymptomData SymData) =>
             {
                 // Insert your Affliction Update in here.
@@ -347,7 +347,7 @@ namespace Neurotrauma
 
     public class NTLimbSymptom : NTLimbAffliction
     {
-        public Action<HumanUpdate.NTHuman, string, LimbType, HumanUpdate.NTHumanLimbSymptomData> UpdateAction =
+        new public Action<HumanUpdate.NTHuman, string, LimbType, HumanUpdate.NTHumanLimbSymptomData> UpdateAction =
             (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanLimbSymptomData SymData) =>
             {
                 // Insert your Affliction Update in here.
@@ -1525,13 +1525,13 @@ namespace Neurotrauma
                 (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanNonLimbAffData AffData) =>
                 {
                     // Arm lock items
-                    Item LeftLockItem = HF.GetItemInLeftHand(C.Human);
+                    Item ?LeftLockItem = HF.GetItemInLeftHand(C.Human);
                     if (LeftLockItem?.Prefab.Identifier.Value != "armlock")
                     {
                         LeftLockItem = null;
                     }
 
-                    Item RightLockItem = HF.GetItemInRightHand(C.Human);
+                    Item ?RightLockItem = HF.GetItemInRightHand(C.Human);
                     if (RightLockItem?.Prefab.Identifier.Value != "armlock")
                     {
                         RightLockItem = null;

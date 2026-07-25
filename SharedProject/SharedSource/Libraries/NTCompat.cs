@@ -30,7 +30,7 @@ namespace Neurotrauma
 
         public static void SetSymptomTrue(Character Char, string SymptomIdentifier, int Duration = 2)
         {
-            HumanUpdate.NTHuman Human = HumanUpdate.CharacterToNTHuman(Char);
+            HumanUpdate.NTHuman ?Human = HumanUpdate.CharacterToNTHuman(Char);
             Dictionary<string, HumanUpdate.NTHumanSymptomData> Afflictions = Human.LocalAfflictions.UpdatingSymptoms;
             HumanUpdate.NTHumanSymptomData Sym = Afflictions[SymptomIdentifier];
 
@@ -60,7 +60,7 @@ namespace Neurotrauma
 
         public static void SetLimbSymptomTrue(Character Char, string SymptomIdentifier, LimbType Limb, int Duration = 2)
         {
-            HumanUpdate.NTHuman Human = HumanUpdate.CharacterToNTHuman(Char);
+            HumanUpdate.NTHuman ?Human = HumanUpdate.CharacterToNTHuman(Char);
             Dictionary<string, HumanUpdate.NTHumanLimbSymptomData> Afflictions = Human.LocalAfflictions.UpdatingLimbSymptoms;
             HumanUpdate.NTHumanLimbSymptomData Sym = Afflictions[SymptomIdentifier];
             Sym.HumanUpdateTime[Limb] = Duration;
@@ -85,7 +85,7 @@ namespace Neurotrauma
 
         public static void SetSymptomFalse(Character Char, string SymptomIdentifier, int Duration = 2)
         {
-            HumanUpdate.NTHuman Human = HumanUpdate.CharacterToNTHuman(Char);
+            HumanUpdate.NTHuman ?Human = HumanUpdate.CharacterToNTHuman(Char);
             Dictionary<string, HumanUpdate.NTHumanSymptomData> Afflictions = Human.LocalAfflictions.UpdatingSymptoms;
             HumanUpdate.NTHumanSymptomData Sym = Afflictions[SymptomIdentifier];
             Sym.HumanUpdateStoptime = Duration;
@@ -111,7 +111,7 @@ namespace Neurotrauma
 
         public static void SetLimbSymptomFalse(Character Char, string SymptomIdentifier, LimbType Limb, int Duration = 2)
         {
-            HumanUpdate.NTHuman Human = HumanUpdate.CharacterToNTHuman(Char);
+            HumanUpdate.NTHuman ?Human = HumanUpdate.CharacterToNTHuman(Char);
             Dictionary<string, HumanUpdate.NTHumanLimbSymptomData> Afflictions = Human.LocalAfflictions.UpdatingLimbSymptoms;
             HumanUpdate.NTHumanLimbSymptomData Sym = Afflictions[SymptomIdentifier];
             Sym.HumanUpdateStoptime[Limb] = Duration;
@@ -240,7 +240,7 @@ namespace Neurotrauma
         public static void MultiplySpeed(Character Char, double Multiplier) // Im not gonna lie, I have no clue where this is used at.
         {
             if (Char == null) return;
-            HumanUpdate.NTHuman Human = HumanUpdate.CharacterToNTHuman(Char);
+            HumanUpdate.NTHuman ?Human = HumanUpdate.CharacterToNTHuman(Char);
             if (CharacterSpeedMultipliers.ContainsKey(Human))
             {
                 CharacterSpeedMultipliers[Human] *= Multiplier;
@@ -263,7 +263,7 @@ namespace Neurotrauma
         public static void DivideSpeed(Character Char, double Multiplier)
         {
             if (Char == null) return;
-            HumanUpdate.NTHuman Human = HumanUpdate.CharacterToNTHuman(Char);
+            HumanUpdate.NTHuman ?Human = HumanUpdate.CharacterToNTHuman(Char);
             if (CharacterSpeedMultipliers.ContainsKey(Human))
             {
                 CharacterSpeedMultipliers[Human] /= Multiplier;
@@ -281,7 +281,7 @@ namespace Neurotrauma
         public static double GetSpeed(Character Char)
         {
             if (Char == null) return 1;
-            HumanUpdate.NTHuman Human = HumanUpdate.CharacterToNTHuman(Char);
+            HumanUpdate.NTHuman ?Human = HumanUpdate.CharacterToNTHuman(Char);
             return (CharacterSpeedMultipliers.ContainsKey(Human)) ? CharacterSpeedMultipliers[Human] : 1; // W C# moment
         }
 
@@ -294,7 +294,7 @@ namespace Neurotrauma
         public static void SetSpeed(Character Char, double Amount)
         {
             if (Char == null) return;
-            HumanUpdate.NTHuman Human = HumanUpdate.CharacterToNTHuman(Char);
+            HumanUpdate.NTHuman ?Human = HumanUpdate.CharacterToNTHuman(Char);
             CharacterSpeedMultipliers[Human] = Amount;
         }
 
@@ -359,7 +359,7 @@ namespace Neurotrauma
 
         public static bool HasSymptom(Character Char, string SymIdentifier)
         {
-            HumanUpdate.NTHuman Human = HumanUpdate.CharacterToNTHuman(Char);
+            HumanUpdate.NTHuman ?Human = HumanUpdate.CharacterToNTHuman(Char);
             if (Human == null)
             {
                 return false;
@@ -390,7 +390,7 @@ namespace Neurotrauma
 
         public static bool HasLimbSymptom(Character Char, string SymIdentifier, LimbType Limb)
         {
-            HumanUpdate.NTHuman Human = HumanUpdate.CharacterToNTHuman(Char);
+            HumanUpdate.NTHuman ?Human = HumanUpdate.CharacterToNTHuman(Char);
             if (Human == null) return false;
             HumanUpdate.NTHumanLimbSymptomData Symptom = Human.GetLimbSymptomData(SymIdentifier);
             if (Symptom == null) return false;
@@ -433,7 +433,7 @@ namespace Neurotrauma
         /// <returns>True if it should be removed, else False.</returns>
         public static bool HasSymptomFalse(Character Character, string SymIdentifier)
         {
-            HumanUpdate.NTHuman Human = HumanUpdate.CharacterToNTHuman(Character);
+            HumanUpdate.NTHuman ?Human = HumanUpdate.CharacterToNTHuman(Character);
             if (Human == null)
             {
                 return false;
@@ -463,9 +463,10 @@ namespace Neurotrauma
             return false;
         }
 
-        public static bool HasLimbSymptomFalse(Character Char, string SymIdentifier, LimbType Limb)
+        public static bool HasLimbSymptomFalse(Character ?Char, string SymIdentifier, LimbType Limb)
         {
-            HumanUpdate.NTHuman Human = HumanUpdate.CharacterToNTHuman(Char);
+            if (Char == null) return false;
+            HumanUpdate.NTHuman ?Human = HumanUpdate.CharacterToNTHuman(Char);
             if (Human == null) return false;
             HumanUpdate.NTHumanLimbSymptomData Symptom = Human.GetLimbSymptomData(SymIdentifier);
             if (Symptom == null) return false;
@@ -474,7 +475,7 @@ namespace Neurotrauma
             return false;
         }
 
-        public static void SetMultiplier(HumanUpdate.NTHuman Character, string MultiplierIdentifier, double Multiplier)
+        public static void SetMultiplier(HumanUpdate.NTHuman ?Character, string MultiplierIdentifier, double Multiplier)
         {
             if (Character == null) return;
             HumanUpdate.CharacterTags Tags = Character.GetTags();
@@ -482,16 +483,16 @@ namespace Neurotrauma
             Tags.SetTag("mult", MultiplierIdentifier, CurrentMultiplier * Multiplier);
         }
 
-        public static void SetMultiplier(Character Char, string MultiplierIdentifier, double Multiplier)
+        public static void SetMultiplier(Character ?Char, string MultiplierIdentifier, double Multiplier)
         {
             if (Char == null) return;
-            HumanUpdate.NTHuman Human = HumanUpdate.CharacterToNTHuman(Char);
+            HumanUpdate.NTHuman ?Human = HumanUpdate.CharacterToNTHuman(Char);
             HumanUpdate.CharacterTags Tags = Human.GetTags();
             double CurrentMultiplier = GetMultiplier(Human, MultiplierIdentifier);
             Tags.SetTag("mult", MultiplierIdentifier, CurrentMultiplier * Multiplier);
         }
 
-        public static double GetMultiplier(HumanUpdate.NTHuman Character, string MultiplierIdentifier)
+        public static double GetMultiplier(HumanUpdate.NTHuman ?Character, string MultiplierIdentifier)
         {
             if (Character == null) return 1;
             HumanUpdate.CharacterTags Tags = Character.GetTags();
@@ -499,36 +500,37 @@ namespace Neurotrauma
             return Tags.GetTag("mult", MultiplierIdentifier);
         }
 
-        public static double GetMultiplier(Character Char, string MultiplierIdentifier)
+        public static double GetMultiplier(Character ?Char, string MultiplierIdentifier)
         {
             if (Char == null) return 1;
-            HumanUpdate.NTHuman Human = HumanUpdate.CharacterToNTHuman(Char);
+            HumanUpdate.NTHuman ?Human = HumanUpdate.CharacterToNTHuman(Char);
             HumanUpdate.CharacterTags Tags = Human.GetTags();
             if (!Tags.HasTag("mult", MultiplierIdentifier)) return 1;
             return Tags.GetTag("mult", MultiplierIdentifier);
         }
 
-        public static void SetTag(HumanUpdate.NTHuman Character, string TagIdentifier)
+        public static void SetTag(HumanUpdate.NTHuman ?Character, string TagIdentifier)
         {
             if (Character == null) return;
             Character.GetTags().SetTag("tag", TagIdentifier);
         }
 
-        public static void SetTag(Character Char, string TagIdentifier)
+        public static void SetTag(Character ?Char, string TagIdentifier)
         {
             if (Char == null) return;
-            HumanUpdate.NTHuman Human = HumanUpdate.CharacterToNTHuman(Char);
+            HumanUpdate.NTHuman ?Human = HumanUpdate.CharacterToNTHuman(Char);
             Human.GetTags().SetTag("tag", TagIdentifier);
         }
 
-        public static bool HasTag(HumanUpdate.NTHuman Character, string TagIdentifier)
+        public static bool HasTag(HumanUpdate.NTHuman ?Character, string TagIdentifier)
         {
             if (Character == null) return false;
             return Character.GetTags().HasTag("tag",TagIdentifier);
         }
 
-        public static void TickCharacterTags(HumanUpdate.NTHuman Character) // Previously "TickCharacter", however due to changes with code this is a different function now.
+        public static void TickCharacterTags(HumanUpdate.NTHuman ?Character) // Previously "TickCharacter", however due to changes with code this is a different function now.
         {
+            if (Character == null) return;
             List<string> TagsToRemove = new();
             foreach (KeyValuePair<string,double> Pair in Character.GetTags().Tags)
             {

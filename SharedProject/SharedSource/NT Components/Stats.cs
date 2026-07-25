@@ -257,7 +257,7 @@ namespace Neurotrauma
         }
     }
 
-    public class NTStatDouble(string Name, double MinStrength = 0, double MaxStrength = 1, double DefaultStrength = 1, Func<HumanUpdate.NTHuman, double> Update = null) : NTStat()
+    public class NTStatDouble(string Name, double MinStrength = 0, double MaxStrength = 1, double DefaultStrength = 1, Func<HumanUpdate.NTHuman, double> ?Update = null) : NTStat()
     {
         private double MinStrength { get; set; } = MinStrength;
         private double MaxStrength { get; set; } = MaxStrength;

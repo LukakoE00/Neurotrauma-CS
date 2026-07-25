@@ -59,7 +59,7 @@ public class OnDamaged
     float stun,
     bool playSound,
     Vector2 attackImpulse,
-    Character attacker = null,
+    Character ?attacker = null,
     float damageMultiplier = 1f,
     bool allowStacking = true,
     float penetration = 0f,
@@ -129,7 +129,7 @@ public class OnDamaged
             if (OnDamaged.OnDamagedMethods.TryGetValue(Identifier, out var method))
             {
                 float Resistance = HF.GetResistance(__instance.Character, Identifier, hitLimb.type);
-                float Strength = affliction.Strength * (1f - Resistance);
+                float Strength = ((float)HF.NormalizeDouble((double)affliction.Strength * (1f - Resistance)));
                 method(__instance.Character, Strength, hitLimb.type);
             }
         }
@@ -260,7 +260,7 @@ public class OnDamaged
         LimbType = HF.NormalizeLimbType(LimbType);
 
         // Deal with Multipliers
-        HumanUpdate.NTHuman NTCharacter = HumanUpdate.CharacterToNTHuman(Character);
+        HumanUpdate.NTHuman ?NTCharacter = HumanUpdate.CharacterToNTHuman(Character);
 
         // Possible Foreign Bodies
         if (HF.Chance(0.75f))

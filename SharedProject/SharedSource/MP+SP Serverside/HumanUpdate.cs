@@ -34,7 +34,7 @@ public static class HumanUpdate
     /// </summary>
     public abstract class NTHumanAffData()
     {
-        public NTAffliction AffTemplate; // Stores our aff template for updates and clamps.
+        public NTAffliction ?AffTemplate; // Stores our aff template for updates and clamps.
         public double Strength;
         public double PrevStrength;
         public string ID;
@@ -64,8 +64,8 @@ public static class HumanUpdate
     public class NTHumanLimbAffData : NTHumanAffData // Stores our characters Aff Data
     {
         new public NTLimbAffliction AffTemplate;
-        public Dictionary<LimbType, double> Strength = new(); // Gotta be a dictionary so we can store strength of limbtypes.
-        public Dictionary<LimbType, double> PrevStrength = new();
+        new public Dictionary<LimbType, double> Strength = new(); // Gotta be a dictionary so we can store strength of limbtypes.
+        new public Dictionary<LimbType, double> PrevStrength = new();
 
         public NTHumanLimbAffData(NTLimbAffliction NewAff, string NewID, Dictionary<LimbType, double> NewStrength) : base()
         {
@@ -680,7 +680,7 @@ public static class HumanUpdate
         /// <returns></returns>
         public T GetStat<T>(string Identifier) // Not my best work.
         {
-            object ReturnType = null;
+            object ?ReturnType = null;
             if (HasBoolStat(Identifier)) ReturnType = GetBoolStat(Identifier);
             else ReturnType = GetDoubleStat(Identifier);
             return (T) Convert.ChangeType(ReturnType, typeof(T));
@@ -688,7 +688,7 @@ public static class HumanUpdate
 
         public T GetStatStrength<T>(string Identifier) // Not my best work.
         {
-            object ReturnType = null;
+            object ?ReturnType = null;
             if (HasBoolStat(Identifier)) ReturnType = GetBoolStat(Identifier).Strength;
             else ReturnType = GetDoubleStat(Identifier).Strength;
             return (T)Convert.ChangeType(ReturnType, typeof(T));
@@ -869,7 +869,7 @@ public static class HumanUpdate
             {
                 string ID = kvp.Key;
                 NTHumanAffData Aff = kvp.Value;
-                NTAffliction Template = Aff.AffTemplate;
+                NTAffliction ?Template = Aff.AffTemplate;
                 NTAfflictionType Type = Template.Type;
                 switch (Type)
                 {
@@ -1044,7 +1044,7 @@ public static class HumanUpdate
                     // Fetch the data of the affliction
                     string ID = Key;
                     NTHumanAffData AffData = Data;
-                    NTAffliction Aff = AffData.AffTemplate;
+                    NTAffliction ?Aff = AffData.AffTemplate;
 
                     if (!Priorities.Contains(Aff.Priority))
                     {
@@ -1118,7 +1118,7 @@ public static class HumanUpdate
 
                     // Fetch the data of the affliction
                     NTHumanAffData AffData = (NTHumanAffData)Data;
-                    NTAffliction Template = AffData.AffTemplate;
+                    NTAffliction ?Template = AffData.AffTemplate;
 
                     if (!Template.Real) return;
 
@@ -1196,7 +1196,7 @@ public static class HumanUpdate
 
     // ---------------------------------------- The Human Update -------------------------------------------------- \\
 
-    public static NTHuman CharacterToNTHuman(Character Character)
+    public static NTHuman ?CharacterToNTHuman(Character Character)
     {
         if (!UpdatingHumans.ContainsKey(Character)) return null;
         return UpdatingHumans[Character];
@@ -1264,7 +1264,7 @@ public static class HumanUpdate
 
     public static void RemoveMonsterFromUpdate(Character RemovingMonster) // Probably a better way to do this.
     {
-        NTMonster MonsterToRemove = null; // We store the index of what to remove so we don't remove while iterating.
+        NTMonster ?MonsterToRemove = null; // We store the index of what to remove so we don't remove while iterating.
         foreach (NTMonster Monster in UpdatingMonsters)
         {
             if (Monster.Monster == RemovingMonster)

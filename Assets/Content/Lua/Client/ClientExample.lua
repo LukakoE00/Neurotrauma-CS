@@ -1,1 +1,1 @@
-print("[NT2] This is the ClientExample init print!")
+print("[NT2] Loaded Client Side!")

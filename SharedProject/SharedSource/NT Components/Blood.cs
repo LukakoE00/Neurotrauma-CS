@@ -15,7 +15,7 @@ namespace Neurotrauma
 
         // Randomize BloodType and set it
         private static readonly Random random = new Random();
-        public static string RandomizeBloodType(Character character)
+        public static string ?RandomizeBloodType(Character character)
         {
             int roll = random.Next(0, 100); // 0–99 (dont forgor)
             int cumulative = 0;

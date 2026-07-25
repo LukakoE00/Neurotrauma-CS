@@ -11,7 +11,7 @@ namespace Neurotrauma
             LuaCsSetup.Instance.Networking.Receive("NT.ConfigUpdate", (object[] args) =>
             {
                 IReadMessage msg = (IReadMessage)args[0];
-                Client sender = args.Length > 1 ? args[1] as Client : null;
+                Client ?sender = args.Length > 1 ? args[1] as Client : null;
 
                 if (sender == null || !sender.HasPermission(ClientPermissions.ManageSettings))
                 {
@@ -24,7 +24,7 @@ namespace Neurotrauma
 
             LuaCsSetup.Instance.Networking.Receive("NT.ConfigRequest", (object[] args) =>
             {
-                Client sender = args.Length > 1 ? args[1] as Client : null;
+                Client ?sender = args.Length > 1 ? args[1] as Client : null;
 
                 if (sender == null)
                 {

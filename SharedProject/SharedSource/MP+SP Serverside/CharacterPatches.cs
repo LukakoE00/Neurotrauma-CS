@@ -2,7 +2,7 @@
 {
     public class CharacterPatches
     {
-        private static Harmony harmony;
+        private static Harmony ?harmony;
 
         public static void InitCharacterPatches()
         {

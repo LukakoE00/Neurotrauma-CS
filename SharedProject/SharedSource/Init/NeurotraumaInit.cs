@@ -15,7 +15,7 @@ namespace Neurotrauma
         public IPluginManagementService PluginService { get; set; }
         public ILoggerService LoggerService { get; set; }
         public ILuaScriptManagementService luaScriptManagementService = LuaCsSetup.Instance.LuaScriptManagementService;
-        private Harmony harmony;
+        private Harmony ?harmony;
 
         // ---------------------------        Functions        --------------------------- \\
         // Called right after the constructor
@@ -143,11 +143,11 @@ namespace Neurotrauma
                 LoveBots.Dispose();
                 CharacterPatches.Dispose();
 
-                this.LoggerService = null;
-                this.ConfigService = null;
-                this.EventService = null;
-                this.PluginService = null;
-                this.luaScriptManagementService = null;
+                //this.LoggerService = null;
+                //this.ConfigService = null;
+                //this.EventService = null;
+                //this.PluginService = null;
+                //this.luaScriptManagementService = null;
             }
         }
 

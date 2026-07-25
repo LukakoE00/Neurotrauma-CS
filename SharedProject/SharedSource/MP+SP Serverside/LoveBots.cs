@@ -5,7 +5,7 @@ namespace Neurotrauma
 {
     public class LoveBots
     {
-        private static Harmony harmony;
+        private static Harmony ?harmony;
 
         public static void InitBotPatches()
         {

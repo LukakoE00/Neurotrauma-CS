@@ -202,6 +202,7 @@ namespace Neurotrauma
             double resistance = character.CharacterHealth.GetResistance(prefab, limbtype);
             if (resistance >= 1) return;
             strength *= (1 - resistance);
+            strength = HF.NormalizeDouble(strength);
             AddAfflictionLimb(character, "blunttrauma", limbtype, (float)strength, character);
 
             // return earlier if the strength value is not high enough for damage checks
@@ -211,11 +212,12 @@ namespace Neurotrauma
 
             double InjuryChanceMultiplier = NTConfig.Get("NT_falldamageSeriousInjuryChance", 1);
 
-            HumanUpdate.NTHuman NTCharacter = HumanUpdate.CharacterToNTHuman(character);
+            HumanUpdate.NTHuman ?NTCharacter = HumanUpdate.CharacterToNTHuman(character);
 
             // torso
             if ((!FractureImmune) && strength >= 1 && limbtype == LimbType.Torso)
             {
+
                 if (Chance((float)(
                         (strength - 15)
                             / 100
@@ -230,11 +232,13 @@ namespace Neurotrauma
                         AddAffliction(character, "pneumothorax", 5, character);
                     }
                 }
+
             }
 
             // head
             if ((!FractureImmune) && strength >= 1 && limbtype == LimbType.Head)
             {
+
                 if (strength >= 15 && Chance((float)Math.Min(strength / 100, .7)))
                 {
                     AddAfflictionResisted(

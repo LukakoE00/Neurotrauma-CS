@@ -119,10 +119,10 @@ namespace Neurotrauma
         /// </summary>
         /// <param name="GivenLimbType">LimbType to check.</param>
         /// <returns>A LimbType as a string, else null.</returns>
-        public static string LimbToString(LimbType GivenLimbType)
+        public static string ?LimbToString(LimbType GivenLimbType)
         {
             LimbType NormalizedLimb = NormalizeLimbType(GivenLimbType);
-            StringLimbsToCheck.TryGetValue(NormalizedLimb, out string Value);
+            StringLimbsToCheck.TryGetValue(NormalizedLimb, out string ?Value);
             return Value;
         }
 
@@ -142,11 +142,11 @@ namespace Neurotrauma
         /// <param name="GivenLimbType">LimbType to convert to a prefix.</param>
         /// <param name="Identifier">Affliction Identifier to append to a limb prefix.</param>
         /// <returns>A concatenated string composed of the limb and the affliction identifier, else null.</returns>
-        public static string CreateLimbAfflictionID(LimbType GivenLimbType, string Identifier)
+        public static string ?CreateLimbAfflictionID(LimbType GivenLimbType, string Identifier)
         {
             GivenLimbType = NormalizeLimbType(GivenLimbType);
 
-            if (!ShortHandLimbsToCheck.TryGetValue(GivenLimbType, out string Value))
+            if (!ShortHandLimbsToCheck.TryGetValue(GivenLimbType, out string ?Value))
             {
                 return null;
             }
@@ -596,7 +596,7 @@ namespace Neurotrauma
         /// <param name="Position">The position in the world where to spawn the item.</param>
         /// <param name="Function">The function to run when the item is spawned.</param>
         /// <param name="Parameters">The parameters for the function used by the item.</param>
-        public static void SpawnItemPlusFunction(string ItemIdentifier, Inventory Inventory, InvSlotType Slot, Vector2 Position, LuaCsAction Function, params object[] Parameters)
+        public static void SpawnItemPlusFunction(string ItemIdentifier, Inventory Inventory, InvSlotType Slot, Vector2 Position, LuaCsAction ?Function, params object[] Parameters)
         {
 #if CLIENT
                 if (HF.GameIsMultiplayer()) return;
@@ -710,7 +710,7 @@ namespace Neurotrauma
         /// Removes an item from the session.
         /// </summary>
         /// <param name="Item">A specific Item to be removed.</param>
-        public static void RemoveItem(Item Item)
+        public static void RemoveItem(Item ?Item)
         {
 #if CLIENT
                 if (HF.GameIsMultiplayer()) return;
@@ -764,7 +764,7 @@ namespace Neurotrauma
                 return;
             }
 
-            Inventory inv = Container?.OwnInventory;
+            Inventory ?inv = Container?.OwnInventory;
             if (inv == null) return;
 
             Item prevItem = inv.GetItemAt(Index);
@@ -778,7 +778,7 @@ namespace Neurotrauma
             {
                 ItemPrefab prefab = ItemPrefab.Find(null, Identifier);
 
-                Entity.Spawner.AddItemToSpawnQueue(prefab, Container.WorldPosition, null, null,
+                Entity.Spawner.AddItemToSpawnQueue(prefab, Container!.WorldPosition, null, null,
                     item =>
                     {
                         inv.TryPutItem(item, null, new InvSlotType[] { (InvSlotType)Index }, true, true);
@@ -1102,6 +1102,34 @@ namespace Neurotrauma
             return Math.Clamp(Value, Aff.MinStrength, Aff.MaxStrength);
         }
 
+        public static bool IsNaNOrInfinity(double Value)
+        {
+            return Double.IsNaN(Value) || Double.IsInfinity(Value);
+        }
+
+        /// <summary>
+        /// Converts a NaN/Infinity into 0.
+        /// </summary>
+        /// <param name="Value"></param>
+        /// <returns></returns>
+        public static double NormalizeDouble(double Value)
+        {
+            if (IsNaNOrInfinity(Value))
+            {
+                return 0;
+            }
+            return Value;
+        }
+
+        public static float NormalizeFloat(float Value)
+        {
+            if (IsNaNOrInfinity((double)Value))
+            {
+                return 0;
+            }
+            return Value;
+        }
+
         // ---------------------------------------- Affliction Related Helper Functions -------------------------------------------------- \\
         public static bool HasAffliction(Character Character, string Identifier = "", float MinAmount = 0)
         {
@@ -1131,7 +1159,7 @@ namespace Neurotrauma
 
         public static bool HasAfflictionExtremity(Character Character, string Identifier = "", LimbType GivenLimbType = LimbType.Torso, double MinAmount = 0.5)
         {
-            Affliction Aff = null;
+            Affliction ?Aff = null;
             List<List<LimbType>> LocalLimbsToCheck = [[LimbType.LeftArm, LimbType.LeftForearm, LimbType.LeftHand],[LimbType.RightArm, LimbType.RightForearm, LimbType.RightHand],
                                                         [LimbType.LeftLeg, LimbType.LeftThigh, LimbType.LeftFoot],[LimbType.RightLeg, LimbType.RightThigh, LimbType.RightFoot]];
 
@@ -1180,7 +1208,7 @@ namespace Neurotrauma
                 return DefaultValue;
             }
 
-            return aff.Strength;
+            return NormalizeFloat(aff.Strength);
         }
 
         // Previous iteration was broken - Greabb
@@ -1193,10 +1221,10 @@ namespace Neurotrauma
                 return DefaultValue;
             }
 
-            return aff.Strength;
+            return NormalizeFloat(aff.Strength);
         }
 
-        public static void AddAffliction(Character Character, string Identifier, float Strength, Character Aggressor = null)
+        public static void AddAffliction(Character Character, string Identifier, float Strength, Character ?Aggressor = null)
         {
             if (Aggressor == null)
             {
@@ -1207,20 +1235,20 @@ namespace Neurotrauma
             SetAffliction(Character, Identifier, Strength + PrevStrength, Aggressor, PrevStrength);
         }
 
-        public static void SetAffliction(Character Character, string Identifier, float Strength, Character Aggressor = null, float PreviousStrength = 0)
+        public static void SetAffliction(Character Character, string Identifier, float Strength, Character ?Aggressor = null, float PreviousStrength = 0)
         {
             if (Aggressor == null)
             {
                 Aggressor = Character;
             }
                 
-            SetAfflictionLimb(Character, Identifier, LimbType.Torso, Strength, Aggressor, PreviousStrength);
+            SetAfflictionLimb(Character, Identifier, LimbType.Torso, NormalizeFloat(Strength), Aggressor, PreviousStrength);
         }
 
-        public static void SetAfflictionLimb(Character Character, string Identifier, LimbType GivenLimbType, float Strength, Character Aggressor = null, float PrevStrength = 0)
+        public static void SetAfflictionLimb(Character Character, string Identifier, LimbType GivenLimbType, float Strength, Character ?Aggressor = null, float PrevStrength = 0)
         {
             // This Error was in the original but not ported for some reason?
-            if (!AfflictionPrefab.Prefabs.TryGet(Identifier, out AfflictionPrefab Prefab) || Prefab == null || Character == null || Character.CharacterHealth == null)
+            if (!AfflictionPrefab.Prefabs.TryGet(Identifier, out AfflictionPrefab ?Prefab) || Prefab == null || Character == null || Character.CharacterHealth == null)
             {
                 LuaCsLogger.LogError(string.Format(
                     "Can't apply affliction to character limb\ncharacter = {0}, limbtype = {1}, affliction = {2}, strength = {3}",
@@ -1240,7 +1268,7 @@ namespace Neurotrauma
 
             // Flip the resistances effects so we get the right values accounting for them
             float ScaledStrength = Strength * Character.CharacterHealth.MaxVitality / 100 / (1 - Resistance);
-            Affliction Affliction = Prefab.Instantiate(ScaledStrength, Aggressor);
+            Affliction Affliction = Prefab.Instantiate(NormalizeFloat(ScaledStrength), Aggressor);
             bool RecalculateVitality = NTC.AfflictionsAffectingVitality.Contains(Identifier);
 
             Character.CharacterHealth.ApplyAffliction(
@@ -1252,7 +1280,7 @@ namespace Neurotrauma
             );
         }
 
-        public static void AddAfflictionLimb(Character Character, string Identifier, LimbType GivenLimbType, float Strength, Character Aggressor = null)
+        public static void AddAfflictionLimb(Character Character, string Identifier, LimbType GivenLimbType, float Strength, Character ?Aggressor = null)
         {
             if (Aggressor == null) Aggressor = Character;
 
@@ -1261,13 +1289,13 @@ namespace Neurotrauma
                 Character.CharacterHealth.ReduceAfflictionOnLimb(
                     GetCharacterLimb(Character, GivenLimbType),
                     Identifier,
-                    -Strength,
+                    NormalizeFloat(-Strength),
                     null,
                     Aggressor);
                 return;
             }
 
-            if (!AfflictionPrefab.Prefabs.TryGet(Identifier, out AfflictionPrefab Prefab) || Prefab == null || Character == null || Character.CharacterHealth == null) { return; }
+            if (!AfflictionPrefab.Prefabs.TryGet(Identifier, out AfflictionPrefab ?Prefab) || Prefab == null || Character == null || Character.CharacterHealth == null) { return; }
 
             float Resistance = Character.CharacterHealth.GetResistance(Prefab, GivenLimbType);
 
@@ -1289,7 +1317,7 @@ namespace Neurotrauma
 
         
 
-        public static void AddAfflictionResisted(Character Character, string Identifier, float Strength, Character Aggressor = null)
+        public static void AddAfflictionResisted(Character Character, string Identifier, float Strength, Character ?Aggressor = null)
         {
             if (Aggressor == null) Aggressor = Character;
 
@@ -1356,7 +1384,7 @@ namespace Neurotrauma
         /// <param name="TotalAmount">Total combined strength of applications.</param>
         /// <param name="Duration">Amount of time in seconds over which the application happens.</param>
         /// <param name="Aggressor">Character that's considered the one applying the affliction.</param>
-        public static void ApplyAfflictionOverTime(Character Target, string Identifier, float TotalAmount, float Duration, Character Aggressor = null)
+        public static void ApplyAfflictionOverTime(Character Target, string Identifier, float TotalAmount, float Duration, Character ?Aggressor = null)
         {
             if (Aggressor == null) Aggressor = Target;
 
@@ -1385,6 +1413,7 @@ namespace Neurotrauma
         public static void DislocateLimb(Character Character, LimbType GivenLimbType, float Strength = 1) // UNUSED?
         {
             GivenLimbType = NormalizeLimbType(GivenLimbType);
+            HF.Print($"{GivenLimbType}");
             AddAfflictionLimb(Character, "dislocation", GivenLimbType, Strength, Character);
         }
 
@@ -1463,10 +1492,10 @@ namespace Neurotrauma
             Dictionary<LimbType, string> LimbToItem = new Dictionary<LimbType, string>() { {LimbType.RightLeg,"rleg" }, { LimbType.LeftLeg, "lleg" },
                                                                                                 { LimbType.RightArm, "rarm" },{ LimbType.LeftArm, "larm" },
                                                                                                 { LimbType.Head, "headta" } };
-            LimbToAffliction.TryGetValue(GivenLimbType, out string Value);
-            LimbToItem.TryGetValue(GivenLimbType, out string Value2);
-            string Aff = Value;
-            string LimbItem = Value2;
+            LimbToAffliction.TryGetValue(GivenLimbType, out string? Value);
+            LimbToItem.TryGetValue(GivenLimbType, out string? Value2);
+            string ?Aff = Value;
+            string ?LimbItem = Value2;
             if (!Attacker.IsHuman && !Attacker.Inventory.IsFull())
             {
                 GiveItem(Attacker, LimbToAffliction[GivenLimbType]);
@@ -1478,7 +1507,7 @@ namespace Neurotrauma
             }
         }
 
-        public static void TraumamputateLimb(Character Character, LimbType GivenLimbType, Character Attacker)
+        public static void TraumamputateLimb(Character Character, LimbType GivenLimbType, Character ?Attacker)
         {
             GivenLimbType = NormalizeLimbType(GivenLimbType);
             if (!LimbsToCheck.Contains(GivenLimbType)) { return; }
@@ -1488,10 +1517,10 @@ namespace Neurotrauma
             Dictionary<LimbType, string> LimbToItem = new Dictionary<LimbType, string>() { {LimbType.RightLeg,"rleg" }, { LimbType.LeftLeg, "lleg" },
                                                                                                 { LimbType.RightArm, "rarm" },{ LimbType.LeftArm, "larm" },
                                                                                                 { LimbType.Head, "headta" } };
-            LimbToAffliction.TryGetValue(GivenLimbType, out string Value);
-            LimbToItem.TryGetValue(GivenLimbType, out string Value2);
-            string Aff = Value;
-            string LimbItem = Value2;
+            LimbToAffliction.TryGetValue(GivenLimbType, out string ?Value);
+            LimbToItem.TryGetValue(GivenLimbType, out string ?Value2);
+            string ?Aff = Value;
+            string ?LimbItem = Value2;
             AddAfflictionLimb(Character, LimbToAffliction[GivenLimbType] + "_2", GivenLimbType, 10, Character);
         }
 
@@ -1524,7 +1553,7 @@ namespace Neurotrauma
                 { LimbType.Head, "headsa" }
             };
 
-            if (limbToItem.TryGetValue(limbType, out string itemIdentifier))
+            if (limbToItem.TryGetValue(limbType, out string ?itemIdentifier))
             {
                 GiveItem(usingCharacter, itemIdentifier);
                 GiveSurgerySkill(usingCharacter, 0.5f);

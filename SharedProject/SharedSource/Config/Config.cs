@@ -19,25 +19,25 @@ namespace Neurotrauma
 
     public class ConfigEntry
     {
-        public LocalizedString Name;
+        public LocalizedString ?Name;
         public ConfigEntryType Type;
-        public object Default;
-        public object Value;
-        public float[] Range;
+        public object ?Default;
+        public object ?Value;
+        public float[] ?Range;
         public bool Group;
         public bool Resettable;
-        public LocalizedString Description;
-        public LocalizedString Style;
+        public LocalizedString ?Description;
+        public LocalizedString ?Style;
         public float Boxsize;
         public bool NoMLTB;
-        public string Page;
-        public string Expansion;
+        public string ?Page;
+        public string ?Expansion;
     }
 
     public class ConfigExpansion
     {
-        public string Name;
-        public Dictionary<string, ConfigEntry> ConfigData;
+        public string ?Name;
+        public Dictionary<string, ConfigEntry> ?ConfigData;
     }
 
     public static class NTConfig
@@ -90,7 +90,7 @@ namespace Neurotrauma
 
                     if (Key.Equals("type", StringComparison.OrdinalIgnoreCase) || Key.Equals("page", StringComparison.OrdinalIgnoreCase)) continue;
 
-                    FieldInfo Field = typeof(ConfigEntry).GetFields().FirstOrDefault(F => string.Equals(F.Name, Key, StringComparison.OrdinalIgnoreCase));
+                    FieldInfo ?Field = typeof(ConfigEntry).GetFields().FirstOrDefault(F => string.Equals(F.Name, Key, StringComparison.OrdinalIgnoreCase));
                     if (Field == null) continue;
 
                     DynValue Dyn = Pair.Value;
@@ -304,7 +304,7 @@ namespace Neurotrauma
 
         public static bool Get(string key, bool defaultValue)
         {
-            if (Entries.TryGetValue(key, out ConfigEntry entry))
+            if (Entries.TryGetValue(key, out ConfigEntry ?entry))
             {
                 if (entry.Value == null) return defaultValue;
                 if (entry.Value is bool) return (bool)entry.Value;
@@ -314,7 +314,7 @@ namespace Neurotrauma
 
         public static float Get(string key, float defaultValue)
         {
-            if (Entries.TryGetValue(key, out ConfigEntry entry))
+            if (Entries.TryGetValue(key, out ConfigEntry ?entry))
             {
                 if (entry.Value == null) return defaultValue;
                 if (entry.Value is float) return (float)entry.Value;
@@ -324,7 +324,7 @@ namespace Neurotrauma
 
         public static string Get(string key, string defaultValue)
         {
-            if (Entries.TryGetValue(key, out ConfigEntry entry))
+            if (Entries.TryGetValue(key, out ConfigEntry ?entry))
             {
                 if (entry.Value == null) return defaultValue;
                 if (entry.Value is string) return (string)entry.Value;
@@ -334,7 +334,7 @@ namespace Neurotrauma
 
         public static double Get(string key, double defaultValue)
         {
-            if (Entries.TryGetValue(key, out ConfigEntry entry))
+            if (Entries.TryGetValue(key, out ConfigEntry ?entry))
             {
                 if (entry.Value == null) return defaultValue;
                 if (entry.Value is double) return (double)entry.Value;
@@ -344,7 +344,7 @@ namespace Neurotrauma
 
         public static List<string> Get(string key, List<string> defaultValue)
         {
-            if (Entries.TryGetValue(key, out ConfigEntry entry))
+            if (Entries.TryGetValue(key, out ConfigEntry ?entry))
             {
                 if (entry.Value == null) return defaultValue;
                 if (entry.Value is List<string>) return (List<string>)entry.Value;
@@ -354,7 +354,7 @@ namespace Neurotrauma
 
         public static IEnumerable<string> Get(string key, IEnumerable<string> defaultValue)
         {
-            if (Entries.TryGetValue(key, out ConfigEntry entry))
+            if (Entries.TryGetValue(key, out ConfigEntry ?entry))
             {
                 if (entry.Value == null) return defaultValue;
                 if (entry.Value is IEnumerable<string>) return (IEnumerable<string>)entry.Value;
@@ -363,7 +363,7 @@ namespace Neurotrauma
         }
         public static object Get(string key)
         {
-            if (Entries.TryGetValue(key, out ConfigEntry entry))
+            if (Entries.TryGetValue(key, out ConfigEntry ?entry))
             {
                 if (entry.Value == null) return null;
                 if (entry.Value is object) return (object)entry.Value;

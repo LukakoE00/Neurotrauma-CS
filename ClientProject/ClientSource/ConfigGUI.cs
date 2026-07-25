@@ -137,14 +137,14 @@ namespace Neurotrauma
             }
         }
 
-        private static string selectedExpansion = null;
-        private static string selectedType = null;
+        private static string ?selectedExpansion = null;
+        private static string ?selectedType = null;
         private class LayoutChunk
         {
-            public string Type;
-            public string Key;
-            public ConfigEntry Entry;
-            public List<(string key, ConfigEntry entry)> Items;
+            public string ?Type;
+            public string ?Key;
+            public ConfigEntry ?Entry;
+            public List<(string key, ConfigEntry entry)> ?Items;
         }
 
         // Automatically combined the Grouped settings
@@ -152,8 +152,8 @@ namespace Neurotrauma
         {
             var result = new List<LayoutChunk>();
 
-            LayoutChunk currentGroup = null;
-            ConfigEntry lastEntry = null;
+            LayoutChunk ?currentGroup = null;
+            ConfigEntry ?lastEntry = null;
 
             foreach (var kvp in entries)
             {
@@ -260,7 +260,7 @@ namespace Neurotrauma
                 }
             }
 
-            Client client = GameMain.Client?.MyClient;
+            Client ?client = GameMain.Client?.MyClient;
 
             if (client == null || !(client.IsOwner || client.HasPermission(ClientPermissions.ManageSettings))) // Need to add a (!IsMultiplayer) check
             {
@@ -276,7 +276,7 @@ namespace Neurotrauma
         private static void CreateFloatGroup(GUIListBox list, List<(string key, ConfigEntry entry)> items)
         {
             const int MaxPerRow = 2;
-            GUILayoutGroup row = null;
+            GUILayoutGroup ?row = null;
             int count = 0;
 
             foreach (var (key, entry) in items)
@@ -351,7 +351,7 @@ namespace Neurotrauma
         private static void CreateStringGroup(GUIListBox list, List<(string key, ConfigEntry entry)> items)
         {
             const int MaxPerRow = 2;
-            GUILayoutGroup row = null;
+            GUILayoutGroup ?row = null;
             int count = 0;
 
             foreach (var (key, entry) in items)
@@ -628,7 +628,7 @@ namespace Neurotrauma
             {
                 if (GameMain.NetworkMember != null && GameMain.NetworkMember.IsClient)
                 {
-                    Client client = GameMain.Client?.MyClient;
+                    Client ?client = GameMain.Client?.MyClient;
                     if (client != null && client.HasPermission(ClientPermissions.ManageSettings))
                     {
                         NTConfig.SendConfig();
