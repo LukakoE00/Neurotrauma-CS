@@ -1210,7 +1210,7 @@ public static class HumanUpdate
             if (character.IsHuman)
             {
                 AddHumanToUpdate(character);
-                //CleanBotomy(character); This breaks everything for some reason. May somebody investigate?
+                CleanBotomy(character);
             }
             else
             {

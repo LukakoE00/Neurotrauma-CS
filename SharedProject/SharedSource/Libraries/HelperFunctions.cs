@@ -1496,14 +1496,14 @@ namespace Neurotrauma
             LimbToItem.TryGetValue(GivenLimbType, out string? Value2);
             string ?Aff = Value;
             string ?LimbItem = Value2;
-            if (!Attacker.IsHuman && !Attacker.Inventory.IsFull())
+            if (Attacker != null && (!Attacker.IsHuman) && (!Attacker.Inventory.IsFull()))
             {
                 GiveItem(Attacker, LimbToAffliction[GivenLimbType]);
                 AddAfflictionLimb(Character, LimbToAffliction[GivenLimbType] + "_2", GivenLimbType, 10, Attacker);
             }
             else
             {
-                AddAfflictionLimb(Character, LimbToAffliction[GivenLimbType] + "_2", GivenLimbType, 10, Character);
+                AddAfflictionLimb(Character, LimbToAffliction[GivenLimbType], GivenLimbType, 10, Character);
             }
         }
 
@@ -1521,7 +1521,7 @@ namespace Neurotrauma
             LimbToItem.TryGetValue(GivenLimbType, out string ?Value2);
             string ?Aff = Value;
             string ?LimbItem = Value2;
-            AddAfflictionLimb(Character, LimbToAffliction[GivenLimbType] + "_2", GivenLimbType, 10, Character);
+            AddAfflictionLimb(Character, LimbToAffliction[GivenLimbType], GivenLimbType, 10, Character);
         }
 
         /// <summary>

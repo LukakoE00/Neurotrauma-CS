@@ -408,12 +408,12 @@ namespace Neurotrauma
             throw new NotImplementedException();
         }
 
-        private void AffSymptoms()
+        private void AffSymptoms() // Create your afflictions in here.
         {
             throw new NotImplementedException();
         }
 
-        private void AddLimbSymptoms()
+        private void AddLimbSymptoms() // Create your afflictions in here.
         {
             throw new NotImplementedException();
         }

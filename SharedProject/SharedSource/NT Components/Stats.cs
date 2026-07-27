@@ -9,7 +9,6 @@ namespace Neurotrauma
 
         public static void DefineAllStats()
         {
-            // This isnt done, just a basic template.
             Stats["healingrate"] = new NTStatDouble("healingrate",0,100,1, (C) =>
             {
                 return NTC.GetMultiplier(C,"healingrate");
