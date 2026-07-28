@@ -1300,7 +1300,7 @@ public static class HumanUpdate
     private static int Interval = 120;
     private static int Tick = 0;
     private static int UpdateTick = 0;
-    private static double NTDeltaTime = UpdateIntervalHigh / 120;
+    private static double NTDeltaTime = UpdateIntervalHigh / 60;
     private static List<AfflictionPriority> Priorities = new();
     // Gets called 60 times a second
     public static void ThinkUpdate()
