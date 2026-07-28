@@ -494,10 +494,10 @@ namespace Neurotrauma
                     if (AffData.Strength > 25)
                     {
                         // Additional Lung Damage
-                        HF.AddAffliction(C.Human, "lungdamage", (float)(Math.Max(AffData.Strength - 25, 0) / 800 * NT.DeltaTime), null);
+                        C.GetAffData("lungdamage").Strength = (Math.Max(AffData.Strength - 25, 0) / 800 * NT.DeltaTime);
 
                         // Bone Damage
-                        HF.AddAffliction(C.Human, "bonedamage", (float)(Math.Max(AffData.Strength - 25, 0) / 600 * NT.DeltaTime), null);
+                        C.GetAffData("bonedamage").Strength = (Math.Max(AffData.Strength - 25, 0) / 600 * NT.DeltaTime);
                     }
 
                     // Heart Damage (in NewOrganDamage)
@@ -508,7 +508,7 @@ namespace Neurotrauma
                     double RadSicknessAbove50 = AffData.Strength >= 50 ? AffData.Strength : 0;
                     if (HF.Chance((float)(RadSicknessAbove50 / 200 * 0.1)))
                     {
-                        HF.AddAffliction(C.Human, "seizure", 10, null);
+                        C.GetAffData("seizure").Strength += 10;
                     }
 
                     // Nausea
@@ -550,7 +550,7 @@ namespace Neurotrauma
                             && C.GetAffData("artificialventilation").Strength <= 0.1) 
                         * 0.18 * NT.DeltaTime;
 
-                        HF.AddAffliction(C.Human, "acidosis", (float)AcidosisIncrease, null);
+                        C.GetAffData("acidosis").Strength += AcidosisIncrease;
 
                         NTC.SetSymptomFalse(C.Human, "hypoventilation", 2);
                         NTC.SetSymptomFalse(C.Human, "hyperventilation", 2);
@@ -627,7 +627,7 @@ namespace Neurotrauma
                     if (AffData.Strength > 60)
                     {
                         // Respiratory Arrest
-                        HF.AddAffliction(C.Human, "respiratoryarrest", 200, null);
+                        C.GetAffData("respiratoryarrest").Strength += 200;
 
                         // Unconsciousness
                         NTC.SetSymptomTrue(C, "unconsciousness", 2);
@@ -635,7 +635,7 @@ namespace Neurotrauma
                         // Seizures
                         if (HF.Chance((float)AffData.Strength / 500f))
                         {
-                            HF.AddAffliction(C.Human, "seizure", 10, null);
+                            C.GetAffData("seizure").Strength += 10;
                         }  
                     }
                 };
@@ -678,7 +678,7 @@ namespace Neurotrauma
                         // Respiratory Arrest
                         if (AffData.Strength > 99 && HF.Chance(0.8f))
                         {
-                            HF.AddAffliction(C.Human, "respiratoryarrest", 200, null);
+                            C.GetAffData("respiratoryarrest").Strength += 200;
                         }
                     }
                 };
@@ -697,7 +697,7 @@ namespace Neurotrauma
 
                     // Effects:
                     // Respiratory Arrest
-                    HF.AddAffliction(C.Human, "respiratoryarrest", 200f, null);
+                    C.GetAffData("respiratoryarrest").Strength += 200;
 
                     // Unconsciousness
                     NTC.SetSymptomTrue(C, "unconsciousness", 2);
@@ -721,13 +721,13 @@ namespace Neurotrauma
                 {
                     // State check; strength is 1 if Retracted Skin is present, else 100.
                     AffData.Strength = 1 + HF.BoolToNum(HF.HasAfflictionLimb(C.Human, "retractedskin", LimbType.Head, 99), 99);
-                        
+
                     // Effects:
                     // Cardiac Arrest
-                    HF.AddAffliction(C.Human, "cardiacarrest", 200, null);
+                    C.GetAffData("cardiacarrest").Strength += 200;
 
                     // Respiratory Arrest
-                    HF.AddAffliction(C.Human, "respiratoryarrest", 200, null);
+                    C.GetAffData("respiratoryarrest").Strength += 200;
 
                     // Unconsciousness
                     NTC.SetSymptomTrue(C, "unconsciousness", 2);
@@ -739,7 +739,7 @@ namespace Neurotrauma
                         NeurotraumaGain += 1.6f;
                     }
 
-                    HF.AddAffliction(C.Human, "neurotrauma", NeurotraumaGain, null);
+                    C.GetAffData("neurotrauma").Strength += NeurotraumaGain;
                 };
 
             // Brain Swap
@@ -891,7 +891,7 @@ namespace Neurotrauma
                     // Cardiac Arrest
                     if (AffData.Strength > 20 && HF.Chance((float)Math.Pow(AffData.Strength / 100f, 4f)))
                     {
-                        HF.AddAffliction(C.Human, "cardiacarrest", 200, null);
+                        C.GetAffData("cardiacarrest").Strength += 200;
                     }
                 };
 
@@ -921,12 +921,13 @@ namespace Neurotrauma
                     // Acidosis
                     // Shares increase with Respiratory Arrest
                     double AcidosisIncrease = 0.18 * NT.DeltaTime;
-                    HF.AddAffliction(C.Human, "acidosis", (float)AcidosisIncrease, null);
+
+                    C.GetAffData("acidosis").Strength += AcidosisIncrease;
 
                     // Coma
                     if (AffData.Strength > 1 && HF.Chance(0.05f))
                     {
-                        HF.AddAffliction(C.Human, "coma", 14, null);
+                        C.GetAffData("coma").Strength += 14;
                     }
 
                     // Hypotension (in BloodPressure constant itself)
@@ -942,6 +943,7 @@ namespace Neurotrauma
             AfflictionsToAdd["infectedcavity"].UpdateAction =
                 (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanNonLimbAffData AffData) =>
                 {
+                    // Does not progress in Stasis
                     if ((C.GetBoolStatStrength("stasis"))) return;
 
                     if (AffData.Strength > 0)
@@ -989,9 +991,9 @@ namespace Neurotrauma
                     {
                         NTC.SetSymptomTrue(C, "shortnessofbreath", 2);
                     }
-                    
+
                     // Heart Damage
-                    HF.AddAffliction(C.Human, "heartdamage", (float)(Math.Clamp(C.GetAffData("heartattack").Strength, 0, 0.5) * NT.DeltaTime), null);
+                    C.GetAffData("heartdamage").Strength += (Math.Clamp(C.GetAffData("heartattack").Strength, 0, 0.5) * NT.DeltaTime);
                 };
 
             // Heart Damage
@@ -1037,7 +1039,7 @@ namespace Neurotrauma
                             // Cardiac Arrest
                             if (AffData.Strength > 99 && HF.Chance(0.3f))
                             {
-                                HF.AddAffliction(C.Human, "cardiacarrest", 200, null);
+                                C.GetAffData("cardiacarrest").Strength += 200;
                             }
                         }
                     }
@@ -1057,7 +1059,7 @@ namespace Neurotrauma
 
                     // Effects:
                     // Cardiac Arrest
-                    HF.AddAffliction(C.Human, "cardiacarrest", 200, null);
+                    C.GetAffData("cardiacarrest").Strength += 200;
                 };
 
             // Heart Swap
@@ -1090,7 +1092,7 @@ namespace Neurotrauma
                     // Effects:
                     // Acidosis
                     double AcidosisIncrease = Math.Max(0, AffData.Strength - 80) / 20.0 * 0.1 * NT.DeltaTime;
-                    HF.AddAffliction(C.Human, "acidosis", (float)AcidosisIncrease, null);
+                    C.GetAffData("acidosis").Strength += AcidosisIncrease;
 
                     // Neurotrauma
                     double NeurotraumaIncrease = AffData.Strength / 1000.0 * NT.DeltaTime
@@ -1098,7 +1100,7 @@ namespace Neurotrauma
                         * NTConfig.Get("NT_neurotraumaGain", 1)
                         * (1 - Math.Clamp(C.GetAffData("afmannitol").Strength, 0, 0.5));
 
-                    HF.AddAffliction(C.Human, "neurotrauma", (float)NeurotraumaIncrease, null);
+                    C.GetAffData("neurotrauma").Strength += NeurotraumaIncrease;
 
                     // Hypertension (in BloodPressure constant)
 
@@ -1121,7 +1123,7 @@ namespace Neurotrauma
                         // Bone Damage
                         if (AffData.Strength > 70)
                         {
-                            HF.AddAffliction(C.Human, "bonedamage", (float)((AffData.Strength - 70) / 30 * 0.15 * NT.DeltaTime), null);
+                            C.GetAffData("bonedamage").Strength += ((AffData.Strength - 70) / 30 * 0.15 * NT.DeltaTime);
                         }
                     }
                 };
@@ -1165,7 +1167,7 @@ namespace Neurotrauma
                         * NTConfig.Get("NT_neurotraumaGain", 1)
                         * (1 - Math.Clamp(C.GetAffData("afmannitol").Strength, 0, 0.5));
 
-                    HF.AddAffliction(C.Human, "neurotrauma", (float)NeurotraumaIncrease, null);
+                    C.GetAffData("neurotrauma").Strength += NeurotraumaIncrease;
 
                     // Hypertension (in BloodPressure constant itself)
 
@@ -1199,7 +1201,7 @@ namespace Neurotrauma
                                     {
                                         // Internal Bleeding & Vomiting Blood
                                         NTC.SetSymptomTrue(C, "vomitingblood", Random.Shared.Next(3, 10));
-                                        HF.AddAffliction(C.Human, "internalbleeding", 2, null);
+                                        C.GetAffData("internalbleeding").Strength += 2;
                                     }
                                 }
                             }
@@ -1349,7 +1351,7 @@ namespace Neurotrauma
                 {
                     // Passive Decrease
                     // Removes Luabotomy and itself; originally done in XML
-                    HF.SetAffliction(C.Human, "luabotomy", 0, null, 0);
+                    C.GetAffData("luabotomy").Strength = 0;
                     AffData.Strength = 0;
                 };
 
@@ -1401,20 +1403,20 @@ namespace Neurotrauma
 
                     // Effects:
                     // Reduce Cardiac Arrest
-                    HF.SetAffliction(C.Human, "cardiacarrest", (float)Math.Max(0, C.GetAffData("cardiacarrest").Strength - 4), null, 0);
+                    C.GetAffData("cardiacarrest").Strength = Math.Max(0, C.GetAffData("cardiacarrest").Strength - 4);
 
                     // Reduce Fibrillation
-                    HF.SetAffliction(C.Human, "fibrillation", (float)Math.Max(0, C.GetNonLimbAffData("fibrillation").Strength - 2), null, 0);
+                    C.GetAffData("fibrillation").Strength = Math.Max(0, C.GetAffData("fibrillation").Strength - 2);
 
                     // Increase Blood Pressure
-                    HF.AddAffliction(C.Human, "bloodpressure", 8, null);
+                    C.GetAffData("bloodpressure").Strength += 8;
 
                     // If Cardiac Arrest is above 0 and below or equal to 0.5, clear it and apply Fibrillation
                     double CardiacArrest = C.GetAffData("cardiacarrest").Strength;
                     if (CardiacArrest > 0 && CardiacArrest <= 0.5)
                     {
-                        HF.SetAffliction(C.Human, "cardiacarrest", 0, null, 0);
-                        HF.AddAffliction(C.Human, "fibrillation", 20, null);
+                        C.GetAffData("cardiacarrest").Strength = 0;
+                        C.GetAffData("fibrillation").Strength += 20;
                     }
                 };
 
@@ -1432,23 +1434,23 @@ namespace Neurotrauma
 
                     // Effects:
                     // Reduce Cardiac Arrest
-                    HF.SetAffliction(C.Human, "cardiacarrest", (float)Math.Max(0, C.GetAffData("cardiacarrest").Strength - 3), null, 0);
+                    C.GetAffData("cardiacarrest").Strength = Math.Max(0, C.GetAffData("cardiacarrest").Strength - 3);
 
                     // Reduce Fibrillation
-                    HF.SetAffliction(C.Human, "fibrillation", (float)Math.Max(0, C.GetNonLimbAffData("fibrillation").Strength - 2), null, 0);
+                    C.GetAffData("cardiacarrest").Strength = Math.Max(0, C.GetNonLimbAffData("fibrillation").Strength - 2);
 
                     // Increase Blood Pressure
-                    HF.AddAffliction(C.Human, "bloodpressure", 10, null);
+                    C.GetAffData("bloodpressure").Strength += 10;
 
                     // Reduce Oxygen Low
-                    HF.SetAffliction(C.Human, "oxygenlow", (float)Math.Max(0, C.GetAffData("oxygenlow").Strength - 6), null, 0);
+                    C.GetAffData("oxygenlow").Strength -= Math.Max(0, C.GetAffData("oxygenlow").Strength - 6);
 
                     // If Cardiac Arrest is above 0 and below or equal to 0.5, clear it and apply Fibrillation
                     double CardiacArrest = C.GetAffData("cardiacarrest").Strength;
                     if (CardiacArrest > 0 && CardiacArrest <= 0.5)
                     {
-                        HF.SetAffliction(C.Human, "cardiacarrest", 0, null, 0);
-                        HF.AddAffliction(C.Human, "fibrillation", 20, null);
+                        C.GetAffData("cardiacarrest").Strength = 0;
+                        C.GetAffData("fibrillation").Strength += 20;
                     }
                 };
 
@@ -1509,12 +1511,12 @@ namespace Neurotrauma
                     // Reduce Husk Infection if below 100
                     if (HF.HasAffliction(C.Human, "huskinfection") && C.GetAffData("huskinfection").Strength < 100)
                     {
-                        HF.AddAffliction(C.Human, "huskinfection", -0.15f, null);
+                        C.GetAffData("huskinfection").Strength -= 0.15;
 
                         // Additional reduction if no Husk Infection Resistance
                         if (!HF.HasAffliction(C.Human, "huskinfectionresistance") || C.GetAffData("huskinfectionresistance").Strength <= 0)
                         {
-                            HF.AddAffliction(C.Human, "huskinfection", -0.15f, null);
+                            C.GetAffData("huskinfection").Strength -= 0.15;
                         }
                     }
                 };
@@ -1548,17 +1550,17 @@ namespace Neurotrauma
                     if (Handcuffed)
                     {
                         // Drop non-handcuff items
-                        Item leftHandItem = HF.GetItemInLeftHand(C.Human);
-                        Item rightHandItem = HF.GetItemInRightHand(C.Human);
+                        Item LeftHandItem = HF.GetItemInLeftHand(C.Human);
+                        Item RightHandItem = HF.GetItemInRightHand(C.Human);
 
-                        if (leftHandItem != null && leftHandItem != Handcuffs && LeftLockItem == null)
+                        if (RightHandItem != null && LeftHandItem != Handcuffs && LeftLockItem == null)
                         {
-                            leftHandItem.Drop(C.Human);
+                            LeftHandItem.Drop(C.Human);
                         }
                             
-                        if (rightHandItem != null && rightHandItem != Handcuffs && RightLockItem == null)
-                        { 
-                            rightHandItem.Drop(C.Human);
+                        if (RightHandItem != null && RightHandItem != Handcuffs && RightLockItem == null)
+                        {
+                            RightHandItem.Drop(C.Human);
                         }
                     }
 
@@ -1734,7 +1736,7 @@ namespace Neurotrauma
                    // Reduce Oxygen Low if lungs are present
                    if (C.GetAffData("lungremoved").Strength <= 0)
                    {
-                       HF.AddAffliction(C.Human, "oxygenlow", -100, null);
+                       C.GetAffData("oxygenlow").Strength -= 100;
                    }
                };
 
@@ -1801,7 +1803,7 @@ namespace Neurotrauma
                                     // Seizure
                                     if (HF.Chance((float)AffData.Strength / 1000f))
                                     {
-                                        HF.AddAffliction(C.Human, "seizure", 10, null);
+                                        C.GetAffData("seizure").Strength += 10;
                                     }
 
                                     // Vomiting
@@ -1915,8 +1917,8 @@ namespace Neurotrauma
                         HF.Fibrillate(C.Human, (float)(5 + Random.Shared.NextDouble() * 30));
                     }
                     else
-                    { 
-                        HF.AddAffliction(C.Human, "psychosis", 10, null); 
+                    {
+                        C.GetAffData("psychosis").Strength += 10;
                     }
                 };
 
@@ -1944,7 +1946,7 @@ namespace Neurotrauma
                         * NTConfig.Get("NT_neurotraumaGain", 1)
                         * (1 - Math.Clamp(C.GetAffData("afmannitol").Strength, 0, 0.5));
 
-                    HF.AddAffliction(C.Human, "neurotrauma", (float)NeurotraumaGain, null);
+                    C.GetAffData("neurotrauma").Strength += NeurotraumaGain;
 
                     // Headache
                     if (AffData.Strength > 1 && C.GetAffData("unconsciousness").Strength <= 0)
@@ -1955,8 +1957,8 @@ namespace Neurotrauma
                     // Coma & Seizure
                     if (AffData.Strength > 1 && HF.Chance(0.05f))
                     {
-                        HF.AddAffliction(C.Human, "coma", 14, null);
-                        HF.AddAffliction(C.Human, "seizure", 10, null);
+                        C.GetAffData("coma").Strength += 14;
+                        C.GetAffData("seizure").Strength += 10;
                     }
                 };
 
@@ -1993,7 +1995,7 @@ namespace Neurotrauma
                         NTC.SetSymptomTrue(C, "unconsciousness", 2);
                         if (HF.Chance(0.05f)) 
                         {
-                            HF.AddAffliction(C.Human, "respiratoryarrest", 200, null);
+                            C.GetAffData("respiratoryarrest").Strength += 200;
                         }
                     }
                 };
@@ -2060,7 +2062,7 @@ namespace Neurotrauma
                         // Cardiac Arrest
                         if (AffData.Strength > 40 && HF.Chance(0.03f))
                         {
-                            HF.AddAffliction(C.Human, "cardiacarrest", 200, null);
+                            C.GetAffData("cardiacarrest").Strength += 200;
                         }
                     }
                 };
@@ -2125,7 +2127,7 @@ namespace Neurotrauma
 
                     // Effects:
                     // Acidosis
-                    HF.AddAffliction(C.Human, "acidosis", 0.2f, null);
+                    C.GetAffData("acidosis").Strength += 0.2;
 
                     // Blood Pressure (in BloodPressure constant)
                 };
@@ -2146,7 +2148,7 @@ namespace Neurotrauma
 
                     // Effects:
                     // Alkalosis
-                    HF.AddAffliction(C.Human, "alkalosis", 0.2f, null);
+                    C.GetAffData("acidosis").Strength += 0.2;
 
                     // Blood Pressure (in BloodPressure constant)
                 };
@@ -2170,7 +2172,7 @@ namespace Neurotrauma
                     // Reduce Neurotrauma if Blood Pressure and Hypoxemia conditions are met.
                     if (C.GetAffData("bloodpressure").Strength >= 70 && C.GetAffData("hypoxemia").Strength <= 30)
                     {
-                        HF.AddAffliction(C.Human, "neurotrauma", -2, null);
+                        C.GetAffData("neurotrauma").Strength -= 2;
                     }
                 };
 
@@ -2192,7 +2194,7 @@ namespace Neurotrauma
                     // Reduce Immunity
                     if (C.GetAffData("immunity").Strength >= 2.5)
                     {
-                        HF.AddAffliction(C.Human, "immunity", -8, null);
+                        C.GetAffData("immunity").Strength -= 8;
                     }
                 };
 
@@ -2266,23 +2268,23 @@ namespace Neurotrauma
                    AffData.Strength -= 0.5;
 
                    // Effects:
-                   // Organ Damage
-                   HF.AddAffliction(C.Human, "organdamage", 0.4f, null);
-                   HF.AddAffliction(C.Human, "kidneydamage", 0.35f, null);
-                   HF.AddAffliction(C.Human, "liverdamage", 0.35f, null);
-                   HF.AddAffliction(C.Human, "heartdamage", 0.2f, null);
-                   HF.AddAffliction(C.Human, "lungdamage", 0.2f, null);
+                   // Specific Organ Damage
+                   C.GetAffData("organdamage").Strength += 0.4;
+                   C.GetAffData("kidneydamage").Strength += 0.35;
+                   C.GetAffData("liverdamage").Strength += 0.35;
+                   C.GetAffData("heartdamage").Strength += 0.2;
+                   C.GetAffData("lungdamage").Strength += 0.2;
 
                    // Reduce Husk Infection
                    if (HF.HasAffliction(C.Human, "huskinfection") && C.GetAffData("huskinfection").Strength < 75)
                    {
-                       HF.AddAffliction(C.Human, "huskinfection", -1, null);
+                       C.GetAffData("huskinfection").Strength -= 1;
                    }
 
                    // Sepsis
                    if (C.GetAffData("sepsis").Strength > 0)
                    {
-                       HF.AddAffliction(C.Human, "sepsis", -2, null);
+                       C.GetAffData("sepsis").Strength -= 2;
                    }
                };
 
@@ -2309,10 +2311,6 @@ namespace Neurotrauma
                     bool IsSafeSurgery = C.GetAffData("safesurgery").Strength > 0;
                     bool IsAnesthesized = C.GetAffData("anesthesia").Strength > 15;
 
-                    HF.Print($"IsSedated: {IsSedated}");
-                    HF.Print($"SafeSurgery: {IsSafeSurgery}");
-                    HF.Print($"Anesthesized: {IsAnesthesized}");
-
                     bool ShouldReduce = (IsSedated && IsSafeSurgery || IsAnesthesized);
 
                     AffData.Strength -= (0.5 + HF.BoolToNum(ShouldReduce, 1.5f)) * NT.DeltaTime;
@@ -2323,20 +2321,20 @@ namespace Neurotrauma
                     {
                         if (C.GetSymptomAffData("unconsciousness").Strength < 0.1)
                         {
-                            HF.AddAffliction(C.Human, "shockpain", (float)(10 * NT.DeltaTime), null);
-                            HF.AddAffliction(C.Human, "psychosis", (float)(AffData.Strength / 100 * NT.DeltaTime), null);
+                            C.GetAffData("shockpain").Strength += (10 * NT.DeltaTime);
+                            C.GetAffData("psychosis").Strength += (AffData.Strength / 100 * NT.DeltaTime);
                         }
 
                         // Respiratory Arrest
                         if (AffData.Strength > 30 && HF.Chance(0.2f))
                         {
-                            HF.AddAffliction(C.Human, "respiratoryarrest", 200, null);
+                            C.GetAffData("respiratoryarrest").Strength += 200;
                         }
 
                         // Cardiac Arrest
                         if (AffData.Strength > 40 && HF.Chance(0.1f))
                         {
-                            HF.AddAffliction(C.Human, "cardiacarrest", 200, null);
+                            C.GetAffData("cardiacarrest").Strength += 200;
                         }
                     }
                 };
@@ -2352,11 +2350,11 @@ namespace Neurotrauma
                 {
                     // Effects:
                     // Vanilla Organ Damage
-                    HF.AddAffliction(C.Human, "organdamage", 1, null);
+                    C.GetAffData("organdamage").Strength += 1;
 
                     // Specific Organ Damage
-                    HF.AddAffliction(C.Human, "liverdamage", 1, null);
-                    HF.AddAffliction(C.Human, "kidneydamage", 1, null);
+                    C.GetAffData("liverdamage").Strength += 1;
+                    C.GetAffData("kidneydamage").Strength += 1;
                 };
 
             // =============== Torso =============== //
@@ -2399,7 +2397,7 @@ namespace Neurotrauma
                     // Blood Loss
                     if (AffData.Strength > 0)
                     {
-                        HF.AddAffliction(C.Human, "bloodloss", (float)(AffData.Strength * (1f / 40f) * NT.DeltaTime), null);
+                        C.GetAffData("bloodloss").Strength += (AffData.Strength * (1f / 40f) * NT.DeltaTime);
 
                         // Vomiting Blood
                         if (AffData.Strength > 50)
@@ -2851,7 +2849,7 @@ namespace Neurotrauma
                     // Reduce Internal Bleeding if on Torso
                     if (Limb == LimbType.Torso)
                     {
-                        HF.AddAffliction(C.Human, "internalbleeding", (float)(-0.2 * NT.DeltaTime), null);
+                        C.GetAffData("internalbleeding").Strength -= (0.2 * NT.DeltaTime);
                     }
 
                     // Heal Blunt Force Trauma
@@ -2958,7 +2956,7 @@ namespace Neurotrauma
 
                     if (HF.Chance((float)SepsisChance))
                     {
-                        HF.AddAffliction(C.Human, "sepsis", (float)(NT.DeltaTime * NTConfig.Get("NT_SepsisRate", 1)), null);
+                        C.GetAffData("sepsis").Strength += (NT.DeltaTime * NTConfig.Get("NT_SepsisRate", 1));
                     }
 
                     // Inflammation
@@ -2973,13 +2971,17 @@ namespace Neurotrauma
 
                     double ForeignBodyInfectIndex = AffData.Strength[Limb] / 40 * NT.DeltaTime;
                     HF.AddAfflictionLimb(C.Human, "infectedwound", Limb, (float)(ForeignBodyInfectIndex / 5), null);
-                    HF.AddAffliction(C.Human, "immunity", (float)-Math.Clamp(ForeignBodyInfectIndex / 3, 0, 10), null);
+
+                    // Decrease Immunity
+                    C.GetAffData("immunity").Strength -= Math.Clamp(ForeignBodyInfectIndex / 3, 0, 10);
 
                     if (C.GetLimbAffStrength("bandageddirty", Limb) > 10)
                     {
                         double ForeignBodyDirtyIndex = AffData.Strength[Limb] / 40 * NT.DeltaTime;
                         HF.AddAfflictionLimb(C.Human, "infectedwound", Limb, (float)(ForeignBodyDirtyIndex / 5), null);
-                        HF.AddAffliction(C.Human, "immunity", (float)-Math.Clamp(ForeignBodyDirtyIndex / 3, 0, 10), null);
+
+                        // Decrease Immunity
+                        C.GetAffData("immunity").Strength -= Math.Clamp(ForeignBodyDirtyIndex / 3, 0, 10);
                     }
                 };
 
@@ -3022,14 +3024,18 @@ namespace Neurotrauma
 
                     double BurnInfectIndex = AffData.Strength[Limb] / 20 * NT.DeltaTime;
                     HF.AddAfflictionLimb(C.Human, "infectedwound", Limb, (float)(BurnInfectIndex / 5), null);
-                    HF.AddAffliction(C.Human, "immunity", (float)-Math.Clamp(BurnInfectIndex / 3, 0, 10), null);
+
+                    // Decrease Immunity
+                    C.GetAffData("immunity").Strength -= Math.Clamp(BurnInfectIndex / 3, 0, 10);
 
                     // Dirty Bandage results
                     if (C.GetLimbAffStrength("bandageddirty", Limb) > 10)
                     {
                         double BurnDirtyIndex = AffData.Strength[Limb] / 40 * NT.DeltaTime;
                         HF.AddAfflictionLimb(C.Human, "infectedwound", Limb, (float)(BurnDirtyIndex / 5), null);
-                        HF.AddAffliction(C.Human, "immunity", (float)-Math.Clamp(BurnDirtyIndex / 3, 0, 10), null);
+
+                        // Decrease Immunity
+                        C.GetAffData("immunity").Strength -= Math.Clamp(BurnDirtyIndex / 3, 0, 10);
                     }
                 };
 
@@ -3072,13 +3078,17 @@ namespace Neurotrauma
 
                     double LacerationInfectIndex = AffData.Strength[Limb] / 40 * NT.DeltaTime;
                     HF.AddAfflictionLimb(C.Human, "infectedwound", Limb, (float)(LacerationInfectIndex / 5), null);
-                    HF.AddAffliction(C.Human, "immunity", (float)-Math.Clamp(LacerationInfectIndex / 3, 0, 10), null);
+
+                    // Decrease Immunity
+                    C.GetAffData("immunity").Strength -= Math.Clamp(LacerationInfectIndex / 3, 0, 10);
 
                     if (C.GetLimbAffStrength("bandageddirty", Limb) > 10)
                     {
                         double LacerationDirtyIndex = AffData.Strength[Limb] / 40 * NT.DeltaTime;
                         HF.AddAfflictionLimb(C.Human, "infectedwound", Limb, (float)(LacerationDirtyIndex / 5), null);
-                        HF.AddAffliction(C.Human, "immunity", (float)-Math.Clamp(LacerationDirtyIndex / 3, 0, 10), null);
+
+                        // Decrease Immunity
+                        C.GetAffData("immunity").Strength -= Math.Clamp(LacerationDirtyIndex / 3, 0, 10);
                     }
                 };
 
@@ -3110,13 +3120,17 @@ namespace Neurotrauma
 
                     double GSWInfectIndex = AffData.Strength[Limb] / 40 * NT.DeltaTime;
                     HF.AddAfflictionLimb(C.Human, "infectedwound", Limb, (float)(GSWInfectIndex / 5), null);
-                    HF.AddAffliction(C.Human, "immunity", (float)-Math.Clamp(GSWInfectIndex / 3, 0, 10), null);
+
+                    // Decrease Immunity
+                    C.GetAffData("immunity").Strength -= Math.Clamp(GSWInfectIndex / 3, 0, 10);
 
                     if (C.GetLimbAffStrength("bandageddirty", Limb) > 10)
                     {
                         double GSWDirtyIndex = AffData.Strength[Limb] / 40 * NT.DeltaTime;
                         HF.AddAfflictionLimb(C.Human, "infectedwound", Limb, (float)(GSWDirtyIndex / 5), null);
-                        HF.AddAffliction(C.Human, "immunity", (float)-Math.Clamp(GSWDirtyIndex / 3, 0, 10), null);
+
+                        // Decrease Immunity
+                        C.GetAffData("immunity").Strength -= Math.Clamp(GSWDirtyIndex / 3, 0, 10);
                     }
                 };
 
@@ -3148,13 +3162,17 @@ namespace Neurotrauma
 
                     double ExplosionDamageInfectIndex = AffData.Strength[Limb] / 40 * NT.DeltaTime;
                     HF.AddAfflictionLimb(C.Human, "infectedwound", Limb, (float)(ExplosionDamageInfectIndex / 5), null);
-                    HF.AddAffliction(C.Human, "immunity", (float)-Math.Clamp(ExplosionDamageInfectIndex / 3, 0, 10), null);
+
+                    // Decrease Immunity
+                    C.GetAffData("immunity").Strength -= Math.Clamp(ExplosionDamageInfectIndex / 3, 0, 10);
 
                     if (C.GetLimbAffStrength("bandageddirty", Limb) > 10)
                     {
                         double ExplosionDamageDirtyIndex = AffData.Strength[Limb] / 40 * NT.DeltaTime;
                         HF.AddAfflictionLimb(C.Human, "infectedwound", Limb, (float)(ExplosionDamageDirtyIndex / 5), null);
-                        HF.AddAffliction(C.Human, "immunity", (float)-Math.Clamp(ExplosionDamageDirtyIndex / 3, 0, 10), null);
+
+                        // Decrease Immunity
+                        C.GetAffData("immunity").Strength -= Math.Clamp(ExplosionDamageDirtyIndex / 3, 0, 10);
                     }
                 };
 
@@ -3186,13 +3204,17 @@ namespace Neurotrauma
 
                     double BitesInfectIndex = AffData.Strength[Limb] / 30 * NT.DeltaTime;
                     HF.AddAfflictionLimb(C.Human, "infectedwound", Limb, (float)(BitesInfectIndex / 5), null);
-                    HF.AddAffliction(C.Human, "immunity", (float)-Math.Clamp(BitesInfectIndex / 3, 0, 10), null);
+
+                    // Decrease Immunity
+                    C.GetAffData("immunity").Strength -= Math.Clamp(BitesInfectIndex / 3, 0, 10);
 
                     if (C.GetLimbAffStrength("bandageddirty", Limb) > 10)
                     {
                         double BitesDirtyIndex = AffData.Strength[Limb] / 40 * NT.DeltaTime;
                         HF.AddAfflictionLimb(C.Human, "infectedwound", Limb, (float)(BitesDirtyIndex / 5), null);
-                        HF.AddAffliction(C.Human, "immunity", (float)-Math.Clamp(BitesDirtyIndex / 3, 0, 10), null);
+
+                        // Decrease Immunity
+                        C.GetAffData("immunity").Strength -= Math.Clamp(BitesDirtyIndex / 3, 0, 10);
                     }
                 };
 
@@ -3210,12 +3232,18 @@ namespace Neurotrauma
                     // Passive Regeneration
                     if (AffData.Strength[Limb] < 100)
                     {
-                        AffData.Strength[Limb] -= (
+                        double IsIced = Math.Clamp(C.GetLimbAffStrength("iced", Limb), 0, 1);
+                        double IsBandaged = Math.Clamp(C.GetLimbAffStrength("bandaged", Limb), 0, 1);
+                        double IsOintmented = Math.Clamp(C.GetLimbAffStrength("ointmented", Limb), 0, 1);
+
+                        double BFTHealRate = (
                             C.GetBloodAffData("immunity").PrevStrength / 8000
-                            + Math.Clamp(C.GetLimbAffStrength("bandaged", Limb), 0, 1) * 0.1
-                            + Math.Clamp(C.GetLimbAffStrength("iced", Limb), 0, 1) * 0.3
-                            + Math.Clamp(C.GetLimbAffStrength("ointmented", Limb), 0, 1) * 0.12
+                            + IsIced * 0.3
+                            + IsBandaged * 0.1
+                            + IsOintmented * 0.12
                         ) * C.GetDoubleStatStrength("healingrate") * NT.DeltaTime;
+
+                        AffData.Strength[Limb] -= BFTHealRate;
                     }
                 };
 
@@ -3339,12 +3367,12 @@ namespace Neurotrauma
                     {
                         if (C.GetAffData("afstreptokinase").Strength <= 0 && C.GetAffData("heartremoved").Strength <= 0 && HF.Chance((float)(NTConfig.Get("NT_heartattackChance", 1f) * ((AffData.Strength - 150) / 50 * 0.02f))))
                         {
-                            HF.AddAffliction(C.Human, "heartattack", 50, null);
+                            C.GetAffData("heartattack").Strength += 50;
                         }
 
                         if (HF.Chance((float)(NTConfig.Get("NT_strokeChance", 1) * ((AffData.Strength - 150) / 50 * 0.02 + Math.Clamp(C.GetAffData("afstreptokinase").Strength, 0, 1) * 0.05))))
                         {
-                            HF.AddAffliction(C.Human, "stroke", 5, null);
+                            C.GetAffData("stroke").Strength += 5;
                         }
                     }
                 };
@@ -3393,10 +3421,10 @@ namespace Neurotrauma
                         * NTConfig.Get("NT_neurotraumaGain", 1)
                         * (1 - Math.Clamp(C.GetAffData("afmannitol").Strength, 0, 0.5));
 
-                    HF.AddAffliction(C.Human, "neurotrauma", (float)NeurotraumaGain, null);
+                    C.GetAffData("neurotrauma").Strength += NeurotraumaGain;
 
                     // Bone Damage
-                    HF.AddAffliction(C.Human, "bonedamage", (float)(AffData.Strength / 1000 * NTC.GetMultiplier(C, "bonedamagegain") * NT.DeltaTime), null);
+                    C.GetAffData("bonedamage").Strength += (AffData.Strength / 1000 * NTC.GetMultiplier(C, "bonedamagegain") * NT.DeltaTime);
 
                     // Shortness of Breath
                     if (AffData.Strength > 20)
@@ -3425,7 +3453,7 @@ namespace Neurotrauma
                                 // Respiratory Arrest
                                 if (AffData.Strength > 70 && HF.Chance(0.05f))
                                 {
-                                    HF.AddAffliction(C.Human, "respiratoryarrest", 200, null);
+                                    C.GetAffData("respiratoryarrest").Strength += 200;
                                 }
 
                                 // Unconsciousness & Cardiac Arrest
@@ -3435,7 +3463,7 @@ namespace Neurotrauma
 
                                     if (HF.Chance(0.01f))
                                     {
-                                        HF.AddAffliction(C.Human, "cardiacarrest", 200, null);
+                                        C.GetAffData("cardiacarrest").Strength += 200;
                                     }
                                 }
                             }
@@ -3478,7 +3506,7 @@ namespace Neurotrauma
                         // Seizures
                         if (AffData.Strength > 60 && HF.Chance(0.05f))
                         {
-                            HF.AddAffliction(C.Human, "seizure", 10, null);
+                            C.GetAffData("seizure").Strength += 10;
                         }
                     }
                 };
@@ -3504,7 +3532,6 @@ namespace Neurotrauma
 
                     // Effects:
                     
-
                     // Fibrillation (in IncreasedHeartrate constant)
                     // Increased Heartrate (in IncreasedHeartrate constant)
 
@@ -3534,13 +3561,13 @@ namespace Neurotrauma
                                 // Coma
                                 if (HF.Chance(0.05f + (float)(AffData.Strength - 60f) / 100f))
                                 {
-                                    HF.AddAffliction(C.Human, "coma", 14, null);
+                                    C.GetAffData("coma").Strength += 14;
                                 }
 
                                 // Seizures
                                 if (HF.Chance(0.05f))
                                 {
-                                    HF.AddAffliction(C.Human, "seizure", 10, null);
+                                    C.GetAffData("seizure").Strength += 10;
                                 }
                             }
                         }
@@ -3628,10 +3655,10 @@ namespace Neurotrauma
                         * NTConfig.Get("NT_neurotraumaGain", 1)
                         * (1 - Math.Clamp(C.GetAffData("afmannitol").Strength, 0, 0.5));
 
-                    HF.AddAffliction(C.Human, "neurotrauma", (float)NeurotraumaGain, null);
+                    C.GetAffData("neurotrauma").Strength += NeurotraumaGain;
 
                     // Bone Damage
-                    HF.AddAffliction(C.Human, "bonedamage", (float)(AffData.Strength / 500 * NTC.GetMultiplier(C, "bonedamagegain") * NT.DeltaTime), null);
+                    C.GetAffData("bonedamage").Strength += (AffData.Strength / 500 * NTC.GetMultiplier(C, "bonedamagegain") * NT.DeltaTime);
 
                     // Fever
                     if (AffData.Strength > 5)
@@ -3862,7 +3889,7 @@ namespace Neurotrauma
                     // Give In
                     if (AffData.Strength > 0)
                     {
-                        HF.AddAffliction(C.Human, "givein", 1, null);
+                        C.GetAffData("givein").Strength ++;
                     }
                 };
 
@@ -3887,7 +3914,7 @@ namespace Neurotrauma
                     // Alkalosis
                     if (AffData.Strength > 0)
                     {
-                        HF.AddAffliction(C.Human, "alkalosis", (float)(Math.Clamp(AffData.Strength, 0, 1) * 0.1 * NT.DeltaTime), null);
+                        C.GetAffData("alkalosis").Strength += (Math.Clamp(AffData.Strength, 0, 1) * 0.1 * NT.DeltaTime);
                     }
                 };
 
@@ -3993,7 +4020,10 @@ namespace Neurotrauma
                         NTC.SetSymptomFalse(C.Human, ID, 2);
                         return;
                     }
-                    HF.AddAffliction(C.Human, "alkalosis", (float)(Math.Clamp(AffData.Strength, 0, 1) * 0.09 * NT.DeltaTime), null);
+
+                    // Effects:
+                    // Alkalosis
+                    C.GetAffData("alkalosis").Strength += (Math.Clamp(AffData.Strength, 0, 1) * 0.09 * NT.DeltaTime);
                 };
 
             // Hypoventilation
@@ -4022,7 +4052,7 @@ namespace Neurotrauma
                     // Acidosis
                     if (AffData.Strength > 0 && C.GetAffData("artificialventilation").Strength <= 0.1)
                     {
-                        HF.AddAffliction(C.Human, "acidosis", (float)(0.09 * NT.DeltaTime), null);
+                        C.GetAffData("acidosis").Strength += (0.09 * NT.DeltaTime);
                     }
                 };
 
@@ -4043,7 +4073,7 @@ namespace Neurotrauma
                 (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanSymptomData AffData) =>
                 {
                     if (AffData.Strength <= 0) return;
-                    HF.SetAffliction(C.Human, "respiratoryarrest", 100);
+                    C.GetAffData("respiratoryarrest").Strength = 100;
                 };
             SymptomsToAdd["triggersym_seizure"] = new("triggersym_seizure", 0, 100, 0, AfflictionPriority.HIGH);
             SymptomsToAdd["triggersym_seizure"].Real = false;
@@ -4052,7 +4082,7 @@ namespace Neurotrauma
                 (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanSymptomData AffData) =>
                 {
                     if (AffData.Strength <= 0) return;
-                    HF.SetAffliction(C.Human, "seizure", 100);
+                    C.GetAffData("seizure").Strength = 100;
                 };
             SymptomsToAdd["triggersym_stroke"] = new("triggersym_stroke", 0, 100, 0, AfflictionPriority.HIGH);
             SymptomsToAdd["triggersym_stroke"].Real = false;
@@ -4061,7 +4091,7 @@ namespace Neurotrauma
                 (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanSymptomData AffData) =>
                 {
                     if (AffData.Strength <= 0) return;
-                    HF.SetAffliction(C.Human, "stroke", 100);
+                    C.GetAffData("stroke").Strength = 100;
                 };
             SymptomsToAdd["triggersym_coma"] = new("triggersym_coma", 0, 100, 0, AfflictionPriority.HIGH);
             SymptomsToAdd["triggersym_coma"].Real = false;
@@ -4070,7 +4100,7 @@ namespace Neurotrauma
                 (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanSymptomData AffData) =>
                 {
                     if (AffData.Strength <= 0) return;
-                    HF.SetAffliction(C.Human, "coma", 100);
+                    C.GetAffData("seizure").Strength = 100;
                 };
             SymptomsToAdd["triggersym_cardiacarrest"] = new("triggersym_cardiacarrest", 0, 100, 0, AfflictionPriority.HIGH);
             SymptomsToAdd["triggersym_cardiacarrest"].Real = false;
@@ -4079,7 +4109,7 @@ namespace Neurotrauma
                 (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanSymptomData AffData) =>
                 {
                     if (AffData.Strength <= 0) return;
-                    HF.SetAffliction(C.Human, "cardiacarrest", 100);
+                    C.GetAffData("cardiacarrest").Strength = 100;
                 };
 
             foreach (KeyValuePair<string, NTSymptom> Pair in SymptomsToAdd)
