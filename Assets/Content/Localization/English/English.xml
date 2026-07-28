@@ -893,7 +893,10 @@ Can give blood to: AB+</entitydescription.ab_positivecard>
 <!-- Surgery table -->
 <entityname.operatingtable>Surgery Table</entityname.operatingtable>
 <entitydescription.operatingtable>A portable version of the hospital bed, intended to be installed on submarines. Like the hospital bed, it comes with ‖color:gui.green‖Artificial Ventilation‖end‖. Additionally, it has electrical pins installed that can output a person's vitals. Built-in are slots for placing an ‖color:gui.blue‖Analgesic Tank‖end‖, one of the ‖color:gui.blue‖Filters‖end‖ and a ‖color:gui.blue‖Refrigerated Crate‖end‖. To use the ‖color:gui.blue‖Analgesic Tank‖end‖ and ‖color:gui.blue‖Filters‖end‖ on an unconscious patient, they will have to be forced on the table.</entitydescription.operatingtable>
-  
+<itemmsgmodifytable>[[attack]] Interact</itemmsgmodifytable>
+<operatingtabellabel>Surgery Table Upgrades</operatingtabellabel>  
+
+
 <!-- Multipurpose scalpel -->
 <entityname.multiscalpel>Multipurpose Scalpel</entityname.multiscalpel>
 <entitydescription.multiscalpel>Novelty scalpel. Disabled and needs activation. In the practitioner's hands, a button pad can be utilised to activate the scalpel and switch between between operations: making incisions, extracting organs, removing bandages, or doing malpractice.</entitydescription.multiscalpel>

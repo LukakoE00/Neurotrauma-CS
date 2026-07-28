@@ -1129,7 +1129,9 @@
             <!-- Hide contained items to prevent sprites glitching -->
             <StatusEffect type="OnUse" target="this" hideitems="false" setvalue="true"/> <!-- If placed, show items -->
             <StatusEffect type="OnContained" target="this" hideitems="true" setvalue="true"/> <!-- If contained (player inventory, storage etc.) hide items.-->
-        
+
+            <!-- Prevent Sub Editor shenanigans -->
+			<RequiredItem items="screwdriver" type="Equipped" requireempty="true" IgnoreInEditor="false" />
         </Holdable>
     </Item>
 
