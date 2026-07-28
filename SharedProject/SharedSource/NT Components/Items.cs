@@ -503,6 +503,7 @@ public class NTItemMethods
         // Empty Blood Pack
         RegisterItemUseFunction("emptybloodpack", infos =>
         {
+            if (!infos.target.IsHuman) return;
             if (infos.item.condition <= 0) return;
 
             // changing from 31 to somthing like 15 can stop easy station kill by using two blood pack in a row
