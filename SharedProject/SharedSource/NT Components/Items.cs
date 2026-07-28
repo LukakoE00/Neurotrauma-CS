@@ -1525,11 +1525,11 @@ public class NTItemMethods
             return true;
         });
 
+        // Sutures
         RegisterItemUseFunction("suture", infos =>
         {
 
             // Base NT has no stasis check ?
-
             if (!HF.GetSurgerySkillRequirementMet(infos.user, 30))
             {
                 HF.AddAfflictionLimb(infos.target, "internaldamage", infos.targetLimb.type, 6, infos.user);
@@ -1561,6 +1561,12 @@ public class NTItemMethods
             // A slight delay is needed for the Surgery afflictions to clear themselves.
             if (HF.HasAfflictionLimb(infos.target, "sawedbones", infos.targetLimb.type, 1))
             {
+                if (!infos.target.IsHuman)
+                {
+                    HF.AddAffliction(infos.target, "sawedbones", -200, infos.user);
+                    return;
+                }
+
                 LuaCsSetup.Instance.Timer.Wait((params object[] _) =>
                 {
                     HF.SurgicallyAmputateLimbAndGenerateItem(infos.user, infos.target, infos.targetLimb.type);
