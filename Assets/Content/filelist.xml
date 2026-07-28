@@ -38,4 +38,6 @@
     <Character file="%ModDir%/Characters/Human/Human.xml" />
     <!-- HealthUI Sound Override -->
 	<Sounds file="%ModDir%/XML/SoundOverrides.xml" />
+    <!-- Talent Overrides -->
+    <Talents file="%ModDir%/XML/Talents/Talents.xml"/>
 </contentpackage>

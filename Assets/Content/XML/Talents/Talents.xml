@@ -1,0 +1,80 @@
+<Talents>
+    <Override>
+        <!-- Vanilla talents override -->
+
+        <!-- Bloody Business -->
+        <Talent identifier="bloodybusiness">
+            <Icon texture="Content/UI/TalentsIcons3.png" sheetindex="1,4" sheetelementsize="128,128"/>
+            <Description tag="talentdescription.itemgiveslessaffliction" >
+                <Replace tag="[amount]" value="50" color="gui.green"/>
+            </Description>
+            <Description tag="talentdescription.bloodybusiness">
+                <Replace tag="[item]" value="entityname.alienblood" color="gui.orange"/>
+            </Description>
+            <AbilityGroupEffect abilityeffecttype="OnApplyTreatment">
+                <Conditions>
+                    <AbilityConditionItem identifiers="alienblood" />
+                </Conditions>
+                <Abilities>
+                    <CharacterAbilityApplyStatusEffects>
+                        <StatusEffects>
+                            <!-- counter half of the psychosis applied by alien blood -->
+                            <!-- also counter most of the hemo shock -->
+                            <!-- this still causes approximately 5% bloodloss and 2.5% organ damage -->
+                            <StatusEffect tags="medical" type="OnAbility" target="UseTarget" multiplyafflictionsbymaxvitality="true" disabledeltatime="true">
+                                <ReduceAffliction identifier="psychosis" amount="15" />
+                                <ReduceAffliction identifier="hemotransfusionshock" amount="90" />
+                            </StatusEffect>
+                        </StatusEffects>
+                    </CharacterAbilityApplyStatusEffects>
+                </Abilities>
+            </AbilityGroupEffect>
+            <AbilityGroupEffect abilityeffecttype="OnLootCharacter">
+                <Conditions>
+                    <AbilityConditionCharacter targettype="Monster">
+                        <Conditional IsMachine="false" />
+                        <Conditional IsHusk="false" />
+                        <Conditional maxhealth="gt 300"/>
+                    </AbilityConditionCharacter>
+                    <AbilityConditionCharacterNotLooted identifier="bloodybusiness" />
+                </Conditions>
+                <Abilities>
+                    <CharacterAbilityApplyStatusEffects>
+                        <StatusEffects>
+                            <StatusEffect type="OnAbility" target="UseTarget" spawnitemrandomly="true" >
+                                <SpawnItem identifiers="alienblood" spawnposition="ThisInventory" />
+                            </StatusEffect>
+                        </StatusEffects>
+                    </CharacterAbilityApplyStatusEffects>
+                    <CharacterAbilityMarkAsLooted identifier="bloodybusiness"/>
+                </Abilities>
+            </AbilityGroupEffect>
+        </Talent>
+
+        <Talent identifier="implacable">
+            <Description tag="talentdescription.cannotfallunconsciousforseconds">
+                <Replace tag="[powerincrease]" value="25" color="gui.green"/>
+                <Replace tag="[seconds]" value="15" color="gui.green"/>
+            </Description>
+            <Description tag="talentdescription.maxtriggeruntildeath"/>
+            <Icon texture="Content/UI/TalentsIcons1.png" sheetindex="2,3" sheetelementsize="128,128"/>
+            <AbilityGroupInterval maxtriggercount="1" >
+                <Conditions>
+                    <AbilityConditionHasAffliction afflictionidentifier="sym_unconsciousness"/>
+                </Conditions>
+                <Abilities>
+                    <CharacterAbilityApplyStatusEffects>
+                        <StatusEffects>
+                            <StatusEffect type="OnAbility" target="Character" multiplyafflictionsbymaxvitality="true" disabledeltatime="true" >
+                                <Affliction identifier="implacable" amount="15.0"/>
+                            </StatusEffect>
+                            <StatusEffect type="OnAbility" target="Character" multiplyafflictionsbymaxvitality="true" disabledeltatime="true" delay="2.1">
+                                <ReduceAffliction identifier="stun" amount="5.0"/>
+                            </StatusEffect>
+                        </StatusEffects>
+                    </CharacterAbilityApplyStatusEffects>
+                </Abilities>
+            </AbilityGroupInterval>
+        </Talent>
+    </Override>
+</Talents>
