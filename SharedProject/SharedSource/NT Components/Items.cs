@@ -133,7 +133,7 @@ public class NTItemMethods
             }
             else
             {
-                HF.BreakLimb(infos.target, infos.targetLimb.type, 1000);
+                HF.BreakLimb(infos.target, infos.targetLimb.type, 1);
             }
 
             if (!HF.HasAffliction(infos.target, "analgesia", 0.5f))
