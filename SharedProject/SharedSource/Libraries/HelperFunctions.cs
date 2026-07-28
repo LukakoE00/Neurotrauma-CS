@@ -1708,7 +1708,7 @@ namespace Neurotrauma
                 return HasAfflictionLimb(Character, "fracturedextremity", GivenLimbType, 100); 
             }
 
-            return HasAfflictionLimb(Character, "fracturedextremity", GivenLimbType);
+            return HasAfflictionLimb(Character, "fracturedextremity", GivenLimbType, 0);
         }
 
         /// <summary>
