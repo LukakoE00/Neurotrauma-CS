@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<contentpackage name="Neurotrauma CS" modversion="1.6" corepackage="False" steamworkshopid="3744761298" gameversion="1.13.4.0">
+<contentpackage name="Neurotrauma CS" modversion="1.7" corepackage="False" steamworkshopid="3744761298" gameversion="1.13.4.0">
     <!-- Comments within this file get removed on upload to Steam; these are just for the Repo. - Lukako -->
     <!-- Main Menu Neurotrauma -->
     <UIStyle file="%ModDir%/Style/StyleMM.xml" />
