@@ -1,4 +1,5 @@
 ﻿using static Barotrauma.Items.Components.ItemComponent;
+using static Barotrauma.Items.Components.ItemContainer;
 using static Neurotrauma.HumanUpdate;
 
 namespace Neurotrauma;
@@ -2401,7 +2402,10 @@ public class NTItemMethods
             // Stasis check
             if (HF.HasAffliction(infos.target, "stasis", 0.1f)) return;
 
-            if (infos.item.Condition <= 0) return;
+            if (infos.item.Condition <= 0)
+            {
+                return;
+            }
 
             infos.item.Condition = 0; // Start Cooldown
 
@@ -2417,10 +2421,13 @@ public class NTItemMethods
             // Surgery use
             if (hasSaline && infos.targetLimb.type == LimbType.Torso && HF.HasAffliction(infos.target, "infectedcavity", 1f) && HF.HasAffliction(infos.target, "retractedskin", 1f))
             {
+                HF.RemoveItem(containedItem);
+                HF.GiveItem(infos.target, "ntsfx_spray");
+
                 float skill = HF.GetSurgerySkill(infos.user);
                 float delay = 11000f - skill * 10f;
 
-                HF.AddAfflictionLimb(infos.target, "caviclean", infos.targetLimb.type, Math.Max(100f - skill / 2f, 10f), infos.user);
+                HF.AddAfflictionLimb(infos.target, "caviclean", infos.targetLimb.type, Math.Max(0f + skill / 2f, 10f), infos.user);
 
                 LuaCsSetup.Instance.Timer.Wait((object[] _) =>
                 {
@@ -2435,7 +2442,7 @@ public class NTItemMethods
                             HF.GiveSkillScaled(infos.user, "medical", 10000f);
                         }
                     }
-                }, (int)delay);
+                }, (int)10000);
 
                 return;
             }
@@ -2443,11 +2450,12 @@ public class NTItemMethods
             // Antiseptic use
             if (hasAntiseptic)
             {
+                containedItem.Condition -= 10f;
+
                 HF.AddAffliction(infos.target, "infectedwound", -100f, infos.user);
                 HF.AddAffliction(infos.target, "ointmented", 20f, infos.user);
+                HF.GiveItem(infos.target, "ntsfx_spray");
             }
-            
-            HF.GiveItem(infos.target, "ntsfx_spray");
         });
 
         // ============== Toggleable ==============

@@ -935,10 +935,10 @@ namespace Neurotrauma
                 };
 
             // Infected Cavity
-            // Type: Non-Limb Specific, Lethal Shit
-            // Not constant; gets applied by Shit.
-            // Caused By: Shit.
-            // Effects: Shit.
+            // Type: Non-Limb Specific, Lethal
+            // Not constant; gets applied by other sources.
+            // Caused By: Damage.
+            // Effects: Sepsis.
             AfflictionsToAdd["infectedcavity"] = new("infectedcavity", 0, 100, 0, AfflictionPriority.MEDIUM);
             AfflictionsToAdd["infectedcavity"].UpdateAction =
                 (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanNonLimbAffData AffData) =>
@@ -2289,6 +2289,24 @@ namespace Neurotrauma
                };
 
             // =============== Surgical =============== //
+            // Cavity Cleaning
+            // Not constant; gets applied by other sources
+            // Type: Surgery, Non-Limb Specific
+            // Caused By: Antiseptic Sprayer + Saline
+            // Effects: Cures Infected Cavity
+            AfflictionsToAdd["caviclean"] = new("caviclean", 0, 100, 0, AfflictionPriority.HIGH);
+            AfflictionsToAdd["caviclean"].UpdateAction =
+               (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanNonLimbAffData AffData) =>
+               {
+                   // Once it hits 100, remove itself and infected cavity.
+                   if (AffData.Strength == 100)
+                   {
+                       AffData.Strength = 0;
+                       C.GetAffData("infectedcavity").Strength = 0;
+                       return;
+                   }
+               };
+
 
             // Traumatic Shock
             // Not constant; gets applied by other sources.

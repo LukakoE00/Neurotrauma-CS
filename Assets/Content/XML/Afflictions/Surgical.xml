@@ -257,5 +257,25 @@
 
       <icon texture="%ModDir%/Images/AfflictionIcons.png" sheetindex="1,4" sheetelementsize="128,128" origin="0,0"/>
     </Affliction>
+
+	<!-- Cleaning cavity -->
+	<Affliction
+	name=""
+    description=""
+	identifier="caviclean"
+		
+	healableinmedicalclinic="true"
+	isbuff="true"
+	limbspecific="true"
+    iconcolors="84,211,211,255;84,211,211,255"
+		
+	showinhealthscannerthreshold="999"
+	showiconthreshold="0"
+    maxstrength="100">
+
+	<Effect minstrength="0" maxstrength="100" strengthchange="10"/>
+
+	<icon texture="%ModDir%/Images/AfflictionIcons2.png" sheetindex="0,7" sheetelementsize="128,128" origin="0,0"/>
+	</Affliction>
   </Afflictions>
 </Override>

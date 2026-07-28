@@ -416,6 +416,10 @@
 <afflictionname.traumaticshock>Traumatic Shock</afflictionname.traumaticshock>
 <afflictiondescription.traumaticshock>Usually occurring during unsafe surgery conditions, causing potentially lethal ‖color:gui.red‖Hypotension‖end‖. To perform safe surgery a patient must be under the effects of ‖color:gui.green‖Analgesia‖end‖ and near any ‖color:gui.blue‖Bed‖end‖, or be ‖color:gui.red‖Unconscious‖end‖.</afflictiondescription.traumaticshock>
 
+<!-- Cavity Cleaning -->
+<afflictionname.caviclean>Cleaning cavity</afflictionname.caviclean>
+<afflictiondescription.caviclean>Stomach cavity is being washed with pressurized saline, cleaning it from infection.</afflictiondescription.caviclean>
+
 <!-- ================================================= Symptoms ================================================= -->
 
 <!-- Cough -->
@@ -531,6 +535,9 @@
 
 <!-- Aortic Rupture -->
 <afflictionname.aorticrupture>Aortic Rupture</afflictionname.aorticrupture>
+
+<!-- Infected Stomach Cavity -->
+<afflictionname.infectedcavity>Infected Stomach Cavity</afflictionname.infectedcavity>
 
 <!-- ================================================= Invisible Afflictions ================================================= -->
 <afflictionname.safesurgery>Safe Surgery</afflictionname.safesurgery>
