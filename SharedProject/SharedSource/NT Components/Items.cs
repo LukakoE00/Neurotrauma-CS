@@ -2581,6 +2581,48 @@ public class NTItemMethods
     {
        // LuaCsLogger.Log("use");
     }
+
+    public static readonly HashSet<string> FixCondition = new()
+    {
+        "healthscanner",
+        "bloodanalyzer",
+        "defibrillator",
+        "bvm",
+        "autocpr",
+        "aed",
+        "antisepticspray"
+    };
+
+    private static void TryFixCondition(Item item)
+    {
+        if (item != null && FixCondition.Contains(item.Prefab.Identifier.Value))
+        {
+            item.Condition = 100f;
+        }
+    }
+
+    public static void RefreshCondition()
+    {
+        foreach (Item item in Item.ItemList)
+        {
+            TryFixCondition(item);
+        }
+    }
+
+    public static void EnsureWorkingItems()
+    {
+        LuaCsSetup.Instance.Hook.Add("roundStart", "NT.RoundStartFixItems", (params object[] args) =>
+        {
+            RefreshCondition(); // catches items already present when the round starts
+            return null;
+        });
+
+        LuaCsSetup.Instance.Hook.Add("item.created", "NT.ItemCreatedFixItems", (params object[] args) =>
+        {
+            TryFixCondition(args[0] as Item);
+            return null;
+        });
+    }
 }
 
 

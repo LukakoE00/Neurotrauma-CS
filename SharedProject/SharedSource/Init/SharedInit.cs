@@ -32,6 +32,7 @@ namespace Neurotrauma
             NTMultiscalpel.RegisterMultiscalpel(); // Add the Multiscalpel hooks
             DynamicItems.InitDynamicItems(); // Add the DynamicItems hooks
             OnDamaged.InitializeOnDamagedMethods(); // Add OnDamaged patches
+            NTItemMethods.EnsureWorkingItems(); // Runs the FixItems hooks
             InitLuaHooks(); // Initializes the Lua hooks at the bottom of this file
             AddApplyHooks();
 
