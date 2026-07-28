@@ -951,7 +951,7 @@ namespace Neurotrauma
         }
 
         /// <summary>
-        /// Rums a chance function to see if a skillcheck is passed.
+        /// Runs a chance function to see if a skillcheck is passed.
         /// </summary>
         /// <param name="Character">The character to check.</param>
         /// <param name="SkillType">The skill type to check.</param>
@@ -970,18 +970,22 @@ namespace Neurotrauma
         }
 
         // For performances reason the check is cached in NTInfo to avoid looping all the time
-        // If you dont like it idc change it yourself
+        /// <summary>
+        /// Check to see if Surgery Plus is enabled.
+        /// </summary>
+        /// <returns>True if it is, else False.</returns>
         public static bool IsNTSPEnabled()
         {
             return NTInfo.NTSPEnabled;
         }
 
+        /// <summary>
+        /// Checks a characters Surgery Skill if NTSP is present; otherwise it checks their Medical Skill.
+        /// </summary>
+        /// <param name="Character"></param>
+        /// <returns>Surgery / Medical skill as a float.</returns>
         public static float GetSurgerySkill(Character Character)
         {
-            // TODO: NTSP integration
-            // if (NTSP != null && NTConfig.Get("NTSP_enableSurgerySkill", false))
-            //     return Math.Max(5, GetSkillLevel(Character, "surgery"), GetSkillLevel(Character, "medical") / 4);
-
             if (IsNTSPEnabled() && NTConfig.Get("NTSP_enableSurgerySkill", false)) 
             { 
                 return Math.Max(GetSkillLevel(Character, "surgery"), GetSkillLevel(Character, "medical") / 4);
@@ -991,6 +995,12 @@ namespace Neurotrauma
 
         }
 
+        /// <summary>
+        /// Runs a chance function to see if a skillcheck is passed.
+        /// </summary>
+        /// <param name="Character">The character to check.</param>
+        /// <param name="RequiredAmount">The required amount of skill to guarantee a passed skillcheck.</param>
+        /// <returns>True if the skill-check was passed, else False.</returns>
         public static bool GetSurgerySkillRequirementMet(Character Character, float RequiredAmount)
         {
             float SkillLevel = GetSurgerySkill(Character);
@@ -1001,37 +1011,81 @@ namespace Neurotrauma
             return Chance(Math.Clamp(SkillLevel / RequiredAmount, 0, 1));
         }
 
+        /// <summary>
+        /// Increases a specific Skill's level by a given amount.
+        /// </summary>
+        /// <param name="Character">The character to give the skill.</param>
+        /// <param name="SkillType">The skill type to increase.</param>
+        /// <param name="Amount">The amount of skill the character should gain.</param>
         public static void GiveSkill(Character Character, Identifier SkillType, float Amount)
         {
             Character.Info.IncreaseSkillLevel(SkillType, Amount);
         }
 
+        /// <summary>
+        /// Increases a character's Surgery Skill by a given amount.
+        /// </summary>
+        /// <param name="Character">The character to give the skill.</param>
+        /// <param name="Amount">The amount of skill the character should gain.</param>
         public static void GiveSurgerySkill(Character Character, float Amount)
         {
             Character.Info.IncreaseSkillLevel("surgery", Amount);
         }
 
+        /// <summary>
+        /// Increases a specific Skill's level by a given amount, adjusted proportionally to the amount of skill they already have - the higher the skill already is the less experience they get..
+        /// </summary>
+        /// <param name="Character">The character to give the skill.</param>
+        /// <param name="SkillType">The skill type to increase.</param>
+        /// <param name="Amount">The amount of skill the character should gain.</param>
         public static void GiveSkillScaled(Character Character, Identifier SkillType, float Amount)
         {
             GiveSkill(Character, SkillType, (float)(Amount * 0.001 / Math.Max(GetSkillLevel(Character, SkillType), 1)));
         }
 
+        /// <summary>
+        /// Checks to see if a specific Flag is present on a character.
+        /// </summary>
+        /// <param name="Character">The character to check.</param>
+        /// <param name="FlagType">The flag to check for.</param>
+        /// <returns>True if the flag is present, else False.</returns>
         public static bool HasAbilityFlag(Character Character, AbilityFlags FlagType)
         {
             return Character.HasAbilityFlag(FlagType);
         }
 
+        /// <summary>
+        /// The current velocity of a character.
+        /// </summary>
+        /// <param name="Character">The character to check.</param>
+        /// <returns>A Vector2 corresponding to the Linear Velocity of the character.</returns>
         public static Vector2 GetVelocity(Character Character)
         {
-            if (Character == null || Character.AnimController == null || Character.AnimController.MainLimb == null || Character.AnimController.MainLimb.body == null) { return new Vector2(0, 0); }
+            if (Character == null || Character.AnimController == null || Character.AnimController.MainLimb == null || Character.AnimController.MainLimb.body == null) 
+            { 
+                return new Vector2(0, 0); 
+            }
+
             return Character.AnimController.MainLimb.body.LinearVelocity;
         }
 
+        /// <summary>
+        /// Checks to see if a character has a specific talent.
+        /// </summary>
+        /// <param name="Character">The character to check.</param>
+        /// <param name="Talent">The identifier of the talent to check for.</param>
+        /// <returns>True if the talent is present, else False.</returns>
         public static bool HasTalent(Character Character, string Talent)
         {
             return Character.HasTalent(Talent);
         }
 
+        /// <summary>
+        /// Gives the distance between two characters.
+        /// </summary>
+        /// <param name="Character1">The first of the two characters.</param>
+        /// <param name="Character2">The second of the two characters.</param>
+        /// <returns>The distance between the two characters as a float.</returns>
         public static float CharacterDistance(Character Character1, Character Character2)
         {
             Vector2 Pos1 = Character1.WorldPosition;
@@ -1039,7 +1093,11 @@ namespace Neurotrauma
             return Vector2.Distance(Pos1, Pos2);
         }
 
-
+        /// <summary>
+        /// Uppercases the first character of a string.
+        /// </summary>
+        /// <param name="Input">The string to amend.</param>
+        /// <returns>The amended string.</returns>
         public static string FirstCharToUpper(string Input)
         {
             string UpperFirst = Input[0].ToString().ToUpper();
@@ -1047,61 +1105,124 @@ namespace Neurotrauma
             return UpperFirst + LowerLast;
         }
 
+        /// <summary>
+        /// Checks to see if at least one Addon is enabled.
+        /// </summary>
+        /// <returns>True if one or more addons are enabled, else False.</returns>
         public static bool UsingAddons()
         {
             return UsingLuaAddons() || UsingCSAddons();
         }
 
+        /// <summary>
+        /// Checks to see if a Lua addon is enabled.
+        /// </summary>
+        /// <returns>True if one or more Lua addons are enabled, else False.</returns>
         public static bool UsingLuaAddons()
         {
             return NTInfo.LuaRegisteredAddons.Count > 0;
         }
 
+        /// <summary>
+        /// Checks to see if a specific Lua addon is enabled.
+        /// </summary>
+        /// <param name="ModName">The mod name to check for.</param>
+        /// <returns>True if the addon in question is enabled, else False.</returns>
         public static bool UsingLuaAddon(string ModName)
         {
             return NTInfo.LuaRegisteredAddons.ContainsKey(ModName);
         }
 
+        /// <summary>
+        /// Checks to see if a C# addon is enabled.
+        /// </summary>
+        /// <returns>True if one or more C# addons are enabled, else False.</returns>
         public static bool UsingCSAddons()
         {
             return NTInfo.RegisteredAddons.Count > 0;
         }
 
+        /// <summary>
+        /// Checks to see if a specific C# addon is enabled.
+        /// </summary>
+        /// <param name="ModName">The mod name to check for.</param>
+        /// <returns>True if the addon in question is enabled, else False.</returns>
         public static bool UsingCSAddon(string ModName)
         {
             return NTInfo.RegisteredAddons.ContainsKey(ModName);
         }
 
+        /// <summary>
+        /// Clamps NTCS AffData between the Min and Max Strength set in the relevant Affliction.
+        /// </summary>
+        /// <param name="Value">Given Value to clamp.</param>
+        /// <param name="Aff">The affliction that determines the values to clamp to.</param>
+        /// <returns>A double with the clamped value.</returns>
         public static double AffClamp(double Value, NTAffliction Aff)
         {
             return Math.Clamp(Value, Aff.MinStrength, Aff.MaxStrength);
         }
 
+        /// <summary>
+        /// Clamps NTCS AffData between the Min and Max Strength set in the relevant Affliction.
+        /// </summary>
+        /// <param name="Value">Given Value to clamp.</param>
+        /// <param name="Aff">The affliction that determines the values to clamp to.</param>
+        /// <returns>A double with the clamped value.</returns>
         public static double AffClamp(double Value, NTNonLimbAffliction Aff)
         {
             return Math.Clamp(Value,Aff.MinStrength,Aff.MaxStrength);
         }
 
+        /// <summary>
+        /// Clamps NTCS AffData between the Min and Max Strength set in the relevant Affliction.
+        /// </summary>
+        /// <param name="Value">Given Value to clamp.</param>
+        /// <param name="Aff">The affliction that determines the values to clamp to.</param>
+        /// <returns>A double with the clamped value.</returns>
         public static double AffClamp(double Value, NTLimbAffliction Aff)
         {
             return Math.Clamp(Value, Aff.MinStrength, Aff.MaxStrength);
         }
 
+        /// <summary>
+        /// Clamps NTCS AffData between the Min and Max Strength set in the relevant Affliction.
+        /// </summary>
+        /// <param name="Value">Given Value to clamp.</param>
+        /// <param name="Aff">The affliction that determines the values to clamp to.</param>
+        /// <returns>A double with the clamped value.</returns>
         public static double AffClamp(double Value, NTBloodAffliction Aff)
         {
             return Math.Clamp(Value, Aff.MinStrength, Aff.MaxStrength);
         }
 
+        /// <summary>
+        /// Clamps NTCS AffData between the Min and Max Strength set in the relevant Affliction.
+        /// </summary>
+        /// <param name="Value">Given Value to clamp.</param>
+        /// <param name="Aff">The affliction that determines the values to clamp to.</param>
+        /// <returns>A double with the clamped value.</returns>
         public static double AffClamp(double Value, NTSymptom Aff)
         {
             return Math.Clamp(Value, Aff.MinStrength, Aff.MaxStrength);
         }
 
+        /// <summary>
+        /// Clamps NTCS AffData between the Min and Max Strength set in the relevant Affliction.
+        /// </summary>
+        /// <param name="Value">Given Value to clamp.</param>
+        /// <param name="Aff">The affliction that determines the values to clamp to.</param>
+        /// <returns>A double with the clamped value.</returns>
         public static double AffClamp(double Value, NTLimbSymptom Aff)
         {
             return Math.Clamp(Value, Aff.MinStrength, Aff.MaxStrength);
         }
 
+        /// <summary>
+        /// Checks to see if a value somehow overflowed into infinity.
+        /// </summary>
+        /// <param name="Value">The value to check.</param>
+        /// <returns>True if it is NaN/Infinity, else False.</returns>
         public static bool IsNaNOrInfinity(double Value)
         {
             return Double.IsNaN(Value) || Double.IsInfinity(Value);
@@ -1110,53 +1231,103 @@ namespace Neurotrauma
         /// <summary>
         /// Converts a NaN/Infinity into 0.
         /// </summary>
-        /// <param name="Value"></param>
-        /// <returns></returns>
+        /// <param name="Value">The value to convert.</param>
+        /// <returns>0 or the original value.</returns>
         public static double NormalizeDouble(double Value)
         {
             if (IsNaNOrInfinity(Value))
             {
                 return 0;
             }
+
             return Value;
         }
 
+        /// <summary>
+        /// Converts a NaN/Infinity into 0.
+        /// </summary>
+        /// <param name="Value">The value to convert.</param>
+        /// <returns>0 or the original value.</returns>
         public static float NormalizeFloat(float Value)
         {
             if (IsNaNOrInfinity((double)Value))
             {
                 return 0;
             }
+
             return Value;
         }
 
         // ---------------------------------------- Affliction Related Helper Functions -------------------------------------------------- \\
+        /// <summary>
+        /// Checks a character for a specific affliction.
+        /// </summary>
+        /// <param name="Character">The character to check.</param>
+        /// <param name="Identifier">The affliction identifier to look for.</param>
+        /// <param name="MinAmount">The Minimum Amount of strength this affliction should have to return true.</param>
+        /// <returns>True if the Affliction is present, else False.</returns>
         public static bool HasAffliction(Character Character, string Identifier = "", float MinAmount = 0)
         {
-            if (Identifier == "" || Character.CharacterHealth == null) { return false; }
+            if (Identifier == "" || Character.CharacterHealth == null) 
+            { 
+                return false; 
+            }
+
+            // Is the affliction null?
             Affliction Aff = GetAffliction(Character, Identifier);
-            if (Aff == null) { return false; } // Is the affliction null?
+            if (Aff == null) 
+            { 
+                return false; 
+            } 
+
             float AffStrength = Aff.Strength;
             if (AffStrength > MinAmount)
             {
                 return true;
             }
+
             return false;
         }
 
+        /// <summary>
+        /// Checks a character for a specific affliction.
+        /// </summary>
+        /// <param name="Character">The character to check.</param>
+        /// <param name="Identifier">The affliction identifier to look for.</param>
+        /// <param name="GivenLimbType">The limb to check.</param>
+        /// <param name="MinAmount">The Minimum Amount of strength this affliction should have to return true.</param>
+        /// <returns>True if the Affliction is present, else False.</returns>
         public static bool HasAfflictionLimb(Character Character, string Identifier = "", LimbType GivenLimbType = LimbType.Torso, float MinAmount = 0)
         {
-            if (Identifier == "" || Character.CharacterHealth == null) { return false; }
+            if (Identifier == "" || Character.CharacterHealth == null) 
+            {
+                return false;
+            }
+
+            // Is the affliction null?
             Affliction Aff = GetAfflictionLimb(Character, Identifier, GivenLimbType);
-            if (Aff == null) { return false; } // Is the affliction null?
+            if (Aff == null) 
+            {
+                return false;
+            } 
+
             float AffStrength = Aff.Strength;
             if (AffStrength >= MinAmount)
             {
                 return true;
             }
+
             return false;
         }
 
+        /// <summary>
+        /// Checks to see if an Extremity has an affliction.
+        /// </summary>
+        /// <param name="Character">The character to check.</param>
+        /// <param name="Identifier">The affliction identifier to look for.</param>
+        /// <param name="GivenLimbType">The limb to check.</param>
+        /// <param name="MinAmount">The Minimum Amount of strength this affliction should have to return true.</param>
+        /// <returns>True if the Affliction is present, else False.</returns>
         public static bool HasAfflictionExtremity(Character Character, string Identifier = "", LimbType GivenLimbType = LimbType.Torso, double MinAmount = 0.5)
         {
             Affliction ?Aff = null;
@@ -1179,26 +1350,47 @@ namespace Neurotrauma
                     break; // We can end the for loop, we found what we were looking for.
                 }
             }
+
             bool Res = false;
             if (Aff != null)
             {
                 Res = Aff.Strength >= MinAmount;
             }
+
             return Res;
         }
 
+        /// <summary>
+        /// Fetches an Affliction from a character.
+        /// </summary>
+        /// <param name="Character">The character to check.</param>
+        /// <param name="Identifier">The Affliction Identifier to fetch.</param>
+        /// <returns>Returns a Barotrauma Affliction if present.</returns>
         public static Affliction GetAffliction(Character Character, String Identifier = "")
         {
             return Character.CharacterHealth.GetAffliction(Identifier); // No error handling on this one, gonna need someone smarter to do that.
         }
 
+        /// <summary>
+        /// Fetches a limb-specific Affliction from a character.
+        /// </summary>
+        /// <param name="Character">The character to check.</param>
+        /// <param name="Identifier">The Affliction Identifier to fetch.</param>
+        /// <param name="GivenLimbType">Limb to grab the affliction from.</param>
+        /// <returns>Returns a Barotrauma Affliction if present.</returns>
         public static Affliction ?GetAfflictionLimb(Character Character, String Identifier = "", LimbType GivenLimbType = LimbType.Torso)
         {
             if (Character == null || Character.CharacterHealth == null) return null;
             return Character.CharacterHealth.GetAffliction(Identifier, GetCharacterLimb(Character, GivenLimbType));
         }
 
-        // Previous iteration was broken - Lukako
+        /// <summary>
+        /// Fetches the strength of an affliction.
+        /// </summary>
+        /// <param name="Character">The character to check.</param>
+        /// <param name="Identifier">The Affliction Identifier to check.</param>
+        /// <param name="DefaultValue">Fallback value.</param>
+        /// <returns>Actual strength of the given affliction if present, else the defaultvalue.</returns>
         public static float GetAfflictionStrength(Character Character, string Identifier = "", float DefaultValue = 0)
         {
             Affliction aff = GetAffliction(Character, Identifier);
@@ -1211,7 +1403,14 @@ namespace Neurotrauma
             return NormalizeFloat(aff.Strength);
         }
 
-        // Previous iteration was broken - Greabb
+        /// <summary>
+        /// Fetches the strength of an affliction on a given limb.
+        /// </summary>
+        /// <param name="Character">The character to check.</param>
+        /// <param name="GivenLimbType">The limb to check.</param>
+        /// <param name="Identifier">The Affliction Identifier to check.</param>
+        /// <param name="DefaultValue">Fallback value.</param>
+        /// <returns>Actual strength of the given affliction if present, else the defaultvalue.</returns>
         public static float GetAfflictionStrengthLimb(Character Character, LimbType GivenLimbType = LimbType.Torso, string Identifier = "", float DefaultValue = 0)
         {
             Affliction aff = GetAfflictionLimb(Character, Identifier, GivenLimbType);
@@ -1224,6 +1423,13 @@ namespace Neurotrauma
             return NormalizeFloat(aff.Strength);
         }
 
+        /// <summary>
+        /// Adds an affliction to a character with a given strength; adds on top of existing strength.
+        /// </summary>
+        /// <param name="Character">The character to add the affliction to.</param>
+        /// <param name="Identifier">The affliction's identifier.</param>
+        /// <param name="Strength">The strength of the affliction.</param>
+        /// <param name="Aggressor">Possible aggressor that caused the affliction.</param>
         public static void AddAffliction(Character Character, string Identifier, float Strength, Character ?Aggressor = null)
         {
             if (Aggressor == null)
@@ -1235,6 +1441,14 @@ namespace Neurotrauma
             SetAffliction(Character, Identifier, Strength + PrevStrength, Aggressor, PrevStrength);
         }
 
+        /// <summary>
+        /// Sets an affliction on a character with a given strength; replacing existing strength.
+        /// </summary>
+        /// <param name="Character">The character to add the affliction to.</param>
+        /// <param name="Identifier">The affliction's identifier.</param>
+        /// <param name="Strength">The strength of the affliction.</param>
+        /// <param name="Aggressor">Possible aggressor that caused the affliction.</param>
+        /// <param name="PreviousStrength">Previous strength if hardcoded.</param>
         public static void SetAffliction(Character Character, string Identifier, float Strength, Character ?Aggressor = null, float PreviousStrength = 0)
         {
             if (Aggressor == null)
@@ -1245,7 +1459,16 @@ namespace Neurotrauma
             SetAfflictionLimb(Character, Identifier, LimbType.Torso, NormalizeFloat(Strength), Aggressor, PreviousStrength);
         }
 
-        public static void SetAfflictionLimb(Character Character, string Identifier, LimbType GivenLimbType, float Strength, Character ?Aggressor = null, float PrevStrength = 0)
+        /// <summary>
+        /// Sets a limb-specific affliction on a character with a given strength; replacing existing strength.
+        /// </summary>
+        /// <param name="Character">The character to add the affliction to.</param>
+        /// <param name="Identifier">The affliction's identifier.</param>
+        /// <param name="GivenLimbType"></param>
+        /// <param name="Strength">The strength of the affliction.</param>
+        /// <param name="Aggressor">Possible aggressor that caused the affliction.</param>
+        /// <param name="PreviousStrength">Previous strength if hardcoded.</param>
+        public static void SetAfflictionLimb(Character Character, string Identifier, LimbType GivenLimbType, float Strength, Character ?Aggressor = null, float PreviousStrength = 0)
         {
             // This Error was in the original but not ported for some reason?
             if (!AfflictionPrefab.Prefabs.TryGet(Identifier, out AfflictionPrefab ?Prefab) || Prefab == null || Character == null || Character.CharacterHealth == null)
@@ -1280,9 +1503,20 @@ namespace Neurotrauma
             );
         }
 
+        /// <summary>
+        /// Adds a limb-specific affliction to a character with a given strength; adds on top of existing strength.
+        /// </summary>
+        /// <param name="Character">The character to add the affliction to.</param>
+        /// <param name="Identifier">The affliction's identifier.</param>
+        /// <param name="GivenLimbType">Limb to add the affliction to.</param>
+        /// <param name="Strength">The strength of the affliction.</param>
+        /// <param name="Aggressor">Possible aggressor that caused the affliction.</param>
         public static void AddAfflictionLimb(Character Character, string Identifier, LimbType GivenLimbType, float Strength, Character ?Aggressor = null)
         {
-            if (Aggressor == null) Aggressor = Character;
+            if (Aggressor == null)
+            {
+                Aggressor = Character;
+            }
 
             if (Strength < 0)
             {
@@ -1292,14 +1526,21 @@ namespace Neurotrauma
                     NormalizeFloat(-Strength),
                     null,
                     Aggressor);
+
                 return;
             }
 
-            if (!AfflictionPrefab.Prefabs.TryGet(Identifier, out AfflictionPrefab ?Prefab) || Prefab == null || Character == null || Character.CharacterHealth == null) { return; }
+            if (!AfflictionPrefab.Prefabs.TryGet(Identifier, out AfflictionPrefab ?Prefab) || Prefab == null || Character == null || Character.CharacterHealth == null) 
+            { 
+                return; 
+            }
 
             float Resistance = Character.CharacterHealth.GetResistance(Prefab, GivenLimbType);
 
-            if (Resistance >= 1) { return; }
+            if (Resistance >= 1) 
+            { 
+                return; 
+            }
 
             float ScaledStrength = Strength * Character.CharacterHealth.MaxVitality / 100 / (1 - Resistance);
             Affliction Affliction = Prefab.Instantiate(ScaledStrength, Aggressor);
@@ -1315,108 +1556,89 @@ namespace Neurotrauma
             );
         }
 
-        
-
+        /// <summary>
+        /// Adds an affliction to a character, considering type resistance.
+        /// </summary>
+        /// <param name="Character">The character to add the affliction to.</param>
+        /// <param name="Identifier">The affliction's identifier.</param>
+        /// <param name="Strength">The amount of strength that should be added.</param>
+        /// <param name="Aggressor">Possible aggressor that caused the affliction.</param>
         public static void AddAfflictionResisted(Character Character, string Identifier, float Strength, Character ?Aggressor = null)
         {
-            if (Aggressor == null) Aggressor = Character;
+            if (Aggressor == null)
+            {
+                Aggressor = Character;
+            }
 
             float PrevStrength = GetAfflictionStrength(Character, Identifier);
             Strength *= 1 - GetResistance(Character, Identifier);
+
             SetAffliction(Character, Identifier, Strength + PrevStrength, Aggressor, PrevStrength);
-        }
-
-        public static void ApplyAfflictionChange(Character Character, string Identifier, float Strength, float PrevStrength, float MinStrength, float MaxStrength)
-        {
-            Strength = Math.Clamp(Strength, MinStrength, MaxStrength);
-            PrevStrength = Math.Clamp(PrevStrength, MinStrength, MaxStrength);
-            if (PrevStrength != Strength)
-            {
-                SetAffliction(Character, Identifier, Strength, Character, Strength);
-            }
-        }
-
-        public static void ApplyAfflictionChangeLimb(Character Character, LimbType GivenLimbType, string Identifier, float Strength, float PrevStrength, float MinStrength, float MaxStrength)
-        {
-            Strength = Math.Clamp(Strength, MinStrength, MaxStrength);
-            PrevStrength = Math.Clamp(PrevStrength, MinStrength, MaxStrength);
-            if (PrevStrength != Strength)
-            {
-                SetAfflictionLimb(Character, Identifier, GivenLimbType, Strength, Character, Strength);
-            }
-        }
-
-        public static void ApplySymptom(Character Character, string Identifier, bool HasSymptom, bool RemoveIfNot)
-        {
-            if (!HasSymptom && !RemoveIfNot)
-            {
-                return;
-            }
-
-            float Strength = 0;
-            if (HasSymptom) { Strength = 100; }
-            if (RemoveIfNot || HasSymptom)
-            {
-                SetAffliction(Character, Identifier, Strength, Character, Strength);
-            }
-        }
-        public static void ApplySymptomLimb(Character Character, LimbType GivenLimbType, string Identifier, bool HasSymptom, bool RemoveIfNot)
-        {
-            if (!HasSymptom && !RemoveIfNot)
-            {
-                return;
-            }
-
-            float Strength = 0;
-            if (HasSymptom) { Strength = 100; }
-            if (RemoveIfNot || HasSymptom)
-            {
-                SetAfflictionLimb(Character, Identifier, GivenLimbType, Strength, Character, Strength);
-            }
         }
 
         // Needed for some slow-acting Consumables. - Lukako
         /// <summary>
         /// Applies a given Affliction over a given Duration.
         /// </summary>
-        /// <param name="Target">Character to apply the affliction to.</param>
+        /// <param name="Character">Character to apply the affliction to.</param>
         /// <param name="Identifier">Identifier of the affliction to apply.</param>
         /// <param name="TotalAmount">Total combined strength of applications.</param>
         /// <param name="Duration">Amount of time in seconds over which the application happens.</param>
         /// <param name="Aggressor">Character that's considered the one applying the affliction.</param>
-        public static void ApplyAfflictionOverTime(Character Target, string Identifier, float TotalAmount, float Duration, Character ?Aggressor = null)
+        public static void ApplyAfflictionOverTime(Character Character, string Identifier, float TotalAmount, float Duration, Character ?Aggressor = null)
         {
-            if (Aggressor == null) Aggressor = Target;
+            if (Aggressor == null)
+            {
+                Aggressor = Character;
+            }
 
             int Applications = (int)Duration;
-            if (Applications <= 0 || Target == null) return;
+            if (Applications <= 0 || Character == null)
+            {
+                return;
+            }
 
             float AfflictionAmountPerApplication = TotalAmount / Applications;
 
             void ApplyAfflictionAgain(int RemainingApplications)
             {
-                if (RemainingApplications <= 0 || Target == null || Target.Removed) return;
+                if (RemainingApplications <= 0 || Character == null || Character.Removed)
+                {
+                    return;
+                }
 
-                HF.AddAffliction(Target, Identifier, AfflictionAmountPerApplication, Aggressor);
+                HF.AddAffliction(Character, Identifier, AfflictionAmountPerApplication, Aggressor);
 
                 LuaCsSetup.Instance.Timer.Wait((params object[] _) =>
                 {
                     ApplyAfflictionAgain(RemainingApplications - 1);
                 }, 1000);
             }
+
             // Start the loop
             ApplyAfflictionAgain(Applications);
         }
 
         // ---------------------------------------- Specific Affliction Helper Functions -------------------------------------------------- \\
 
-        public static void DislocateLimb(Character Character, LimbType GivenLimbType, float Strength = 1) // UNUSED?
+        /// <summary>
+        /// Dislocates a limb on a character.
+        /// </summary>
+        /// <param name="Character">Character whose limb will get dislocated.</param>
+        /// <param name="GivenLimbType">Limb to dislocate.</param>
+        /// <param name="Strength">Dislocation strength. Negative values will reduce it.</param>
+        public static void DislocateLimb(Character Character, LimbType GivenLimbType, float Strength = 1)
         {
             GivenLimbType = NormalizeLimbType(GivenLimbType);
-            HF.Print($"{GivenLimbType}");
             AddAfflictionLimb(Character, "dislocation", GivenLimbType, Strength, Character);
         }
 
+        /// <summary>
+        /// Fractures a limb on a character.
+        /// </summary>
+        /// <param name="Character">Character whose limb will get fractured.</param>
+        /// <param name="GivenLimbType">Limb to fracture.</param>
+        /// <param name="Strength">Fracture strength. Negative values will reduce it.</param>
         public static void BreakLimb(Character Character, LimbType GivenLimbType, float Strength = 1)
         {
             GivenLimbType = NormalizeLimbType(GivenLimbType);
@@ -1424,9 +1646,12 @@ namespace Neurotrauma
             if (GivenLimbType == LimbType.Head)
             {
                 AddAfflictionLimb(Character, "fracturedskull", GivenLimbType, Strength, Character);
-            } else if (GivenLimbType == LimbType.Torso) {
+            } 
+            else if (GivenLimbType == LimbType.Torso) 
+            {
                 AddAfflictionLimb(Character, "fracturedribs", GivenLimbType, Strength, Character);
-            } else
+            } 
+            else
             {
                 AddAfflictionLimb(Character, "fracturedextremity", GivenLimbType, Strength, Character);
 
@@ -1436,32 +1661,75 @@ namespace Neurotrauma
                 }
             }
         }
+
+        /// <summary>
+        /// Cuts an artery of a character.
+        /// </summary>
+        /// <param name="Character">Character to cut an artery of.</param>
+        /// <param name="GivenLimbType">Limb to cut the artery of.</param>
+        /// <param name="Strength">Arterial Cut strength. Negative values will reduce it.</param>
         public static void ArteryCutLimb(Character Character, LimbType GivenLimbType, float Strength = 1)
         {
             GivenLimbType = NormalizeLimbType(GivenLimbType);
             AddAfflictionLimb(Character, "arterialcut", GivenLimbType, Strength, Character);
         }
 
+        /// <summary>
+        /// Checks to see if a limb is dislocated.
+        /// </summary>
+        /// <param name="Character">Character to check.</param>
+        /// <param name="GivenLimbType">Limb to check.</param>
+        /// <param name="IsArm">Manual toggle for arm-locking functionality.</param>
+        /// <returns>True if the limb is dislocated, else False. Additionally, returns a MinAmount of 100 if IsArm is True; else MinAmount is 0.</returns>
         public static bool LimbIsDislocated(Character Character, LimbType GivenLimbType, bool IsArm)
         {
             GivenLimbType = NormalizeLimbType(GivenLimbType);
-            if (IsArm) { return HasAfflictionLimb(Character, "dislocation", GivenLimbType, 100); }
+
+            if (IsArm) 
+            { 
+                return HasAfflictionLimb(Character, "dislocation", GivenLimbType, 100); 
+            }
+
             return HasAfflictionLimb(Character, "dislocation", GivenLimbType);
         }
 
+        /// <summary>
+        /// Checks to see if a limb is fractured.
+        /// </summary>
+        /// <param name="Character">Character to check.</param>
+        /// <param name="GivenLimbType">Limb to check.</param>
+        /// <param name="IsArm">Manual toggle for arm-locking functionality.</param>
+        /// <returns>True if the limb is fractured, else False. Additionally, returns a MinAmount of 100 if IsArm is True; else MinAmount is 0.</returns>
         public static bool LimbIsBroken(Character Character, LimbType GivenLimbType, bool IsArm)
         {
             GivenLimbType = NormalizeLimbType(GivenLimbType);
-            if (IsArm) { return HasAfflictionLimb(Character, "fracturedextremity", GivenLimbType, 100); }
+            if (IsArm) 
+            { 
+                return HasAfflictionLimb(Character, "fracturedextremity", GivenLimbType, 100); 
+            }
+
             return HasAfflictionLimb(Character, "fracturedextremity", GivenLimbType);
         }
 
+        /// <summary>
+        /// Checks to see if a limb has an arterial cut.
+        /// </summary>
+        /// <param name="Character">Character to check.</param>
+        /// <param name="GivenLimbType">Limb to check.</param>
+        /// <returns>True if the limb has an arterial cut, else False.</returns>
         public static bool LimbIsArterialCut(Character Character, LimbType GivenLimbType)
         {
             GivenLimbType = NormalizeLimbType(GivenLimbType);
+
             return HasAfflictionLimb(Character, "arterialcut", GivenLimbType);
         }
 
+        /// <summary>
+        /// Checks to see if a limb has a traumatic amputation.
+        /// </summary>
+        /// <param name="Character">Character to check.</param>
+        /// <param name="GivenLimbType">Limb to check.</param>
+        /// <returns>True if the limb was traumatically amputated, else False.</returns>
         public static bool LimbIsTraumaticallyAmputated(Character character, LimbType givenLimbType)
         {
             givenLimbType = NormalizeLimbType(givenLimbType);
@@ -1469,6 +1737,12 @@ namespace Neurotrauma
             return HasAffliction(character, "t" + CreateLimbAfflictionID(givenLimbType, "amputation"));
         }
 
+        /// <summary>
+        /// Checks to see if a limb has a surgical amputation.
+        /// </summary>
+        /// <param name="Character">Character to check.</param>
+        /// <param name="GivenLimbType">Limb to check.</param>
+        /// <returns>True if the limb was surgically amputated, else False.</returns>
         public static bool LimbIsSurgicallyAmputated(Character character, LimbType givenLimbType)
         {
             givenLimbType = NormalizeLimbType(givenLimbType);
@@ -1476,26 +1750,54 @@ namespace Neurotrauma
             return HasAffliction(character, "s" + CreateLimbAfflictionID(givenLimbType, "amputation"));
         }
 
+        /// <summary>
+        /// Checks to see if a limb was amputated.
+        /// </summary>
+        /// <param name="Character">Character to check.</param>
+        /// <param name="GivenLimbType">Limb to check.</param>
+        /// <returns>True if the limb was amputated, else False.</returns>
         public static bool LimbIsAmputated(Character Character, LimbType GivenLimbType)
         {
             GivenLimbType = NormalizeLimbType(GivenLimbType);
+
             return LimbIsSurgicallyAmputated(Character, GivenLimbType) || LimbIsTraumaticallyAmputated(Character, GivenLimbType);
         }
 
+        /// <summary>
+        /// Traumatically amputates a limb and spawns the respective limb item.
+        /// </summary>
+        /// <param name="Character">Character whose limb will get traumatically amputated.</param>
+        /// <param name="GivenLimbType">The limb to traumatically amputate.</param>
+        /// <param name="Attacker">A possible attacker that caused the traumatic amputation.</param>
         public static void TraumamputateLimbAndGenerateItem(Character Character, LimbType GivenLimbType, Character Attacker)
         {
             GivenLimbType = NormalizeLimbType(GivenLimbType);
-            if (!LimbsToCheck.Contains(GivenLimbType)) { return; }
-            Dictionary<LimbType, string> LimbToAffliction = new Dictionary<LimbType, string>() { {LimbType.RightLeg,"gate_ta_rl" }, { LimbType.LeftLeg, "gate_ta_ll" },
-                                                                                                { LimbType.RightArm, "gate_ta_ra" },{ LimbType.LeftArm, "gate_ta_la" },
-                                                                                                { LimbType.Head, "gate_ta_h" } };
-            Dictionary<LimbType, string> LimbToItem = new Dictionary<LimbType, string>() { {LimbType.RightLeg,"rleg" }, { LimbType.LeftLeg, "lleg" },
-                                                                                                { LimbType.RightArm, "rarm" },{ LimbType.LeftArm, "larm" },
-                                                                                                { LimbType.Head, "headta" } };
+            if (!LimbsToCheck.Contains(GivenLimbType)) 
+            { 
+                return;
+            }
+
+            Dictionary<LimbType, string> LimbToAffliction = new Dictionary<LimbType, string>() { 
+                {LimbType.RightLeg,"gate_ta_rl" }, 
+                { LimbType.LeftLeg, "gate_ta_ll" },
+                { LimbType.RightArm, "gate_ta_ra" },
+                { LimbType.LeftArm, "gate_ta_la" },
+                { LimbType.Head, "gate_ta_h" } 
+            };
+
+            Dictionary<LimbType, string> LimbToItem = new Dictionary<LimbType, string>() { 
+                {LimbType.RightLeg,"rleg" }, 
+                { LimbType.LeftLeg, "lleg" },                                                                    
+                { LimbType.RightArm, "rarm" },
+                { LimbType.LeftArm, "larm" },
+                { LimbType.Head, "headta" } 
+            };
+
             LimbToAffliction.TryGetValue(GivenLimbType, out string? Value);
             LimbToItem.TryGetValue(GivenLimbType, out string? Value2);
             string ?Aff = Value;
             string ?LimbItem = Value2;
+
             if (Attacker != null && (!Attacker.IsHuman) && (!Attacker.Inventory.IsFull()))
             {
                 GiveItem(Attacker, LimbToAffliction[GivenLimbType]);
@@ -1507,20 +1809,41 @@ namespace Neurotrauma
             }
         }
 
+        /// <summary>
+        /// Traumatically amputate a limb without spawning a replacement item.
+        /// </summary>
+        /// <param name="Character">Character whose limb will get traumatically amputated.</param>
+        /// <param name="GivenLimbType">The limb to traumatically amputate.</param>
+        /// <param name="Attacker">A possible attacker that caused the traumatic amputation.</param>
         public static void TraumamputateLimb(Character Character, LimbType GivenLimbType, Character ?Attacker)
         {
             GivenLimbType = NormalizeLimbType(GivenLimbType);
-            if (!LimbsToCheck.Contains(GivenLimbType)) { return; }
-            Dictionary<LimbType, string> LimbToAffliction = new Dictionary<LimbType, string>() { {LimbType.RightLeg,"gate_ta_rl" }, { LimbType.LeftLeg, "gate_ta_ll" },
-                                                                                                { LimbType.RightArm, "gate_ta_ra" },{ LimbType.LeftArm, "gate_ta_la" },
-                                                                                                { LimbType.Head, "gate_ta_h" } };
-            Dictionary<LimbType, string> LimbToItem = new Dictionary<LimbType, string>() { {LimbType.RightLeg,"rleg" }, { LimbType.LeftLeg, "lleg" },
-                                                                                                { LimbType.RightArm, "rarm" },{ LimbType.LeftArm, "larm" },
-                                                                                                { LimbType.Head, "headta" } };
+            if (!LimbsToCheck.Contains(GivenLimbType)) 
+            { 
+                return; 
+            }
+
+            Dictionary<LimbType, string> LimbToAffliction = new Dictionary<LimbType, string>() {
+                {LimbType.RightLeg,"gate_ta_rl" },
+                { LimbType.LeftLeg, "gate_ta_ll" },
+                { LimbType.RightArm, "gate_ta_ra" },
+                { LimbType.LeftArm, "gate_ta_la" },
+                { LimbType.Head, "gate_ta_h" }
+            };
+
+            Dictionary<LimbType, string> LimbToItem = new Dictionary<LimbType, string>() {
+                {LimbType.RightLeg,"rleg" },
+                { LimbType.LeftLeg, "lleg" },
+                { LimbType.RightArm, "rarm" },
+                { LimbType.LeftArm, "larm" },
+                { LimbType.Head, "headta" }
+            };
+
             LimbToAffliction.TryGetValue(GivenLimbType, out string ?Value);
             LimbToItem.TryGetValue(GivenLimbType, out string ?Value2);
             string ?Aff = Value;
             string ?LimbItem = Value2;
+
             AddAfflictionLimb(Character, LimbToAffliction[GivenLimbType], GivenLimbType, 10, Character);
         }
 
@@ -1536,7 +1859,10 @@ namespace Neurotrauma
 
             Item prevItem = GetItemInHeadWear(targetCharacter);
 
-            if (prevItem != null && limbType == LimbType.Head) prevItem.Drop(usingCharacter, true);
+            if (prevItem != null && limbType == LimbType.Head)
+            {
+                prevItem.Drop(usingCharacter, true);
+            }
 
             bool dropLimb = !LimbIsAmputated(targetCharacter, limbType) && !HasAfflictionLimb(targetCharacter, "gangrene", limbType, 15);
 
@@ -1592,21 +1918,29 @@ namespace Neurotrauma
             return HasAffliction(Character, "analgesia", 1) || HasAffliction(Character, "unconsciousness", (float).1);
         }
 
+        /// <summary>
+        /// Handles fibrillation.
+        /// </summary>
+        /// <param name="Character">Character to undergo fibrillation.</param>
+        /// <param name="Amount">Amount of fibrillation to experience.</param>
         public static void Fibrillate(Character Character, float Amount)
         {
-            // tachycardia (increased heartrate) ->
-            // fibrillation(irregular heartbeat)->
-
-            // cardiacarrest
-
             float Tachycardia = GetAfflictionStrength(Character, "tachycardia");
             float Fibrillation = GetAfflictionStrength(Character, "fibrillation");
             float CardiacArrest = GetAfflictionStrength(Character, "cardiacarrest");
 
             // Already in cardiac arrest? Don't do anything.
-            if (CardiacArrest > 0) { return; }
+            if (CardiacArrest > 0) 
+            { 
+                return; 
+            }
+
             float PreviousAmount = Tachycardia / 5;
-            if (Fibrillation > 0) { PreviousAmount = 20 + Fibrillation; }
+            if (Fibrillation > 0) 
+            { 
+                PreviousAmount = 20 + Fibrillation; 
+            }
+
             float NewAmount = PreviousAmount + Amount;
 
             //0 - 20: 0 - 100 % tachycardia
@@ -1637,46 +1971,67 @@ namespace Neurotrauma
             SetAffliction(Character, "fibrillation", Fibrillation, Character, 0);
         }
 
+        /// <summary>
+        /// Should the limb of this character be locked?
+        /// </summary>
+        /// <param name="C">The character to check.</param>
+        /// <param name="Limb">The limb to check.</param>
+        /// <param name="Key">The stat relevant for this limb.</param>
+        /// <returns>True if it should, else False.</returns>
         public static bool LimbLockedInitial(HumanUpdate.NTHuman C, LimbType Limb, string Key)
         {
             return (!NTC.HasSymptomFalse(C, Key))
                    && (
                        NTC.HasSymptom(C, Key)
-                || LimbIsAmputated(C.Human, Limb)
-                       || (GetAfflictionStrengthLimb(C.Human, Limb, "bandaged") <= 0 && GetAfflictionStrengthLimb(
-                           C.Human,
-                           Limb,
-                           "bandageddirty"
-                           ) <= 0 && GetAfflictionStrength(C.Human, "afadrenaline") <= 0 && LimbIsDislocated(
-                                C.Human,
-                                Limb,
-                                Limb == LimbType.LeftArm || Limb == LimbType.RightArm
-                           )
-                )
-                || (
-                            GetAfflictionStrengthLimb(C.Human, Limb, "gypsumcast") <= 0
+                        || LimbIsAmputated(C.Human, Limb)
+
+                        || (GetAfflictionStrengthLimb(C.Human, Limb, "bandaged") <= 0 
+                            && GetAfflictionStrengthLimb(C.Human, Limb, "bandageddirty") <= 0 && GetAfflictionStrength(C.Human, "afadrenaline") <= 0 
+                            && LimbIsDislocated(C.Human, Limb, Limb == LimbType.LeftArm || Limb == LimbType.RightArm))
+
+                        || (GetAfflictionStrengthLimb(C.Human, Limb, "gypsumcast") <= 0
                             && GetAfflictionStrength(C.Human, "afadrenaline") <= 0
-                            && LimbIsBroken(
-                                C.Human,
-                                Limb,
-                                Limb == LimbType.LeftArm || Limb == LimbType.RightArm
-                         )
-                    )
-                );
+                            && LimbIsBroken(C.Human, Limb, Limb == LimbType.LeftArm || Limb == LimbType.RightArm)) 
+           );
         }
 
+        /// <summary>
+        /// Calculates organ damage / regeneration for non-kidney organs.
+        /// </summary>
+        /// <param name="C">The character whose organs are changed.</param>
+        /// <param name="DamageValue">Current organ damage amount.</param>
+        /// <param name="NoMaxStrength">Should the maximum amount of damage be uncapped?</param>
+        /// <returns>Amended damage value as a double.</returns>
         public static double OrganDamageCalc(HumanUpdate.NTHuman C, double DamageValue, bool NoMaxStrength = false)
         {
-            if (DamageValue >= 99 && !(NoMaxStrength)) return 100;
+            if (DamageValue >= 99 && !(NoMaxStrength))
+            {
+                return 100;
+            }
+
             return DamageValue - 0.01 * C.GetDoubleStatStrength("healingrate") * C.GetDoubleStatStrength("specificOrganDamageHealMultiplier") * NT.DeltaTime;
         }
 
+        /// <summary>
+        /// Calculates organ damage / regeneration for kidneys.
+        /// </summary>
+        /// <param name="C">The character whose organs are changed.</param>
+        /// <param name="DamageValue">Current organ damage amount.</param>
+        /// <returns>Amended damage value as a double.</returns>
         public static double KidneyDamageCalc(HumanUpdate.NTHuman C, double DamageValue)
         {
-            if (DamageValue >= 99) return 100;
+            if (DamageValue >= 99)
+            {
+                return 100;
+            }
+
             if (DamageValue >= 50)
             {
-                if (DamageValue <= 51) return DamageValue;
+                if (DamageValue <= 51)
+                { 
+                    return DamageValue; 
+                }
+
                 return DamageValue - 0.01 * C.GetDoubleStatStrength("healingrate") * C.GetDoubleStatStrength("specificOrganDamageHealMultiplier") * NT.DeltaTime;
             }
             return DamageValue - 0.02 * C.GetDoubleStatStrength("healingrate") * C.GetDoubleStatStrength("specificOrganDamageHealMultiplier") * NT.DeltaTime;
@@ -1684,13 +2039,17 @@ namespace Neurotrauma
 
         // ---------------------------------------- Client Related Helper Functions -------------------------------------------------- \\
 
-        // Both these functions were returning null. - Lukako
-        public static Client ?CharacterToClient(Character character)
+        /// <summary>
+        /// Converts a character to a client.
+        /// </summary>
+        /// <param name="Character">The character to convert.</param>
+        /// <returns>Client object if valid, else null.</returns>
+        public static Client ?CharacterToClient(Character Character)
         {
 #if SERVER
             foreach (Client client in GameMain.Server.ConnectedClients)
             {
-                if (client.Character == character)
+                if (client.Character == Character)
                 {
                     return client;
                 }
@@ -1700,6 +2059,11 @@ namespace Neurotrauma
             return null;
         }
 
+        /// <summary>
+        /// Converts a username to a client.
+        /// </summary>
+        /// <param name="Name">The username to convert.</param>
+        /// <returns>Client object if valid, else null.</returns>
         public static Client ?ClientFromName(string Name)
         {
 #if SERVER
@@ -1715,6 +2079,10 @@ namespace Neurotrauma
             return null;
         }
 
+        /// <summary>
+        /// Determines which items should be dynamically removed and which should not.
+        /// </summary>
+        /// <returns>A list of items to use.</returns>
         public static Dictionary<string, bool> DynamicUnavailableItems()
         {
             Dictionary<string, bool> blockedItems = new Dictionary<string, bool>();
