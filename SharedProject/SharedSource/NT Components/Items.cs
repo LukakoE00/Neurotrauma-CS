@@ -1098,6 +1098,53 @@ public class NTItemMethods
             }, 3200);
         });
 
+        // AutoPulse
+        RegisterItemUseFunction("autocpr", infos =>
+        {
+            if (infos.target.InWater) return;
+
+            var targetInventory = infos.target.Inventory;
+            if (targetInventory == null) return;
+
+            // Try to put the autopulse directly into the target's outerwear slot
+            if (targetInventory.TryPutItem(infos.item, 4, true, true, infos.user, true, true))
+            {
+                HF.GiveItem(infos.target, "ntsfx_zipper");
+            }
+            else
+            {
+                var UserInventory = infos.user.Inventory;
+                var TargetOuterWear = HF.GetItemInOuterWear(infos.target);
+                var LeftHand = HF.GetItemInLeftHand(infos.user);
+                var RightHand = HF.GetItemInRightHand(infos.user);
+
+                if (RightHand != null)
+                {
+                    if (!UserInventory.TryPutItem(RightHand, null, new List<InvSlotType> { InvSlotType.Any }))
+                    {
+                        RightHand.Drop(infos.user, true);
+                    }
+                }
+
+                if (LeftHand != null)
+                {
+                    if (!UserInventory.TryPutItem(LeftHand, null, new List<InvSlotType> { InvSlotType.Any }))
+                    {
+                        LeftHand.Drop(infos.user, true); 
+                    }   
+                }
+
+                // Move the target's current outerwear to the user's inventory (yoink)
+                UserInventory.TryPutItem(TargetOuterWear, 5, true, true, infos.user, true, true);
+
+                // Try again to put the autopulse on the target
+                if (targetInventory.TryPutItem(infos.item, 4, true, true, infos.user, true, true))
+                {
+                    HF.GiveItem(infos.target, "ntsfx_zipper");
+                }
+            }
+        });
+
         // Blue Shark
         RegisterItemUseFunction("blahaj", infos =>
         {

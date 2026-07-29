@@ -833,31 +833,37 @@
         <InventoryIcon texture="%ModDir%/Images/InventoryItemIconAtlas.png" sourcerect="320,64,64,64" origin="0.5,0.5"/>
         <Sprite texture="%ModDir%/Images/InGameItemIconAtlas.png" sourcerect="640,0,128,128" depth="0.55" origin="0.5,0.5"/>
         <Body radius="45" height="50" density="40"/>
+
         <SuitableTreatment identifier="respiratoryarrest" suitability="0.0009"/>
         <SuitableTreatment identifier="cardiacarrest" suitability="0.0009"/>
 
-        <Wearable slots="Any,OuterClothes" msg="ItemMsgPickUpSelect">
-            <StatusEffect type="OnWearing" target="This" Condition="-100" disabledeltatime="true" delay="0.3" stackable="false">
-                <Condition Condition="gte 99"/>
-            </StatusEffect>
-            <StatusEffect type="OnBroken" target="This" Condition="100" disabledeltatime="true" delay="3" stackable="false"/>
-            <StatusEffect type="OnWearing" target="Contained,Character,This" Condition="-0.2" comparison="And">
-                <RequiredItem items="mobilebattery" type="Contained"/>
-                <Conditional IsDead="false"/>
-            </StatusEffect>
-            <StatusEffect type="OnWearing" target="Character,This" comparison="Or" disabledeltatime="true">
-                <RequiredItem items="mobilebattery" type="Contained"/>
-                <Conditional IsDead="false"/>
-                <Affliction identifier="cpr_buff_auto" amount="10" />
-            </StatusEffect>
-            <StatusEffect type="OnWearing" target="Character,This" comparison="And">
-                <RequiredItem items="mobilebattery" type="Contained"/>
-                <Conditional IsDead="false" Condition="gte 99"/>
-                <Sound file="%ModDir%/Sounds/ItemApplication/Tools/pump.ogg" range="500"/>
-            </StatusEffect>
-            <damagemodifier armorsector="0.0,360.0" afflictionidentifiers="cpr_buff" damagemultiplier="0.0" damagesound="LimbArmor"/>
-            <sprite name="AutoPulse" texture="%ModDir%/Images/InGameItemIconAtlas.png" limb="Torso" scale="0.8" hidelimb="false" inherittexturescale="true" sourcerect="640,0,128,128" origin="0.5,0.6"/>
-        </Wearable>
+		<Wearable slots="Any,OuterClothes" msg="ItemMsgPickUpSelect">
+			<StatusEffect type="OnWearing" target="This" Condition="-100" disabledeltatime="true" delay="0.3" stackable="false">
+				<Condition Condition="gte 99"/>
+			</StatusEffect>
+
+			<StatusEffect type="OnBroken" target="This" Condition="100" disabledeltatime="true" delay="3" stackable="false"/>
+
+			<StatusEffect type="OnWearing" target="Contained,Character,This" Condition="-0.2" comparison="And">
+				<RequiredItem items="mobilebattery" type="Contained"/>
+				<Conditional IsDead="false"/>
+			</StatusEffect>
+
+			<StatusEffect type="OnWearing" target="Character,This" comparison="Or" disabledeltatime="true">
+				<RequiredItem items="mobilebattery" type="Contained"/>
+				<Conditional IsDead="false"/>
+				<Affliction identifier="cpr_buff_auto" amount="10" />
+			</StatusEffect>
+
+			<StatusEffect type="OnWearing" target="Character,This" comparison="And">
+				<RequiredItem items="mobilebattery" type="Contained"/>
+				<Conditional IsDead="false" Condition="gte 99"/>
+				<Sound file="%ModDir%/Sounds/ItemApplication/Tools/pump.ogg" range="500"/>
+			</StatusEffect>
+
+			<damagemodifier armorsector="0.0,360.0" afflictionidentifiers="cpr_buff" damagemultiplier="0.0" damagesound="LimbArmor"/>
+			<sprite name="AutoPulse" texture="%ModDir%/Images/InGameItemIconAtlas.png" limb="Torso" scale="0.8" hidelimb="false" inherittexturescale="true" sourcerect="640,0,128,128" origin="0.5,0.6"/>
+		</Wearable>
 
         <ItemContainer capacity="1" maxstacksize="1" hideitems="true" containedstateindicatorstyle="battery">
             <Containable items="mobilebattery"/>
