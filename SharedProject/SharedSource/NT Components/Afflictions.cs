@@ -478,6 +478,17 @@ namespace Neurotrauma
                 {
                 };
 
+            // Psychosis
+            // Not constant; gets applied by other sources.
+            // Type: Non-Limb Specific, Vanilla Override
+            // Caused By: no root beer.
+            // Effects: Psychosis.
+            AfflictionsToAdd["psychosis"] = new("psychosis", 0, 200, 0, AfflictionPriority.MEDIUM);
+            AfflictionsToAdd["psychosis"].UpdateAction =
+                (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanNonLimbAffData AffData) =>
+                {
+                };
+
             // Radiation Sickness
             // Not constant; gets applied by other sources.
             // Type: Damage, Vanilla Override
@@ -1207,6 +1218,17 @@ namespace Neurotrauma
                             }
                         }
                     }
+                };
+
+            // Organ Damage
+            // Type: Non-Limb Specific, Organ Damage
+            // Not constant; gets applied by other sources.
+            // Caused By: Many things.
+            // Effects: Many things.
+            AfflictionsToAdd["organdamage"] = new("organdamage", 0, 100, 0, AfflictionPriority.HIGH);
+            AfflictionsToAdd["organdamage"].UpdateAction =
+                (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanNonLimbAffData AffData) =>
+                {
                 };
 
             // Liver Removed
@@ -2988,7 +3010,7 @@ namespace Neurotrauma
                     if (C.GetBoolStatStrength("stasis")) return;
 
                     double ForeignBodyInfectIndex = AffData.Strength[Limb] / 40 * NT.DeltaTime;
-                    HF.AddAfflictionLimb(C.Human, "infectedwound", Limb, (float)(ForeignBodyInfectIndex / 5), null);
+                    C.GetLimbAffData("infectedwound").Strength[Limb] += ForeignBodyInfectIndex / 5;
 
                     // Decrease Immunity
                     C.GetAffData("immunity").Strength -= Math.Clamp(ForeignBodyInfectIndex / 3, 0, 10);
@@ -2996,7 +3018,7 @@ namespace Neurotrauma
                     if (C.GetLimbAffStrength("bandageddirty", Limb) > 10)
                     {
                         double ForeignBodyDirtyIndex = AffData.Strength[Limb] / 40 * NT.DeltaTime;
-                        HF.AddAfflictionLimb(C.Human, "infectedwound", Limb, (float)(ForeignBodyDirtyIndex / 5), null);
+                        C.GetLimbAffData("infectedwound").Strength[Limb] += ForeignBodyInfectIndex / 5;
 
                         // Decrease Immunity
                         C.GetAffData("immunity").Strength -= Math.Clamp(ForeignBodyDirtyIndex / 3, 0, 10);
@@ -3041,7 +3063,7 @@ namespace Neurotrauma
                     if (C.GetBoolStatStrength("stasis")) return;
 
                     double BurnInfectIndex = AffData.Strength[Limb] / 20 * NT.DeltaTime;
-                    HF.AddAfflictionLimb(C.Human, "infectedwound", Limb, (float)(BurnInfectIndex / 5), null);
+                    C.GetLimbAffData("infectedwound").Strength[Limb] += BurnInfectIndex / 5;
 
                     // Decrease Immunity
                     C.GetAffData("immunity").Strength -= Math.Clamp(BurnInfectIndex / 3, 0, 10);
@@ -3050,7 +3072,7 @@ namespace Neurotrauma
                     if (C.GetLimbAffStrength("bandageddirty", Limb) > 10)
                     {
                         double BurnDirtyIndex = AffData.Strength[Limb] / 40 * NT.DeltaTime;
-                        HF.AddAfflictionLimb(C.Human, "infectedwound", Limb, (float)(BurnDirtyIndex / 5), null);
+                        C.GetLimbAffData("infectedwound").Strength[Limb] += BurnInfectIndex / 5;
 
                         // Decrease Immunity
                         C.GetAffData("immunity").Strength -= Math.Clamp(BurnDirtyIndex / 3, 0, 10);
@@ -3095,7 +3117,7 @@ namespace Neurotrauma
                     if (C.GetBoolStatStrength("stasis")) return;
 
                     double LacerationInfectIndex = AffData.Strength[Limb] / 40 * NT.DeltaTime;
-                    HF.AddAfflictionLimb(C.Human, "infectedwound", Limb, (float)(LacerationInfectIndex / 5), null);
+                    C.GetLimbAffData("infectedwound").Strength[Limb] += LacerationInfectIndex / 5;
 
                     // Decrease Immunity
                     C.GetAffData("immunity").Strength -= Math.Clamp(LacerationInfectIndex / 3, 0, 10);
@@ -3103,7 +3125,7 @@ namespace Neurotrauma
                     if (C.GetLimbAffStrength("bandageddirty", Limb) > 10)
                     {
                         double LacerationDirtyIndex = AffData.Strength[Limb] / 40 * NT.DeltaTime;
-                        HF.AddAfflictionLimb(C.Human, "infectedwound", Limb, (float)(LacerationDirtyIndex / 5), null);
+                        C.GetLimbAffData("infectedwound").Strength[Limb] += LacerationInfectIndex / 5;
 
                         // Decrease Immunity
                         C.GetAffData("immunity").Strength -= Math.Clamp(LacerationDirtyIndex / 3, 0, 10);
@@ -3137,7 +3159,7 @@ namespace Neurotrauma
                     if (C.GetBoolStatStrength("stasis")) return;
 
                     double GSWInfectIndex = AffData.Strength[Limb] / 40 * NT.DeltaTime;
-                    HF.AddAfflictionLimb(C.Human, "infectedwound", Limb, (float)(GSWInfectIndex / 5), null);
+                    C.GetLimbAffData("infectedwound").Strength[Limb] += GSWInfectIndex / 5;
 
                     // Decrease Immunity
                     C.GetAffData("immunity").Strength -= Math.Clamp(GSWInfectIndex / 3, 0, 10);
@@ -3145,7 +3167,7 @@ namespace Neurotrauma
                     if (C.GetLimbAffStrength("bandageddirty", Limb) > 10)
                     {
                         double GSWDirtyIndex = AffData.Strength[Limb] / 40 * NT.DeltaTime;
-                        HF.AddAfflictionLimb(C.Human, "infectedwound", Limb, (float)(GSWDirtyIndex / 5), null);
+                        C.GetLimbAffData("infectedwound").Strength[Limb] += GSWInfectIndex / 5;
 
                         // Decrease Immunity
                         C.GetAffData("immunity").Strength -= Math.Clamp(GSWDirtyIndex / 3, 0, 10);
@@ -3179,7 +3201,7 @@ namespace Neurotrauma
                     if (C.GetBoolStatStrength("stasis")) return;
 
                     double ExplosionDamageInfectIndex = AffData.Strength[Limb] / 40 * NT.DeltaTime;
-                    HF.AddAfflictionLimb(C.Human, "infectedwound", Limb, (float)(ExplosionDamageInfectIndex / 5), null);
+                    C.GetLimbAffData("infectedwound").Strength[Limb] += ExplosionDamageInfectIndex / 5;
 
                     // Decrease Immunity
                     C.GetAffData("immunity").Strength -= Math.Clamp(ExplosionDamageInfectIndex / 3, 0, 10);
@@ -3187,7 +3209,7 @@ namespace Neurotrauma
                     if (C.GetLimbAffStrength("bandageddirty", Limb) > 10)
                     {
                         double ExplosionDamageDirtyIndex = AffData.Strength[Limb] / 40 * NT.DeltaTime;
-                        HF.AddAfflictionLimb(C.Human, "infectedwound", Limb, (float)(ExplosionDamageDirtyIndex / 5), null);
+                        C.GetLimbAffData("infectedwound").Strength[Limb] += ExplosionDamageInfectIndex / 5;
 
                         // Decrease Immunity
                         C.GetAffData("immunity").Strength -= Math.Clamp(ExplosionDamageDirtyIndex / 3, 0, 10);
@@ -3221,7 +3243,7 @@ namespace Neurotrauma
                     if (C.GetBoolStatStrength("stasis")) return;
 
                     double BitesInfectIndex = AffData.Strength[Limb] / 30 * NT.DeltaTime;
-                    HF.AddAfflictionLimb(C.Human, "infectedwound", Limb, (float)(BitesInfectIndex / 5), null);
+                    C.GetLimbAffData("infectedwound").Strength[Limb] += BitesInfectIndex / 5;
 
                     // Decrease Immunity
                     C.GetAffData("immunity").Strength -= Math.Clamp(BitesInfectIndex / 3, 0, 10);
@@ -3229,7 +3251,7 @@ namespace Neurotrauma
                     if (C.GetLimbAffStrength("bandageddirty", Limb) > 10)
                     {
                         double BitesDirtyIndex = AffData.Strength[Limb] / 40 * NT.DeltaTime;
-                        HF.AddAfflictionLimb(C.Human, "infectedwound", Limb, (float)(BitesDirtyIndex / 5), null);
+                        C.GetLimbAffData("infectedwound").Strength[Limb] += BitesInfectIndex / 5;
 
                         // Decrease Immunity
                         C.GetAffData("immunity").Strength -= Math.Clamp(BitesDirtyIndex / 3, 0, 10);
@@ -3978,7 +4000,7 @@ namespace Neurotrauma
                 };
 
             // On Wheelchair
-            // Not constant; gets applied by other sources.
+            // Constant.
             // Type: Functionality
             // Effects: Changes the animations of a character to one in a wheelchair.
             // Applied via Stats.
@@ -3988,7 +4010,7 @@ namespace Neurotrauma
                 {
                     // Removal Conditions
                     AffData.Strength = HF.BoolToNum(
-                        !(NTC.HasSymptomFalse(C, "onwheelchair"))
+                        (!NTC.HasSymptomFalse(C, "onwheelchair"))
                         && C.GetSymptomAffData("unconsciousness").Strength <= 0
                         && (NTC.HasSymptom(C, "onwheelchair") || HF.GetOuterWearIdentifier(C.Human) == "wheelchair"
                         ),

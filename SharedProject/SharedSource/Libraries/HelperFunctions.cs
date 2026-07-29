@@ -1896,7 +1896,7 @@ namespace Neurotrauma
         {
             GivenLimbType = NormalizeLimbType(GivenLimbType);
 
-            string baseId = CreateLimbAfflictionID(GivenLimbType, "amputation");
+            string ?baseId = CreateLimbAfflictionID(GivenLimbType, "amputation");
 
             SetAffliction(character, "s" + baseId, strength, null, 0);
 

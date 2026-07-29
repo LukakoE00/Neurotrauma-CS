@@ -103,8 +103,20 @@ namespace Neurotrauma
         {
             NTC.AddPostHumanUpdateHook((HumanUpdate.NTHuman C) =>
             {
-                C.Human.SetStun((float)C.GetAffStrength("stun"));
+                if (C != null && C.Human != null && C.Human.IdFreed == false)
+                {
+                    C.Human.SetStun((float)C.GetAffStrength("stun"));
+                }
+            });
+
+            NTC.AddPostHumanUpdateHook((HumanUpdate.NTHuman C) =>
+            {
+                if (C != null && C.Human != null && C.Human.IdFreed == false && C.Human.Health < 0)
+                {
+                    NTC.SetSymptomTrue(C.Human, "unconsciousness", 2);
+                    HF.SetAffliction(C.Human, "unconsciousness", 100);
+                }
             });
         }
     }
-}
+    }
