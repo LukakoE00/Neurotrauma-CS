@@ -1902,10 +1902,7 @@ namespace Neurotrauma
 
             SetAffliction(character, "s" + baseId, strength, null, 0);
 
-            if (traumampStrength > 0f)
-            {
-                SetAffliction(character, "t" + baseId, traumampStrength, null, 0);
-            }
+            SetAffliction(character, "t" + baseId, traumampStrength, null, 0);
 
             SetAfflictionLimb(character, "gangrene", GivenLimbType, 0, null, 0);
         }

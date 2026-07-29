@@ -866,13 +866,19 @@ public class NTItemMethods
         // Gypsum
         RegisterItemUseFunction("gypsum", infos =>
         {
-            if (HF.HasAffliction(infos.target, "stasis", (float)0.1)) { return; }
+            if (HF.HasAffliction(infos.target, "stasis", (float)0.1)) 
+            { 
+                return; 
+            }
 
             // Needs to be bandaged, not already in a cast, not during a surgery, and the limb needs to be extremity.
-            if (!HF.HasAfflictionLimb(infos.target, "bandaged", infos.targetLimb.type, (float)0.1) ||
-            HF.HasAfflictionLimb(infos.target, "plastercast", infos.targetLimb.type, (float)0.1) ||
-            HF.HasAfflictionLimb(infos.target, "surgeryincision", infos.targetLimb.type, (float)0.1) ||
-            !HF.LimbIsExtremity(infos.targetLimb.type)) { return; }
+            if (!HF.HasAfflictionLimb(infos.target, "bandaged", infos.targetLimb.type, (float)0.1) 
+            || HF.HasAfflictionLimb(infos.target, "plastercast", infos.targetLimb.type, (float)0.1) 
+            || HF.HasAfflictionLimb(infos.target, "surgeryincision", infos.targetLimb.type, (float)0.1) 
+            || !HF.LimbIsExtremity(infos.targetLimb.type)) 
+            { 
+                return; 
+            }
 
             if (HF.GetSkillRequirementMet(infos.user, "medical", (float)40))
             {

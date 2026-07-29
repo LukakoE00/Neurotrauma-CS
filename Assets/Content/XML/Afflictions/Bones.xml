@@ -51,7 +51,7 @@
       type="fractures"
 
       showinhealthscannerthreshold="5"
-      showiconthreshold="90"
+      showiconthreshold="50"
       maxstrength="100">
 
       <icon texture="%ModDir%/Images/AfflictionIcons.png" sheetindex="6,2" sheetelementsize="128,128" origin="0,0"/>
