@@ -2133,6 +2133,7 @@ public class NTItemMethods
                     HF.AddAfflictionLimb(infos.target, "organdamage", infos.targetLimb.type, 5, infos.user);
                     HF.AddAffliction(infos.target, "lungdamage", 20, infos.user);
                 }
+
                 HF.GiveItem(infos.target, "ntsfx_slash");
             }
             else
@@ -2152,7 +2153,9 @@ public class NTItemMethods
                 {
                     string transplantID = "lungtransplant_q1";
                     if (NTC.HasTag(CharacterToNTHuman(infos.user), "organssellforfull")) transplantID = "lungtransplant";
-                    SpawnOrganTransplantInContainer(transplantID, infos.user, 100 - damage);
+                    { 
+                        SpawnOrganTransplantInContainer(transplantID, infos.user, 100 - damage); 
+                    }
                 }
             }
         });
@@ -2184,6 +2187,7 @@ public class NTItemMethods
                     HF.AddAfflictionLimb(infos.target, "organdamage", infos.targetLimb.type, 5, infos.user);
                     HF.AddAffliction(infos.target, "heartdamage", 20, infos.user);
                 }
+
                 HF.GiveItem(infos.target, "ntsfx_slash");
             }
             else

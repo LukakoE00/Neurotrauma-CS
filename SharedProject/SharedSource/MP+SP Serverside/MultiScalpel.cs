@@ -202,12 +202,12 @@ namespace Neurotrauma
         private static void UseSpeedflexMode(NTItemMethods.ItemUpdateFunctionInfos infos)
         {
             var torsoLimb = infos.target.AnimController?.MainLimb ?? infos.targetLimb;
-
             // Me when I LIE!!!!
             // Act like its the torso (even when we apply to a limb)
             var torsoInfos = new NTItemMethods.ItemUpdateFunctionInfos(infos.item, infos.user, infos.target, torsoLimb);
+            var UsedOnLimb = HF.NormalizeLimbType(infos.targetLimb.type);
 
-            switch (infos.targetLimb.type)
+            switch (UsedOnLimb)
             {
                 case LimbType.Head:
                     NTItemMethods.NTItemsRegistry["organscalpel_brain"]?.Invoke(infos);

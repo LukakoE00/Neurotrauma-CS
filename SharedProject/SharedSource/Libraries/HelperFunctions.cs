@@ -1006,8 +1006,10 @@ namespace Neurotrauma
             float SkillLevel = GetSurgerySkill(Character);
 
             if (NTConfig.Get("NT_vanillaSkillCheck", false))
+            {
                 return Chance(Math.Clamp((100 - (RequiredAmount - SkillLevel)) / 100, 0, 1));
-
+            }
+                
             return Chance(Math.Clamp(SkillLevel / RequiredAmount, 0, 1));
         }
 
