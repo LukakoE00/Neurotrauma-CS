@@ -70,8 +70,8 @@ public static class NTInfo
 
             consolePrint += "\n";
 
-            if (hasCSAddons) consolePrint += "- C# Addons:\n";
-            else consolePrint += "- Not running any C# Addons\n";
+            if (hasCSAddons) consolePrint += "- C# Addons:";
+            else consolePrint += "- Not running any C# Addons";
             foreach (KeyValuePair<string, NTAddon> kvp in RegisteredAddons)
             {
                 NTAddon addon = kvp.Value;
@@ -83,8 +83,10 @@ public static class NTInfo
                 }
             }
 
-            if (hasLuaAddons) consolePrint += "- Lua Addons:\n";
-            else consolePrint += "- Not running any Lua Addons\n";
+            consolePrint += "\n";
+
+            if (hasLuaAddons) consolePrint += "\n- Lua Addons:";
+            else consolePrint += "\n- Not running any Lua Addons\n";
             foreach (KeyValuePair< string, Table > kvp in LuaRegisteredAddons)
             {
                 Table addon = kvp.Value;
