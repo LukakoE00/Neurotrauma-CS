@@ -25,6 +25,10 @@ Lua Documentation (for Barotrauma) can be found [here](https://evilfactory.githu
 
 NT Repository (Lua version) can be found [here](https://github.com/OlegBSTU/Neurotrauma)
 
+NT C# Template Repository can be found [here](https://github.com/BigEvilGreenBean/Neurotrauma-CS-Addon-Template)
+
+NT C# Refs can be found [here](https://github.com/BigEvilGreenBean/Neurotrauma-C-Refs/releases/download/NT_CS_Refs/NT.zip)
+
 <h3>Code & Requirements</h3>
 
 <hr>
