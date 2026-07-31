@@ -871,7 +871,7 @@
     </Item>
 
     <!-- Wheelchair-->
-    <Item name="" identifier="wheelchair" category="Equipment" tags="provocative,mediumitem" scale="0.5" fireproof="false" description="" cargocontaineridentifier="metalcrate" impactsoundtag="impact_metal_heavy">
+    <Item name="" identifier="nt_wheelchair" category="Equipment" tags="provocative,mediumitem" scale="0.5" fireproof="false" description="" cargocontaineridentifier="metalcrate" impactsoundtag="impact_metal_heavy">
         <Price baseprice="100" soldbydefault="false">
             <Price storeidentifier="merchantmedical" sold="true" multiplier="0.9"/>
         </Price>
