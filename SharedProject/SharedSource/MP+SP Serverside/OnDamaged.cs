@@ -251,6 +251,9 @@ public class OnDamaged
         {
             HF.AddAfflictionLimb(Character, "foreignbody", LimbType, Math.Clamp(Strength / 4f, 0, 20));
         }
+
+        HumanUpdate.NTHuman? NTCharacter = HumanUpdate.CharacterToNTHuman(Character);
+        FallOffChair(NTCharacter, Character, Strength);
     }
 
     // Causes Foreign Bodies, Rib Fractures, Pneumothorax, Internal Bleeding, Fractures
@@ -349,6 +352,8 @@ public class OnDamaged
                 HF.DislocateLimb(Character, LimbType);
             }
         }
+
+        FallOffChair(NTCharacter,Character,Strength,25);
     }
 
     // Causes Rib Fractures, Pneumothorax, Internal Bleeding, Concussion, Fractures
@@ -582,6 +587,8 @@ public class OnDamaged
                 HF.DislocateLimb(Character, LimbType);
             }
         }
+
+        FallOffChair(NTCharacter, Character, Strength, 30);
     }
 
     // Causes Rib Fractures, Organ Damage, Pneumothorax, Concussion, Fractures
@@ -667,6 +674,16 @@ public class OnDamaged
             {
                 HF.DislocateLimb(Character, LimbType);
             }
+        }
+    }
+
+    private static void FallOffChair(HumanUpdate.NTHuman NTCharacter, Character Character, double Strength, double MinimumStrength = 20)
+    {
+        if (NTCharacter.GetAffData("onwheelchair").Strength > 0 && Strength > MinimumStrength)
+        {
+            Item WheelChair = HF.GetItemInOuterWear(Character);
+            WheelChair.Drop(Character);
+            NTCharacter.GetAffData("onwheelchair").Strength = 0;
         }
     }
 }

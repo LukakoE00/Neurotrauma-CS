@@ -4012,10 +4012,23 @@ namespace Neurotrauma
                     AffData.Strength = HF.BoolToNum(
                         (!NTC.HasSymptomFalse(C, "onwheelchair"))
                         && C.GetSymptomAffData("unconsciousness").Strength <= 0
-                        && (NTC.HasSymptom(C, "onwheelchair") || HF.GetOuterWearIdentifier(C.Human) == "wheelchair"
+                        && (NTC.HasSymptom(C, "onwheelchair") || HF.GetOuterWearIdentifier(C.Human) == "nt_wheelchair"
                         ),
                         2
                     );
+
+                    if (AffData.Strength > 0)
+                    {
+                        double SpeedMult = .8;
+                        List<LimbType> Arms = [LimbType.LeftArm, LimbType.RightArm];
+
+                        foreach (LimbType Arm in Arms)
+                        {
+                            if (HF.LimbIsBroken(C.Human, Arm, true) || HF.LimbIsDislocated(C.Human, Limb, true) || HF.LimbIsAmputated(C.Human,Limb)) SpeedMult -= .2;
+                        }
+
+                        C.SetDoubleStatStrength("speedmultiplier", C.GetDoubleStatStrength("speedmultiplier") * SpeedMult); // slow the character down.
+                    }
                 };
 
             // Force Prone

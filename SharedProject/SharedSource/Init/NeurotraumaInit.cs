@@ -139,15 +139,9 @@ namespace Neurotrauma
             
             if (HF.IsMain())
             {
-                if (harmony != null) harmony.UnpatchSelf();
+                harmony?.UnpatchSelf();
                 LoveBots.Dispose();
                 CharacterPatches.Dispose();
-
-                //this.LoggerService = null;
-                //this.ConfigService = null;
-                //this.EventService = null;
-                //this.PluginService = null;
-                //this.luaScriptManagementService = null;
             }
         }
 
