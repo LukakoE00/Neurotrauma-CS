@@ -794,8 +794,8 @@ Can give blood to: AB+</entitydescription.ab_positivecard>
 <entitydescription.traumashears>A tool used to remove ‖color:gui.green‖Bandages‖end‖ or ‖color:gui.green‖Plaster Casts‖end‖. On failure, causes ‖color:gui.red‖Bleeding‖end‖ and ‖color:gui.red‖Lacerations‖end‖.</entitydescription.traumashears>
 
 <!-- Wheelchair -->
-<entityname.wheelchair>Wheelchair</entityname.wheelchair>
-<entitydescription.wheelchair>A tool that occupies a patient's Outerwear slot. Allows utilizing arms for movement, allowing you to move better with damaged legs.</entitydescription.wheelchair>
+<entityname.nt_wheelchair>Wheelchair</entityname.nt_wheelchair>
+	<entitydescription.nt_wheelchair>A tool that occupies a patient's Outerwear slot. Allows utilizing arms for movement, allowing you to move better with damaged legs.</entitydescription.nt_wheelchair>
 
 <!-- Blue Shark -->
 <entityname.blahaj>Blue Shark</entityname.blahaj>

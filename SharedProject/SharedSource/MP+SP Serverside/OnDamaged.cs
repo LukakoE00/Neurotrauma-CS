@@ -1,4 +1,5 @@
 ﻿using Barotrauma.Items.Components;
+using FarseerPhysics.Dynamics;
 
 namespace Neurotrauma;
 
@@ -683,6 +684,9 @@ public class OnDamaged
         {
             Item WheelChair = HF.GetItemInOuterWear(Character);
             WheelChair.Drop(Character);
+            Vector2 CharacterDirection = HF.GetCharacterLimb(Character, LimbType.Torso).LinearVelocity;
+            WheelChair.body.ApplyLinearImpulse(CharacterDirection * 15); // Move the wheel chair in the direction of the damage.
+            WheelChair.body.ApplyTorque((float)HF.Magnitude(CharacterDirection * 5));
             NTCharacter.GetAffData("onwheelchair").Strength = 0;
         }
     }
