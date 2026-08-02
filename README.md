@@ -41,8 +41,6 @@ NT C# Refs can be found [here](https://github.com/BigEvilGreenBean/Neurotrauma-C
 
 - If you're going to be running this locally, change the LocalMods folder directory in **Build.props**. IDK if there is a better way to do this without GitHub constantly changing it.
 
-- Linux / OSX projects have been disabled, as this is complex enough as-is right now.
-
 - Download Visual Studio (Not Visual Code Studio!!!) with the .NET addon, then open the Neurotrauma.sln file using it to have the entire project visible and easily navigatable.
 
 - If you want to test, you should go to the top side of the screen and under 'Build' hit 'Rebuild Solution'; this will re-generate the entire LocalMod. You can then Launch Barotrauma via Visual Studio or the normal way.
