@@ -241,6 +241,48 @@ NTLua.Add("SyncPreHumanUpdateHooks", function(character)
 	end
 end)
 
+NTLua.Add("OverrideC#Afflictions", function()
+	for key, val in pairs(NT.Afflictions) do
+		if NT.LegacyAfflictions[key] and (val.legacy ~= true) then
+			CSNTAfflictions.LuaOverrideAffliction(NT.ConvertToModern(key))
+		end
+	end
+
+	for key, val in pairs(NT.LimbAfflictions) do
+		if NT.LegacyLimbAfflictions[key] and (val.legacy ~= true) then
+			CSNTAfflictions.LuaOverrideAffliction(NT.ConvertToModern(key))
+		end
+	end
+
+end)
+
+NTLua.Add("SyncLegacyTables", function()
+	for key, val in pairs(NT.SutureAfflictions) do
+		if not CSItems.HasSuturedAffliction(key) then
+			NTC.AddSuturedAffliction(key,val.xpgain,val.case,val.func)
+		end
+	end
+
+
+	for key, val in pairs(NT.DrainageAfflictions) do
+		if not CSItems.HasDrainageAffliction(key) then
+			NTC.AddDrainageAffliction(key,val.xpgain,val.case,val.func or nil)
+		end
+	end
+
+	for key in NT.HematologyDetectable do
+		if not CSItems.HasHemaAffliction(key) then
+			NTC.AddHematologyAffliction(key)
+		end
+	end
+
+	for key, value in pairs(NT.SymsForNPC) do
+		for string in value do
+			CSSpeakIssues.AddAfflictionToSpeakAbout(string,1,1)
+		end
+	end
+end)
+
 -- Neurotrauma human update functions
 -- Hooks Lua event "think" to update and use for applying NT specific character data (its called 'c') with
 -- values/functions defined here in NT.UpdateHuman, NT.LimbAfflictions and NT.Afflictions
@@ -273,7 +315,7 @@ function NT.UpdateHuman(character, currentCharData, NTHuman, Priorities)
 	end
 	-- fetch and calculate all the current stats
 	for identifier, data in pairs(NT.CharStats) do
-		if NT.LegacyCharStats[identifier] == nil and not NT.CharStats[identifier].legacy then
+		if not NT.CharStats[identifier].legacy then
 			if data.getter ~= nil then
 				charData.stats[identifier] = data.getter(charData)
 			else
@@ -283,7 +325,7 @@ function NT.UpdateHuman(character, currentCharData, NTHuman, Priorities)
 	end
 	-- update non-limb-specific afflictions
 	for identifier, data in pairs(NT.Afflictions) do
-		if NT.LegacyAfflictions[identifier] == nil and not NT.Afflictions[identifier].legacy  then
+		if not NT.Afflictions[identifier].legacy  then
 			if data.const ~= false or (data.const == false and HF.HasAffliction(charData,identifier,data.default or 0)) then -- Const check
 				if data.update ~= nil and (Priorities.Contains(data.priority or AfflictionPriority.HIGH)) then data.update(charData, identifier) end
 			end
@@ -302,7 +344,7 @@ function NT.UpdateHuman(character, currentCharData, NTHuman, Priorities)
 		local keystring = tostring(type) .. "afflictions"
 		for identifier, data in pairs(NT.LimbAfflictions) do
 			if data.const ~= false or (data.const == false and HF.HasAfflictionLimb(charData,identifier,type,data.default or 0)) then -- Const check
-				if NT.LegacyLimbAfflictions[identifier] == nil and not NT.LimbAfflictions[identifier].legacy then
+				if not NT.LimbAfflictions[identifier].legacy then
 					if
 						data.update ~= nil and (not data.priority or Priorities.Contains(AfflictionPriority.HIGH)) -- Priority check
 						and (
@@ -359,7 +401,7 @@ function NT.UpdateHuman(character, currentCharData, NTHuman, Priorities)
 
 	-- non-limb-specific late update (useful for things that use stats that are altered by limb specifics)
 	for identifier, data in pairs(NT.Afflictions) do
-		if NT.LegacyAfflictions[identifier] == nil and not NT.Afflictions[identifier].legacy then
+		if not NT.Afflictions[identifier].legacy then
 			if data.lateupdate ~= nil then data.lateupdate(charData, identifier) end
 		end
 	end

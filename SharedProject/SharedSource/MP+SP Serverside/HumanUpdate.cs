@@ -1046,7 +1046,7 @@ public static class HumanUpdate
                     NTHumanAffData AffData = Data;
                     NTAffliction ?Aff = AffData.AffTemplate;
 
-                    if (!Priorities.Contains(Aff.Priority))
+                    if ((!Priorities.Contains(Aff.Priority)) || Aff.LuaOverridden)
                     {
                         return; // Skip to the next affliction, we don't have the same priority currently.
                     }
@@ -1066,12 +1066,15 @@ public static class HumanUpdate
                 case NTAfflictionType.LIMB:
                 case NTAfflictionType.LIMBSYMPTOM:
 
+                    // Fetch the data of the affliction
+                    string LimbID = Key;
+                    NTHumanLimbAffData LimbAffData = (NTHumanLimbAffData)Data;
+                    NTLimbAffliction LimbAff = LimbAffData.AffTemplate;
+
+                    if (LimbAff.LuaOverridden) return;
+
                     foreach (LimbType Limb in LimbsToCheck)
                     {
-                        // Fetch the data of the affliction
-                        string LimbID = Key;
-                        NTHumanLimbAffData LimbAffData = (NTHumanLimbAffData)Data;
-                        NTLimbAffliction LimbAff = LimbAffData.AffTemplate;
 
                         if (PreLimbCheck(Limb, LimbAff, LimbAffData, Priorities)) continue;
 

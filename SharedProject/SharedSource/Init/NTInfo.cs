@@ -12,11 +12,11 @@ namespace Neurotrauma;
 /// </summary>
 public struct NTVariants
 {
-    public static string NTOld = "3190189044";
-    public static string NTLegacy = "3705482890";
-    public static string NTDev = "3439141713";
-    public static string NTLite = "3369418643";
-    public static string NTAi = "3741432181";
+    readonly public static string NTOld = "3190189044";
+    readonly public static string NTLegacy = "3705482890";
+    readonly public static string NTDev = "3439141713";
+    readonly public static string NTLite = "3369418643";
+    readonly public static string NTAi = "3741432181";
 }
 
 public struct NTLuaAddonIDs
@@ -147,6 +147,8 @@ public static class NTInfo
                 HF.PrintWarning("Possibly incompatible addons detected! These may causes issues when using NT C#!\n" + warnedMods);
             }
 
+            NTLua.Call("OverrideC#Afflictions");
+            NTLua.Call("SyncLegacyTables");
         }, 1000);
     }
 }

@@ -27,7 +27,7 @@ NT.Afflictions = {
 	-- stylua: ignore end
 
 	-- Arterial cuts
-	t_arterialcut = {},
+	t_arterialcut = {legacy = true},
 	-- Fractures and amputations
 	t_fracture = {
 		        legacy = true, -- Should NTC# ignore this affliction?
@@ -128,16 +128,16 @@ NT.Afflictions = {
 			end
 		end,
 	},
-	tla_amputation = {},
-	tra_amputation = {},
-	tll_amputation = {},
-	trl_amputation = {},
-	sla_amputation = {},
-	sra_amputation = {},
-	sll_amputation = {},
-	srl_amputation = {},
-	t_paralysis = {},
-	alv = {}, -- artificial ventilation
+	tla_amputation = {legacy = true},
+	tra_amputation = {legacy = true},
+	tll_amputation = {legacy = true},
+	trl_amputation = {legacy = true},
+	sla_amputation = {legacy = true},
+	sra_amputation = {legacy = true},
+	sll_amputation = {legacy = true},
+	srl_amputation = {legacy = true},
+	t_paralysis = {legacy = true},
+	alv = {legacy = true}, -- artificial ventilation
 	needlec = {
 		        legacy = true, -- Should NTC# ignore this affliction?
 		update = function(c, i)
@@ -524,7 +524,7 @@ NT.Afflictions = {
 				HF.Clamp(c.afflictions[i].strength + (0.5 + c.afflictions[i].strength / 100) * NT.Deltatime, 5, 100)
 		end,
 	},
-	bloodloss = { max = 200 },
+	bloodloss = { legacy = true, max = 200 },
 	bloodpressure = {
 		min = 5,
 		max = 200,
@@ -595,8 +595,8 @@ NT.Afflictions = {
 			)
 		end,
 	},
-	hemotransfusionshock = {},
-	tshocktimeout = {},
+	hemotransfusionshock = {legacy = true},
+	tshocktimeout = {legacy = true},
 	-- Other
 	oxygenlow = {
 		max = 200,
@@ -615,8 +615,8 @@ NT.Afflictions = {
 			c.afflictions[i].strength = c.afflictions[i].strength - NT.Deltatime * 0.02
 		end,
 	},
-	stasis = {},
-	table = {},
+	stasis = {legacy = true},
+	table = {legacy = true},
 	internalbleeding = {
 		        legacy = true, -- Should NTC# ignore this affliction?
 		update = function(c, i)
@@ -839,12 +839,12 @@ NT.Afflictions = {
 			end
 		end,
 	},
-	alcoholwithdrawal = {},
-	opiatewithdrawal = {},
-	chemwithdrawal = {},
-	opiateoverdose = {},
+	alcoholwithdrawal = {legacy = true},
+	opiatewithdrawal = {legacy = true},
+	chemwithdrawal = {legacy = true},
+	opiateoverdose = {legacy = true},
 	-- Drugs
-	analgesia = { max = 200 },
+	analgesia = { legacy = true, max = 200 },
 
 	-- propofol (i hate it)
 	anesthesia = {
@@ -874,23 +874,23 @@ NT.Afflictions = {
 			end
 		end,
 	},
-	drunk = { max = 200 },
-	afadrenaline = {},
-	afantibiotics = {},
-	afthiamine = {},
-	afsaline = {},
-	afringerssolution = {},
-	afstreptokinase = {},
-	afmannitol = {},
-	afanaesthetic = {},
-	afopioid = {},
+	drunk = {legacy = true, max = 200 },
+	afadrenaline = {legacy = true},
+	afantibiotics = {legacy = true},
+	afthiamine = {legacy = true},
+	afsaline = {legacy = true},
+	afringerssolution = {legacy = true},
+	afstreptokinase = {legacy = true},
+	afmannitol = {legacy = true},
+	afanaesthetic = {legacy = true},
+	afopioid = {legacy = true},
 	afpressuredrug = {
 		        legacy = true, -- Should NTC# ignore this affliction?
 		update = function(c, i)
 			c.afflictions[i].strength = c.afflictions[i].strength - 0.25 * NT.Deltatime
 		end,
 	},
-	combatstimulant = {},
+	combatstimulant = {legacy = true},
 	concussion = {
 		        legacy = true, -- Should NTC# ignore this affliction?
 		update = function(c, i)
@@ -1414,7 +1414,7 @@ NT.LimbAfflictions = {
 			end
 		end,
 	},
-	dirtybandage = {}, -- for bandage dirtifaction logic see above
+	dirtybandage = {legacy = true}, -- for bandage dirtifaction logic see above
 	iced = {
         legacy = true,
 		update = function(c, limbaff, i, type)
@@ -1448,7 +1448,7 @@ NT.LimbAfflictions = {
 			end
 		end,
 	},
-	ointmented = {},
+	ointmented = {legacy = true},
 	bonegrowth = {
         legacy = true,
 		update = function(c, limbaff, i, type)
@@ -1458,7 +1458,7 @@ NT.LimbAfflictions = {
 			end
 		end,
 	},
-	arteriesclamp = {},
+	arteriesclamp = {legacy = true},
 	-- damage
 	bleeding = {
         legacy = true,

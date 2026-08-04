@@ -9,12 +9,14 @@ NT.SymsForNPC = {}
 NT.BLOODTYPE = {}
 NT.ContainerFills = {}
 
-Init = LuaUserData.CreateStatic("Neurotrauma.NT",false)-- stores our class ref
 NTConfig = LuaUserData.CreateStatic("Neurotrauma.NTConfig",false)
 NTInfo = LuaUserData.CreateStatic("Neurotrauma.NTInfo",false)
 CSNTCompat = LuaUserData.CreateStatic("Neurotrauma.NTC",false)
 CSNTAfflictions = LuaUserData.CreateStatic("Neurotrauma.NTAfflictions",false)
 CSHumanUpdate = LuaUserData.CreateStatic("Neurotrauma.HumanUpdate",false)-- stores our class ref
+CSItems = LuaUserData.CreateStatic("Neurotrauma.NTItemMethodsLuaCompat",false)
+CSInit = LuaUserData.CreateStatic("Neurotrauma.NT",false)-- stores our class ref
+CSSpeakIssues = LuaUserData.CreateStatic("Neurotrauma.SpeakAboutIssuesPatch",false)
 NTLua = LuaUserData.CreateStatic("Neurotrauma.NTLua",false)
 AfflictionPriority = LuaUserData.CreateEnumTable("Neurotrauma.AfflictionPriority",false)
 

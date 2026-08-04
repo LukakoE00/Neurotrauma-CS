@@ -1,3 +1,4 @@
+using Barotrauma;
 using MoonSharp.Interpreter;
 using System.Reflection.Metadata;
 using static Barotrauma.LuaCs.NetworkingService;
@@ -73,6 +74,17 @@ namespace Neurotrauma
             }
         }
 
+        public static void LuaOverrideAffliction(string id)
+        {
+            if (Afflictions.ContainsKey(id))
+            {
+                Afflictions[id].LuaOverridden = true;
+            }
+            else
+            {
+                LuaCsLogger.LogError($"Affliction with id {id} does not exist! Can't lua override it.");
+            }
+        }
 
         // I recommend running this function only once OnLoadCompleted as it could be perf inducing.
         public static Dictionary<string, NTAffliction> GetAfflictionsByPriority(AfflictionPriority priority)
@@ -149,6 +161,11 @@ namespace Neurotrauma
     /// </summary>
     public abstract class NTAffliction // Added to NTHuman updatingAfflictions
     {
+        /// <summary>
+        /// Has this affliction been overrided via Lua?
+        /// </summary>
+        public bool LuaOverridden = false;
+
         /// <summary>
         /// Should this affliction always be running? If on, regardless of current affliction strength, this will update.
         /// </summary>

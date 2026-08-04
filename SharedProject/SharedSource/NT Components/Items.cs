@@ -4,6 +4,26 @@ using static Neurotrauma.HumanUpdate;
 
 namespace Neurotrauma;
 
+
+public static class NTItemMethodsLuaCompat // I am going to fucking obliterate cookie
+{
+    public static bool HasSuturedAffliction(string id) // Lua compat
+    {
+        return NTItemMethods.SutureAfflictions.ContainsKey(id);
+    }
+
+    public static bool HasDrainageAffliction(string id) // Lua compat
+    {
+        return NTItemMethods.DrainageAfflictions.ContainsKey(id);
+    }
+
+    public static bool HasHemaAffliction(string id) // Lua compat
+    {
+        return NTItemMethods.HematologyDetectable.Contains(id);
+    }
+}
+
+
 public class NTItemMethods
 {
     /// <summary>
@@ -2687,5 +2707,4 @@ public class NTItemMethods
         });
     }
 }
-
 

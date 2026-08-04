@@ -47,6 +47,11 @@ namespace Neurotrauma
             UserData.RegisterType(typeof(NTAfflictions));
             UserData.RegisterType(typeof(NTAffliction));
 
+            UserData.RegisterType(typeof(NTItemMethods));
+            UserData.RegisterType(typeof(NTItemMethodsLuaCompat));
+
+            UserData.RegisterType(typeof(SpeakAboutIssuesPatch));
+
             UserData.RegisterType(typeof(HumanUpdate));
             UserData.RegisterType(typeof(HumanUpdate.NTHuman));
             UserData.RegisterType(typeof(HumanUpdate.CharacterAfflictions));
