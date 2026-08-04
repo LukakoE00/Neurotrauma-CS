@@ -21,9 +21,9 @@
 
         <Deconstruct time="1"/>
 
-        <SuitableTreatment identifier="infectedwound" suitability="100"/>
+        <!-- <SuitableTreatment identifier="infectedwound" suitability="100"/>
         <SuitableTreatment identifier="burn_deg1" suitability="50"/>
-        <SuitableTreatment identifier="burn_deg2" suitability="50"/>
+        <SuitableTreatment identifier="burn_deg2" suitability="50"/> -->
 
         <InventoryIcon texture="%ModDir%/Images/InventoryItemIconAtlas.png" sourcerect="64,64,64,64" origin="0.5,0.5"/>
         <Sprite texture="%ModDir%/Images/InGameItemIconAtlas.png" sourcerect="128,256,128,128" depth="0.6" origin="0.5,0.5"/>
@@ -76,7 +76,7 @@
 
         <Deconstruct time="2"/>
 
-        <SuitableTreatment identifier="arterialcut" suitability="50"/>
+        <!-- <SuitableTreatment identifier="arterialcut" suitability="50"/> -->
 
         <InventoryIcon texture="%ModDir%/Images/InventoryItemIconAtlas.png" sourcerect="384,0,64,64" origin="0.5,0.5"/>
         <Sprite texture="%ModDir%/Images/InGameItemIconAtlas.png" sourcerect="384,128,128,128" depth="0.55" origin="0.5,0.5"/>
@@ -108,10 +108,10 @@
         <Deconstruct time="5">
             <Item identifier="carbon"/>
         </Deconstruct>
-
+<!-- 
         <SuitableTreatment identifier="blunttrauma" suitability="40"/>
         <SuitableTreatment identifier="infectedwound" suitability="-100"/>
-        <SuitableTreatment identifier="inflammation" suitability="-100"/>
+        <SuitableTreatment identifier="inflammation" suitability="-100"/> -->
 
         <InventoryIcon texture="%ModDir%/Images/InventoryItemIconAtlas.png" sourcerect="64,256,64,64" origin="0.5,0.5"/>
         <Sprite texture="%ModDir%/Images/InGameItemIconAtlas.png" sourcerect="896,512,128,128" depth="0.6" origin="0.5,0.5"/>
@@ -183,8 +183,8 @@
             <Item identifier="antibloodloss1" copycondition="true" mincondition="0.1"/>
             <Item identifier="potassium" copycondition="true" mincondition="0.1"/>
         </Deconstruct>
-
-        <SuitableTreatment identifier="bloodloss" suitability="30"/>
+<!-- 
+        <SuitableTreatment identifier="bloodloss" suitability="30"/> -->
 
         <InventoryIcon texture="%ModDir%/Images/InventoryItemIconAtlas.png" sourcerect="448,192,64,64" origin="0.5,0.5"/>
         <Sprite texture="%ModDir%/Images/InGameItemIconAtlas.png" sourcerect="679,386,51,128" depth="0.6" origin="0.5,0.5"/>
@@ -219,7 +219,8 @@
             <Item identifier="liquidoxygenite" copycondition="true" mincondition="0.1"/>
         </Deconstruct>
 
-        <SuitableTreatment identifier="neurotrauma" suitability="15"/>
+        <!-- <SuitableTreatment identifier="neurotrauma" suitability="15"/> -->
+
         <InventoryIcon texture="%ModDir%/Images/InventoryItemIconAtlas.png" sourcerect="128,128,64,64" origin="0.5,0.5"/>
         <Sprite texture="%ModDir%/Images/InGameItemIconAtlas.png" sourcerect="640,128,128,128" depth="0.6" origin="0.5,0.5"/>
         <Body width="35" height="70" density="20"/>
@@ -279,7 +280,8 @@
             <Item identifier="stabilozine" copycondition="true" mincondition="0.1"/>
         </Deconstruct>
 
-        <SuitableTreatment identifier="heartattack" suitability="15"/>
+        <!-- <SuitableTreatment identifier="heartattack" suitability="15"/> -->
+
         <InventoryIcon texture="%ModDir%/Images/InventoryItemIconAtlas.png" sourcerect="256,195,64,64" origin="0.5,0.5"/>
         <Sprite texture="%ModDir%/Images/InGameItemIconAtlas.png" sourcerect="896,384,128,128" depth="0.6" origin="0.5,0.5"/>
         <Body width="35" height="70" density="20"/>
