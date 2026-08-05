@@ -12,6 +12,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)sharedsource\Config\Config.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)sharedsource\Config\ConfigData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)sharedsource\MP+SP Serverside\NTLua.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)sharedsource\nt bot support\AIObjectiveOverrides.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)sharedsource\NT Components\Blood.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)sharedsource\MP+SP Serverside\CharacterPatches.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)sharedsource\MP+SP Serverside\CPR.cs" />
@@ -39,6 +40,7 @@
     <Folder Include="$(MSBuildThisFileDirectory)sharedsource\Config\" />
     <Folder Include="$(MSBuildThisFileDirectory)sharedsource\Libraries\" />
     <Folder Include="$(MSBuildThisFileDirectory)sharedsource\Init\" />
+    <Folder Include="$(MSBuildThisFileDirectory)sharedsource\NT Bot Support\" />
     <Folder Include="$(MSBuildThisFileDirectory)sharedsource\NT Components\" />
   </ItemGroup>
 </Project>

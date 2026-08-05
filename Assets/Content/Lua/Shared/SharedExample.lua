@@ -3,7 +3,7 @@ print("[NT2] Loaded Shared Side!")
 NT = {}
 NT.Name = "Neurotrauma"
 NT.Version = "1.0.0h0"
-NT.VersionNum = 000000001
+NT.VersionNum = 01090000
 NT.Path = table.pack(...)[1]
 NT.SymsForNPC = {}
 NT.BLOODTYPE = {}
