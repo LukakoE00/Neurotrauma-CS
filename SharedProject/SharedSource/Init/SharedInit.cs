@@ -33,6 +33,7 @@ namespace Neurotrauma
             DynamicItems.InitDynamicItems(); // Add the DynamicItems hooks
             OnDamaged.InitializeOnDamagedMethods(); // Add OnDamaged patches
             NTItemMethods.EnsureWorkingItems(); // Runs the FixItems hooks
+            NTSurgeryTable.InitializeSurgeryTableHooks(); // Adds hook for surgery table
             InitLuaHooks(); // Initializes the Lua hooks at the bottom of this file
             AddApplyHooks();
 
