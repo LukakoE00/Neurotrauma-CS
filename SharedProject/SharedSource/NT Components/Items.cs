@@ -21,6 +21,20 @@ public static class NTItemMethodsLuaCompat // I am going to fucking obliterate c
     {
         return NTItemMethods.HematologyDetectable.Contains(id);
     }
+
+    public static bool HasItemUseMethod(string id) // Lua compat
+    {
+        return NTItemMethods.HasItemUseFunction(id);
+    }
+
+    public static void OverrideAndTranslateMethod(string id, LuaCsAction newUse)
+    {
+        Action<NTItemMethods.ItemUpdateFunctionInfos> TranslatedFunc = (info) =>
+        {
+            newUse.Invoke(info.item, info.user, info.target, info.targetLimb);
+        };
+        NTItemMethods.UpdateItemUseFunction(id, TranslatedFunc);
+    }
 }
 
 
@@ -2628,6 +2642,21 @@ public class NTItemMethods
     }
 
     /// <summary>
+    /// Checks if a item use method already exists.
+    /// </summary>
+    /// <param name="itemID">The Identifier for the item, defined within XML.</param>
+    /// <returns>'True' if the item was defined correctly ánd not already defined; otherwise 'False'.</returns>
+    public static bool HasItemUseFunction(string itemID)
+    {
+        if (NTItemsRegistry.ContainsKey(itemID))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
     /// Overrides an already defined function matching the itemID. Does nothing if the itemID isn't defined in the registry.
     /// </summary>
     /// <param name="itemID">The Identifier for the item, defined within XML.</param>
@@ -2637,6 +2666,7 @@ public class NTItemMethods
     {
         if (NTItemsRegistry.ContainsKey(itemID))
         {
+            NTItemsRegistry.Remove(itemID);
             NTItemsRegistry.Add(itemID, function);
             return true;
         }

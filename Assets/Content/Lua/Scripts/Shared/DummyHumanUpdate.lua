@@ -62,6 +62,7 @@ NT.NonLimbAfflictionTranslations =
 
 	-- Pain
 	["chestpain"] = "pain_chest",
+	["intensepain"] = "pain_extremity",
 
 	-- Mechanics
 	["artificialventilation"] = "alv",
@@ -117,7 +118,8 @@ NT.NonLimbAfflictionTranslationsModern =
 	["sym_jaundice"] = "jaundice",
 
 	-- Pain
-	["chestpain"] = "pain_chest",
+	["pain_chest"] = "chestpain",
+	["pain_extremity"] = "intensepain",
 
 	-- Mechanics
 	["table"] = "safesurgery",
@@ -251,6 +253,17 @@ NTLua.Add("OverrideC#Afflictions", function()
 	for key, val in pairs(NT.LimbAfflictions) do
 		if NT.LegacyLimbAfflictions[key] and (val.legacy ~= true) then
 			CSNTAfflictions.LuaOverrideAffliction(NT.ConvertToModern(key))
+		end
+	end
+
+end)
+
+NTLua.Add("OverrideC#Items", function()
+
+	for key, val in pairs(NT.ItemMethods) do
+		if CSItems.HasItemUseMethod(key) then
+			CSItems.OverrideAndTranslateMethod(key,val)
+			NT.ItemMethods[key] = nil -- remove the OG item use so we don't create duplicates.
 		end
 	end
 

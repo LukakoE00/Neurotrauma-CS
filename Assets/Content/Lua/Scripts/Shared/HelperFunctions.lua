@@ -288,6 +288,7 @@ end
 -- /// affliction magic ///
 ------------------------------
 function HF.GetAfflictionStrength(character, identifier, defaultvalue)
+	identifier = NT.ConvertToModern(identifier)
 	if character == nil or character.CharacterHealth == nil then return defaultvalue end
 
 	local aff = character.CharacterHealth.GetAffliction(identifier)
@@ -298,6 +299,7 @@ function HF.GetAfflictionStrength(character, identifier, defaultvalue)
 end
 
 function HF.GetAfflictionStrengthLimb(character, limbtype, identifier, defaultvalue)
+	identifier = NT.ConvertToModern(identifier)
 	if character == nil or character.CharacterHealth == nil or character.AnimController == nil then
 		return defaultvalue
 	end
@@ -312,6 +314,7 @@ function HF.GetAfflictionStrengthLimb(character, limbtype, identifier, defaultva
 end
 
 function HF.HasAffliction(character, identifier, minamount)
+	identifier = NT.ConvertToModern(identifier)
 	if character == nil or character.CharacterHealth == nil then return false end
 
 	local aff = character.CharacterHealth.GetAffliction(identifier)
@@ -321,6 +324,7 @@ function HF.HasAffliction(character, identifier, minamount)
 end
 
 function HF.HasAfflictionLimb(character, identifier, limbtype, minamount)
+	identifier = NT.ConvertToModern(identifier)
 	local limb = character.AnimController.GetLimb(limbtype)
 	if limb == nil then return false end
 	local aff = character.CharacterHealth.GetAffliction(identifier, limb)
@@ -332,6 +336,7 @@ end
 -- this might be overkill, but a lot of people have reported dislocation fixing issues
 function HF.HasAfflictionExtremity(character, identifier, limbtype, minamount)
 	local aff = nil
+	identifier = NT.ConvertToModern(identifier)
 
 	if limbtype == LimbType.LeftArm or limbtype == LimbType.LeftForearm or limbtype == LimbType.LeftHand then
 		aff = character.CharacterHealth.GetAffliction(identifier, character.AnimController.GetLimb(LimbType.LeftArm))
@@ -398,6 +403,7 @@ end
 
 -- the main "mess with afflictions" function
 function HF.SetAfflictionLimb(character, identifier, limbtype, strength, aggressor, prevstrength)
+	identifier = NT.ConvertToModern(identifier)
 	local _, prefab = AfflictionPrefab.Prefabs.TryGet(identifier)
 	if not character or not limbtype or not prefab then
 		TraceError(
@@ -477,6 +483,7 @@ function HF.ApplySymptomLimb(character, limbtype, identifier, hassymptom, remove
 end
 
 function HF.AddAfflictionLimb(character, identifier, limbtype, strength, aggressor)
+	identifier = NT.ConvertToModern(identifier)
 	if strength < 0 then
 		character.CharacterHealth.ReduceAfflictionOnLimb(
 			character.AnimController.GetLimb(limbtype),
@@ -492,17 +499,20 @@ function HF.AddAfflictionLimb(character, identifier, limbtype, strength, aggress
 end
 
 function HF.AddAffliction(character, identifier, strength, aggressor)
+	identifier = NT.ConvertToModern(identifier)
 	local prevstrength = HF.GetAfflictionStrength(character, identifier, 0)
 	HF.SetAffliction(character, identifier, strength + prevstrength, aggressor, prevstrength)
 end
 
 function HF.AddAfflictionResisted(character, identifier, strength, aggressor)
+	identifier = NT.ConvertToModern(identifier)
 	local prevstrength = HF.GetAfflictionStrength(character, identifier, 0)
 	strength = strength * (1 - HF.GetResistance(character, identifier))
 	HF.SetAffliction(character, identifier, strength + prevstrength, aggressor, prevstrength)
 end
 
 function HF.GetResistance(character, identifier, limbtype)
+	identifier = NT.ConvertToModern(identifier)
 	local limbtype = limbtype or LimbType.None
 	local prefab = AfflictionPrefab.Prefabs[identifier]
 	if character == nil or character.CharacterHealth == nil or prefab == nil then return 0 end
