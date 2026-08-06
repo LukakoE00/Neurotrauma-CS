@@ -67,7 +67,7 @@ public static class NTSurgeryTable
 
             var Item = args[2] as Barotrauma.Item;
 
-            var Targets = args[3] as IEnumerable<Barotrauma.Character>;
+            var Targets = args[3] as List<ISerializableEntity>;
 
             var Position = args[4];
 
@@ -92,14 +92,27 @@ public static class NTSurgeryTable
 
                 if (Targets != null)
                 {
-                    foreach (var value in Targets)
+                    foreach (var t in Targets)
+                    {
+                        if (t.GetType() == typeof(Barotrauma.Character))
+                        {
+                            var value = t as Barotrauma.Character;
+                            if (value.Name != null && value.IsHuman && value.Vitality < minVitality)
+                            {
+                                minVitality = value.Vitality;
+                                Target = value;
+                            }
+                        }
+                    }
+
+                    /*foreach (var value in Targets)
                     {
                         if (value.Name != null && value.IsHuman && value.Vitality < minVitality)
                         {
                             minVitality = value.Vitality;
                             Target = value;
                         }
-                    }
+                    }*/
                 }
             }
 
