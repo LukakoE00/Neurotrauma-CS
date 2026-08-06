@@ -47,6 +47,12 @@ NT C# Refs can be found [here](https://github.com/BigEvilGreenBean/Neurotrauma-C
 
 - Everything within the **_Assets_** folder gets copied into LocalMods alongside the C# code, already compiled.
 
+<h3>Contributions/Pull Requests</h3>
+
+<hr>
+
+NT C# and NT in general is open source (obviously) and encourages others to report issues or fix those issues themselves. There is no strict guideline to making a pull request or reporting an issue, however please include details regarding the version of NT, what addons were in use and what the fix does. Any vibe coded pull request will not be accepted, don't waste your time making it.
+
 <h3>Credits</h3>
 
 <hr>
