@@ -270,7 +270,7 @@ end
 ---@param character Character The character to set the multiplier on.
 ---@param multiplieridentifier string The identifier of the multiplier.
 function NTC.GetMultiplier(character, multiplieridentifier)
-	CSNTCompat.GetMultiplier(character, multiplieridentifier)
+	return CSNTCompat.GetMultiplier(character, multiplieridentifier)
 end
 
 -- sets tag data for one humanupdate, should be called from within a humanupdate hook
@@ -281,7 +281,7 @@ function NTC.SetTag(character, tagidentifier)
 end
 
 function NTC.HasTag(character, tagidentifier)
-	CSNTCompat.HasTag(character, tagidentifier)
+	return CSNTCompat.HasTag(character, tagidentifier)
 end
 
 -- // Utility functions //
