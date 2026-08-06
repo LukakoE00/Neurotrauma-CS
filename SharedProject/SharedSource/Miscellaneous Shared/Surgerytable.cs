@@ -61,113 +61,116 @@ public static class NTSurgeryTable
     {
         LuaCsSetup.Instance.Hook.Add("surgerytable.update", "surgerytable.update", (params object[] args) =>
         {
-            var effect = args[0];
+            var Effect = args[0];
 
-            var deltaTime = args[1];
+            var DeltaTime = args[1];
 
-            var item = args[2] as Barotrauma.Item;
+            var Item = args[2] as Barotrauma.Item;
 
-            var targets = args[3] as IEnumerable<Barotrauma.Character>;
+            var Targets = args[3] as IEnumerable<Barotrauma.Character>;
 
-            var position = args[4];
+            var Position = args[4];
 
             // Fetch controller component
-            var controllerComponent = item.GetComponentString("Controller");
+            var ControllerComponent = Item.GetComponentString("Controller");
 
-            if (controllerComponent == null)
+            if (ControllerComponent == null)
             {
-                item.SendSignal("0", "state_out");
+                Item.SendSignal("0", "state_out");
                 return null;
             }
 
             // Check if anyone is laying on the table
-            var target = (controllerComponent as dynamic)?.User as Character;
+            // Let me do this like lua, fucking tupid
+            var Sleeper = ControllerComponent.GetType().GetProperty("User");
+            var Target = Sleeper?.GetValue(ControllerComponent) as Barotrauma.Character;
 
             // If no one on the table, find the character with the least vitality in the targets
-            if (target == null || !target.IsHuman)
+            if (Target == null || !Target.IsHuman)
             {
                 float minVitality = 999f;
-                if (targets != null)
+
+                if (Targets != null)
                 {
-                    foreach (var value in targets)
+                    foreach (var value in Targets)
                     {
-                        if (value?.Name != null && value.IsHuman && value.Vitality < minVitality)
+                        if (value.Name != null && value.IsHuman && value.Vitality < minVitality)
                         {
                             minVitality = value.Vitality;
-                            target = value;
+                            Target = value;
                         }
                     }
                 }
             }
 
             // No target found
-            if (target == null || !target.IsHuman)
+            if (Target == null || !Target.IsHuman)
             {
-                item.SendSignal("0", "state_out");
+                Item.SendSignal("0", "state_out");
                 return null;
             }
 
             // Send signals:
             // Is there a character to check right now?
-            item.SendSignal("1", "state_out");
+            Item.SendSignal("1", "state_out");
 
             // Is currently alive?
-            item.SendSignal(target.IsDead ? "0" : "1", "alive_out");
+            Item.SendSignal(Target.IsDead ? "0" : "1", "alive_out");
 
             // Is currently unconscious?
-            item.SendSignal(target.IsDead || HF.HasAffliction(target, "unconsciousness", 0.1f) ? "0" : "1", "conscious_out");
+            Item.SendSignal(Target.IsDead || HF.HasAffliction(Target, "unconsciousness", 0.1f) ? "0" : "1", "conscious_out");
 
             // What is the character name?
-            item.SendSignal(target.Name, "name_out");
+            Item.SendSignal(Target.Name, "name_out");
 
             // What is the character's vitality?
-            item.SendSignal(MathF.Round(target.Vitality).ToString(), "vitality_out");
+            Item.SendSignal(MathF.Round(Target.Vitality).ToString(), "vitality_out");
 
             // What is the character's blood pressure?
-            item.SendSignal(target.IsDead ? "0" : MathF.Round(HF.GetAfflictionStrength(target, "bloodpressure", 100)).ToString(), "bloodpressure_out");
+            Item.SendSignal(Target.IsDead ? "0" : MathF.Round(HF.GetAfflictionStrength(Target, "bloodpressure", 100)).ToString(), "bloodpressure_out");
 
             // What is their current blood 02 level?
-            item.SendSignal(MathF.Round(100 - HF.GetAfflictionStrength(target, "hypoxemia", 0)).ToString(), "bloodoxygen_out");
+            Item.SendSignal(MathF.Round(100 - HF.GetAfflictionStrength(Target, "hypoxemia", 0)).ToString(), "bloodoxygen_out");
 
             // What is their current amount of Neurotrauma?
-            item.SendSignal(MathF.Round(HF.GetAfflictionStrength(target, "cerebralhypoxia", 0)).ToString(), "neurotrauma_out");
+            Item.SendSignal(MathF.Round(HF.GetAfflictionStrength(Target, "neurotrauma", 0)).ToString(), "neurotrauma_out");
 
             // What is their current amount of VANILLA organ damage?
-            item.SendSignal(MathF.Round(HF.GetAfflictionStrength(target, "organdamage", 0)).ToString(), "organdamage_out");
+            Item.SendSignal(MathF.Round(HF.GetAfflictionStrength(Target, "organdamage", 0)).ToString(), "organdamage_out");
 
             // What is their current heartrate?
-            item.SendSignal(MathF.Round(GetHeartrate(target)).ToString(), "heartrate_out");
+            Item.SendSignal(MathF.Round(GetHeartrate(Target)).ToString(), "heartrate_out");
 
             // Determine breathing rate
             int BreathingRate = random.Next(15, 19);
             // Not breathing if dead
-            if (HF.HasAffliction(target, "respiratoryarrest") || target.IsDead)
+            if (HF.HasAffliction(Target, "respiratoryarrest") || Target.IsDead)
             {
                 BreathingRate = 0;
             }
-            else if (HF.HasAffliction(target, "hyperventilation"))
+            else if (HF.HasAffliction(Target, "hyperventilation"))
             {
                 BreathingRate += random.Next(6, 9);
             }
-            else if (HF.HasAffliction(target, "hypoventilation"))
+            else if (HF.HasAffliction(Target, "hypoventilation"))
             {
                 BreathingRate -= random.Next(6, 9);
             }
 
             // What is their current breathing rate?
-            item.SendSignal(BreathingRate.ToString(), "breathingrate_out");
+            Item.SendSignal(BreathingRate.ToString(), "breathingrate_out");
 
             // Are they in surgery?
-            item.SendSignal(HF.BoolToNum(HF.HasAffliction(target, "surgeryincision")).ToString(), "insurgery_out");
+            Item.SendSignal(HF.BoolToNum(HF.HasAffliction(Target, "surgeryincision")).ToString(), "insurgery_out");
 
             // If dead, what was the cause of death?
-            if (target.IsDead && target.CauseOfDeath != null)
+            if (Target.IsDead && Target.CauseOfDeath != null)
             {
-                item.SendSignal(HF.CauseOfDeathToString(target.CauseOfDeath), "causeofdeath_out");
+                Item.SendSignal(HF.CauseOfDeathToString(Target.CauseOfDeath), "causeofdeath_out");
             }
 
             // What is their Alkalosis/Acidosis value right now?
-            item.SendSignal(MathF.Round(GetPH(target)).ToString(), "bloodph_out");
+            Item.SendSignal(MathF.Round(GetPH(Target)).ToString(), "bloodph_out");
 
             return null;
         });
