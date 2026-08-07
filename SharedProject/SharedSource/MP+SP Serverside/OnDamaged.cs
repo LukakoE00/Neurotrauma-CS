@@ -3,7 +3,7 @@ using FarseerPhysics.Dynamics;
 
 namespace Neurotrauma;
 
-public class OnDamaged
+public static class OnDamaged
 {
     public static readonly Dictionary<string, Action<Character, float, LimbType>> OnDamagedMethods = new();
 

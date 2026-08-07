@@ -9,15 +9,16 @@ NT.SymsForNPC = {}
 NT.BLOODTYPE = {}
 NT.ContainerFills = {}
 
-NTConfig = LuaUserData.CreateStatic("Neurotrauma.NTConfig",false)
-NTLua = LuaUserData.CreateStatic("Neurotrauma.NTLua",false)
-NTInfo = LuaUserData.CreateStatic("Neurotrauma.NTInfo",false)
-CSNTCompat = LuaUserData.CreateStatic("Neurotrauma.NTC",false)
-CSNTAfflictions = LuaUserData.CreateStatic("Neurotrauma.NTAfflictions",false)
-CSHumanUpdate = LuaUserData.CreateStatic("Neurotrauma.HumanUpdate",false)-- stores our class ref
-CSItems = LuaUserData.CreateStatic("Neurotrauma.NTItemMethodsLuaCompat",false)
-CSInit = LuaUserData.CreateStatic("Neurotrauma.NT",false)-- stores our class ref
-CSSpeakIssues = LuaUserData.CreateStatic("Neurotrauma.SpeakAboutIssuesPatch",false)
+NTConfig =           LuaUserData.CreateStatic("Neurotrauma.NTConfig",false)
+NTLua =              LuaUserData.CreateStatic("Neurotrauma.NTLua",false)
+NTInfo =             LuaUserData.CreateStatic("Neurotrauma.NTInfo",false)
+CSOnDamaged =        LuaUserData.CreateStatic("Neurotrauma.OnDamaged",false)
+CSNTCompat =         LuaUserData.CreateStatic("Neurotrauma.NTC",false)
+CSNTAfflictions =    LuaUserData.CreateStatic("Neurotrauma.NTAfflictions",false)
+CSHumanUpdate =      LuaUserData.CreateStatic("Neurotrauma.HumanUpdate",false)-- stores our class ref
+CSItems =            LuaUserData.CreateStatic("Neurotrauma.NTItemMethodsLuaCompat",false)
+CSInit =             LuaUserData.CreateStatic("Neurotrauma.NT",false)-- stores our class ref
+CSSpeakIssues =      LuaUserData.CreateStatic("Neurotrauma.SpeakAboutIssuesPatch",false)
 AfflictionPriority = LuaUserData.CreateEnumTable("Neurotrauma.AfflictionPriority",false)
 
 dofile(NT.Path .. "/Lua/Scripts/Shared/ConfigData.lua") 		
@@ -26,3 +27,4 @@ dofile(NT.Path .. "/Lua/Scripts/Shared/DummyHumanUpdate.lua")
 dofile(NT.Path .. "/Lua/Scripts/Shared/LegacyAfflictions.lua") 	
 dofile(NT.Path .. "/Lua/Scripts/Shared/NTCompat.lua") 	
 dofile(NT.Path .. "/Lua/Scripts/Shared/Items.lua") 		
+dofile(NT.Path .. "/Lua/Scripts/Shared/OnDamaged.lua") 		
