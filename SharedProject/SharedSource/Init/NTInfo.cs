@@ -1,4 +1,5 @@
 using Barotrauma.LuaCs.Data;
+using Barotrauma.Networking;
 using MoonSharp.Interpreter;
 using static Neurotrauma.NTVariants;
 
@@ -37,6 +38,8 @@ public static class NTInfo
     public const int VersionNum = 02000000;
 
     public static bool NTSPEnabled = false;
+
+    public static bool ShowIncompatibleModsPopup = false;
 
     // Make a new list (like a table! but not!) that only holds NTAddon objects.
     // 'get' means we can read the list, but not replace it and 'new' means it get's created on loading.
@@ -142,7 +145,23 @@ public static class NTInfo
             if (detectedMods != "")
             {
                 HF.PrintError("Incompatible mods detected! This will cause many errors and you should disable them before playing!\n" + detectedMods);
-                // TODO : popup on round start to notice players of their lack of mental capacity
+
+                // Works for MP
+                IReadOnlyList<Client> clients = GameMain.NetworkMember?.ConnectedClients;
+                if (clients != null)
+                {
+                    foreach (Client client in clients)
+                    {
+                        HF.SendTextBox("Incompatible mods detected!", "Incompatible mods detected! This will cause many errors and you should disable them before playing!\n" + detectedMods, client);
+                    }
+                } else
+                {
+                    // TODO: Works for solo
+#if CLIENT
+                    
+#endif
+                }
+
             }
 
             if (warnedMods != "")
