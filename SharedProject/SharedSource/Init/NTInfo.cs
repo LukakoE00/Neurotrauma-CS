@@ -17,6 +17,8 @@ public struct NTVariants
     readonly public static string NTDev = "3439141713";
     readonly public static string NTLite = "3369418643";
     readonly public static string NTAi = "3741432181";
+    readonly public static string NTOptimized = "3622155470";
+    readonly public static string NTRussianFix = "3531774267";
 }
 
 public struct NTLuaAddonIDs
@@ -102,7 +104,7 @@ public static class NTInfo
 
             // Checking for incompatible mods
 
-            List<String> incompatibleMods = [NTLegacy, NTDev, NTOld, NTLite, NTAi];
+            List<String> incompatibleMods = [NTLegacy, NTDev, NTOld, NTLite, NTAi, NTOptimized, NTRussianFix];
             List<string> WorkingAddons = ["Eyes","Thermal","Cybernetics","Nanite Integration","Grafting","Lobotomy","Pharmacy","NT Surgery Plus"]; // Addons we can be sure that work. (Presuming you use the patches)
             string detectedMods = "";
             string warnedMods = "";
@@ -140,6 +142,7 @@ public static class NTInfo
             if (detectedMods != "")
             {
                 HF.PrintError("Incompatible mods detected! This will cause many errors and you should disable them before playing!\n" + detectedMods);
+                // TODO : popup on round start to notice players of their lack of mental capacity
             }
 
             if (warnedMods != "")
