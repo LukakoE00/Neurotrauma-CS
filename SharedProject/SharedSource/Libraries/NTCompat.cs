@@ -299,14 +299,13 @@ namespace Neurotrauma
             }
         }
 
-        public static void AddSuturableAffliction(string Identifier, int SurgerySkillGain, string RequiredAfflictionID, LuaCsAction Func)
+        public static void AddSuturableAffliction(string Identifier, int SurgerySkillGain, string RequiredAfflictionID)
         {
             if (!NTItemMethods.SutureAfflictions.ContainsKey(Identifier))
             {
-                Func<NTItemMethods.ItemUpdateFunctionInfos, bool> TranslatedFunc = (info) => // We have to translate our Lua function into a C# function
+                Func<NTItemMethods.ItemUpdateFunctionInfos, bool> TranslatedFunc = (info) =>
                 {
-                    Func.Invoke(info.item, info.user, info.target, info.targetLimb);
-                    return true;
+                    return HF.HasAfflictionLimb(info.target, RequiredAfflictionID, LimbType.Torso, 1);
                 };
                 NTItemMethods.SutureAfflictions[Identifier] = new(Identifier, SurgerySkillGain, TranslatedFunc, RequiredAfflictionID);
             }
@@ -320,14 +319,13 @@ namespace Neurotrauma
             }
         }
 
-        public static void AddDrainageAffliction(string Identifier, int SurgerySkillGain, string RequiredAfflictionID, LuaCsAction Func)
+        public static void AddDrainageAffliction(string Identifier, int SurgerySkillGain, string RequiredAfflictionID)
         {
             if (!NTItemMethods.DrainageAfflictions.ContainsKey(Identifier))
             {
-                Func<NTItemMethods.ItemUpdateFunctionInfos, bool> TranslatedFunc = (info) => // We have to translate our Lua function into a C# function
+                Func<NTItemMethods.ItemUpdateFunctionInfos, bool> TranslatedFunc = (info) =>
                 {
-                    Func.Invoke(info.item, info.user, info.target, info.targetLimb);
-                    return true;
+                    return HF.HasAfflictionLimb(info.target, "retractedskin", LimbType.Torso, 95);
                 };
                 NTItemMethods.DrainageAfflictions[Identifier] = new(Identifier, SurgerySkillGain, TranslatedFunc, RequiredAfflictionID);
             }

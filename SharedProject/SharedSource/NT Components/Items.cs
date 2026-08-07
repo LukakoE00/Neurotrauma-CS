@@ -1,5 +1,6 @@
 ﻿using static Barotrauma.Items.Components.ItemComponent;
 using static Barotrauma.Items.Components.ItemContainer;
+using static Barotrauma.Networking.MessageFragment;
 using static Neurotrauma.HumanUpdate;
 
 namespace Neurotrauma;
@@ -27,13 +28,15 @@ public static class NTItemMethodsLuaCompat // I am going to fucking obliterate c
         return NTItemMethods.HasItemUseFunction(id);
     }
 
-    public static void OverrideAndTranslateMethod(string id, LuaCsAction newUse)
+    public static void OverrideItemMethod(string id) // Lua compat
     {
-        Action<NTItemMethods.ItemUpdateFunctionInfos> TranslatedFunc = (info) =>
-        {
-            newUse.Invoke(info.item, info.user, info.target, info.targetLimb);
-        };
-        NTItemMethods.UpdateItemUseFunction(id, TranslatedFunc);
+        NTItemMethods.LuaOverridenItems.Add(id);
+    }
+     
+    public static void CallItemUseMethod(Item UsedItem, Character UsingCharacter, Character TargetCharacter, Limb TargetLimb, string id) // Lua compat
+    {
+        NTItemMethods.ItemUpdateFunctionInfos Infos = new(UsedItem, UsingCharacter, TargetCharacter, TargetLimb);
+        NTItemMethods.NTItemsRegistry[id].Invoke(Infos);
     }
 }
 
@@ -76,6 +79,11 @@ public class NTItemMethods
             Case = newCase;
         }
     }
+
+    /// <summary>
+    /// Stores what Item Methods shouldn't run. Technically this makes Lua override all C# addons, I'll make a better system some day.
+    /// </summary>
+    public static List<string> LuaOverridenItems = [];
 
     /// <summary>
     /// A List containing Identifiers for all afflictions curable by using the Drainage item.
@@ -1666,7 +1674,6 @@ public class NTItemMethods
             foreach (KeyValuePair<string, ItemsAfflictionInfos> Pair in SutureAfflictions)
             {
                 ItemsAfflictionInfos affInfos = Pair.Value;
-
                 // If the target doesn't have the affliction, we skip it
                 if (!AfflictionPrefab.Prefabs.ContainsKey(affInfos.AfflictionID)) continue;
                 AfflictionPrefab prefab = AfflictionPrefab.Prefabs[affInfos.AfflictionID];
@@ -1680,7 +1687,7 @@ public class NTItemMethods
                 if (!hasAffliction) continue;
 
                 // If the affliction's conditions are not met, we skip it
-                if (!affInfos.Conditions(infos)) continue;
+                if (!affInfos.Conditions.Invoke(infos)) continue;
 
                 if (prefab.LimbSpecific)
                 {
@@ -1699,7 +1706,7 @@ public class NTItemMethods
         DrainageAfflictions["pneumothorax"] = new ItemsAfflictionInfos("pneumothorax", 3, infos =>
         {
             return HF.HasAfflictionLimb(infos.target, "retractedskin", LimbType.Torso, 95);
-        });
+        }, "pneumothorax");
 
         DrainageAfflictions["tamponade"] = new ItemsAfflictionInfos("tamponade", 3, infos =>
         {
@@ -1708,21 +1715,27 @@ public class NTItemMethods
             if (NTConfig.Get("NT_OpenCloseTamponade", false)) return false;
 
             return retractedSkin;
-        });
+        }, "tamponade");
 
         // From 48 lines to 12 my point stands, why tf was the lua function so girthy?
         RegisterItemUseFunction("drainage", infos =>
         {
             if (HF.HasAffliction(infos.target, "stasis", (float)0.1)) { return; }
 
+            bool consumeItem = false;
+
             foreach (KeyValuePair<string, ItemsAfflictionInfos> Pair in DrainageAfflictions)
             {
                 ItemsAfflictionInfos affInfos = Pair.Value;
-                if (!affInfos.Conditions(infos)) continue;
+                if (!affInfos.Conditions.Invoke(infos)) continue;
+                if (!HF.HasAfflictionLimb(infos.target, affInfos.Case, LimbType.Torso, 1)) continue;
 
                 HF.SetAffliction(infos.target, affInfos.AfflictionID, 0, infos.user, 0);
                 HF.GiveSurgerySkill(infos.user, affInfos.XPGain);
+                consumeItem = true;
             }
+
+            if (consumeItem) HF.RemoveItem(infos.item); // Actually use the item.
         });
 
         // Needle
@@ -2657,6 +2670,20 @@ public class NTItemMethods
     }
 
     /// <summary>
+    /// Returns an item use method.
+    /// </summary>
+    /// <param name="itemID">The Identifier for the item, defined within XML.</param>
+    public static Action<ItemUpdateFunctionInfos> GetItemUseFunction(string itemID)
+    {
+        if (NTItemsRegistry.ContainsKey(itemID))
+        {
+            return NTItemsRegistry[itemID];
+        }
+
+        return null;
+    }
+
+    /// <summary>
     /// Overrides an already defined function matching the itemID. Does nothing if the itemID isn't defined in the registry.
     /// </summary>
     /// <param name="itemID">The Identifier for the item, defined within XML.</param>
@@ -2681,7 +2708,7 @@ public class NTItemMethods
     {
 
         string itemID = __instance.Prefab.Identifier.ToString();
-        if (NTItemsRegistry.ContainsKey(itemID))
+        if (NTItemsRegistry.ContainsKey(itemID) && (!LuaOverridenItems.Contains(itemID)))
         {
             NTItemsRegistry[itemID].Invoke(new ItemUpdateFunctionInfos(__instance, user, character, targetLimb));
         }

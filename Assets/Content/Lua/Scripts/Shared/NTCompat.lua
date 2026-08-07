@@ -187,15 +187,15 @@ end
 ---@param surgeryskillgain number The surgeryskill increase from sutured affliction.
 ---@param requiredaffliction string The identifier of the requiredaffliction (Might need more documentation!)
 ---@param func function The function to be called when the affliction is cured with sutures.
-function NTC.AddSuturedAffliction(identifier, surgeryskillgain, requiredaffliction, func)
-	CSNTCompat.AddSuturableAffliction(identifier, surgeryskillgain or 5, requiredaffliction or identifier, func or nil)
+function NTC.AddSuturedAffliction(identifier, surgeryskillgain, requiredaffliction, newfunc)
+	CSNTCompat.AddSuturableAffliction(identifier, surgeryskillgain or 5, requiredaffliction or identifier)
 end
 
 -- use this function to register an affliction to be healed by drainage
 -- func(item, usingCharacter, targetCharacter, limb)
 ---@param identifier string The identifier of the affliction to be healed.
-function NTC.AddDrainageAffliction(identifier, surgeryskillgain, requiredaffliction, func)
-	CSNTCompat.AddDrainageAffliction(identifier, surgeryskillgain or 5, requiredaffliction or identifier, func or nil)
+function NTC.AddDrainageAffliction(identifier, surgeryskillgain, requiredaffliction)
+	CSNTCompat.AddDrainageAffliction(identifier, surgeryskillgain or 5, requiredaffliction or identifier)
 end
 
 NTC.AfflictionsAffectingVitality = {

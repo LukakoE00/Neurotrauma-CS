@@ -261,9 +261,16 @@ end)
 NTLua.Add("OverrideC#Items", function()
 
 	for key, val in pairs(NT.ItemMethods) do
-		if CSItems.HasItemUseMethod(key) then
-			CSItems.OverrideAndTranslateMethod(key,val)
-			NT.ItemMethods[key] = nil -- remove the OG item use so we don't create duplicates.
+		if NT.LegacyItemMethods[key] ~= NT.ItemMethods[key] and NT.LegacyItemMethods[key] ~= nil then
+			CSItems.OverrideItemMethod(key)
+			NT.ItemsToIgnore[key] = nil -- Allow us to run the OG NT Item func
+		end
+	end
+
+	for key, val in pairs(NT.ItemStartsWithMethods) do
+		if NT.LegacyItemMethods[key] ~= NT.ItemStartsWithMethods[key] and NT.LegacyItemMethods[key] ~= nil then
+			CSItems.OverrideItemMethod(key)
+			NT.ItemsToIgnore[key] = nil -- Allow us to run the OG NT Item func
 		end
 	end
 
