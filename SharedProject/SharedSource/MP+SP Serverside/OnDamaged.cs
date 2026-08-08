@@ -680,14 +680,18 @@ public static class OnDamaged
 
     private static void FallOffChair(HumanUpdate.NTHuman NTCharacter, Character Character, double Strength, double MinimumStrength = 20)
     {
-        if (NTCharacter.GetAffData("onwheelchair").Strength > 0 && Strength > MinimumStrength)
+        if (NTCharacter != null && HF.IsCharacterValid(Character))
         {
-            Item WheelChair = HF.GetItemInOuterWear(Character);
-            WheelChair.Drop(Character);
-            Vector2 CharacterDirection = HF.GetCharacterLimb(Character, LimbType.Torso).LinearVelocity;
-            WheelChair.body.ApplyLinearImpulse(CharacterDirection * 15); // Move the wheel chair in the direction of the damage.
-            WheelChair.body.ApplyTorque((float)HF.Magnitude(CharacterDirection * 5));
-            NTCharacter.GetAffData("onwheelchair").Strength = 0;
+            if (NTCharacter.GetAffData("onwheelchair").Strength > 0 && Strength > MinimumStrength)
+            {
+                Item WheelChair = HF.GetItemInOuterWear(Character);
+                if (WheelChair == null) return;
+                WheelChair.Drop(Character);
+                Vector2 CharacterDirection = HF.GetCharacterLimb(Character, LimbType.Torso).LinearVelocity;
+                WheelChair.body.ApplyLinearImpulse(CharacterDirection * 15); // Move the wheel chair in the direction of the damage.
+                WheelChair.body.ApplyTorque((float)HF.Magnitude(CharacterDirection * 5));
+                NTCharacter.GetAffData("onwheelchair").Strength = 0;
+            }
         }
     }
 }
