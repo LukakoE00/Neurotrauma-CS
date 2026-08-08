@@ -1260,6 +1260,16 @@ namespace Neurotrauma
             return Value;
         }
 
+        /// <summary>
+        /// Checks to see if a character is valid.
+        /// </summary>
+        /// <param name="character"></param>
+        /// <returns>True if valid, else false.</returns>
+        public static bool IsCharacterValid(Character character)
+        {
+            return (character != null && character.CharacterHealth != null && character.IdFreed == false);
+        }
+
         // ---------------------------------------- Affliction Related Helper Functions -------------------------------------------------- \\
         /// <summary>
         /// Checks a character for a specific affliction.
@@ -1382,7 +1392,7 @@ namespace Neurotrauma
         /// <returns>Returns a Barotrauma Affliction if present.</returns>
         public static Affliction ?GetAfflictionLimb(Character Character, String Identifier = "", LimbType GivenLimbType = LimbType.Torso)
         {
-            if (Character == null || Character.CharacterHealth == null) return null;
+            if (Character == null || Character.CharacterHealth == null || Character.IdFreed) return null;
             return Character.CharacterHealth.GetAffliction(Identifier, GetCharacterLimb(Character, GivenLimbType));
         }
 

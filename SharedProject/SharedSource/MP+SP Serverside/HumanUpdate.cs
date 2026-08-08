@@ -1377,8 +1377,12 @@ public static class HumanUpdate
 
             double Delay = (((index + 1) / UpdatingHumans.Count) * NT.DeltaTime * 1000); // Delay our update to prevent sutters.
 
+            NTHuman Human = Pair.Value;
             LuaCsSetup.Instance.Timer.Wait((params object[] _) => {
-                Pair.Value.Update(priorities);
+                if (Human != null && HF.IsCharacterValid(Human.Human)) // Verify this character exists.
+                {
+                    Human.Update(priorities);
+                }
             }, (int)Delay);
 
             index++;
@@ -1407,7 +1411,10 @@ public static class HumanUpdate
             double Delay = (((index + 1) / UpdatingMonsters.Count) * NT.DeltaTime * 1000); // Delay our update to prevent sutters.
 
             LuaCsSetup.Instance.Timer.Wait((params object[] _) => {
-                Monster.Update();
+                if (Monster != null && HF.IsCharacterValid(Monster.Monster)) // Verify this character exists.
+                {
+                    Monster.Update();
+                }
             }, (int)Delay);
 
             index++;
