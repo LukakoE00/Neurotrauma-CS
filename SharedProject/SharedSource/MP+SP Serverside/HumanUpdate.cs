@@ -1359,8 +1359,28 @@ public static class HumanUpdate
         }
 
         if (UsingLuaAddons()) HumanUpdateLuaSync.Update(UpdatingHumans.Values.ToList(),priorities);
+
+
+        
+
     }
-    
+
+
+
+
+
+    public static List<Affliction> GetScreenShownAfflictions(Character character)
+    {
+        List<Affliction> Afflictions = new List<Affliction>();
+
+        if (character == null) return Afflictions;
+
+
+
+        return Afflictions;
+
+    }
+
     private static void UpdateHumans(List<AfflictionPriority> priorities)
     {
         List<Character> QueuedCharacters = new();
