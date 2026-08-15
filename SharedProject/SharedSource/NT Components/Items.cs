@@ -69,14 +69,20 @@ public class NTItemMethods
         /// </example>
         public string Case { get; } = "";
         public Func<ItemUpdateFunctionInfos, bool> Conditions { get; }
+
+        /// <summary>
+        /// This function will be run when the item is used successfully. Useful for removing symptoms.
+        /// </summary>
+        public Action<ItemUpdateFunctionInfos>? Used { get; }
         public LuaCsAction LuaConditions { get; }
 
-        public ItemsAfflictionInfos(string affID, int xpGain, Func<ItemUpdateFunctionInfos, bool> conditions, string newCase = "") 
+        public ItemsAfflictionInfos(string affID, int xpGain, Func<ItemUpdateFunctionInfos, bool> conditions, string newCase = "", Action<ItemUpdateFunctionInfos> ?used = null) 
         { 
             AfflictionID = affID;
             XPGain = xpGain;
             Conditions = conditions;
             Case = newCase;
+            Used = used;
         }
     }
 
@@ -1706,16 +1712,23 @@ public class NTItemMethods
         DrainageAfflictions["pneumothorax"] = new ItemsAfflictionInfos("pneumothorax", 3, infos =>
         {
             return HF.HasAfflictionLimb(infos.target, "retractedskin", LimbType.Torso, 95);
-        }, "pneumothorax");
+        }, "pneumothorax", infos =>
+        {
+            NTC.SetSymptomFalse(infos.target, "hyperventilation");
+            NTC.SetSymptomFalse(infos.target, "shortnessofbreath");
+        });
 
         DrainageAfflictions["tamponade"] = new ItemsAfflictionInfos("tamponade", 3, infos =>
         {
-            bool retractedSkin = HF.HasAfflictionLimb(infos.target, "retractedskin", LimbType.Torso, 95);
-
             if (NTConfig.Get("NT_OpenCloseTamponade", false)) return false;
 
-            return retractedSkin;
-        }, "tamponade");
+            return HF.HasAfflictionLimb(infos.target, "retractedskin", LimbType.Torso, 95); ;
+        }, "tamponade", infos =>
+        {
+            NTC.SetSymptomFalse(infos.target, "shortnessofbreath");
+            NTC.SetSymptomFalse(infos.target, "cough");
+            NTC.SetSymptomFalse(infos.target, "weakness");
+        });
 
         // From 48 lines to 12 my point stands, why tf was the lua function so girthy?
         RegisterItemUseFunction("drainage", infos =>
@@ -1728,7 +1741,12 @@ public class NTItemMethods
             {
                 ItemsAfflictionInfos affInfos = Pair.Value;
                 if (!affInfos.Conditions.Invoke(infos)) continue;
-                if (!HF.HasAfflictionLimb(infos.target, affInfos.Case, LimbType.Torso, 1)) continue;
+                if (!HF.HasAffliction(infos.target, affInfos.Case, 1)) continue;
+
+                if (affInfos.Used != null)
+                {
+                    affInfos.Used.Invoke(infos);
+                } 
 
                 HF.SetAffliction(infos.target, affInfos.AfflictionID, 0, infos.user, 0);
                 HF.GiveSurgerySkill(infos.user, affInfos.XPGain);
