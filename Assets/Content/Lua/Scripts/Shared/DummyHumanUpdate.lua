@@ -84,7 +84,7 @@ NT.NonLimbAfflictionTranslationsModern =
 	["cerebralhypoxia"] = "neurotrauma",
 
 	-- Limbs
-	["clampedarteries"] = "tourniqueted",
+	["arteriesclamp"] = "tourniqueted",
 	["clampedbleeders"] = "clampedbleeding",
 	["gypsumcast"] = "plastercast",
 
@@ -134,10 +134,10 @@ NT.NonLimbAfflictionTranslationsModern =
 	["ra_fracture"] = "fracturedextremity",
 	["ll_fracture"] = "fracturedextremity",
 	["rl_fracture"] = "fracturedextremity",
-	["ll_arterialcut"] = "arterialbleeding",
-	["rl_arterialcut"] = "arterialbleeding",
-	["la_arterialcut"] = "arterialbleeding",
-	["ra_arterialcut"] = "arterialbleeding",
+	["ll_arterialcut"] = "arterialcut",
+	["rl_arterialcut"] = "arterialcut",
+	["la_arterialcut"] = "arterialcut",
+	["ra_arterialcut"] = "arterialcut",
 }
 
 NT.LimbAfflictionTranslations = 
@@ -148,7 +148,7 @@ NT.LimbAfflictionTranslations =
 	["thirddegreeburn"] = "burn_deg3",
 
 	["fracturedextremity"] = {[LimbType.LeftArm] = "la_fracture", [LimbType.RightArm] = "ra_fracture", [LimbType.LeftLeg] = "ll_fracture",[LimbType.RightLeg] = "rl_fracture"},
-	["arterialbleeding"] = {[LimbType.LeftLeg] = "ll_arterialcut",[LimbType.RightLeg] = "rl_arterialcut",[LimbType.LeftArm] = "la_arterialcut",[LimbType.RightArm] = "ra_arterialcut"},
+	["arterialcut"] = {[LimbType.LeftLeg] = "ll_arterialcut",[LimbType.RightLeg] = "rl_arterialcut",[LimbType.LeftArm] = "la_arterialcut",[LimbType.RightArm] = "ra_arterialcut"},
 }
 
 NT.LimbSymptoms = 

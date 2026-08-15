@@ -11,7 +11,6 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)sharedsource\Config\Config.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)sharedsource\Config\ConfigData.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)sharedsource\miscellaneous shared\ShownAfflictionsPriority.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)sharedsource\miscellaneous shared\Surgerytable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)sharedsource\MP+SP Serverside\NTLua.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)sharedsource\nt bot support\AIObjectiveOverrides.cs" />

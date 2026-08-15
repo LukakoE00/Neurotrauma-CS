@@ -401,8 +401,22 @@ function HF.SetAffliction(character, identifier, strength, aggressor, prevstreng
 	HF.SetAfflictionLimb(character, identifier, LimbType.Torso, strength, aggressor, prevstrength)
 end
 
+dislocationsAff = {
+		["dislocation1"] = LimbType.RightLeg,
+		["dislocation2"] = LimbType.LeftLeg,
+		["dislocation3"] = LimbType.RightArm,
+		["dislocation4"] = LimbType.LeftArm
+	}
+
 -- the main "mess with afflictions" function
 function HF.SetAfflictionLimb(character, identifier, limbtype, strength, aggressor, prevstrength)
+
+	-- because we need to change both identifier and limbtype i do it here instead of NT.ConvertToModern
+	if dislocationsAff[identifier] ~= nil then
+		limbtype = dislocationsAff[identifier]
+		identifier = "dislocation"
+	end
+
 	identifier = NT.ConvertToModern(identifier)
 	local _, prefab = AfflictionPrefab.Prefabs.TryGet(identifier)
 	if not character or not limbtype or not prefab then
