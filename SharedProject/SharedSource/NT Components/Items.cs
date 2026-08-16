@@ -560,7 +560,7 @@ public class NTItemMethods
             if (BloodLossStrength >= 31f) return;
 
             bool success = HF.GetSkillRequirementMet(infos.user, "medical", 30);
-            int bloodlossinduced = success ? 40 : 30;
+            int bloodlossinduced = success ? 30 : 40;
 
             string bloodtype = NTBloodTypes.GetBloodType(infos.target);
 
