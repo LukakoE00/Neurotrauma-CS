@@ -1031,7 +1031,14 @@ namespace Neurotrauma
         /// <param name="Amount">The amount of skill the character should gain.</param>
         public static void GiveSurgerySkill(Character Character, float Amount)
         {
-            Character.Info.IncreaseSkillLevel("surgery", Amount);
+            if (IsNTSPEnabled() && NTConfig.Get("NTSP_enableSurgerySkill", true))
+            {
+                Character.Info.IncreaseSkillLevel("surgery", Amount);
+            }
+            else
+            {
+                Character.Info.IncreaseSkillLevel("medical", Amount/4);
+            }
         }
 
         /// <summary>
