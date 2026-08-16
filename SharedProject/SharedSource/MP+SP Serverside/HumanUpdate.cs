@@ -8,6 +8,9 @@ using static Neurotrauma.NTC;
 
 namespace Neurotrauma;
 
+/// <summary>
+/// The primary functionality that NT uses to update afflictions and create the gameplay loop
+/// </summary>
 public static class HumanUpdate
 {
     private static int UpdateCooldown = 0;
@@ -163,7 +166,7 @@ public static class HumanUpdate
         public NTHuman CharacterNT { get; set; } // Our NTHuman Ref
 
         public Dictionary<string, NTHumanAffData> UpdatingAfflictions = new();                  // Stores the ID's of our updating afflictions.
-        public Dictionary<string, NTHumanAffData> ConstantAfflictions = new();
+        public Dictionary<string, NTHumanAffData> ConstantAfflictions = new();                  // Stores the ID's of our constant afflictions
         public Dictionary<string, NTHumanNonLimbAffData> UpdatingNonLimbAfflictions = new();    // Stores the ID's of our updating non limb afflictions.
         public Dictionary<string, NTHumanLimbAffData> UpdatingLimbAfflictions = new();          // Stores the ID's of our updating (Limb) afflictions.
         public Dictionary<string, NTHumanBloodAffData> UpdatingBloodAfflictions = new();        // Stores the ID's of our updating (blood) afflictions.
@@ -172,6 +175,11 @@ public static class HumanUpdate
 
         public List<Affliction> LastUpdatedAfflictions = new();
 
+        /// <summary>
+        /// Takes in the ID of an NTAffliction and registers it to it's aff type.
+        /// </summary>
+        /// <param name="ID"></param>
+        /// <param name="Aff"></param>
         public void RegisterAffliction(string ID, NTAffliction Aff)
         {
             if (Aff != null)
@@ -761,6 +769,10 @@ public static class HumanUpdate
 
         // -------------------------------- Start of cursed update stuff -------------------------------- \\
 
+        /// <summary>
+        /// Sets all constant afflictions to there default strength.
+        /// </summary>
+        /// <param name="C"></param>
         private void SetDefaults(NTHuman C)
         {
             foreach (KeyValuePair<string,NTHumanAffData> Pair in C.LocalAfflictions.ConstantAfflictions)
@@ -771,6 +783,10 @@ public static class HumanUpdate
             }
         }
 
+        /// <summary>
+        /// The main update function for our NT characters.
+        /// </summary>
+        /// <param name="Priorities"></param>
         public void Update(List<AfflictionPriority> Priorities) // THHHHEEEE UPPPDATTEEEEE
         {
 
@@ -806,6 +822,9 @@ public static class HumanUpdate
             CharacterSpeedMultipliers.Remove(this);
         }
 
+        /// <summary>
+        /// Updates all pre human hooks in both Lua and C#.
+        /// </summary>
         public void UpdatePreHumanHooks()
         {
             foreach (Action<NTHuman> Hook in PreHumanUpdateHooks) // Pre hooks.
@@ -819,6 +838,9 @@ public static class HumanUpdate
             }
         }
 
+        /// <summary>
+        /// Clears data for the next HU update.
+        /// </summary>
         private void UpdatePost()
         {
             UpdatePostHumanHooks();
@@ -834,6 +856,9 @@ public static class HumanUpdate
             }
         }
 
+        /// <summary>
+        /// Updates all post human hooks in C#. (ONLY CALLS IF NOT USING LUA ADDONS)
+        /// </summary>
         public void UpdatePostHumanHooks()
         {
             if (!UsingLuaAddons())
@@ -846,6 +871,9 @@ public static class HumanUpdate
             }
         }
 
+        /// <summary>
+        /// Updates all stats and sets their strengths to the new value.
+        /// </summary>
         private void UpdateStats()
         {
             foreach (KeyValuePair<string, CharacterStats.NTHumanStatDoubleData> Pair in LocalStats.DoubleStats) // Update all of our double stats
@@ -863,6 +891,24 @@ public static class HumanUpdate
             }
         }
 
+        /// <summary>
+        /// Fetches all current NT Afflictions on a character and returns them.
+        /// </summary>
+        /// <param name="Human"></param>
+        /// <returns></returns>
+        private List<Affliction> FetchNTAfflictions(Character Human)
+        {
+            IReadOnlyCollection<Affliction> CurrentAfflictions = Human.CharacterHealth.GetAllAfflictions();
+            IEnumerable<Affliction> FilteredAfflictions = CurrentAfflictions.Where(aff => { return LocalAfflictions.UpdatingAfflictions.ContainsKey(aff.Identifier.ToString()); });
+            List<Affliction> SortedAfflictions = FilteredAfflictions.OrderBy(
+                                aff => LocalAfflictions?.UpdatingAfflictions[aff.Identifier.ToString()]?.AffTemplate?.AffSortID
+                            ).ToList();
+            return SortedAfflictions;
+        }
+
+        /// <summary>
+        /// Fetches the strength of all NT Afflictions and gets the current strength before the HU update.
+        /// </summary>
         private void FetchAfflictions()
         {
             foreach (KeyValuePair<string,NTHumanAffData> kvp in LocalAfflictions.UpdatingAfflictions)
@@ -897,47 +943,60 @@ public static class HumanUpdate
             }
         }
 
-        private void UpdateAfflictions(List<AfflictionPriority> Priorities)
+        /// <summary>
+        /// Stores our checks we run on a updating affliction before the update, basically just validate the update.
+        /// </summary>
+        /// <param name="UpdatedAfflictions"></param>
+        /// <param name="RealAff"></param>
+        /// <returns></returns>
+        private bool PreUpdateAffliction(List<string> UpdatedAfflictions, Affliction RealAff)
         {
-            IReadOnlyCollection<Affliction> CurrentAfflictions = Human.CharacterHealth.GetAllAfflictions();
-            IEnumerable<Affliction> FilteredAfflictions = CurrentAfflictions.Where(aff => { return LocalAfflictions.UpdatingAfflictions.ContainsKey(aff.Identifier.ToString()); });
-            List < Affliction > SortedAfflictions = FilteredAfflictions.OrderBy(
-                                aff => LocalAfflictions?.UpdatingAfflictions[aff.Identifier.ToString()]?.AffTemplate?.AffSortID
-                            ).ToList();
+            if (RealAff == null || UpdatedAfflictions.Contains(RealAff.Identifier.ToString())
+                        || (!LocalAfflictions.UpdatingAfflictions.ContainsKey(RealAff.Identifier.ToString()))) return true;
 
-            SortedAfflictions = SortedAfflictions.Union(LocalAfflictions.LastUpdatedAfflictions).ToList(); // We merge our last updated afflictions with our new afflictions.
-            List<string> UpdatedAfflictions = new List<string>(); // We store this so we don't update a duplicate.
-
-            if (SortedAfflictions != null && SortedAfflictions.Count() > 0)
-            {
-                // Our Current Afflictions Update
-                foreach (Affliction RealAff in SortedAfflictions)
-                {
-                    if (RealAff == null) continue;
-                    if (UpdatedAfflictions.Contains(RealAff.Identifier.ToString())) continue;
-                    if (!LocalAfflictions.UpdatingAfflictions.ContainsKey(RealAff.Identifier.ToString())) continue;
-                    NTHumanAffData Data = LocalAfflictions.UpdatingAfflictions[RealAff.Identifier.ToString()];
-                    if (Data.AffTemplate.Const) continue;
-                    NTAfflictionType AffType = Data.AffTemplate.Type;
-                    UpdateAffliction(AffType, Priorities, RealAff.Identifier.ToString(), Data);
-                    UpdatedAfflictions.Add(RealAff.Identifier.ToString());
-                }
-            }
-
-            if (LocalAfflictions.ConstantAfflictions != null && LocalAfflictions.ConstantAfflictions.Count > 0)
-            {
-                // Our Constant Afflictions Update
-                foreach (KeyValuePair<string, NTHumanAffData> Pair in LocalAfflictions.ConstantAfflictions)
-                {
-                    if (Pair.Key == null || Pair.Value == null) continue;
-                    NTAfflictionType AffType = Pair.Value.AffTemplate.Type;
-                    UpdateAffliction(AffType,Priorities,Pair.Key, Pair.Value);
-                }
-            }
-
-            LocalAfflictions.LastUpdatedAfflictions = SortedAfflictions.Where(aff => { return Human.CharacterHealth.GetAllAfflictions().Contains(aff); }).ToList();
+            NTHumanAffData Data = LocalAfflictions.UpdatingAfflictions[RealAff.Identifier.ToString()];
+            if (Data.AffTemplate.Const) return true;
+            NTAfflictionType AffType = Data.AffTemplate.Type;
+            UpdateAffliction(AffType, Priorities, RealAff.Identifier.ToString(), Data);
+            return false;
         }
 
+        /// <summary>
+        /// Updates all constant and non constant afflictions on the character.
+        /// </summary>
+        /// <param name="Priorities"></param>
+        private void UpdateAfflictions(List<AfflictionPriority> Priorities)
+        {
+            List<Affliction> SortedAfflictions = FetchNTAfflictions(Human); // Grab our current afflictions from NT that are on the character. (Our to update list)
+            SortedAfflictions = SortedAfflictions.Union(LocalAfflictions.LastUpdatedAfflictions).ToList(); // We merge our last updated afflictions with our new afflictions.
+            List<string> UpdatedAfflictions = new List<string>(); // Store updated afflictions in here, so we never double dip.
+
+            // Our Current Afflictions Update
+            foreach (Affliction RealAff in SortedAfflictions)
+            {
+                if (PreUpdateAffliction(UpdatedAfflictions, RealAff)) continue; // Validate this before we update and update
+                UpdatedAfflictions.Add(RealAff.Identifier.ToString());
+            }
+
+            // Our Constant Afflictions Update
+            foreach (KeyValuePair<string, NTHumanAffData> Pair in LocalAfflictions.ConstantAfflictions)
+            {
+                if (Pair.Key == null || Pair.Value == null) continue;
+                NTAfflictionType AffType = Pair.Value.AffTemplate.Type;
+                UpdateAffliction(AffType,Priorities,Pair.Key, Pair.Value);
+            }
+
+            LocalAfflictions.LastUpdatedAfflictions = SortedAfflictions.Where(aff => { return Human.CharacterHealth.GetAllAfflictions().Contains(aff); }).ToList(); // Store our last updated affs
+        }
+
+        /// <summary>
+        /// Validation for limb affliction updates.
+        /// </summary>
+        /// <param name="Limb"></param>
+        /// <param name="LimbAff"></param>
+        /// <param name="LimbAffData"></param>
+        /// <param name="Priorities"></param>
+        /// <returns></returns>
         private bool PreLimbCheck(LimbType Limb, NTLimbAffliction LimbAff, NTHumanLimbAffData LimbAffData, List<AfflictionPriority> Priorities)
         {
             if (!LimbAff.AllowedLimbs.Contains(Limb))
@@ -959,6 +1018,11 @@ public static class HumanUpdate
             return false;
         }
 
+        /// <summary>
+        /// Validation for pre symptom updates.
+        /// </summary>
+        /// <param name="Data"></param>
+        /// <returns></returns>
         private static bool PreSymptomCheck(NTHumanAffData Data)
         {
             if (!(Data is NTHumanSymptomData)) return false; // Is this a symptom lol
@@ -1364,10 +1428,6 @@ public static class HumanUpdate
         
 
     }
-
-
-
-
 
     public static List<Affliction> GetScreenShownAfflictions(Character character)
     {

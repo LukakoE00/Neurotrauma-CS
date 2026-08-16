@@ -1712,23 +1712,14 @@ public class NTItemMethods
         DrainageAfflictions["pneumothorax"] = new ItemsAfflictionInfos("pneumothorax", 3, infos =>
         {
             return HF.HasAfflictionLimb(infos.target, "retractedskin", LimbType.Torso, 95);
-        }, "pneumothorax", infos =>
-        {
-            NTC.SetSymptomFalse(infos.target, "hyperventilation");
-            NTC.SetSymptomFalse(infos.target, "shortnessofbreath");
-        });
+        }, "pneumothorax");
 
         DrainageAfflictions["tamponade"] = new ItemsAfflictionInfos("tamponade", 3, infos =>
         {
             if (NTConfig.Get("NT_OpenCloseTamponade", false)) return false;
 
             return HF.HasAfflictionLimb(infos.target, "retractedskin", LimbType.Torso, 95); ;
-        }, "tamponade", infos =>
-        {
-            NTC.SetSymptomFalse(infos.target, "shortnessofbreath");
-            NTC.SetSymptomFalse(infos.target, "cough");
-            NTC.SetSymptomFalse(infos.target, "weakness");
-        });
+        }, "tamponade");
 
         // From 48 lines to 12 my point stands, why tf was the lua function so girthy?
         RegisterItemUseFunction("drainage", infos =>

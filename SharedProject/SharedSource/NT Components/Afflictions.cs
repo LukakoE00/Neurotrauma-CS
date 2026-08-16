@@ -594,8 +594,11 @@ namespace Neurotrauma
             AfflictionsToAdd["fracturedribs"].UpdateAction =
                 (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanNonLimbAffData AffData) =>
                 {
-                    // Passive Increase
-                    AffData.Strength += 4 * NT.DeltaTime;
+                    if (AffData.Strength > 0)
+                    {
+                        // Passive Increase
+                        AffData.Strength += 4 * NT.DeltaTime;
+                    }
 
                     // Effects:
                     // Chest Pain
@@ -614,8 +617,11 @@ namespace Neurotrauma
             AfflictionsToAdd["fracturedneck"].UpdateAction =
                 (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanNonLimbAffData AffData) =>
                 {
-                    // Passive Increase
-                    AffData.Strength += 4 * NT.DeltaTime;
+                    if (AffData.Strength > 0)
+                    {
+                        // Passive Increase
+                        AffData.Strength += 4 * NT.DeltaTime;
+                    }
                 };
 
             // Skull Fracture
@@ -627,8 +633,11 @@ namespace Neurotrauma
             AfflictionsToAdd["fracturedskull"].UpdateAction =
                 (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanNonLimbAffData AffData) =>
                 {
-                    // Passive Increase
-                    AffData.Strength += 4 * NT.DeltaTime;
+                    if (AffData.Strength > 0)
+                    {
+                        // Passive Increase
+                        AffData.Strength += 4 * NT.DeltaTime;
+                    }
 
                     // Effects:
                     // Headache
@@ -720,6 +729,7 @@ namespace Neurotrauma
             AfflictionsToAdd["lungremoved"].UpdateAction =
                 (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanNonLimbAffData AffData) =>
                 {
+                    if (AffData.Strength <= 0) return;
                     // State check; strength is 1 if Retracted Skin is present, else 100.
                     AffData.Strength = 1 + HF.BoolToNum(HF.HasAfflictionLimb(C.Human, "retractedskin", LimbType.Head, 99), 99);
 
@@ -747,6 +757,7 @@ namespace Neurotrauma
             AfflictionsToAdd["brainremoved"].UpdateAction =
                 (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanNonLimbAffData AffData) =>
                 {
+                    if (AffData.Strength <= 0) return;
                     // State check; strength is 1 if Retracted Skin is present, else 100.
                     AffData.Strength = 1 + HF.BoolToNum(HF.HasAfflictionLimb(C.Human, "retractedskin", LimbType.Head, 99), 99);
 
@@ -795,10 +806,13 @@ namespace Neurotrauma
 
                     // Passive Regeneration / Increase
                     // Increases if there is no needle until 100%; else decreases until 5%.
-                    AffData.Strength = Math.Clamp(AffData.Strength + NT.DeltaTime * (0.5f - HF.BoolToNum(AffData.Strength > 5) * Math.Clamp(C.GetAffData("needlec").Strength, 0, 1)),
-                        0,
-                        100
-                    );
+                    if (AffData.Strength > 0)
+                    {
+                        AffData.Strength = Math.Clamp(AffData.Strength + NT.DeltaTime * (0.5f - HF.BoolToNum(AffData.Strength > 5) * Math.Clamp(C.GetAffData("needlec").Strength, 0, 1)),
+                            0,
+                            100
+                        );
+                    }
 
                     // Effects:
                     // Shortness of Breath
@@ -1082,6 +1096,7 @@ namespace Neurotrauma
             AfflictionsToAdd["heartremoved"].UpdateAction =
                 (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanNonLimbAffData AffData) =>
                 {
+                    if (AffData.Strength <= 0) return;
                     // State check; strength is 1 if Retracted Skin is present, else 100.
                     AffData.Strength = 1 + HF.BoolToNum(HF.HasAfflictionLimb(C.Human, "retractedskin", LimbType.Torso, 99), 99);
 
@@ -1274,10 +1289,13 @@ namespace Neurotrauma
                 {
                     // Passive Regeneration / Increase
                     // Increases if there is no needle until 100%; else decreases until 5%.
-                    AffData.Strength = Math.Clamp(AffData.Strength + NT.DeltaTime * (0.5 - HF.BoolToNum(AffData.Strength > 15) * Math.Clamp(C.GetAffData("needlec").Strength, 0, 1)),
-                        0, 
-                        100
-                    );
+                    if (AffData.Strength > 0)
+                    {
+                        AffData.Strength = Math.Clamp(AffData.Strength + NT.DeltaTime * (0.5 - HF.BoolToNum(AffData.Strength > 15) * Math.Clamp(C.GetAffData("needlec").Strength, 0, 1)),
+                            0,
+                            100
+                        );
+                    }
 
                     // Effects:
                     // Increased Heartrate (in IncreasedHeartrate constant)

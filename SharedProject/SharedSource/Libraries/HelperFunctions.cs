@@ -1320,10 +1320,6 @@ namespace Neurotrauma
             Affliction Aff = GetAfflictionLimb(Character, Identifier, GivenLimbType);
             if (Aff == null) 
             {
-                if (Identifier == "pneumothorax")
-                {
-                    HF.Print("yo yo o yo");
-                }
                 return false;
             } 
 
@@ -1398,11 +1394,6 @@ namespace Neurotrauma
         {
 
             if (Character == null || Character.CharacterHealth == null || Character.IdFreed) return null;
-            if (Identifier == "pneumothorax")
-            {
-                HF.Print(GivenLimbType.ToString());
-                //HF.Print(Character.CharacterHealth.GetAffliction(Identifier, GetCharacterLimb(Character, GivenLimbType)).ToString());
-            }
             return Character.CharacterHealth.GetAffliction(Identifier, Character.AnimController.GetLimb(GivenLimbType));
         }
 
