@@ -16,7 +16,7 @@ namespace Neurotrauma
         {
             NTAfflictions.DefineAllAfflictions();
             NTStats.DefineAllStats();
-            NTItemMethods.DefineAllItems();
+            NTItemsData.DefineAllItems();
         }
 
         public void OnLoadCompletedServerside()
@@ -32,7 +32,7 @@ namespace Neurotrauma
             NTMultiscalpel.RegisterMultiscalpel(); // Add the Multiscalpel hooks
             DynamicItems.InitDynamicItems(); // Add the DynamicItems hooks
             OnDamaged.InitializeOnDamagedMethods(); // Add OnDamaged patches
-            NTItemMethods.EnsureWorkingItems(); // Runs the FixItems hooks
+            NTItemsData.EnsureWorkingItems(); // Runs the FixItems hooks
             NTSurgeryTable.InitializeSurgeryTableHooks(); // Adds hook for surgery table
             InitLuaHooks(); // Initializes the Lua hooks at the bottom of this file
             AddApplyHooks();
@@ -49,8 +49,8 @@ namespace Neurotrauma
 
             harmony.Patch(originalApplyDamage, prefix: new HarmonyMethod(typeof(OnDamaged), nameof(OnDamaged.Override_ApplyDamage)));
             harmony.Patch(originalDamageLimb, prefix: new HarmonyMethod(typeof(OnDamaged), nameof(OnDamaged.Override_DamageLimb)));
-            harmony.Patch(originalUse, prefix: new HarmonyMethod(typeof(NTItemMethods), nameof(NTItemMethods.Override_Use)));
-            harmony.Patch(originalApplyTreatment, prefix: new HarmonyMethod(typeof(NTItemMethods), nameof(NTItemMethods.Override_ApplyTreatment)));
+            harmony.Patch(originalUse, prefix: new HarmonyMethod(typeof(NTItems), nameof(NTItems.Override_Use)));
+            harmony.Patch(originalApplyTreatment, prefix: new HarmonyMethod(typeof(NTItems), nameof(NTItems.Override_ApplyTreatment)));
             harmony.Patch(originalRoundStart, postfix: new HarmonyMethod(typeof(NTInfo), nameof(NTInfo.PrintNTInitInfo)));
 
             // Character Patches ----------------------------------------------------------------------------------------------------------------------------------------- \\

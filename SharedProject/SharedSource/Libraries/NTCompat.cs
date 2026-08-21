@@ -288,46 +288,46 @@ namespace Neurotrauma
 
         public static void AddHematologyAffliction(string Identifier)
         {
-            NTItemMethods.HematologyDetectable.Add(Identifier);
+            NTItems.HematologyDetectable.Add(Identifier);
         }
 
-        public static void AddSuturableAffliction(string Identifier, int SurgerySkillGain, string RequiredAfflictionID, Func<NTItemMethods.ItemUpdateFunctionInfos, bool> Func)
+        public static void AddSuturableAffliction(string Identifier, int SurgerySkillGain, string RequiredAfflictionID, Func<NTItems.ItemUpdateFunctionInfos, bool> Func)
         {
-            if (!NTItemMethods.SutureAfflictions.ContainsKey(Identifier))
+            if (!NTItems.SutureAfflictions.ContainsKey(Identifier))
             {
-                NTItemMethods.SutureAfflictions[Identifier] = new(Identifier, SurgerySkillGain, Func, RequiredAfflictionID);
+                NTItems.SutureAfflictions[Identifier] = new(Identifier, SurgerySkillGain, Func, RequiredAfflictionID);
             }
         }
 
         public static void AddSuturableAffliction(string Identifier, int SurgerySkillGain, string RequiredAfflictionID)
         {
-            if (!NTItemMethods.SutureAfflictions.ContainsKey(Identifier))
+            if (!NTItems.SutureAfflictions.ContainsKey(Identifier))
             {
-                Func<NTItemMethods.ItemUpdateFunctionInfos, bool> TranslatedFunc = (info) =>
+                Func<NTItems.ItemUpdateFunctionInfos, bool> TranslatedFunc = (info) =>
                 {
                     return HF.HasAfflictionLimb(info.target, RequiredAfflictionID, LimbType.Torso, 1);
                 };
-                NTItemMethods.SutureAfflictions[Identifier] = new(Identifier, SurgerySkillGain, TranslatedFunc, RequiredAfflictionID);
+                NTItems.SutureAfflictions[Identifier] = new(Identifier, SurgerySkillGain, TranslatedFunc, RequiredAfflictionID);
             }
         }
 
-        public static void AddDrainageAffliction(string Identifier, int SurgerySkillGain, string RequiredAfflictionID, Func<NTItemMethods.ItemUpdateFunctionInfos, bool> Func)
+        public static void AddDrainageAffliction(string Identifier, int SurgerySkillGain, string RequiredAfflictionID, Func<NTItems.ItemUpdateFunctionInfos, bool> Func)
         {
-            if (!NTItemMethods.DrainageAfflictions.ContainsKey(Identifier))
+            if (!NTItems.DrainageAfflictions.ContainsKey(Identifier))
             {
-                NTItemMethods.DrainageAfflictions[Identifier] = new(Identifier, SurgerySkillGain, Func, RequiredAfflictionID);
+                NTItems.DrainageAfflictions[Identifier] = new(Identifier, SurgerySkillGain, Func, RequiredAfflictionID);
             }
         }
 
         public static void AddDrainageAffliction(string Identifier, int SurgerySkillGain, string RequiredAfflictionID)
         {
-            if (!NTItemMethods.DrainageAfflictions.ContainsKey(Identifier))
+            if (!NTItems.DrainageAfflictions.ContainsKey(Identifier))
             {
-                Func<NTItemMethods.ItemUpdateFunctionInfos, bool> TranslatedFunc = (info) =>
+                Func<NTItems.ItemUpdateFunctionInfos, bool> TranslatedFunc = (info) =>
                 {
                     return HF.HasAfflictionLimb(info.target, "retractedskin", LimbType.Torso, 95);
                 };
-                NTItemMethods.DrainageAfflictions[Identifier] = new(Identifier, SurgerySkillGain, TranslatedFunc, RequiredAfflictionID);
+                NTItems.DrainageAfflictions[Identifier] = new(Identifier, SurgerySkillGain, TranslatedFunc, RequiredAfflictionID);
             }
         }
 
