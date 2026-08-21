@@ -814,7 +814,6 @@ public static class HumanUpdate
             // ----------------------------------------- Clearing ----------------------------------------- \\
 
             UpdatePost();
-
         }
 
         public void ClearSpeedMultiplier()
@@ -1220,7 +1219,6 @@ public static class HumanUpdate
                             if (LimbAffData.Strength[Limb] == LimbAffData.PrevStrength[Limb]) continue;
 
                             HF.SetAfflictionLimb(Human, ID, Limb, (float)Math.Clamp(LimbAffData.Strength[Limb], LimbTemplate.MinStrength, LimbTemplate.MaxStrength));
-
                         }
                         else
                         {
@@ -1423,10 +1421,6 @@ public static class HumanUpdate
         }
 
         if (UsingLuaAddons()) HumanUpdateLuaSync.Update(UpdatingHumans.Values.ToList(),priorities);
-
-
-        
-
     }
 
     public static List<Affliction> GetScreenShownAfflictions(Character character)
@@ -1435,10 +1429,7 @@ public static class HumanUpdate
 
         if (character == null) return Afflictions;
 
-
-
         return Afflictions;
-
     }
 
     private static void UpdateHumans(List<AfflictionPriority> priorities)

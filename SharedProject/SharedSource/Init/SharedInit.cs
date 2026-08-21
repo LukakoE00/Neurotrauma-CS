@@ -106,7 +106,9 @@ namespace Neurotrauma
             {
                 if (C != null && C.Human != null && C.Human.IdFreed == false)
                 {
-                    C.Human.SetStun((float)C.GetAffStrength("stun"));
+                    C.Human.Stun = HF.GetAfflictionStrength(C.Human, "stun");
+                    HF.SetAffliction(C.Human, "stun", 0);
+                    C.GetAffData("stun").Strength = 0;
                 }
             });
 

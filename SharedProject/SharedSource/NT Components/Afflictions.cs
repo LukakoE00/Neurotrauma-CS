@@ -1444,7 +1444,12 @@ namespace Neurotrauma
             // Type: Functionality
             // Effects: Enables give-in button.
             // Allows you to die while stuck in certain afflictions like Spinal Cord Injury, which are not lethal yet prevent character use.
-            AfflictionsToAdd["givein"] = new("givein", 0, 1, 0);
+            AfflictionsToAdd["givein"] = new("givein", 0, 2, 0);
+            AfflictionsToAdd["givein"].UpdateAction =
+                (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanNonLimbAffData AffData) =>
+                {
+                    AffData.Strength -= 1;
+                };
 
             // CPR Buff
             // Not constant; gets applied by other sources.
@@ -2545,6 +2550,10 @@ namespace Neurotrauma
                         || NTC.HasSymptom(C,"unconsciousness"))
                     {
                         AffData.Strength = Math.Max(5,AffData.Strength);
+                    }
+                    else
+                    {
+                        AffData.Strength = 0;
                     }
                 };
 
@@ -3964,7 +3973,7 @@ namespace Neurotrauma
                     // Give In
                     if (AffData.Strength > 0)
                     {
-                        C.GetAffData("givein").Strength ++;
+                        C.GetAffData("givein").Strength += 2;
                     }
                 };
 
