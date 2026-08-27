@@ -28,12 +28,12 @@
 
         <Body width="65" height="45" density="50"/>
 
-        <!-- <SuitableTreatment identifier="lacerations" suitability="20"/>
+        <SuitableTreatment identifier="lacerations" suitability="20"/>
         <SuitableTreatment identifier="bitewounds" suitability="20"/>
         <SuitableTreatment identifier="explosiondamage" suitability="20"/>
         <SuitableTreatment identifier="gunshotwound" suitability="20"/>
         <SuitableTreatment type="bleeding" suitability="40"/>
-        <SuitableTreatment identifier="surgeryincision" suitability="100"/> -->
+        <SuitableTreatment identifier="surgeryincision" suitability="100"/>
 
         <MeleeWeapon slots="Any,RightHand,LeftHand" aimpos="5,0" handle1="-5,0" holdangle="10" reload="1.0">
             <StatusEffect type="OnUse" target="This" Condition="-100.0" disabledeltatime="true"/>
@@ -308,14 +308,14 @@
         <Sprite texture="%ModDir%/Images/InventoryItemIconAtlas.png" sourcerect="0,192,64,64" depth="0.55" origin="0.5,0.5"/>
         <Body width="60" height="55" density="50"/>
 
-        <!-- <SuitableTreatment identifier="bandageddirty" suitability="100"/>
+        <SuitableTreatment identifier="bandageddirty" suitability="100"/>
         <SuitableTreatment identifier="bandaged" suitability="100"/>
         <SuitableTreatment identifier="gypsumcast" suitability="100"/>
         <SuitableTreatment identifier="arteriesclamp" suitability="100"/>
         <SuitableTreatment identifier="triagetag_green" suitability="100"/>
         <SuitableTreatment identifier="triagetag_yellow" suitability="100"/>
         <SuitableTreatment identifier="triagetag_red" suitability="100"/>
-        <SuitableTreatment identifier="triagetag_black" suitability="100"/> -->
+        <SuitableTreatment identifier="triagetag_black" suitability="100"/>
 
         <MeleeWeapon slots="Any,RightHand,LeftHand" aimpos="40,5" handle1="12,-2" holdangle="210" reload="1.0">
             <StatusEffect type="OnUse" target="Limb" comparison="and"/>
@@ -418,7 +418,7 @@
 
         <Body width="150" height="60" density="40"/>
 
-        <!-- <SuitableTreatment identifier="infectedwound" suitability="45"/> -->
+        <SuitableTreatment identifier="infectedwound" suitability="45"/>
 
         <Holdable slots="Any,RightHand+LeftHand" controlpose="true" aimpos="30,0" handle1="0,-7" handle2="95, 10" msg="ItemMsgPickUpSelect"/>
 
