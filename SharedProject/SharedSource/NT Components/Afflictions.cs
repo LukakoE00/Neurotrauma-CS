@@ -2621,7 +2621,7 @@ namespace Neurotrauma
             // Caused By: Stitching an Open Wound.
             // Effects: Vitality damage proportional to affliction strength.
             LimbAfflictionsToAdd["suturedw"] = new("suturedw", 0, 100, 0, AfflictionPriority.HIGH);
-            LimbAfflictionsToAdd["suturedi"].UpdateAction =
+            LimbAfflictionsToAdd["suturedw"].UpdateAction =
                (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanLimbAffData AffData) =>
                {
                    // Passive Decrease
