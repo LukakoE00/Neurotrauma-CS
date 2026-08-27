@@ -2327,7 +2327,7 @@ namespace Neurotrauma
                    // Passive Decrease
                    // Originally had a maxstrength of 100, and reduced by 0.25 per second in XML.
                    // Adjusted, that became 0.5 per 2 seconds.
-                   AffData.Strength -= 0.5;
+                   AffData.Strength -= 1;
 
                    // Effects:
                    // Specific Organ Damage
