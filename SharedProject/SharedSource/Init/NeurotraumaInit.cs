@@ -15,6 +15,9 @@ namespace Neurotrauma
         public IPluginManagementService PluginService { get; set; }
         public ILoggerService LoggerService { get; set; }
         public ILuaScriptManagementService luaScriptManagementService = LuaCsSetup.Instance.LuaScriptManagementService;
+
+        public static NTAfflictions.NTAfflictionsLoader NTAfflLoader = new NTAfflictions.NTAfflictionsLoader(NTInfo.Name);
+
         private Harmony ?harmony;
 
         // ---------------------------        Functions        --------------------------- \\

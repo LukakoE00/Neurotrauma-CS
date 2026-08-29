@@ -77,7 +77,7 @@ public class NTItems
                     return Register(ItemID, UpdateFunction);
                 }
 
-                HF.PrintError($"[{this.ModID}] Item with ID '{ItemID}' does not have a registered use function to override."); 
+                HF.PrintError($"[{this.ModID}] Item with ID '{ItemID}' does not have a registered use function to override.");
                 return false;
 
             }
@@ -231,7 +231,7 @@ public class NTItems
     /// </summary>
     public static List<string> BloodPacks { get; } = [];
 
-    
+
     /// <summary>
     /// The function patching the base game Item.ApplyTreatment
     /// </summary>

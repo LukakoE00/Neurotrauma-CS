@@ -1,0 +1,11 @@
+tree b7cb1c2ad3bd2345dc945076dc576b4cdfb4c016
+
+.gitignore
+Assets/
+Build.props
+ClientProject/
+Directory.Build.props
+Neurotrauma.sln
+README.md
+ServerProject/
+SharedProject/

@@ -1,0 +1,385 @@
+using static Neurotrauma.HumanUpdate;
+using static Neurotrauma.NTItemMethods;
+
+namespace Neurotrauma;
+
+
+public class NTAfflictions
+{
+
+    // TODO: CHANGE THIS TO FALSE WHEN GOING PUBLIC TO AVOID SPAMMING CONSOLE LIKE RETARDS
+    private static bool IS_DEBUG = true;
+
+    /// <summary>
+    /// Determines how often an affliction gets updated; Low every 6 seconds, Medium every 4 seconds and High every 2 seconds.
+    /// </summary>
+    public enum AfflictionPriority : int
+    {
+        LOW = 6 * 60,  // Every 6s
+        MEDIUM = 4 * 60, // Every 4s
+        HIGH = 2 * 60 // Every 2s
+    }
+    public static Dictionary<string, NTAfflictionPrefab> NTAfflictionsPrefabRegistry { get; } = new Dictionary<string, NTAfflictionPrefab>(); // Stores all of our registered afflictions (regardless of categeory)
+    public static Dictionary<string, string> NTAfflictionsPrefabModDefinerRegistry { get; } = new Dictionary<string, string>(); // Stores the mod that defined the affliction
+
+    /// <summary>
+    /// When an NTAfflictionPrefab is overriden, the old NTAfflictionPrefab is stored here in case a mod needs to access the original affliction. The key is a tuple of (modID, afflictionID).
+    /// </summary>
+    public static Dictionary<(string, string), NTAfflictionPrefab> NTOldAfflictionsPrefabRegistry { get; } = new Dictionary<(string, string), NTAfflictionPrefab>();
+
+    public class NTAfflictionsLoader
+    {
+        public string ModID { get; private set; } = "";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ModID"></param>
+        public NTAfflictionsLoader(string ModID)
+        {
+            this.ModID = ModID;
+        }
+
+        /// <summary>
+        /// Register a new affliction to the Neurotrauma affliction registry. If the affliction already has a registered function, it will not be registered again.
+        /// <example>
+        /// <code>
+        /// NTAfflictionPrefabBuilder builder = new NTAfflictionPrefabBuilder();
+        /// NTAfflictionPrefab MyAffliction = builder.New("MyAfflictionID").Build();
+        /// 
+        /// var NTAfflictionsLoader = new NTAfflictions.NTAfflictionsLoader("MyMod");
+        /// NTAfflictionsLoader.Register(MyAffliction);
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="affliction">The affliction to register. Use the NTAfflictionPrefabBuilder to create one.</param>
+        /// <returns>true if the function was registered successfully, false otherwise (the affliction already has a function assigned).</returns>s
+        public bool Register(NTAfflictionPrefab affliction)
+        {
+            if (NTConfig.Get("debug_mode", IS_DEBUG))
+            {
+                HF.PrintUtility($"[{this.ModID}] Registering affliction: {affliction.ID}");
+            }
+
+            if (NTAfflictionsPrefabRegistry.ContainsKey(affliction.ID))
+            {
+                HF.PrintError($"[{this.ModID}] Affliction with ID '{affliction.ID}' already is registered by '{NTAfflictionsPrefabModDefinerRegistry[affliction.ID]}'.");
+                return false;
+            }
+
+            NTAfflictionsPrefabRegistry.Add(affliction.ID, affliction);
+            NTAfflictionsPrefabModDefinerRegistry[affliction.ID] = this.ModID;
+            return true;
+        }
+
+
+        /// <returns>Returns false if any affliction fails to register, true otherwise.</returns>
+        public bool Registers(List<NTAfflictionPrefab> afflictions)
+        {
+            bool allRegistered = true;
+            foreach (var affliction in afflictions)
+            {
+                if (!Register(affliction))
+                {
+                    allRegistered = false;
+                }
+            }
+            return allRegistered;
+        }
+
+
+        /// <summary>
+        /// Overrides the update function for an existing item. If the item does not have a registered update function, it will register it instead.
+        /// </summary>
+        /// <param name="RegisterInstead">If true, the given function will be registered if the given item has no function to override. If false it will do nothing.</param>
+        /// <returns>true if the function was overridden or registered successfully, false otherwise.</returns>
+        public bool Override(NTAfflictionPrefab Affliction, bool RegisterInstead = true)
+        {
+            if (NTConfig.Get("debug_mode", IS_DEBUG))
+            {
+                HF.PrintUtility($"[{this.ModID}] Overriding affliction: {Affliction.ID}");
+            }
+
+            if (!NTAfflictionsPrefabRegistry.ContainsKey(Affliction.ID))
+            {
+                if (RegisterInstead)
+                {
+                    if (NTConfig.Get("debug_mode", IS_DEBUG))
+                    {
+                        HF.PrintWarning($"[{this.ModID}] Affliction with ID '{Affliction.ID}' is not registered. Will register instead.");
+                    }
+                    return Register(Affliction);
+                }
+
+                HF.PrintError($"[{this.ModID}] Affliction with ID '{Affliction.ID}' is not already registered.");
+                return false;
+
+            }
+
+            NTOldAfflictionsPrefabRegistry.Add((this.ModID, Affliction.ID), NTAfflictionsPrefabRegistry[Affliction.ID]);
+            NTAfflictionsPrefabRegistry[Affliction.ID] = Affliction;
+            NTAfflictionsPrefabModDefinerRegistry[Affliction.ID] = this.ModID;
+            return true;
+        }
+
+        /// <summary>
+        /// Moves the NTAfflictionPrefab associated with the given affliction ID from the NTAfflictionsPrefabRegistry to the NTOldAfflictionsPrefabRegistry. This will have the effect of no longer being updated on HumanUpdate. 
+        /// </summary>
+        /// <param name="AfflictionID">The ID of the affliction defined in the XML.</param>
+        /// <returns>true if there was an affliction to remove, false otherwise.</returns>
+        public bool Remove(string AfflictionID)
+        {
+            // TODO: set debug mode to false when going public to avoid spamming console like retards
+            if (NTConfig.Get("debug_mode", IS_DEBUG))
+            {
+                HF.PrintUtility($"[{this.ModID}] Removing affliction: {AfflictionID}");
+            }
+
+
+            if (!NTAfflictionsPrefabRegistry.ContainsKey(AfflictionID))
+            {
+                HF.PrintError($"[{this.ModID}] Affliction with ID '{AfflictionID}' is not registered.");
+                return false;
+            }
+
+            NTOldAfflictionsPrefabRegistry.Add((this.ModID, AfflictionID), NTAfflictionsPrefabRegistry[AfflictionID]);
+            NTAfflictionsPrefabRegistry.Remove(AfflictionID);
+            return true;
+        }
+
+        /// <summary>
+        /// Check if the given affliction ID has a corresponding NTAfflictionPrefab registered.
+        /// </summary>
+        /// <param name="AfflictionID">The ID of the affliction defined in the XML.</param>
+        /// <returns>true if the affliction has a corresponding NTAfflictionPrefab registered, false otherwise.</returns>
+        public bool Exists(string AfflictionID)
+        {
+            return NTAfflictionsPrefabRegistry.ContainsKey(AfflictionID);
+        }
+
+
+
+        /// <param name="AfflictionID">The ID of the affliction defined in the XML.</param>
+        /// <returns>Returns the NTAfflictionPrefab associated with the given ID, or null if no NTAfflictionPrefab is associated.</returns>
+        public NTAfflictionPrefab? Get(string AfflictionID)
+        {
+            if (NTAfflictionsPrefabRegistry.ContainsKey(AfflictionID))
+            {
+                return NTAfflictionsPrefabRegistry[AfflictionID];
+            }
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// A builder for creating new NTAfflictionPrefab instances.
+    /// <b>CALL New("AfflictionID") BEFORE BUILDING A NEW AFFLICTION!</b>
+    /// </summary>
+    public class NTAfflictionPrefabBuilder
+    {
+        private NTAfflictionPrefab Affliction;
+
+        public NTAfflictionPrefabBuilder New(string AfflictionID)
+        {
+            this.Affliction = new NTAfflictionPrefab(AfflictionID);
+            return this;
+        }
+
+        /// <summary>
+        /// Default is false
+        /// </summary>
+        public NTAfflictionPrefabBuilder IsConst(bool Const)
+        {
+            this.Affliction.Const = Const;
+            return this;
+        }
+
+        /// <summary>
+        /// Default is true
+        /// </summary>
+        public NTAfflictionPrefabBuilder IsReal(bool Real)
+        {
+            this.Affliction.Real = Real;
+            return this;
+        }
+
+        /// <summary>
+        /// Default is false
+        /// </summary>
+        public NTAfflictionPrefabBuilder IsLimbSpecific(bool LimbSpecific)
+        {
+            this.Affliction.LimbSpecific = LimbSpecific;
+            return this;
+        }
+
+        /// <summary>
+        /// Default is false
+        /// </summary>
+        public NTAfflictionPrefabBuilder IsSymptom(bool Symptom)
+        {
+            this.Affliction.Symptom = Symptom;
+            return this;
+        }
+
+        /// <summary>
+        /// Default is 0
+        /// </summary>
+        public NTAfflictionPrefabBuilder SetDelay(int Delay)
+        {
+            this.Affliction.Delay = Delay;
+            return this;
+        }
+
+        /// <summary>
+        /// Default is 0, 100, 0
+        /// </summary>
+        public NTAfflictionPrefabBuilder SetStrengths(int MinStrength, int MaxStrength, int DefaultStrength)
+        {
+            this.Affliction.MinStrength = MinStrength;
+            this.Affliction.MaxStrength = MaxStrength;
+            this.Affliction.DefaultStrength = DefaultStrength;
+            return this;
+        }
+
+        /// <summary>
+        /// Default is HIGH
+        /// </summary>
+        public NTAfflictionPrefabBuilder SetPriority(AfflictionPriority Priority)
+        {
+            this.Affliction.Priority = Priority;
+            return this;
+        }
+
+
+        /// <summary>
+        /// Default is true
+        /// </summary>
+        public NTAfflictionPrefabBuilder SetIgnoreStasis(bool IgnoreStasis)
+        {
+            this.Affliction.IgnoreStasis = IgnoreStasis;
+            return this;
+        }
+
+        //TODO: check if summary is factual.
+        /// <summary>
+        /// If LimbSpecific is false then the LimbType will always be Torso.
+        /// </summary>
+        public NTAfflictionPrefabBuilder SetUpdateAction(Action<NTHuman, string, LimbType, NTHumanAffData> UpdateAction)
+        {
+            this.Affliction.UpdateAction = UpdateAction;
+            return this;
+        }
+
+        public NTAfflictionPrefab Build()
+        {
+            return this.Affliction;
+        }
+
+    }
+
+    public class NTAfflictionPrefab
+    {
+        /// <summary>
+        /// Should this affliction always be running? If on, regardless of current affliction strength, this will update.
+        /// </summary>
+        public bool Const = false;
+
+        /// <summary>
+        /// Does this affliction actually have an XML prefab? If true, gets/sets the affliction prefab, else uses the custom strength only.
+        /// </summary>
+        public bool Real = true;
+
+        public bool LimbSpecific = false;
+
+        /// <summary>
+        /// If set to true, this affliction will be interactible thourgh the NTSymptom class.
+        /// </summary>
+        public bool Symptom = false;
+
+        /// <summary>
+        /// Delays the update from occuring for as many human updates as the delay. Decremented each time the affliction is update. (Only is used when a character is first created.)
+        /// </summary>
+        public int Delay = 0;
+
+        /// <summary>
+        /// The minimum strength the affliction can have.
+        /// </summary>
+        public double MinStrength { get; set; } = 0;
+
+        /// <summary>
+        /// The maximum strength the affliction can have.
+        /// </summary>
+        public double MaxStrength { get; set; } = 100;
+
+        /// <summary>
+        /// The strength of the affliction on creation.
+        /// </summary>
+        public double DefaultStrength { get; set; } = 0;
+
+        /// <summary>
+        /// The priority of our affliction, higher intervals mean more updates.
+        /// </summary>
+        public AfflictionPriority Priority { get; set; } = AfflictionPriority.HIGH;
+
+        /// <summary>
+        /// If false, doesnt update on stasis.
+        /// </summary>
+        public bool IgnoreStasis { get; set; } = true;
+
+        /// <summary>
+        /// The ID of the affliction.
+        /// </summary>
+        public string ID { get; private set; } = "";
+
+        /// <summary>
+        /// The main update function of our affliction.
+        /// </summary>
+        public Action<NTHuman, string, LimbType, NTHumanAffData> UpdateAction =
+            (NTHuman C, string ID, LimbType Limb, NTHumanAffData AffData) =>
+            {
+                // Insert your Affliction Update in here.
+            };
+
+        public void Update(NTHuman C, string ID, LimbType Limb, NTHumanAffData Data)
+        {
+            UpdateAction.Invoke(C, ID, Limb, Data);
+        }
+
+        public NTAfflictionPrefab(string id)
+        {
+            this.ID = id;
+        }
+
+    }
+
+    public class NTSymptoms
+    {
+
+        /// <summary>
+        /// Stores infos concerning a single symptom in NTHuman.
+        /// </summary>
+        public class NTSymptomData
+        {
+            public int Duration { get; set; }
+            public NTAfflictionPrefab Affliction { get; private set; }
+            public LimbType Limb { get; private set; }
+
+            public NTSymptomData(NTAfflictionPrefab Affliction, int Duration, LimbType Limb = LimbType.None)
+            {
+                this.Affliction = Affliction;
+                this.Duration = Duration;
+
+                if (Affliction.LimbSpecific)
+                {
+                    this.Limb = Limb;
+                }
+
+            }
+
+        }
+
+
+
+    }
+
+}
