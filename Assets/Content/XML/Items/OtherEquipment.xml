@@ -1085,6 +1085,17 @@
                 <ReduceAffliction identifier="deliriuminepoisoning" amount="1.6" />
                 <Affliction identifier="sepsis" amount="1" probability="0.001" />
             </StatusEffect>
+            <StatusEffect type="OnActive" target="Character">
+                <reduceaffliction identifier="nausea" strength="0.05"/>
+                <reduceaffliction identifier="opiatewithdrawal" strength="0.05"/>
+                <reduceaffliction identifier="opiateaddiction" strength="0.05"/>
+                <reduceaffliction identifier="chemwithdrawal" strength="0.05"/>
+                <reduceaffliction identifier="chemaddiction" strength="0.05"/>
+                <reduceaffliction identifier="alcoholwithdrawal" strength="0.05"/>
+                <reduceaffliction identifier="alcoholaddiction" strength="0.05"/>
+                <reduceaffliction identifier="drunk" strength="0.05"/>
+                <reduceaffliction identifier="concussion" strength="0.02"/>
+            </StatusEffect>
         </Controller>
 
         <ItemContainer canbeselected="true" selectkey="Attack" capacity="0" maxstacksize="0" hideitems="true" hidehud="false" msg="itemmsgmodifytable" uilabel="operatingtabellabel">
