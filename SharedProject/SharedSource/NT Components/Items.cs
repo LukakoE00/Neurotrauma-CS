@@ -132,13 +132,23 @@ public class NTItemMethods
     public class ItemUpdateFunctionInfos
     {
         public Barotrauma.Item item { get; }
-        public Character user {  get; }
+        public ItemPrefab prefab { get; }
+        public Character user { get; }
         public Character target { get; }
         public Limb targetLimb { get; }
 
         public ItemUpdateFunctionInfos(Barotrauma.Item item, Character user, Character target, Limb targetLimb)
         {
             this.item = item;
+            this.user = user;
+            this.target = target;
+            this.targetLimb = targetLimb;
+        }
+
+        // This one can use a prefab to do things, so we can spoof item usage via the UI
+        public ItemUpdateFunctionInfos(ItemPrefab prefab, Character user, Character target, Limb targetLimb)
+        {
+            this.prefab = prefab;
             this.user = user;
             this.target = target;
             this.targetLimb = targetLimb;

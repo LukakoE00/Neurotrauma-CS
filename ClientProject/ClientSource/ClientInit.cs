@@ -1,4 +1,5 @@
 ﻿using Barotrauma.Networking;
+using Neurotrauma.ClientSource;
 using Neurotrauma.ClientSource.OverlayEffects;
 
 namespace Neurotrauma
@@ -13,6 +14,7 @@ namespace Neurotrauma
         {
             ConfigurationMenu.AddConfigToPauseMenu();
             DynamicItems.InitDynamicItemsClient();
+            ButtonsHUI.InitClient();
 
             if (ENABLE_SYMPTOM_EFFECTS_CLIENT) {SymptomsEffects.InitSymptomsEffects();}
 

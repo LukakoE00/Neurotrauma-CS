@@ -1229,6 +1229,31 @@ Can give blood to: AB+</entitydescription.ab_positivecard>
 <npcdialogsym.palpitations_2>My heart is beating faster than usual!</npcdialogsym.palpitations_2>
 <npcdialogsym.palpitations_3>My heart is pounding!</npcdialogsym.palpitations_3>
 
+<!-- ================================================= HUI Button Translations ================================================= -->
+<!-- Scalpel Button -->
+<nt_huibutton_enabled_scalpel>Use a Scalpel on the currently selected limb. \nRequired Medical Skill: ‖color:gui.green‖30‖end‖</nt_huibutton_enabled_scalpel>
+
+<!-- Hemostat Button -->
+<nt_huibutton_enabled_hemostat>Use a Hemostat on the currently selected limb. \nRequired Medical Skill: ‖color:gui.green‖None‖end‖</nt_huibutton_enabled_hemostat>
+
+<!-- Skin Retractors Button -->
+<nt_huibutton_enabled_skinretractors>Use Skin Retractors on the currently selected limb. \nRequired Medical Skill: ‖color:gui.green‖30‖end‖</nt_huibutton_enabled_skinretractors>
+
+<!-- Surgical Drill Button -->
+<nt_huibutton_enabled_surgicaldrill>Use a Surgical Drill on the currently selected limb. \nRequired Medical Skill: ‖color:gui.green‖45‖end‖</nt_huibutton_enabled_surgicaldrill>
+
+<!-- Surgery Saw Button -->
+<nt_huibutton_enabled_surgerysaw>Use a Surgery Saw on the currently selected limb. \nRequired Medical Skill: ‖color:gui.green‖50‖end‖</nt_huibutton_enabled_surgerysaw>
+
+<!-- Tweezers Button -->
+<nt_huibutton_enabled_tweezers>Use Tweezers on the currently selected limb. \nRequired Medical Skill: ‖color:gui.green‖30‖end‖</nt_huibutton_enabled_tweezers>
+
+<!-- Trauma Shears Button -->
+<nt_huibutton_enabled_traumashears>Use Trauma Shears on the currently selected limb. \nRequired Medical Skill: ‖color:gui.green‖10‖end‖</nt_huibutton_enabled_traumashears>
+
+<!-- Disabled Tooltip for Surgery Kit Dependencies -->
+<nt_huibutton_disabled_surgerykit>Requires Surgery Kit in inventory!</nt_huibutton_disabled_surgerykit>
+
 <!-- ================================================= Config Options ================================================= -->
 <!-- Pause Menu Button -->
 <ntgui_pausemenubutton_name>Neurotrauma Config</ntgui_pausemenubutton_name>

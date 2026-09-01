@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Style>
+  <Override>
+
+    <GUIButtonScalpel color="204,204,204,255" hovercolor="77,77,204,255" selectedcolor="255,255,255,255" pressedcolor="100,100,150,255" disabledcolor="125,125,125,125">
+        <Sprite name="GUIButtonScalpel" texture="%ModDir%/Images/InventoryItemIconAtlas.png" tile="false" maintainaspectratio="true" sourcerect="0,0,64,64" origin="0.5,0.5"/>
+    </GUIButtonScalpel>
+
+    <GUIButtonHemostat color="204,204,204,255" hovercolor="77,77,204,255" selectedcolor="255,255,255,255" pressedcolor="100,100,150,255" disabledcolor="125,125,125,125">
+        <Sprite name="GUIButtonHemostat" texture="%ModDir%/Images/InventoryItemIconAtlas.png" tile="false" maintainaspectratio="true" sourcerect="192,0,64,64" origin="0.5,0.5"/>
+    </GUIButtonHemostat>
+
+    <GUIButtonSkinRetractors color="204,204,204,255" hovercolor="77,77,204,255" selectedcolor="255,255,255,255" pressedcolor="100,100,150,255" disabledcolor="125,125,125,125">
+        <Sprite name="GUIButtonSkinRetractors" texture="%ModDir%/Images/InventoryItemIconAtlas.png" tile="false" maintainaspectratio="true" sourcerect="256,0,64,64" origin="0.5,0.5"/>
+    </GUIButtonSkinRetractors>
+
+    <GUIButtonSurgicalDrill color="204,204,204,255" hovercolor="77,77,204,255" selectedcolor="255,255,255,255" pressedcolor="100,100,150,255" disabledcolor="125,125,125,125">
+        <Sprite name="GUIButtonSurgicalDrill" texture="%ModDir%/Images/InventoryItemIconAtlas.png" tile="false" maintainaspectratio="true" sourcerect="128,0,64,64" origin="0.5,0.5"/>
+    </GUIButtonSurgicalDrill>
+
+    <GUIButtonSurgicalSaw color="204,204,204,255" hovercolor="77,77,204,255" selectedcolor="255,255,255,255" pressedcolor="100,100,150,255" disabledcolor="125,125,125,125">
+        <Sprite name="GUIButtonSurgicalSaw" texture="%ModDir%/Images/InventoryItemIconAtlas.png" tile="false" maintainaspectratio="true" sourcerect="0,64,64,64" origin="0.5,0.5"/>
+    </GUIButtonSurgicalSaw>
+
+    <GUIButtonTweezers color="204,204,204,255" hovercolor="77,77,204,255" selectedcolor="255,255,255,255" pressedcolor="100,100,150,255" disabledcolor="125,125,125,125">
+        <Sprite name="GUIButtonTweezers" texture="%ModDir%/Images/InventoryItemIconAtlas.png" tile="false" maintainaspectratio="true" sourcerect="448,0,64,64" origin="0.5,0.5"/>
+    </GUIButtonTweezers>
+
+    <GUIButtonTraumaShears color="204,204,204,255" hovercolor="77,77,204,255" selectedcolor="255,255,255,255" pressedcolor="100,100,150,255" disabledcolor="125,125,125,125">
+        <Sprite name="GUIButtonTraumaShears" texture="%ModDir%/Images/InventoryItemIconAtlas.png" tile="false" maintainaspectratio="true" sourcerect="0,192,64,64" origin="0.5,0.5"/>
+    </GUIButtonTraumaShears>
+
+  </Override>
+</Style>
