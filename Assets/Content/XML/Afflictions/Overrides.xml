@@ -1333,6 +1333,7 @@
         healcostmultiplier="2.5">
 
         <Effect minstrength="0" maxstrength="10"
+			strengthchange="-0.001"
             minscreendistort="0.02"
             maxscreendistort="0.1"
             minscreenblur="0.1"
