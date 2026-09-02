@@ -7,7 +7,6 @@ namespace Neurotrauma
     // Clientside code ONLY!
     public partial class NeurotraumaInit
     {
-
         private static readonly bool ENABLE_SYMPTOM_EFFECTS_CLIENT = false;
 
         public void InitClientOnly()
@@ -16,13 +15,21 @@ namespace Neurotrauma
             DynamicItems.InitDynamicItemsClient();
             ButtonsHUI.InitClient();
 
-            if (ENABLE_SYMPTOM_EFFECTS_CLIENT) {SymptomsEffects.InitSymptomsEffects();}
+            if (ENABLE_SYMPTOM_EFFECTS_CLIENT)
+            {
+                SymptomsEffects.InitSymptomsEffects();
+            }
 
             LuaCsSetup.Instance.Networking.Receive("NT.ConfigUpdate", (object[] args) =>
             {
                 IReadMessage msg = (IReadMessage)args[0];
                 NTConfig.ReceiveConfig(msg);
             });
+        }
+
+        partial void DisposeClient()
+        {
+            ButtonsHUI.RemoveNTButtons();
         }
     }
 }

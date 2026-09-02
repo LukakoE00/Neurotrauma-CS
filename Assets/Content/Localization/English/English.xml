@@ -896,7 +896,6 @@ Can give blood to: AB+</entitydescription.ab_positivecard>
 <itemmsgmodifytable>[[attack]] Interact</itemmsgmodifytable>
 <operatingtabellabel>Surgery Table Upgrades</operatingtabellabel>  
 
-
 <!-- Multipurpose scalpel -->
 <entityname.multiscalpel>Multipurpose Scalpel</entityname.multiscalpel>
 <entitydescription.multiscalpel>Novelty scalpel. Disabled and needs activation. In the practitioner's hands, a button pad can be utilised to activate the scalpel and switch between between operations: making incisions, extracting organs, removing bandages, or doing malpractice.</entitydescription.multiscalpel>
@@ -923,7 +922,11 @@ Can give blood to: AB+</entitydescription.ab_positivecard>
 <multiscalpel.btn.bandage>Bandages, casts, malpractice</multiscalpel.btn.bandage>
 <multiscalpel.btn.speedflex>Adaptive organ extraction</multiscalpel.btn.speedflex>
 
-<!-- ================================================= Toggleable ================================================= -->
+<!-- Surgery Kit -->
+<entityname.surgerykit>Surgery Kit</entityname.surgerykit>
+<entitydescription.surgerykit>A kit that contains all the basic surgical equipment a medic could need. \n\nEnables usage of all basic Neurotrauma tools in the Health Menu.</entitydescription.surgerykit>
+
+	<!-- ================================================= Toggleable ================================================= -->
 
 <!-- Sodium nitroprusside -->
 <entityname.pressuremeds>Sodium Nitroprusside</entityname.pressuremeds>
@@ -1250,6 +1253,9 @@ Can give blood to: AB+</entitydescription.ab_positivecard>
 
 <!-- Trauma Shears Button -->
 <nt_huibutton_enabled_traumashears>Use Trauma Shears on the currently selected limb. \nRequired Medical Skill: ‖color:gui.green‖10‖end‖</nt_huibutton_enabled_traumashears>
+
+<!-- Organ Scalpel Button -->
+<nt_huibutton_enabled_organscalpel>Swap or remove a specific organ in either the Torso or the Head, depending on the currently selected limb.</nt_huibutton_enabled_organscalpel>
 
 <!-- Disabled Tooltip for Surgery Kit Dependencies -->
 <nt_huibutton_disabled_surgerykit>Requires Surgery Kit in inventory!</nt_huibutton_disabled_surgerykit>

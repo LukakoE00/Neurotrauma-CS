@@ -275,7 +275,7 @@
 
     <!-- Surgery Tool Box (Campaign Start) -->
     <Item name="" identifier="surgerytoolboxsetstarter" nameidentifier="surgerytoolboxset" category="Equipment" tags="smallitem,mobilecontainer,tool,toolbox" cargocontaineridentifier="" showcontentsintooltip="true" Scale="0.5" fireproof="true" impactsoundtag="impact_metal_heavy" RequireAimToUse="True" description="">
-        <PreferredContainer primary="medcab" minamount="2" maxamount="2" spawnprobability="1"/>
+        <PreferredContainer primary="medcab"/>
         <PreferredContainer secondary="locker"/>
        
         <Deconstruct time="10">

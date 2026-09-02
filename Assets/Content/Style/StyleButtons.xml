@@ -1,34 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Style>
   <Override>
-
+    <!-- Scalpel -->
     <GUIButtonScalpel color="204,204,204,255" hovercolor="77,77,204,255" selectedcolor="255,255,255,255" pressedcolor="100,100,150,255" disabledcolor="125,125,125,125">
         <Sprite name="GUIButtonScalpel" texture="%ModDir%/Images/InventoryItemIconAtlas.png" tile="false" maintainaspectratio="true" sourcerect="0,0,64,64" origin="0.5,0.5"/>
     </GUIButtonScalpel>
 
+    <!-- Hemostat -->
     <GUIButtonHemostat color="204,204,204,255" hovercolor="77,77,204,255" selectedcolor="255,255,255,255" pressedcolor="100,100,150,255" disabledcolor="125,125,125,125">
         <Sprite name="GUIButtonHemostat" texture="%ModDir%/Images/InventoryItemIconAtlas.png" tile="false" maintainaspectratio="true" sourcerect="192,0,64,64" origin="0.5,0.5"/>
     </GUIButtonHemostat>
 
+    <!-- Skin Retractors -->
     <GUIButtonSkinRetractors color="204,204,204,255" hovercolor="77,77,204,255" selectedcolor="255,255,255,255" pressedcolor="100,100,150,255" disabledcolor="125,125,125,125">
         <Sprite name="GUIButtonSkinRetractors" texture="%ModDir%/Images/InventoryItemIconAtlas.png" tile="false" maintainaspectratio="true" sourcerect="256,0,64,64" origin="0.5,0.5"/>
     </GUIButtonSkinRetractors>
 
+    <!-- Surgical Drill -->
     <GUIButtonSurgicalDrill color="204,204,204,255" hovercolor="77,77,204,255" selectedcolor="255,255,255,255" pressedcolor="100,100,150,255" disabledcolor="125,125,125,125">
         <Sprite name="GUIButtonSurgicalDrill" texture="%ModDir%/Images/InventoryItemIconAtlas.png" tile="false" maintainaspectratio="true" sourcerect="128,0,64,64" origin="0.5,0.5"/>
     </GUIButtonSurgicalDrill>
 
+    <!-- Surgical Saw -->
     <GUIButtonSurgicalSaw color="204,204,204,255" hovercolor="77,77,204,255" selectedcolor="255,255,255,255" pressedcolor="100,100,150,255" disabledcolor="125,125,125,125">
         <Sprite name="GUIButtonSurgicalSaw" texture="%ModDir%/Images/InventoryItemIconAtlas.png" tile="false" maintainaspectratio="true" sourcerect="0,64,64,64" origin="0.5,0.5"/>
     </GUIButtonSurgicalSaw>
 
+    <!-- Tweezers -->
     <GUIButtonTweezers color="204,204,204,255" hovercolor="77,77,204,255" selectedcolor="255,255,255,255" pressedcolor="100,100,150,255" disabledcolor="125,125,125,125">
         <Sprite name="GUIButtonTweezers" texture="%ModDir%/Images/InventoryItemIconAtlas.png" tile="false" maintainaspectratio="true" sourcerect="448,0,64,64" origin="0.5,0.5"/>
     </GUIButtonTweezers>
 
+    <!-- Trauma Shears -->
     <GUIButtonTraumaShears color="204,204,204,255" hovercolor="77,77,204,255" selectedcolor="255,255,255,255" pressedcolor="100,100,150,255" disabledcolor="125,125,125,125">
         <Sprite name="GUIButtonTraumaShears" texture="%ModDir%/Images/InventoryItemIconAtlas.png" tile="false" maintainaspectratio="true" sourcerect="0,192,64,64" origin="0.5,0.5"/>
     </GUIButtonTraumaShears>
+
+    <!-- Organ Scalpel -->
+    <GUIButtonOrganScalpel color="204,204,204,255" hovercolor="77,77,204,255" selectedcolor="255,255,255,255" pressedcolor="100,100,150,255" disabledcolor="125,125,125,125">
+        <Sprite name="GUIButtonOrganScalpel" texture="%ModDir%/Images/InventoryItemIconAtlas.png" tile="false" maintainaspectratio="true" sourcerect="0,256,64,64" origin="0.5,0.5"/>
+    </GUIButtonOrganScalpel>
+
+    <!-- Kidney -->
+    <GUIButtonKidney color="204,204,204,255" hovercolor="77,77,204,255" selectedcolor="255,255,255,255" pressedcolor="100,100,150,255" disabledcolor="125,125,125,125">
+        <Sprite name="GUIButtonKidney" texture="%ModDir%/Images/InGameItemIconAtlas.png" tile="false" maintainaspectratio="true" sourcerect="193,481,32,47" origin="0.5,0.5"/>
+    </GUIButtonKidney>
+
+    <!-- Liver -->
+    <GUIButtonLiver color="204,204,204,255" hovercolor="77,77,204,255" selectedcolor="255,255,255,255" pressedcolor="100,100,150,255" disabledcolor="125,125,125,125">
+        <Sprite name="GUIButtonLiver" texture="%ModDir%/Images/InGameItemIconAtlas.png" tile="false" maintainaspectratio="true" sourcerect="5,479,79,52" origin="0.5,0.5"/>
+    </GUIButtonLiver>
+
+    <!-- Lungs -->
+    <GUIButtonLungs color="204,204,204,255" hovercolor="77,77,204,255" selectedcolor="255,255,255,255" pressedcolor="100,100,150,255" disabledcolor="125,125,125,125">
+        <Sprite name="GUIButtonLungs" texture="%ModDir%/Images/InGameItemIconAtlas.png" tile="false" maintainaspectratio="true" sourcerect="91,480,84,84" origin="0.5,0.5"/>
+    </GUIButtonLungs>
+
+    <!-- Heart -->
+    <GUIButtonHeart color="204,204,204,255" hovercolor="77,77,204,255" selectedcolor="255,255,255,255" pressedcolor="100,100,150,255" disabledcolor="125,125,125,125">
+        <Sprite name="GUIButtonHeart" texture="%ModDir%/Images/InGameItemIconAtlas.png" tile="false" maintainaspectratio="true" sourcerect="238,479,28,54" origin="0.5,0.5"/>
+    </GUIButtonHeart>
+
+    <!-- Brain -->
+    <GUIButtonBrain color="204,204,204,255" hovercolor="77,77,204,255" selectedcolor="255,255,255,255" pressedcolor="100,100,150,255" disabledcolor="125,125,125,125">
+        <Sprite name="GUIButtonBrain" texture="%ModDir%/Images/InGameItemIconAtlas.png" tile="false" maintainaspectratio="true" sourcerect="272,480,78,60" origin="0.5,0.5"/>
+    </GUIButtonBrain>
 
   </Override>
 </Style>

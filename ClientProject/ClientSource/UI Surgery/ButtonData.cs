@@ -10,6 +10,8 @@ namespace Neurotrauma.ClientSource
         public string StyleName = "";
         public string? ItemIdentifier;
         public string? RequiredItemIdentifier;
+        public LimbType? RequiredLimb;
+        public List<ButtonData>? SubButtons;
     }
 }
 
@@ -25,7 +27,7 @@ internal static class ButtonDefinitions
             DisabledTooltip = TextManager.Get("nt_huibutton_disabled_surgerykit"),
             StyleName = "GUIButtonScalpel",
             ItemIdentifier = "advscalpel",
-            RequiredItemIdentifier = "antidama1" // TODO: Change to Surgery Kit item! Same for all below here
+            RequiredItemIdentifier = "surgerykit"
         },
 
         // Hemostat
@@ -36,7 +38,7 @@ internal static class ButtonDefinitions
             DisabledTooltip = TextManager.Get("nt_huibutton_disabled_surgerykit"),
             StyleName = "GUIButtonHemostat",
             ItemIdentifier = "advhemostat",
-            RequiredItemIdentifier = "antidama1"
+            RequiredItemIdentifier = "surgerykit"
         },
 
         // Skin Retractors
@@ -47,7 +49,7 @@ internal static class ButtonDefinitions
             DisabledTooltip = TextManager.Get("nt_huibutton_disabled_surgerykit"),
             StyleName = "GUIButtonSkinRetractors",
             ItemIdentifier = "advretractors",
-            RequiredItemIdentifier = "antidama1"
+            RequiredItemIdentifier = "surgerykit"
         },
 
         // Surgical Drill
@@ -58,7 +60,7 @@ internal static class ButtonDefinitions
             DisabledTooltip = TextManager.Get("nt_huibutton_disabled_surgerykit"),
             StyleName = "GUIButtonSurgicalDrill",
             ItemIdentifier = "surgicaldrill",
-            RequiredItemIdentifier = "antidama1"
+            RequiredItemIdentifier = "surgerykit"
         },
 
         // Surgery Saw
@@ -69,7 +71,7 @@ internal static class ButtonDefinitions
             DisabledTooltip = TextManager.Get("nt_huibutton_disabled_surgerykit"),
             StyleName = "GUIButtonSurgicalSaw",
             ItemIdentifier = "surgerysaw",
-            RequiredItemIdentifier = "antidama1"
+            RequiredItemIdentifier = "surgerykit"
         },
 
         // Tweezers
@@ -80,7 +82,7 @@ internal static class ButtonDefinitions
             DisabledTooltip = TextManager.Get("nt_huibutton_disabled_surgerykit"),
             StyleName = "GUIButtonTweezers",
             ItemIdentifier = "tweezers",
-            RequiredItemIdentifier = "antidama1"
+            RequiredItemIdentifier = "surgerykit"
         },
 
         // Trauma Shears
@@ -91,7 +93,25 @@ internal static class ButtonDefinitions
             DisabledTooltip = TextManager.Get("nt_huibutton_disabled_surgerykit"),
             StyleName = "GUIButtonTraumaShears",
             ItemIdentifier = "traumashears",
-            RequiredItemIdentifier = "antidama1"
+            RequiredItemIdentifier = "surgerykit"
+        },
+
+        // Surgery on Organs
+        new ButtonData
+        {
+            Identifier = "organscalpel",
+            Tooltip = TextManager.Get("nt_huibutton_enabled_organscalpel"),
+            DisabledTooltip = TextManager.Get("nt_huibutton_disabled_surgerykit"),
+            StyleName = "GUIButtonOrganScalpel",
+            RequiredItemIdentifier = "surgerykit",
+            SubButtons = new List<ButtonData>
+            {
+                new ButtonData { Identifier = "surgery_kidney", StyleName = "GUIButtonKidney", ItemIdentifier = "organscalpel_kidneys", RequiredItemIdentifier = "surgerykit", RequiredLimb = LimbType.Torso },
+                new ButtonData { Identifier = "surgery_liver",  StyleName = "GUIButtonLiver",  ItemIdentifier = "organscalpel_liver",   RequiredItemIdentifier = "surgerykit", RequiredLimb = LimbType.Torso },
+                new ButtonData { Identifier = "surgery_lungs",  StyleName = "GUIButtonLungs",  ItemIdentifier = "organscalpel_lungs",   RequiredItemIdentifier = "surgerykit", RequiredLimb = LimbType.Torso },
+                new ButtonData { Identifier = "surgery_heart",  StyleName = "GUIButtonHeart",  ItemIdentifier = "organscalpel_heart",   RequiredItemIdentifier = "surgerykit", RequiredLimb = LimbType.Torso },
+                new ButtonData { Identifier = "surgery_brain",  StyleName = "GUIButtonBrain",  ItemIdentifier = "organscalpel_brain",   RequiredItemIdentifier = "surgerykit", RequiredLimb = LimbType.Head },
+            }
         }
     };
 }

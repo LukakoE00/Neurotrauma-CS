@@ -150,7 +150,11 @@ namespace Neurotrauma
                 LoveBots.Dispose();
                 CharacterPatches.Dispose();
             }
+
+            DisposeClient();
         }
+
+        partial void DisposeClient();
 
         // -------------------------------------- Our IEvent Plugins -------------------------------------- \\
 

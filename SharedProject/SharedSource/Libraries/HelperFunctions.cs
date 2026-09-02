@@ -2056,6 +2056,23 @@ namespace Neurotrauma
 
         // ---------------------------------------- Client Related Helper Functions -------------------------------------------------- \\
 
+        public static bool IsWorkshopPackageEnabledByID(ContentPackage Package, string DesiredPackageIdentifier)
+        {
+            if (Package == null)
+            {
+                return false;
+            }
+
+            string CurrentPackageID = Package.UgcId.ToString();
+
+            if (CurrentPackageID == DesiredPackageIdentifier)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         /// <summary>
         /// Converts a character to a client.
         /// </summary>
