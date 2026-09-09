@@ -1,5 +1,4 @@
 using static Neurotrauma.HumanUpdate;
-using static Neurotrauma.NTItemMethods;
 
 namespace Neurotrauma;
 
@@ -19,11 +18,22 @@ public class NTAfflictions
         MEDIUM = 4 * 60, // Every 4s
         HIGH = 2 * 60 // Every 2s
     }
+
+    /// <summary>
+    /// Stores every defined affliction. 
+    /// Key is Affliction ID and Value is the NTAfflictionPrefab.
+    /// </summary>
     public static Dictionary<string, NTAfflictionPrefab> NTAfflictionsPrefabRegistry { get; } = new Dictionary<string, NTAfflictionPrefab>(); // Stores all of our registered afflictions (regardless of categeory)
+    
+    /// <summary>
+    /// Stores which mod defined an affliction last. 
+    /// Key is Mod Name and Value is Affliction ID.
+    /// </summary>
     public static Dictionary<string, string> NTAfflictionsPrefabModDefinerRegistry { get; } = new Dictionary<string, string>(); // Stores the mod that defined the affliction
 
     /// <summary>
-    /// When an NTAfflictionPrefab is overriden, the old NTAfflictionPrefab is stored here in case a mod needs to access the original affliction. The key is a tuple of (modID, afflictionID).
+    /// When an NTAfflictionPrefab is overriden, the old NTAfflictionPrefab is stored here in case a mod needs to access the original affliction. 
+    /// The Key is a tuple of (ModName, AfflictionID) and the Value is the old Prefab.
     /// </summary>
     public static Dictionary<(string, string), NTAfflictionPrefab> NTOldAfflictionsPrefabRegistry { get; } = new Dictionary<(string, string), NTAfflictionPrefab>();
 
@@ -56,7 +66,7 @@ public class NTAfflictions
         /// <returns>true if the function was registered successfully, false otherwise (the affliction already has a function assigned).</returns>s
         public bool Register(NTAfflictionPrefab affliction)
         {
-            if (NTConfig.Get("debug_mode", IS_DEBUG))
+            if (NTConfig.Get("NT_DEBUG_MODE", IS_DEBUG))
             {
                 HF.PrintUtility($"[{this.ModID}] Registering affliction: {affliction.ID}");
             }
@@ -95,7 +105,7 @@ public class NTAfflictions
         /// <returns>true if the function was overridden or registered successfully, false otherwise.</returns>
         public bool Override(NTAfflictionPrefab Affliction, bool RegisterInstead = true)
         {
-            if (NTConfig.Get("debug_mode", IS_DEBUG))
+            if (NTConfig.Get("NT_DEBUG_MODE", IS_DEBUG))
             {
                 HF.PrintUtility($"[{this.ModID}] Overriding affliction: {Affliction.ID}");
             }
@@ -104,7 +114,7 @@ public class NTAfflictions
             {
                 if (RegisterInstead)
                 {
-                    if (NTConfig.Get("debug_mode", IS_DEBUG))
+                    if (NTConfig.Get("NT_DEBUG_MODE", IS_DEBUG))
                     {
                         HF.PrintWarning($"[{this.ModID}] Affliction with ID '{Affliction.ID}' is not registered. Will register instead.");
                     }
@@ -130,7 +140,7 @@ public class NTAfflictions
         public bool Remove(string AfflictionID)
         {
             // TODO: set debug mode to false when going public to avoid spamming console like retards
-            if (NTConfig.Get("debug_mode", IS_DEBUG))
+            if (NTConfig.Get("NT_DEBUG_MODE", IS_DEBUG))
             {
                 HF.PrintUtility($"[{this.ModID}] Removing affliction: {AfflictionID}");
             }
@@ -168,6 +178,24 @@ public class NTAfflictions
                 return NTAfflictionsPrefabRegistry[AfflictionID];
             }
             return null;
+        }
+
+
+        /// <summary>
+        /// Calls the old function of an affliction, useful if you want to add functionalities on top of another afflictions.
+        /// </summary>
+        /// <param name="ModName">The name defined in their NTAfflictionsLoader.</param>
+        /// <param name="AfflictionID">The ID of the affliction defined in the XML.</param>
+        public void CallOldUpdate(string ModName, string AfflictionID, NTHuman C, string ID, LimbType Limb, NTHumanAffData AffData)
+        {
+            if (!NTOldAfflictionsPrefabRegistry.ContainsKey((ModName, AfflictionID)))
+            {
+                HF.PrintError($"The affliction {AfflictionID} was never overriden by {ModName}!");
+                return;
+            }
+
+            NTAfflictionPrefab OldAff = NTOldAfflictionsPrefabRegistry[(ModName, AfflictionID)];
+            OldAff.Update(C, ID, Limb, AffData);
         }
     }
 

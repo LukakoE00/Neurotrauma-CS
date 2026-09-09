@@ -2,6 +2,8 @@ namespace Neurotrauma;
 
 public class NTItems
 {
+    // TODO: add and old item registry to call old item update
+
 
     private static Dictionary<string, Action<ItemUpdateFunctionInfos>> NTItemsRegistry { get; } = new Dictionary<string, Action<ItemUpdateFunctionInfos>> { };
 
@@ -23,18 +25,20 @@ public class NTItems
 
         /// <summary>
         /// Register a new function associated with the given item ID. This function will be called when the item is used in the game.
-        /// </summary>
-        /// <param name="ItemID">The ID of the item defined in the XML.</param>
-        /// <param name="UpdateFunction">A function that runs when the item is used.</param>
-        /// <returns>true if the function was registered successfully, false otherwise (the item already has a function assigned).</returns>
         /// <example>
         /// <code>
-        /// var NTItemFunctionLoader = new NTItems.NTItemFunctionLoader("MyMod");
-        /// NTItemFunctionLoader.Register("MyItemID", (infos) => {
+        /// NTItemFunctionLoader loader = new NTItems.NTItemFunctionLoader("MyMod");
+        /// 
+        /// loader.Register("MyItemID", (infos) => {
         ///     // Your item update logic here
         /// });
         /// </code>
         /// </example>
+        /// </summary>
+        /// <param name="ItemID">The ID of the item defined in the XML.</param>
+        /// <param name="UpdateFunction">A function that runs when the item is used.</param>
+        /// <returns>true if the function was registered successfully, false otherwise (the item already has a function assigned).</returns>
+        /// 
         public bool Register(string ItemID, Action<ItemUpdateFunctionInfos> UpdateFunction)
         {
             // TODO: set debug mode to false when going public to avoid spamming console like retards

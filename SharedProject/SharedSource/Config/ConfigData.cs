@@ -459,6 +459,14 @@ namespace Neurotrauma
                             Description = TextManager.Get("ntconfigdescription_ignoredcategory"),
                         },
 
+                        ["NT_DEBUG_MODE"] = new ConfigEntry
+                        {
+                            Name = TextManager.Get("ntconfigname_debugmode"),
+                            Default = false,
+                            Type = ConfigEntryType.Bool,
+                            Description = TextManager.Get("ntconfigdescription_debugmode"),
+                        },
+
                         // ================================= COMMON ITEMS ========================================
                         ["NT_ItemPriceHeaderFirstAid"] = new ConfigEntry
                         {

@@ -256,7 +256,7 @@ namespace Neurotrauma
         }
     }
 
-    public class NTStatDouble(string Name, double MinStrength = 0, double MaxStrength = 1, double DefaultStrength = 1, Func<HumanUpdate.NTHuman, double> ?Update = null) : NTStat()
+    public class NTStatDouble(string Name, double MinStrength = 0, double MaxStrength = 1, double DefaultStrength = 1, Func<NTHuman, double> ?Update = null) : NTStat()
     {
         private double MinStrength { get; set; } = MinStrength;
         private double MaxStrength { get; set; } = MaxStrength;
@@ -264,7 +264,7 @@ namespace Neurotrauma
         private bool Settable { get; set; } = false;
         public string ID = Name;
 
-        public void Add(HumanUpdate.NTHuman C, double AddStrength)
+        public void Add(NTHuman C, double AddStrength)
         {
             if (Settable)
             {
@@ -272,12 +272,12 @@ namespace Neurotrauma
             }
         }
 
-        public double Get(HumanUpdate.NTHuman C)
+        public double Get(NTHuman C)
         {
             return (Update != null) ? Update.Invoke(C) : C.LocalStats.DoubleStats[ID].Strength; // C# my beloved.
         }
 
-        public void Set(HumanUpdate.NTHuman C, double NewStrength)
+        public void Set(NTHuman C, double NewStrength)
         {
             if (Settable)
             {

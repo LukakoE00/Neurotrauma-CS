@@ -1,5 +1,3 @@
-using static Neurotrauma.HF;
-using static Neurotrauma.HumanUpdate;
 using static Neurotrauma.NTAfflictions;
 using static Neurotrauma.NTAfflictions.NTSymptoms;
 
@@ -7,7 +5,8 @@ namespace Neurotrauma;
 
 public class NTHuman
 {
-
+    public Dictionary<String, bool> BoolStats { get; private set; }
+    public Dictionary<String, double> DoubleStats { get; private set; }
     private NTSymptomsStorage Symptoms;
     public Character Human {  get; private set; }
 
@@ -15,7 +14,35 @@ public class NTHuman
     {
         this.Human = Human;
         this.Symptoms = new NTSymptomsStorage(this);
+
+
+        this.BoolStats = new Dictionary<String, bool>();
+        this.DoubleStats = new Dictionary<String, double>();
+
+        foreach (var item in Stats.StatRegistry)
+        {
+            string name = item.Key;
+            Stats.NTStat stat = item.Value;
+
+            if (stat is Stats.NTStatBool)
+            {
+                this.BoolStats.Add(name, ((Stats.NTStatBool)stat).DefaultValue);
+            }
+            else if (stat is Stats.NTStatDouble)
+            {
+                this.DoubleStats.Add(name, ((Stats.NTStatDouble)stat).DefaultStrength);
+            }
+        }
     }
+     
+    // ========== STATS    ==========
+
+    public void UpdateStats()
+    {
+
+    }
+
+    #region Symptoms
 
     // ========== SYMPTOMS ==========
 
@@ -116,7 +143,7 @@ public class NTHuman
     }
 
 
-    // TODO: find a better name
+    // TODO: find a better name and maybe make a better system but this will have to do for now
     private class NTSymptomsStorage
     {
         private NTHuman Human;
@@ -221,7 +248,7 @@ public class NTHuman
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣵⡂⢳⣀⠴⠶⠷⠾⠦⣌⠃⠘⢊⠿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢹⠃⢙⡷⢸⣶⢶⣞⠉⠈⡣⠀⣸⡇⠀⠀⠀⠀⠀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⢧⡘⠈⠀⠀⠀⠀⠈⠙⠄⣀⠝⢧⠄⠀⠀⠀⢠⠆⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡴⢣⢎⠳⢦⣀⣠⣦⣀⣔⡥⠞⠁⠀⣹⡨⣄⡂⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡴⢣⢎⠳⢦⣀⣠⣦⣀⣔⡤⠞⠁⠀⣹⡨⣄⡂⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠹⡝⣹⠁⠀⠀⠐⠫⠿⠛⠋⠀⠀⠀⢠⢿⣏⠿⣮⡆⡤⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡆⢀⠞⣸⡇⠋⠀⠀⠀⠐⢄⠀⠀⠀⠀⠀⠀⠎⣾⠸⣄⣪⡽⢧⡁⢀⡀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢂⣠⡞⡀⠊⡐⢹⡰⡀⠀⠀⢀⠀⠀⠀⠀⠀⠀⠀⣎⢲⢸⢆⠫⡁⠫⡢⣳⡄⢢⣴⠄⣀⡀⠀⠀⠀
@@ -279,6 +306,7 @@ probably the most disgusting code i've ever written
         }
  
     }
+    #endregion
 }
 
 /*
@@ -983,6 +1011,4 @@ public class NTHuman
         }
     }
 
-}
-
-*/
+}*/

@@ -1418,6 +1418,9 @@ Can give blood to: AB+</entitydescription.ab_positivecard>
 <ntconfigstyle_ignoredcategory>identifier,identifier</ntconfigstyle_ignoredcategory>
 <ntconfigdescription_ignoredcategory>Afflictions added to this category will be ignored by the health scanner.</ntconfigdescription_ignoredcategory>
 
+<ntconfigname_debugmode>Debug Mode</ntconfigname_debugmode>
+<ntconfigdescription_debugmode>MORE LOGS! Useful if you're debugging or developping an addon.</ntconfigdescription_debugmode>
+	
 <!-- =================== Common Item Price Multipliers =================== -->
 <ntconfigname_header3>Common Item Price Multipliers</ntconfigname_header3>
 <!-- Morphine -->
