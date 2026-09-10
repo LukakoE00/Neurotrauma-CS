@@ -2350,6 +2350,19 @@ namespace Neurotrauma
                    }
                };
 
+            // Husk Infection
+            // Not constant; gets applied by other sources.
+            // Type: Non-Limb Specific.
+            // Caused By: Velonaceps calyx Eggs item, Calyx Extract item, Husk Stinger weapon, bites by Husk Infected creatures.
+            // Effects: Transcendence, death, water breathing, pressure resistance. 
+            AfflictionsToAdd["huskinfection"] = new("huskinfection", 0, 100, 0, AfflictionPriority.HIGH);
+            AfflictionsToAdd["huskinfection"].UpdateAction =
+               (HumanUpdate.NTHuman C, string ID, LimbType Limb, HumanUpdate.NTHumanNonLimbAffData AffData) =>
+               {
+                   // Passive Increase is basegame +0.3/s
+
+               };
+
             // =============== Surgical =============== //
             // Cavity Cleaning
             // Not constant; gets applied by other sources
