@@ -186,7 +186,7 @@ public class NTAfflictions
         /// </summary>
         /// <param name="ModName">The name defined in their NTAfflictionsLoader.</param>
         /// <param name="AfflictionID">The ID of the affliction defined in the XML.</param>
-        public void CallOldUpdate(string ModName, string AfflictionID, NTHuman C, string ID, LimbType Limb, NTHumanAffData AffData)
+        public void CallOldUpdate(string ModName, string AfflictionID, NTHuman C, string ID, LimbType Limb)
         {
             if (!NTOldAfflictionsPrefabRegistry.ContainsKey((ModName, AfflictionID)))
             {
@@ -195,7 +195,7 @@ public class NTAfflictions
             }
 
             NTAfflictionPrefab OldAff = NTOldAfflictionsPrefabRegistry[(ModName, AfflictionID)];
-            OldAff.Update(C, ID, Limb, AffData);
+            OldAff.Update(C, ID, Limb);
         }
     }
 
@@ -292,7 +292,7 @@ public class NTAfflictions
         /// <summary>
         /// If LimbSpecific is false then the LimbType will always be Torso.
         /// </summary>
-        public NTAfflictionPrefabBuilder SetUpdateAction(Action<NTHuman, string, LimbType, NTHumanAffData> UpdateAction)
+        public NTAfflictionPrefabBuilder SetUpdateAction(Action<NTHuman, string, LimbType> UpdateAction)
         {
             this.Affliction.UpdateAction = UpdateAction;
             return this;
@@ -362,15 +362,15 @@ public class NTAfflictions
         /// <summary>
         /// The main update function of our affliction.
         /// </summary>
-        public Action<NTHuman, string, LimbType, NTHumanAffData> UpdateAction =
-            (NTHuman C, string ID, LimbType Limb, NTHumanAffData AffData) =>
+        public Action<NTHuman, string, LimbType> UpdateAction =
+            (NTHuman C, string ID, LimbType Limb) =>
             {
                 // Insert your Affliction Update in here.
             };
 
-        public void Update(NTHuman C, string ID, LimbType Limb, NTHumanAffData Data)
+        public void Update(NTHuman C, string ID, LimbType Limb)
         {
-            UpdateAction.Invoke(C, ID, Limb, Data);
+            UpdateAction.Invoke(C, ID, Limb);
         }
 
         public NTAfflictionPrefab(string id)

@@ -28,11 +28,11 @@ public class NTAfflictionsToAdd
 
         NTAfflictionPrefab OxygenLow = builder.New("oxygenlow")
             .SetStrengths(0, 200, 0)
-            .SetUpdateAction((NTHuman C, string ID, LimbType Limb, NTHumanAffData AffData) =>
+            .SetUpdateAction((NTHuman C, string ID, LimbType Limb) =>
             {
-                if (C.GetAffStrength("respiratoryarrest") > 0)
+                if (C.GetAfflictionStrength("respiratoryarrest") > 0)
                 {
-                    AffData.Strength += 30f;
+                    C.AddAffliction(ID, 30f);
                 }
             })
             .Build();

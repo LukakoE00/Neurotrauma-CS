@@ -5,6 +5,10 @@ namespace Neurotrauma;
 
 public class NTHuman
 {
+
+    // We might want to get our own ?
+    private static IEventService EventService = LuaCsSetup.Instance.EventService;
+
     public Dictionary<String, bool> BoolStats { get; private set; }
     public Dictionary<String, double> DoubleStats { get; private set; }
     private NTSymptomsStorage Symptoms;
@@ -34,13 +38,171 @@ public class NTHuman
             }
         }
     }
-     
+
+    #region Stats
     // ========== STATS    ==========
 
     public void UpdateStats()
     {
 
     }
+
+    #endregion
+
+    #region Afflictions
+
+    public Affliction GetAffliction(string AfflictionID)
+    {
+        return this.Human.CharacterHealth.GetAffliction(AfflictionID);
+    }
+
+    public Affliction GetAfflictionLimb(string AfflictionID, LimbType Limb)
+    {
+        return this.Human.CharacterHealth.GetAffliction(AfflictionID, this.Human.AnimController.GetLimb(Limb));
+    }
+
+    public float GetAfflictionStrength(string AfflictionID, float DefaultValue = 0f)
+    {
+        Affliction aff = this.GetAffliction(AfflictionID);
+
+        if (aff == null)
+        {
+            return DefaultValue;
+        }
+
+        return HF.NormalizeFloat(aff.Strength);
+        
+
+    }
+
+    public float GetAfflictionStrengthLimb(string AfflictionID, LimbType Limb, float DefaultValue = 0f)
+    {
+
+        Affliction aff = this.GetAfflictionLimb(AfflictionID, Limb);
+
+        if (aff == null)
+        {
+            return DefaultValue;
+        }
+
+        return HF.NormalizeFloat(aff.Strength);
+    }
+
+    public void AddAffliction(string AfflictionID, float Strength, Character? Aggressor = null)
+    {
+        float prev = this.GetAfflictionStrength(AfflictionID, 0f);
+        this.SetAffliction(AfflictionID, prev + Strength, Aggressor == null ? this.Human : Aggressor);
+    }
+
+    public void AddAfflictionLimb(string AfflictionID, LimbType Limb, float Strength, Character? Aggressor = null)
+    {
+        if (Aggressor == null)
+        {
+            Aggressor = this.Human;
+        }
+
+        if (Strength < 0)
+        {
+            this.Human.CharacterHealth.ReduceAfflictionOnLimb(
+                HF.GetCharacterLimb(this.Human, Limb),
+                AfflictionID,
+                HF.NormalizeFloat(-Strength),
+                null,
+                Aggressor);
+
+            return;
+        }
+
+        if (!AfflictionPrefab.Prefabs.TryGet(AfflictionID, out AfflictionPrefab? Prefab) || Prefab == null || this.Human == null || this.Human.CharacterHealth == null)
+        {
+            return;
+        }
+
+        float Resistance = this.Human.CharacterHealth.GetResistance(Prefab, Limb);
+
+        if (Resistance >= 1)
+        {
+            return;
+        }
+
+        float ScaledStrength = Strength * this.Human.CharacterHealth.MaxVitality / 100 / (1 - Resistance);
+        Affliction Affliction = Prefab.Instantiate(ScaledStrength, Aggressor);
+        bool RecalculateVitality = NTC.AfflictionsAffectingVitality.Contains(AfflictionID);
+
+        // No need to manually calculate strength, just stack it - Lukako
+        this.Human.CharacterHealth.ApplyAffliction(
+            this.Human.AnimController.GetLimb(Limb),
+            Affliction,
+            true,
+            false,
+            RecalculateVitality
+        );
+    }
+
+    public void SetAffliction(string AfflictionID, double Strength, Character? Aggressor = null)
+    {
+        
+    }
+
+    #endregion
+
+    #region Update
+    // ==== UPDATE ====
+
+    public void PreHook()
+    {
+        EventService.Call("Neurotrauma.HumanUpdate.PreHook", this);
+        return;
+    }
+
+    public Dictionary<LimbType, List<String>> FetchAfflictions(AfflictionPriority minimumPriority)
+    {
+        IReadOnlyCollection<Affliction> afflictions = this.Human.CharacterHealth.GetAllAfflictions();
+
+        var r = new Dictionary<LimbType, List<String>>();
+        
+        
+
+        return r;
+        
+    }
+
+    /// <summary>
+    /// First calls UpdateSymptoms() then calls every NTAffliction Update function for every NTAffliction in the given list.
+    /// </summary>
+    /// <param name="AfflictionsList">The list of affliction IDs oredered by LimbType</param>
+    public void UpdateAfflictions(Dictionary<LimbType, List<String>> AfflictionsList)
+    {
+        this.UpdateSymptoms();
+
+        foreach (var limbList in AfflictionsList)
+        {
+            var limb = limbList.Key;
+
+            foreach (var id in limbList.Value)
+            {
+
+                var aff = NeurotraumaInit.NTAfflLoader.Get(id);
+
+                if (aff == null)
+                {
+                    HF.PrintError($"Error getting a NTAfflictionPrefab from the ID {id} : The ID does not match any NTAfflictionPrefab!");
+                    continue;
+                }
+
+                aff.Update(this, id, limb);
+            }
+        }
+
+    }
+
+    public void PostHook()
+    {
+        EventService.Call("Neurotrauma.HumanUpdate.PostHook", this);
+        return;
+    }
+
+    #endregion
 
     #region Symptoms
 
