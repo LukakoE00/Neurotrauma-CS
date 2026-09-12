@@ -1298,6 +1298,16 @@ namespace Neurotrauma
                             Type = ConfigEntryType.Bool,
                             Description = TextManager.Get("ntconfigdescription_doorganscalpels"),
                         },
+
+
+                        // ================================= EXPERIMENTAL =================================
+
+                        ["NT_ExperimentalHeader"] = new ConfigEntry
+                        {
+                            Page = "experimental",
+                            Name = TextManager.Get("ntconfigname_header9"),
+                            Type = ConfigEntryType.Category,
+                        },
                     }
                 }
             );

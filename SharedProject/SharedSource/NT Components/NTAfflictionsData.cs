@@ -1,3 +1,4 @@
+using static Neurotrauma.HumanUpdate;
 using static Neurotrauma.NTAfflictions;
 
 namespace Neurotrauma;
@@ -26,13 +27,18 @@ public class NTAfflictionsToAdd
     {
         NTAfflictionPrefabBuilder builder = new NTAfflictionPrefabBuilder();
 
+        // Oxygen Low
+        // Not constant; gets applied by other sources
+        // Type: Non-Limb Specific, Vanilla Override
+        // Caused By: Lack of Oxygen, Respiratory Arrest
+        // Effects: Hypoxemia
         NTAfflictionPrefab OxygenLow = builder.New("oxygenlow")
             .SetStrengths(0, 200, 0)
-            .SetUpdateAction((NTHuman C, string ID, LimbType Limb) =>
+            .SetUpdateAction((NTHuman C, string ID, LimbType Limb, float DeltaTime) =>
             {
                 if (C.GetAfflictionStrength("respiratoryarrest") > 0)
                 {
-                    C.AddAffliction(ID, 30f);
+                    C.AddAffliction(ID, 15f * DeltaTime);
                 }
             })
             .Build();
@@ -41,64 +47,52 @@ public class NTAfflictionsToAdd
 
         NeurotraumaInit.NTAfflLoader.Registers(AfflictionsToAdd);
 
-        // Oxygen Low
-        // Not constant; gets applied by other sources
-        // Type: Non-Limb Specific, Vanilla Override
-        // Caused By: Lack of Oxygen, Respiratory Arrest
-        // Effects: Hypoxemia
-        AfflictionsToAdd["oxygenlow"] = new("oxygenlow", 0, 200, 0, AfflictionPriority.HIGH);
-        AfflictionsToAdd["oxygenlow"].UpdateAction =
-            (NTHuman C, string ID, LimbType Limb, NTHumanNonLimbAffData AffData) =>
-            {
-                if (C.GetAffStrength("respiratoryarrest") > 0)
-                {
-                    AffData.Strength += 30f;
-                }
-            };
-
-
         // Drunk
         // Not constant; gets applied by other sources.
         // Type: Non-Limb Specific, Vanilla Override
         // Caused By: ROOOTT BEEERRRRRR.
         // Effects: idk.
-        AfflictionsToAdd["drunk"] = new("drunk", 0, 200, 0, AfflictionPriority.MEDIUM);
-        AfflictionsToAdd["drunk"].UpdateAction =
-            (NTHuman C, string ID, LimbType Limb, NTHumanNonLimbAffData AffData) =>
-            {
-            };
+        NTAfflictionPrefab Drunk = builder.New("drunk")
+            .SetStrengths(0, 200, 0)
+            .Build();
+
+        AfflictionsToAdd.Add(Drunk);
 
         // Psychosis
         // Not constant; gets applied by other sources.
         // Type: Non-Limb Specific, Vanilla Override
         // Caused By: no root beer.
         // Effects: Psychosis.
-        AfflictionsToAdd["psychosis"] = new("psychosis", 0, 200, 0, AfflictionPriority.MEDIUM);
-        AfflictionsToAdd["psychosis"].UpdateAction =
-            (NTHuman C, string ID, LimbType Limb, NTHumanNonLimbAffData AffData) =>
-            {
-            };
+        AfflictionsToAdd.Add(
+            builder.New("psychosis")
+            .SetStrengths(0, 200, 0)
+            .SetPriority(AfflictionPriority.MEDIUM)
+            .Build());
 
+        
         // Radiation Sickness
         // Not constant; gets applied by other sources.
         // Type: Damage, Vanilla Override
         // Caused By: Health Scanner, Radiotoxin, Radiation, Certain Damage.
         // Effects: Burns (XML), Screen Grain (XML), Specific Organ Damage, Bone Damage.
-        AfflictionsToAdd["radiationsickness"] = new("radiationsickness", 0, 200, 0, AfflictionPriority.HIGH);
-        AfflictionsToAdd["radiationsickness"].UpdateAction =
-            (NTHuman C, string ID, LimbType Limb, NTHumanNonLimbAffData AffData) =>
+        AfflictionsToAdd.Add(
+            builder.New("radiationsickness")
+            .SetStrengths(0, 200, 0)
+            .SetUpdateAction((NTHuman C, string ID, LimbType Limb, float DeltaTime) =>
             {
+                float strength = C.GetAfflictionStrength(ID);
+
                 // Passive Regeneration
-                AffData.Strength -= NT.DeltaTime * 0.02;
+                C.AddAffliction(ID, -0.02f * DeltaTime);
 
                 // Effects:   
-                if (AffData.Strength > 25)
+                if (strength > 25)
                 {
                     // Additional Lung Damage
-                    C.GetAffData("lungdamage").Strength = (Math.Max(AffData.Strength - 25, 0) / 800 * NT.DeltaTime);
+                    C.SetAffliction("lungdamage", (Math.Max(C.GetAfflictionStrength("lungdamage") - 25, 0) / 800 * DeltaTime));
 
                     // Bone Damage
-                    C.GetAffData("bonedamage").Strength = (Math.Max(AffData.Strength - 25, 0) / 600 * NT.DeltaTime);
+                    C.SetAffliction("bonedamage", (Math.Max(C.GetAfflictionStrength("bonedamage") - 25, 0) / 600 * DeltaTime));
                 }
 
                 // Heart Damage (in NewOrganDamage)
@@ -106,27 +100,31 @@ public class NTAfflictionsToAdd
                 // Kidney Damage (in NewOrganDamage)
 
                 // Seizures
-                double RadSicknessAbove50 = AffData.Strength >= 50 ? AffData.Strength : 0;
+                double RadSicknessAbove50 = strength >= 50 ? strength : 0;
                 if (HF.Chance((float)(RadSicknessAbove50 / 200 * 0.1)))
                 {
-                    C.GetAffData("seizure").Strength += 10;
+                    C.AddAffliction("seizure", 10);
                 }
 
                 // Nausea
-                if (AffData.Strength > 80)
+                if (strength > 80)
                 {
-                    NTC.SetSymptomTrue(C, "nausea", 2);
+                    C.SetSymptomTrue("nausea", 2);
                 }
-            };
+            })
+            .Build()); 
+
+        NeurotraumaInit.NTAfflLoader.Registers(AfflictionsToAdd);
 
         // Respiratory Arrest
         // Not constant; gets applied by other sources, removes itself however.
         // Type: Non-Limb Specific, Interrim
         // Caused By: Lung Damage, TraumaShock, Neurotrauma, Hypoxemia, Opiate Overdose, Stasis, Morbusine Poisoning.
         // Effects: Oxygen Low, Acidosis.
-        AfflictionsToAdd["respiratoryarrest"] = new("respiratoryarrest", 0, 100, 0, AfflictionPriority.HIGH);
-        AfflictionsToAdd["respiratoryarrest"].UpdateAction =
-            (NTHuman C, string ID, LimbType Limb, NTHumanNonLimbAffData AffData) =>
+
+        AfflictionsToAdd.Add(
+            builder.New("respiratoryarrest")
+            .SetUpdateAction((NTHuman C, string ID, LimbType Limb, float DeltaTime) =>
             {
                 // Removal Conditions
                 if ((!C.GetBoolStatStrength("stasis")) // Not in Stasis
@@ -153,10 +151,11 @@ public class NTAfflictionsToAdd
 
                 C.GetAffData("acidosis").Strength += AcidosisIncrease;
 
-                NTC.SetSymptomFalse(C.Human, "hypoventilation", 2);
-                NTC.SetSymptomFalse(C.Human, "hyperventilation", 2);
-                NTC.SetSymptomFalse(C.Human, "shortnessofbreath", 2);
-            };
+                C.SetSymptomFalse("hypoventilation");
+                C.SetSymptomFalse("hyperventilation");
+                C.SetSymptomFalse("shortnessofbreath");
+            })
+            .Build());
 
         // Rib Fractures
         // Not constant; gets applied by other sources.
@@ -2922,10 +2921,6 @@ public class NTAfflictionsToAdd
                 }
             };
 
-        foreach (KeyValuePair<string, NTLimbAffliction> Pair in LimbAfflictionsToAdd)
-        {
-            NTAfflictions.RegisterAffliction(Pair.Key, Pair.Value);
-        }
     }
 
     private void AddBloodAfflictions()

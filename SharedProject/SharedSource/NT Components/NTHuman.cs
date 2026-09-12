@@ -5,6 +5,7 @@ namespace Neurotrauma;
 
 public class NTHuman
 {
+    public static List<NTHuman> NTHumans = new List<NTHuman>();
 
     // We might want to get our own ?
     private static IEventService EventService = LuaCsSetup.Instance.EventService;
@@ -22,6 +23,8 @@ public class NTHuman
 
         this.BoolStats = new Dictionary<String, bool>();
         this.DoubleStats = new Dictionary<String, double>();
+
+        NTHumans.Add(this);
 
         foreach (var item in Stats.StatRegistry)
         {
@@ -139,10 +142,47 @@ public class NTHuman
         );
     }
 
-    public void SetAffliction(string AfflictionID, double Strength, Character? Aggressor = null)
+    public void SetAffliction(string AfflictionID, float Strength, Character? Aggressor = null)
     {
-        
+        SetAfflictionLimb(AfflictionID, LimbType.Torso, HF.NormalizeFloat(Strength), Aggressor == null ? this.Human : Aggressor);
     }
+
+    public void SetAfflictionLimb(string AfflictionID, LimbType Limb, float Strength, Character? Aggressor = null)
+    {
+        // This Error was in the original but not ported for some reason?
+        if (!AfflictionPrefab.Prefabs.TryGet(AfflictionID, out AfflictionPrefab? Prefab) || Prefab == null || this.Human == null || this.Human.CharacterHealth == null)
+        {
+            LuaCsLogger.LogError(string.Format(
+                "Can't apply affliction to character limb\ncharacter = {0}, limbtype = {1}, affliction = {2}, strength = {3}",
+                this.Human != null ? this.Human.Name : "nil",
+                Limb.ToString(),
+                Prefab != null ? $"{Prefab.Name} ({Prefab.Identifier})" : AfflictionID ?? "nil",
+                Strength.ToString("F3")
+            ));
+            return;
+        }
+
+        float Resistance = this.Human.CharacterHealth.GetResistance(Prefab, Limb);
+        if (Resistance >= 1)
+        {
+            return;
+        }
+
+        // Flip the resistances effects so we get the right values accounting for them
+        float ScaledStrength = Strength * this.Human.CharacterHealth.MaxVitality / 100 / (1 - Resistance);
+        Affliction Affliction = Prefab.Instantiate(HF.NormalizeFloat(ScaledStrength), Aggressor);
+        bool RecalculateVitality = NTC.AfflictionsAffectingVitality.Contains(AfflictionID);
+
+        this.Human.CharacterHealth.ApplyAffliction(
+            this.Human.AnimController.GetLimb(Limb),
+            Affliction,
+            false,
+            false,
+            true
+        );
+    }
+
+    // TODO: HasAffliction, HasAfflictionLimbn, HasAfflictionExtremity, HasAbilityFlag, HasTalent and other shits
 
     #endregion
 
@@ -190,7 +230,8 @@ public class NTHuman
                     continue;
                 }
 
-                aff.Update(this, id, limb);
+                // TODO: Replace the delta time with a configurable one
+                aff.Update(this, id, limb, (float) aff.Priority);
             }
         }
 

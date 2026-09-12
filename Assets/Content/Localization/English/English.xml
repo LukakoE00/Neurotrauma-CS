@@ -1249,6 +1249,7 @@ Can give blood to: AB+</entitydescription.ab_positivecard>
 <!-- Default Pages -->
 <ntconfig_pagename_prices>Item Prices</ntconfig_pagename_prices>
 <ntconfig_pagename_availability>Item Availability</ntconfig_pagename_availability>
+<ntconfig_pagename_experimental>Experimental</ntconfig_pagename_experimental>
 
 <!-- Default Warning -->
 <ntgui_defaultmessage_config>Server config can only be changed by host or authorized clients.</ntgui_defaultmessage_config>
@@ -1658,5 +1659,8 @@ Can give blood to: AB+</entitydescription.ab_positivecard>
 <ntconfigname_doorganscalpels>Enable Organ Scalpels</ntconfigname_doorganscalpels>
 <ntconfigdescription_doorganscalpels>Allow Organ scalpels and Surgery Box Scalpel set to be fabricated, bought and found.</ntconfigdescription_doorganscalpels>
 
+<!-- =================== EXPERIMENTAL ===================-->
+
+<ntconfigname_header9>Experimental Settings</ntconfigname_header9>
 
 </infotexts>
