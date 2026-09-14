@@ -477,6 +477,8 @@ public class NTHuman
             return;
         }
 
+        this.Symptoms.RemoveSymptom(Affliction, Limb);
+
     }
 
     public bool HasSymptom(String AfflictionID, LimbType Limb = LimbType.None)
@@ -580,6 +582,14 @@ public class NTHuman
 
             l.Add(Aff.ID, d);
 
+            if (Aff.LimbSpecific)
+            {
+                this.Human.SetAfflictionLimb(Aff.ID, limb, (float) Aff.MaxStrength);
+            } else
+            {
+                this.Human.SetAffliction(Aff.ID, (float) Aff.MaxStrength);
+            }
+
         }
 
         public void RemoveSymptom(NTAfflictionPrefab Aff, LimbType limb)
@@ -588,6 +598,15 @@ public class NTHuman
             {
                 Dictionary<String, NTSymptomData> l = this.getDictFromLimb(limb);
                 l.Remove(Aff.ID);
+
+                if (Aff.LimbSpecific)
+                {
+                    this.Human.SetAfflictionLimb(Aff.ID, limb, 0);
+                }
+                else
+                {
+                    this.Human.SetAffliction(Aff.ID, 0);
+                }
             }
 
         }
@@ -639,43 +658,70 @@ probably the most disgusting code i've ever written
             foreach (var item in HeadAfflictions)
             {
                 item.Value.Duration--;
-                if (item.Value.Duration <= 0) { HF.SetAfflictionLimb(this.Human.Human, item.Value.Affliction.ID, LimbType.Head, 0); }
+                if (item.Value.Duration <= 0) 
+                { 
+                    this.Human.SetAfflictionLimb(item.Value.Affliction.ID, LimbType.Head, 0);
+                    HeadAfflictions.Remove(item.Key);
+                }
             }
 
             foreach (var item in TorsoAfflictions)
             {
                 item.Value.Duration--;
-                if (item.Value.Duration <= 0) { HF.SetAfflictionLimb(this.Human.Human, item.Value.Affliction.ID, LimbType.Torso, 0); }
+                if (item.Value.Duration <= 0) 
+                { 
+                    this.Human.SetAfflictionLimb(item.Value.Affliction.ID, LimbType.Torso, 0);
+                    TorsoAfflictions.Remove(item.Key);
+                }
             }
 
             foreach (var item in RightArmAfflictions)
             {
                 item.Value.Duration--;
-                if (item.Value.Duration <= 0) { HF.SetAfflictionLimb(this.Human.Human, item.Value.Affliction.ID, LimbType.RightArm, 0); }
+                if (item.Value.Duration <= 0) 
+                { 
+                    this.Human.SetAfflictionLimb(item.Value.Affliction.ID, LimbType.RightArm, 0);
+                    RightArmAfflictions.Remove(item.Key);
+                }
             }
 
             foreach (var item in LeftArmAfflictions)
             {
                 item.Value.Duration--;
-                if (item.Value.Duration <= 0) { HF.SetAfflictionLimb(this.Human.Human, item.Value.Affliction.ID, LimbType.LeftArm, 0); }
+                if (item.Value.Duration <= 0) 
+                { 
+                    this.Human.SetAfflictionLimb(item.Value.Affliction.ID, LimbType.LeftArm, 0);
+                    LeftArmAfflictions.Remove(item.Key);
+                }
             }
 
             foreach (var item in RightLegAfflictions)
             {
                 item.Value.Duration--;
-                if (item.Value.Duration <= 0) { HF.SetAfflictionLimb(this.Human.Human, item.Value.Affliction.ID, LimbType.RightLeg, 0); }
+                if (item.Value.Duration <= 0) 
+                { 
+                    this.Human.SetAfflictionLimb(item.Value.Affliction.ID, LimbType.RightLeg, 0); 
+                    RightLegAfflictions.Remove(item.Key);
+                }
             }
 
             foreach (var item in LeftLegAfflictions)
             {
                 item.Value.Duration--;
-                if (item.Value.Duration <= 0) { HF.SetAfflictionLimb(this.Human.Human, item.Value.Affliction.ID, LimbType.LeftLeg, 0); }
+                if (item.Value.Duration <= 0) 
+                { 
+                    this.Human.SetAfflictionLimb(item.Value.Affliction.ID, LimbType.LeftLeg, 0);
+                    LeftLegAfflictions.Remove(item.Key);
+                }
             }
 
             foreach (var item in NonLimbSpecificAfflictions)
             {
                 item.Value.Duration--;
-                if (item.Value.Duration <= 0) { HF.SetAffliction(this.Human.Human, item.Value.Affliction.ID, 0); }
+                if (item.Value.Duration <= 0) { 
+                    this.Human.SetAffliction(item.Value.Affliction.ID, 0);
+                    NonLimbSpecificAfflictions.Remove(item.Key);
+                }
             }
         }
  
