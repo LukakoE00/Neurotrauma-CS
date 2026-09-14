@@ -1,10 +1,13 @@
 ﻿using Barotrauma.LuaCs.Compatibility;
 using Barotrauma.Networking;
+using Neurotrauma.ClientSource;
 
 namespace Neurotrauma
 {
     internal class ConfigurationMenu
     {
+        private static Harmony? Harmony;
+
         private static readonly List<(string uiName, string id, string type)> ExpansionNameForUI = new();
         private static readonly List<(LocalizedString name, string id)> BaseConfigPages = new()
         {
@@ -16,36 +19,32 @@ namespace Neurotrauma
         // We hook opening the Pause Menu, then force it to also render our Button to open the settings.
         public static void AddConfigToPauseMenu()
         {
-            LuaCsSetup.Instance.Hook.Patch(
-                "AddButtonToPauseMenu", // identifier for our Patch
-                "Barotrauma.GUI",       // className
-                "TogglePauseMenu",      // methodName
-                Array.Empty<string>(),  // parameterTypes (this one has none)
+            Harmony = new Harmony("NTConfigButton");
 
-                new LuaCsPatchFunc((object instance, LuaPatcherService.ParameterTable ptable) =>
-                {
-                    if (!GUI.PauseMenuOpen) return null;
+            var InitMethod = AccessTools.Method(typeof(Barotrauma.GUI), "TogglePauseMenu");
+            Harmony.Patch(InitMethod, postfix: new HarmonyMethod(typeof(ConfigurationMenu), nameof(AddButtonToPauseMenu)));
+        }
 
-                    GUIComponent frame = GUI.PauseMenu; // The actual menu screen
-                    GUIComponent secondChild = frame.Children.Skip(1).First(); // The panel containing the elements
-                    GUIComponent list = secondChild.Children.First(); // The buttons!
+        static void AddButtonToPauseMenu()
+        {
+            if (!GUI.PauseMenuOpen)
+            {
+                return;
+            }
 
-                    var btn = new GUIButton(
-                        new RectTransform(new Vector2(1f, 0.1f), list.RectTransform),
-                        TextManager.Get("ntgui_pausemenubutton_name"),
-                        textAlignment: Alignment.Center,
-                        style: "GUIButtonSmall");
+            GUIComponent frame = GUI.PauseMenu; // The actual menu screen
+            GUIComponent secondChild = frame.Children.Skip(1).First(); // The panel containing the elements
+            GUIComponent list = secondChild.Children.First(); // The buttons!
 
-                    btn.OnClicked = (_, _) =>
-                    {
-                        CreateConfigGUI(frame);
-                        return true;
-                    };
+            var btn = new GUIButton(new RectTransform(new Vector2(1f, 0.1f), list.RectTransform), TextManager.Get("ntgui_pausemenubutton_name"), textAlignment: Alignment.Center, style: "GUIButtonSmall");
 
-                    return null;
-                }),
-                ILuaCsHook.HookMethodType.After
-            );
+            btn.OnClicked = (_, _) =>
+            {
+                CreateConfigGUI(frame);
+                return true;
+            };
+
+            return;
         }
 
         public static GUIListBox CreateConfigGUI(GUIComponent parent)
