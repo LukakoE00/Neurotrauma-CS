@@ -1663,4 +1663,17 @@ Can give blood to: AB+</entitydescription.ab_positivecard>
 
 <ntconfigname_header9>Experimental Settings</ntconfigname_header9>
 
+<ntconfigname_description1>The settings below define the time (in ticks, 60 ticks per second) between every update cycles. Afflictions are separated into different priority levels depending on their "importance". Changing these values can cause unintended behaviors, only change these if you know what you are doing!</ntconfigname_description1>
+<ntconfigname_description2></ntconfigname_description2>
+
+<ntconfigname_updateinterval_high>Update Interval (High Priority Afflictions)</ntconfigname_updateinterval_high>
+<ntconfigname_updateinterval_medium>Update Interval (Medium Priority Afflictions)</ntconfigname_updateinterval_medium>
+<ntconfigname_updateinterval_low>Update Interval (Low Priority Afflictions)</ntconfigname_updateinterval_low>
+<ntconfigname_updateinterval_monster>Update Interval (Monsters)</ntconfigname_updateinterval_monster>
+
+<ntconfigdescription_updateinterval_high></ntconfigdescription_updateinterval_high>
+<ntconfigdescription_updateinterval_medium></ntconfigdescription_updateinterval_medium>
+<ntconfigdescription_updateinterval_low></ntconfigdescription_updateinterval_low>
+<ntconfigdescription_updateinterval_monster></ntconfigdescription_updateinterval_monster>
+
 </infotexts>

@@ -2,7 +2,7 @@ using static Neurotrauma.NTItems;
 
 namespace Neurotrauma;
 
-public class Stats
+public partial class NTStats
 {
 
     public class NTStat
@@ -23,9 +23,9 @@ public class Stats
         public double DefaultStrength { get; private set; }
         public string ID;
 
-        public Func<NTHuman, double>? UpdateFunction { get; private set; }
+        public Func<NTHuman, float, double>? UpdateFunction { get; private set; }
 
-        public NTStatDouble(string Name, double MinStrength, double MaxStrength, double DefaultStrength, Func<HumanUpdate.NTHuman, double>? Update) : base(Name)
+        public NTStatDouble(string Name, double MinStrength, double MaxStrength, double DefaultStrength, Func<NTHuman, float, double>? Update) : base(Name)
         {
             this.MinStrength = MinStrength;
             this.MaxStrength = MaxStrength;
@@ -33,21 +33,9 @@ public class Stats
             this.ID = Name;
         }
 
-        public void Add(NTHuman C, double AddStrength)
+        public double Get(NTHuman C, float deltaTime, double defaultStrength = 0)
         {
-            C.LocalStats.DoubleStats[ID].Strength = Math.Clamp(C.LocalStats.DoubleStats[ID].Strength + AddStrength, MinStrength, MaxStrength);
-        }
-
-        public double Get(NTHuman C)
-        {
-            return (UpdateFunction != null) ? UpdateFunction.Invoke(C) : C.LocalStats.DoubleStats[ID].Strength;
-        }
-
-        public void Set(NTHuman C, double NewStrength)
-        {
-
-            C.LocalStats.DoubleStats[ID].Strength = Math.Clamp(NewStrength, MinStrength, MaxStrength);
-
+            return (UpdateFunction != null) ? UpdateFunction.Invoke(C, deltaTime) : defaultStrength;
         }
 
     }
@@ -56,17 +44,17 @@ public class Stats
     {
 
         public bool DefaultValue { get; private set; }
-        public Func<NTHuman, bool>? UpdateFunction { get; private set; }
+        public Func<NTHuman, float, bool>? UpdateFunction { get; private set; }
 
-        public NTStatBool(string Name, bool DefaultValue, Func<NTHuman, bool>? Update) : base(Name)
+        public NTStatBool(string Name, bool DefaultValue, Func<NTHuman, float, bool>? Update) : base(Name)
         {
             this.DefaultValue = DefaultValue;
             this.UpdateFunction = Update;
         }
 
-        public bool Get(NTHuman C)
+        public bool Get(NTHuman C, float deltaTime, bool defaultValue = false)
         {
-            return (UpdateFunction != null) ? UpdateFunction.Invoke(C) : DefaultValue;
+            return (UpdateFunction != null) ? UpdateFunction.Invoke(C, deltaTime) : defaultValue;
         }
 
     }
@@ -116,6 +104,18 @@ public class Stats
             return true;
         }
 
+        public bool Registers(List<NTStat> Stats)
+        {
+            bool r = true;
+
+            foreach (var stat in Stats)
+            {
+                if (!Register(stat)) r = false;
+
+            }
+
+            return r;
+        }
 
         /// <summary>
         /// Overrides the Stat matching the given Stat Name. If RegisterInstead is set to true, it will register the given function if the given item has no function to override.

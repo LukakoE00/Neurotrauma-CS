@@ -6,29 +6,14 @@ namespace Neurotrauma;
 public class NTAfflictionsToAdd
 {
 
-    // Human Updates update functions have 
-    // Param 1: NTHuman (The character we updating) [C]
-    // Param 2: String (The affliction Identifier) [I]
-    // Param 3: LimbType (The limb the aff is on) [L]
-    // Param 4: AfflictionData (the affliction data of the aff) [AffData]
+    private static List<NTAfflictionPrefab> AfflictionsToAdd = new List<NTAfflictionPrefab>();
 
-    List<NTAfflictionPrefab> AfflictionsToAdd = new List<NTAfflictionPrefab>();
-
-    public NTAfflictionsToAdd() // Initalize the afflictions.
-    {
-        AddAfflictions();
-        AddLimbAfflictions();
-        AddBloodAfflictions();
-        AddSymptoms();
-        AddLimbSymptoms();
-    }
-
-    private void AddAfflictions()
+    public static void AddAfflictions()
     {
         NTAfflictionPrefabBuilder builder = new NTAfflictionPrefabBuilder();
 
         // Oxygen Low
-        // Not constant; gets applied by other sources
+        // Not constant; gets applied by other sourcess
         // Type: Non-Limb Specific, Vanilla Override
         // Caused By: Lack of Oxygen, Respiratory Arrest
         // Effects: Hypoxemia

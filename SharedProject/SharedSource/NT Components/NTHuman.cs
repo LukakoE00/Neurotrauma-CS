@@ -7,7 +7,7 @@ public class NTHuman
 {
     public static List<NTHuman> NTHumans = new List<NTHuman>();
 
-    // We might want to get our own ?
+    // TODO: We might want to get our own ?
     private static IEventService EventService = LuaCsSetup.Instance.EventService;
 
     public Dictionary<String, bool> BoolStats { get; private set; }
@@ -26,33 +26,110 @@ public class NTHuman
 
         NTHumans.Add(this);
 
-        foreach (var item in Stats.StatRegistry)
+        foreach (var item in NTStats.StatRegistry)
         {
             string name = item.Key;
-            Stats.NTStat stat = item.Value;
+            NTStats.NTStat stat = item.Value;
 
-            if (stat is Stats.NTStatBool)
+            if (stat is NTStats.NTStatBool)
             {
-                this.BoolStats.Add(name, ((Stats.NTStatBool)stat).DefaultValue);
+                this.BoolStats.Add(name, ((NTStats.NTStatBool)stat).DefaultValue);
             }
-            else if (stat is Stats.NTStatDouble)
+            else if (stat is NTStats.NTStatDouble)
             {
-                this.DoubleStats.Add(name, ((Stats.NTStatDouble)stat).DefaultStrength);
+                this.DoubleStats.Add(name, ((NTStats.NTStatDouble)stat).DefaultStrength);
             }
         }
+    }
+
+    public static NTHuman? getNTHumanFromCharacter(Character Human)
+    {
+        foreach (NTHuman ntHuman in NTHumans)
+        {
+            if (ntHuman.Human == Human) return ntHuman;
+        }
+        return null;
     }
 
     #region Stats
     // ========== STATS    ==========
 
-    public void UpdateStats()
+    public void UpdateStats(float deltaTime)
     {
+        EventService.Call("Neurotrauma.HumanUpdate.UpdateStats", this);
 
+        foreach (var i in BoolStats)
+        {
+            string id = i.Key;
+            bool val = i.Value;
+
+            var stat = NTStats.StatRegistry[id];
+
+            BoolStats[id] = ((NTStats.NTStatBool)stat).UpdateFunction?.Invoke(this, deltaTime) ?? val;
+        }
+
+        foreach (var i in DoubleStats)
+        {
+            string id = i.Key;
+            double val = i.Value;
+
+            var stat = NTStats.StatRegistry[id];
+
+            DoubleStats[id] = ((NTStats.NTStatDouble)stat).UpdateFunction?.Invoke(this, deltaTime) ?? val;
+        }
+    }
+
+    public bool GetBoolStat(string StatID)
+    {
+        if (BoolStats.ContainsKey(StatID))
+        {
+            return BoolStats[StatID];
+        }
+
+        HF.PrintError($"Trying to get an unknown bool stat : {StatID}. Target character : {this.Human.DisplayName}");
+
+        return false;
+    }
+
+    public double GetDoubleStat(string StatID)
+    {
+        if (DoubleStats.ContainsKey(StatID))
+        {
+            return DoubleStats[StatID];
+        }
+
+        HF.PrintError($"Trying to get an unknown double stat : {StatID}. Target character : {this.Human.DisplayName}");
+
+        return 0;
+    }
+
+    public void SetBoolStat(string StatID, bool val)
+    {
+        if (BoolStats.ContainsKey(StatID))
+        {
+            BoolStats[StatID] = val;
+            return;
+        }
+
+        HF.PrintError($"Trying to set an unknown bool stat : {StatID}. Target character : {this.Human.DisplayName}");
+    }
+
+    public void SetDoubleStat(string StatID, double val)
+    {
+        if (DoubleStats.ContainsKey(StatID))
+        {
+            DoubleStats[StatID] = val;
+            return;
+        }
+
+        HF.PrintError($"Trying to set an unknown double stat : {StatID}. Target character : {this.Human.DisplayName}");
     }
 
     #endregion
 
     #region Afflictions
+
+    // TODO : add debug prints
 
     public Affliction GetAffliction(string AfflictionID)
     {
@@ -142,6 +219,19 @@ public class NTHuman
         );
     }
 
+    public void AddAfflictionResisted(string AfflictionID, float Strength, Character? Aggressor = null)
+    {
+        if (Aggressor == null)
+        {
+            Aggressor = this.Human;
+        }
+
+        float PrevStrength = GetAfflictionStrength(AfflictionID);
+        Strength *= 1 - HF.GetResistance(this.Human, AfflictionID);
+
+        SetAffliction(AfflictionID, Strength + PrevStrength, Aggressor);
+    }
+
     public void SetAffliction(string AfflictionID, float Strength, Character? Aggressor = null)
     {
         SetAfflictionLimb(AfflictionID, LimbType.Torso, HF.NormalizeFloat(Strength), Aggressor == null ? this.Human : Aggressor);
@@ -182,7 +272,84 @@ public class NTHuman
         );
     }
 
-    // TODO: HasAffliction, HasAfflictionLimbn, HasAfflictionExtremity, HasAbilityFlag, HasTalent and other shits
+    public bool HasAffliction(string AfflictionID = "", float MinAmount = 0)
+    {
+        if (AfflictionID == "" || this.Human.CharacterHealth == null)
+        {
+            return false;
+        }
+
+        // Is the affliction null?
+        Affliction Aff = GetAffliction(AfflictionID);
+        if (Aff == null)
+        {
+            return false;
+        }
+
+        float AffStrength = Aff.Strength;
+        if (AffStrength > MinAmount)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool HasAfflictionLimb(string AfflictionID = "", LimbType Limb = LimbType.Torso, float MinAmount = 0)
+    {
+        if (AfflictionID == "" || this.Human.CharacterHealth == null)
+        {
+            return false;
+        }
+
+        // Is the affliction null?
+        Affliction Aff = GetAfflictionLimb(AfflictionID, Limb);
+        if (Aff == null)
+        {
+            return false;
+        }
+
+        float AffStrength = Aff.Strength;
+        if (AffStrength >= MinAmount)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    private static readonly List<List<LimbType>> LocalLimbsToCheck = [[LimbType.LeftArm, LimbType.LeftForearm, LimbType.LeftHand],[LimbType.RightArm, LimbType.RightForearm, LimbType.RightHand],
+                                                        [LimbType.LeftLeg, LimbType.LeftThigh, LimbType.LeftFoot],[LimbType.RightLeg, LimbType.RightThigh, LimbType.RightFoot]];
+
+    public bool HasAfflictionExtremity(string AfflictionID = "", LimbType GivenLimbType = LimbType.Torso, double MinAmount = 0.5)
+    {
+        Affliction? Aff = null;
+        
+        foreach (List<LimbType> SubList in LocalLimbsToCheck)
+        {
+            if (HF.NormalizeLimbType(GivenLimbType) == SubList[0])
+            {
+                Aff = GetAfflictionLimb(AfflictionID, SubList[0]);
+                if (Aff == null)
+                {
+                    Aff = GetAfflictionLimb(AfflictionID, SubList[1]);
+                }
+                if (Aff == null)
+                {
+                    Aff = GetAfflictionLimb(AfflictionID, SubList[2]);
+                }
+                break; // We can end the for loop, we found what we were looking for.
+            }
+        }
+
+        bool Res = false;
+        if (Aff != null)
+        {
+            Res = Aff.Strength >= MinAmount;
+        }
+
+        return Res;
+    }
 
     #endregion
 
@@ -195,8 +362,9 @@ public class NTHuman
         return;
     }
 
-    public Dictionary<LimbType, List<String>> FetchAfflictions(AfflictionPriority minimumPriority)
+    public Dictionary<LimbType, List<String>> FetchAfflictions(List<AfflictionPriority> priorities)
     {
+        EventService.Call("Neurotrauma.HumanUpdate.FetchAfflictions", this, priorities);
         IReadOnlyCollection<Affliction> afflictions = this.Human.CharacterHealth.GetAllAfflictions();
 
         var r = new Dictionary<LimbType, List<String>>();
@@ -215,6 +383,7 @@ public class NTHuman
     {
         this.UpdateSymptoms();
 
+        EventService.Call("Neurotrauma.HumanUpdate.UpdateAfflictions", this, AfflictionsList);
         foreach (var limbList in AfflictionsList)
         {
             var limb = limbList.Key;
@@ -230,8 +399,9 @@ public class NTHuman
                     continue;
                 }
 
-                // TODO: Replace the delta time with a configurable one
-                aff.Update(this, id, limb, (float) aff.Priority);
+                float deltaTime = ((float)NTHumanUpdate.GetUpdateInterval(aff.Priority)) / 60f;
+
+                aff.Update(this, id, limb, deltaTime);
             }
         }
 
@@ -342,6 +512,7 @@ public class NTHuman
     /// </summary>
     public void UpdateSymptoms()
     {
+        EventService.Call("Neurotrauma.HumanUpdate.UpdateSymptoms", this);
         this.Symptoms.UpdateSymptoms();
     }
 
@@ -511,707 +682,3 @@ probably the most disgusting code i've ever written
     }
     #endregion
 }
-
-/*
-/// <summary>
-/// The Neurotrauma version of a Human Character. Stores crucial info required for NT to work.
-/// </summary>
-public class NTHuman
-{
-    public NTHuman(Character NewHuman)
-    {
-        Human = NewHuman;
-        LocalStats = new CharacterStats(this);
-        LocalAfflictions = new CharacterAfflictions(NewHuman, this);
-        LocalTags = new CharacterTags();
-        SetSpeed(this, 1);
-        SetDefaults(this);
-    }
-
-    public Character Human; // Our Human Ref
-    public CharacterStats LocalStats;
-    public CharacterAfflictions LocalAfflictions;
-    public CharacterTags LocalTags;
-
-
-    // -------------------------------- Start of afflictions -------------------------------- \\
-
-    public Dictionary<string, NTHumanAffData> GetAffDatas()
-    {
-        return LocalAfflictions.UpdatingAfflictions;
-    }
-
-    public NTHumanAffData GetAffData(string Identifier)
-    {
-        if (!LocalAfflictions.UpdatingAfflictions.ContainsKey(Identifier)) PrintError($"The following identifier of {Identifier} wasn't found in UpdatingAfflictions!");
-
-        return LocalAfflictions.UpdatingAfflictions[Identifier];
-    }
-
-    public double GetAffStrength(string Identifier) // SHOULD ONLY BE USED FOR READING. NOT SETTING.
-    {
-        if (!LocalAfflictions.UpdatingAfflictions.ContainsKey(Identifier)) PrintError($"The following identifier of {Identifier} wasn't found in UpdatingAfflictions!");
-
-        return (LocalAfflictions.UpdatingAfflictions.ContainsKey(Identifier)) ? LocalAfflictions.UpdatingAfflictions[Identifier].Strength : 0;
-    }
-
-    public Dictionary<string, NTHumanNonLimbAffData> GetNonLimbAffDatas()
-    {
-        return LocalAfflictions.UpdatingNonLimbAfflictions;
-    }
-
-    public NTHumanNonLimbAffData GetNonLimbAffData(string Identifier)
-    {
-        if (!LocalAfflictions.UpdatingNonLimbAfflictions.ContainsKey(Identifier)) PrintError($"The following identifier of {Identifier} wasn't found in UpdatingNonLimbAfflictions!");
-
-        return LocalAfflictions.UpdatingNonLimbAfflictions[Identifier];
-    }
-
-    public double GetNonLimbAffStrength(string Identifier) // SHOULD ONLY BE USED FOR READING. NOT SETTING.
-    {
-        if (!LocalAfflictions.UpdatingNonLimbAfflictions.ContainsKey(Identifier)) PrintError($"The following identifier of {Identifier} wasn't found in UpdatingNonLimbAfflictions!");
-
-        return (LocalAfflictions.UpdatingNonLimbAfflictions.ContainsKey(Identifier)) ? LocalAfflictions.UpdatingNonLimbAfflictions[Identifier].Strength : 0;
-    }
-
-    public Dictionary<string, NTHumanLimbAffData> GetLimbAffDatas()
-    {
-        return LocalAfflictions.UpdatingLimbAfflictions;
-    }
-
-    public NTHumanLimbAffData GetLimbAffData(string Identifier)
-    {
-        if (!LocalAfflictions.UpdatingLimbAfflictions.ContainsKey(Identifier)) PrintError($"The following identifier of {Identifier} wasn't found in UpdatingLimbAfflictions!");
-
-        return LocalAfflictions.UpdatingLimbAfflictions[Identifier];
-    }
-
-    public double GetLimbAffStrength(string Identifier, LimbType Limb) // SHOULD ONLY BE USED FOR READING. NOT SETTING.
-    {
-        if (!LocalAfflictions.UpdatingLimbAfflictions.ContainsKey(Identifier)) PrintError($"The following identifier of {Identifier} wasn't found in UpdatingLimbAfflictions!");
-
-        return (LocalAfflictions.UpdatingLimbAfflictions.ContainsKey(Identifier)) ? LocalAfflictions.UpdatingLimbAfflictions[Identifier].Strength[Limb] : 0;
-    }
-
-    public Dictionary<string, NTHumanBloodAffData> GetBloodAffDatas()
-    {
-        return LocalAfflictions.UpdatingBloodAfflictions;
-    }
-
-    public NTHumanBloodAffData GetBloodAffData(string Identifier)
-    {
-        if (!LocalAfflictions.UpdatingBloodAfflictions.ContainsKey(Identifier)) PrintError($"The following identifier of {Identifier} wasn't found in UpdatingBloodAfflictions!");
-
-        return LocalAfflictions.UpdatingBloodAfflictions[Identifier];
-    }
-
-    public double GetBloodAffStrength(string Identifier) // SHOULD ONLY BE USED FOR READING. NOT SETTING.
-    {
-        if (!LocalAfflictions.UpdatingBloodAfflictions.ContainsKey(Identifier)) PrintError($"The following identifier of {Identifier} wasn't found in UpdatingBloodAfflictions!");
-
-        return (LocalAfflictions.UpdatingBloodAfflictions.ContainsKey(Identifier)) ? LocalAfflictions.UpdatingBloodAfflictions[Identifier].Strength : 0;
-    }
-
-    public Dictionary<string, NTHumanSymptomData> GetSymptomAffDatas()
-    {
-
-        return LocalAfflictions.UpdatingSymptoms;
-    }
-
-    public NTHumanSymptomData GetSymptomAffData(string Identifier)
-    {
-        if (!LocalAfflictions.UpdatingSymptoms.ContainsKey(Identifier)) PrintError($"The following identifier of {Identifier} wasn't found in UpdatingSymptoms!");
-
-        return LocalAfflictions.UpdatingSymptoms[Identifier];
-    }
-
-    public double GetSymptomStrength(string Identifier) // SHOULD ONLY BE USED FOR READING. NOT SETTING.
-    {
-        if (!LocalAfflictions.UpdatingSymptoms.ContainsKey(Identifier)) PrintError($"The following identifier of {Identifier} wasn't found in UpdatingSymptoms!");
-
-        return (LocalAfflictions.UpdatingSymptoms.ContainsKey(Identifier)) ? LocalAfflictions.UpdatingSymptoms[Identifier].Strength : 0;
-    }
-
-    public Dictionary<string, NTHumanLimbSymptomData> GetLimbSymptomDatas()
-    {
-        return LocalAfflictions.UpdatingLimbSymptoms;
-    }
-
-    public NTHumanLimbSymptomData GetLimbSymptomData(string Identifier)
-    {
-        if (!LocalAfflictions.UpdatingLimbSymptoms.ContainsKey(Identifier)) PrintError($"The following identifier of {Identifier} wasn't found in UpdatingLimbSymptoms!");
-
-        return LocalAfflictions.UpdatingLimbSymptoms[Identifier];
-    }
-
-    public double GetLimbSymptomStrength(string Identifier, LimbType Limb)
-    {
-        if (!LocalAfflictions.UpdatingLimbSymptoms.ContainsKey(Identifier)) PrintError($"The following identifier of {Identifier} wasn't found in UpdatingLimbSymptoms!");
-
-        return (LocalAfflictions.UpdatingLimbSymptoms.ContainsKey(Identifier)) ? LocalAfflictions.UpdatingLimbSymptoms[Identifier].Strength[Limb] : 0;
-    }
-
-    public CharacterAfflictions? GetAfflictions()
-    {
-        return LocalAfflictions;
-    }
-
-    // -------------------------------- Start of stats -------------------------------- \\
-
-    public CharacterStats? GetStats()
-    {
-        return LocalStats;
-    }
-
-    /// <summary>
-    /// Can return NTHumanStatDoubleData or NTHumanStatBoolData.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="Identifier"></param>
-    /// <returns></returns>
-    public T GetStat<T>(string Identifier) // Not my best work.
-    {
-        object? ReturnType = null;
-        if (HasBoolStat(Identifier)) ReturnType = GetBoolStat(Identifier);
-        else ReturnType = GetDoubleStat(Identifier);
-        return (T)Convert.ChangeType(ReturnType, typeof(T));
-    }
-
-    public T GetStatStrength<T>(string Identifier) // Not my best work.
-    {
-        object? ReturnType = null;
-        if (HasBoolStat(Identifier)) ReturnType = GetBoolStat(Identifier).Strength;
-        else ReturnType = GetDoubleStat(Identifier).Strength;
-        return (T)Convert.ChangeType(ReturnType, typeof(T));
-    }
-
-    public bool HasBoolStat(string Identifier)
-    {
-        if (LocalStats.BoolStats.ContainsKey(Identifier)) return true;
-        return false;
-    }
-
-    public CharacterStats.NTHumanStatBoolData GetBoolStat(string Identifier)
-    {
-        return LocalStats.BoolStats[Identifier];
-    }
-
-    public bool GetBoolStatUpdate(NTHuman C, string Identifier) // SHOULDNT BE USED I REGRET WRITING THIS FUNCTION.
-    {
-        return (LocalStats.BoolStats.ContainsKey(Identifier)) ? LocalStats.BoolStats[Identifier].StatRef.Get(C) : false;
-    }
-
-    public bool GetBoolStatStrength(string Identifier)
-    {
-        return (LocalStats.BoolStats.ContainsKey(Identifier)) ? LocalStats.BoolStats[Identifier].Strength : false;
-    }
-
-    public void SetBoolStatStrength(string Identifier, bool Strength)
-    {
-        if (LocalStats.BoolStats.ContainsKey(Identifier))
-        {
-            LocalStats.BoolStats[Identifier].Strength = Strength;
-        }
-    }
-
-    public bool HasDoubleStat(string Identifier)
-    {
-        if (LocalStats.DoubleStats.ContainsKey(Identifier)) return true;
-        return false;
-    }
-
-    public CharacterStats.NTHumanStatDoubleData GetDoubleStat(string Identifier)
-    {
-        return LocalStats.DoubleStats[Identifier];
-    }
-
-    public double GetDoubleStatUpdate(NTHuman C, string Identifier) // SHOULDNT BE USED I REGRET WRITING THIS FUNCTION.
-    {
-        return (LocalStats.DoubleStats.ContainsKey(Identifier)) ? LocalStats.DoubleStats[Identifier].StatRef.Get(C) : 0;
-    }
-
-    public double GetDoubleStatStrength(string Identifier)
-    {
-        return (LocalStats.DoubleStats.ContainsKey(Identifier)) ? LocalStats.DoubleStats[Identifier].Strength : 0;
-    }
-
-    public void SetDoubleStatStrength(string Identifier, double Strength)
-    {
-        if (LocalStats.DoubleStats.ContainsKey(Identifier))
-        {
-            LocalStats.DoubleStats[Identifier].Strength = Strength;
-        }
-    }
-
-    // -------------------------------- Start of tags -------------------------------- \\
-
-    public CharacterTags GetTags()
-    {
-        return LocalTags;
-    }
-
-    // -------------------------------- Start of cursed update stuff -------------------------------- \\
-
-    /// <summary>
-    /// Sets all constant afflictions to there default strength.
-    /// </summary>
-    /// <param name="C"></param>
-    private void SetDefaults(NTHuman C)
-    {
-        foreach (KeyValuePair<string, NTHumanAffData> Pair in C.LocalAfflictions.ConstantAfflictions)
-        {
-            if (Pair.Key == null || Pair.Value == null) continue;
-            NTAfflictionType AffType = Pair.Value.AffTemplate.Type;
-            SetAfflictionStrength(AffType, Pair.Key, Pair.Value, true);
-        }
-    }
-
-    /// <summary>
-    /// The main update function for our NT characters.
-    /// </summary>
-    /// <param name="Priorities"></param>
-    public void Update(List<AfflictionPriority> Priorities) // THHHHEEEE UPPPDATTEEEEE
-    {
-
-        if (Human == null) return;
-
-        if (!(Human.IsHuman && Human.TeamID == CharacterTeamType.Team1 || Human.TeamID == CharacterTeamType.Team2 && !Human.IsDead))
-        {
-            if (!HasAffliction(Human, "luabotomy")) return;
-        }
-
-        UpdatePreHumanHooks();
-
-        // ----------------------------------------- Stat updates ----------------------------------------- \\
-
-        UpdateStats();
-
-        // ----------------------------------------- Affliction updates ----------------------------------------- \\
-
-        FetchAfflictions();
-
-        UpdateAfflictions(Priorities);
-
-        SetAfflictionStrengths();
-
-        // ----------------------------------------- Clearing ----------------------------------------- \\
-
-        UpdatePost();
-    }
-
-    public void ClearSpeedMultiplier()
-    {
-        CharacterSpeedMultipliers.Remove(this);
-    }
-
-    /// <summary>
-    /// Updates all pre human hooks in both Lua and C#.
-    /// </summary>
-    public void UpdatePreHumanHooks()
-    {
-        foreach (Action<NTHuman> Hook in PreHumanUpdateHooks) // Pre hooks.
-        {
-            Hook.Invoke(this);
-        }
-
-        if (UsingLuaAddons())
-        {
-            HumanUpdateLuaSync.SyncPreHumanUpdateHooks(this.Human);
-        }
-    }
-
-    /// <summary>
-    /// Clears data for the next HU update.
-    /// </summary>
-    private void UpdatePost()
-    {
-        UpdatePostHumanHooks();
-
-        HF.SetAffliction(Human, "slowdown", Math.Clamp(100 * (1 - (float)GetDoubleStatStrength("speedmultiplier")), 0, 100));
-
-        if (UsingLuaAddons()) HumanUpdateLuaSync.SyncCharacterSpeed(Human, GetDoubleStatStrength("speedmultiplier")); // If we have lua addons sync our character speed.
-
-        else
-        {
-            SetDoubleStatStrength("speedmultiplier", 1);
-            ClearSpeedMultiplier();
-        }
-    }
-
-    /// <summary>
-    /// Updates all post human hooks in C#. (ONLY CALLS IF NOT USING LUA ADDONS)
-    /// </summary>
-    public void UpdatePostHumanHooks()
-    {
-        if (!UsingLuaAddons())
-        {
-            NTC.TickCharacterTags(this);
-            foreach (Action<NTHuman> Hook in PostHumanUpdateHooks) // Post hooks.
-            {
-                Hook.Invoke(this);
-            }
-        }
-    }
-
-    /// <summary>
-    /// Updates all stats and sets their strengths to the new value.
-    /// </summary>
-    private void UpdateStats()
-    {
-        foreach (KeyValuePair<string, CharacterStats.NTHumanStatDoubleData> Pair in LocalStats.DoubleStats) // Update all of our double stats
-        {
-            string ID = Pair.Key;
-            CharacterStats.NTHumanStatDoubleData StatData = Pair.Value;
-            SetDoubleStatStrength(Pair.Key, GetDoubleStatUpdate(this, ID));
-        }
-
-        foreach (KeyValuePair<string, CharacterStats.NTHumanStatBoolData> Pair in LocalStats.BoolStats) // Update all of our boolean stats
-        {
-            string ID = Pair.Key;
-            CharacterStats.NTHumanStatBoolData StatData = Pair.Value;
-            SetBoolStatStrength(Pair.Key, GetBoolStatUpdate(this, ID));
-        }
-    }
-
-    /// <summary>
-    /// Fetches all current NT Afflictions on a character and returns them.
-    /// </summary>
-    /// <param name="Human"></param>
-    /// <returns></returns>
-    private List<Affliction> FetchNTAfflictions(Character Human)
-    {
-        IReadOnlyCollection<Affliction> CurrentAfflictions = Human.CharacterHealth.GetAllAfflictions();
-        IEnumerable<Affliction> FilteredAfflictions = CurrentAfflictions.Where(aff => { return LocalAfflictions.UpdatingAfflictions.ContainsKey(aff.Identifier.ToString()); });
-        List<Affliction> SortedAfflictions = FilteredAfflictions.OrderBy(
-                            aff => LocalAfflictions?.UpdatingAfflictions[aff.Identifier.ToString()]?.AffTemplate?.AffSortID
-                        ).ToList();
-        return SortedAfflictions;
-    }
-
-    /// <summary>
-    /// Fetches the strength of all NT Afflictions and gets the current strength before the HU update.
-    /// </summary>
-    private void FetchAfflictions()
-    {
-        foreach (KeyValuePair<string, NTHumanAffData> kvp in LocalAfflictions.UpdatingAfflictions)
-        {
-            string ID = kvp.Key;
-            NTHumanAffData Aff = kvp.Value;
-            NTAffliction? Template = Aff.AffTemplate;
-            NTAfflictionType Type = Template.Type;
-            switch (Type)
-            {
-                case NTAfflictionType.NONLIMB:
-                case NTAfflictionType.SYMPTOM:
-                case NTAfflictionType.BLOOD:
-                    double CustomStrength = AffClamp(Aff.Strength, Template);
-                    double NewStrength = Template.Real ? GetAfflictionStrength(Human, ID) : CustomStrength; // If real, use the prefab strength, else use custom.
-                    Aff.Strength = NewStrength;
-                    Aff.PrevStrength = NewStrength;
-                    break;
-
-                case NTAfflictionType.LIMBSYMPTOM:
-                case NTAfflictionType.LIMB:
-                    foreach (LimbType Limb in HF.LimbsToCheck)
-                    {
-                        NTHumanLimbAffData LimbAff = (NTHumanLimbAffData)Aff;
-                        double CustomLimbStrength = AffClamp(LimbAff.Strength[Limb], Template);
-                        double NewLimbStrength = Template.Real ? GetAfflictionStrengthLimb(Human, Limb, ID) : CustomLimbStrength; // If real, use the prefab strength, else use custom.
-                        LimbAff.Strength[Limb] = NewLimbStrength;
-                        LimbAff.PrevStrength[Limb] = NewLimbStrength;
-                    }
-                    break;
-            }
-        }
-    }
-
-    /// <summary>
-    /// Stores our checks we run on a updating affliction before the update, basically just validate the update.
-    /// </summary>
-    /// <param name="UpdatedAfflictions"></param>
-    /// <param name="RealAff"></param>
-    /// <returns></returns>
-    private bool PreUpdateAffliction(List<string> UpdatedAfflictions, Affliction RealAff)
-    {
-        if (RealAff == null || UpdatedAfflictions.Contains(RealAff.Identifier.ToString())
-                    || (!LocalAfflictions.UpdatingAfflictions.ContainsKey(RealAff.Identifier.ToString()))) return true;
-
-        NTHumanAffData Data = LocalAfflictions.UpdatingAfflictions[RealAff.Identifier.ToString()];
-        if (Data.AffTemplate.Const) return true;
-        NTAfflictionType AffType = Data.AffTemplate.Type;
-        UpdateAffliction(AffType, Priorities, RealAff.Identifier.ToString(), Data);
-        return false;
-    }
-
-    /// <summary>
-    /// Updates all constant and non constant afflictions on the character.
-    /// </summary>
-    /// <param name="Priorities"></param>
-    private void UpdateAfflictions(List<AfflictionPriority> Priorities)
-    {
-        List<Affliction> SortedAfflictions = FetchNTAfflictions(Human); // Grab our current afflictions from NT that are on the character. (Our to update list)
-        SortedAfflictions = SortedAfflictions.Union(LocalAfflictions.LastUpdatedAfflictions).ToList(); // We merge our last updated afflictions with our new afflictions.
-        List<string> UpdatedAfflictions = new List<string>(); // Store updated afflictions in here, so we never double dip.
-
-        // Our Current Afflictions Update
-        foreach (Affliction RealAff in SortedAfflictions)
-        {
-            if (PreUpdateAffliction(UpdatedAfflictions, RealAff)) continue; // Validate this before we update and update
-            UpdatedAfflictions.Add(RealAff.Identifier.ToString());
-        }
-
-        // Our Constant Afflictions Update
-        foreach (KeyValuePair<string, NTHumanAffData> Pair in LocalAfflictions.ConstantAfflictions)
-        {
-            if (Pair.Key == null || Pair.Value == null) continue;
-            NTAfflictionType AffType = Pair.Value.AffTemplate.Type;
-            UpdateAffliction(AffType, Priorities, Pair.Key, Pair.Value);
-        }
-
-        LocalAfflictions.LastUpdatedAfflictions = SortedAfflictions.Where(aff => { return Human.CharacterHealth.GetAllAfflictions().Contains(aff); }).ToList(); // Store our last updated affs
-    }
-
-    /// <summary>
-    /// Validation for limb affliction updates.
-    /// </summary>
-    /// <param name="Limb"></param>
-    /// <param name="LimbAff"></param>
-    /// <param name="LimbAffData"></param>
-    /// <param name="Priorities"></param>
-    /// <returns></returns>
-    private bool PreLimbCheck(LimbType Limb, NTLimbAffliction LimbAff, NTHumanLimbAffData LimbAffData, List<AfflictionPriority> Priorities)
-    {
-        if (!LimbAff.AllowedLimbs.Contains(Limb))
-        {
-            LimbAffData.Strength[Limb] = 0;
-            if (LimbAffData is NTHumanLimbSymptomData LimbSymData)
-            {
-                LimbSymData.HumanUpdateTime[Limb] = 0;
-                LimbSymData.HumanUpdateStoptime[Limb] = 0;
-            }
-            return true;
-        }
-
-        if (!Priorities.Contains(LimbAff.Priority) || ((!LimbAff.IgnoreStasis) && GetBoolStatStrength("stasis")))
-        {
-            return true;
-        }
-
-        return false;
-    }
-
-    /// <summary>
-    /// Validation for pre symptom updates.
-    /// </summary>
-    /// <param name="Data"></param>
-    /// <returns></returns>
-    private static bool PreSymptomCheck(NTHumanAffData Data)
-    {
-        if (!(Data is NTHumanSymptomData)) return false; // Is this a symptom lol
-        NTHumanSymptomData AffData = (NTHumanSymptomData)Data;
-        NTSymptom Aff = AffData.SymTemplate;
-        if ((!Aff.Const) && AffData.Strength == 0 && (AffData.HumanUpdateTime <= 0 || AffData.HumanUpdateStoptime > 0)) return true;
-        if (Aff.IsBoolSymptom && AffData.Strength > 0) { AffData.Strength = Aff.MaxStrength; return false; }
-        return false;
-    }
-
-    private static bool PreSymptomCheck(NTHumanLimbAffData Data, LimbType Limb)
-    {
-        if (!(Data is NTHumanLimbSymptomData)) return false; // Is this a symptom lol
-        NTHumanLimbSymptomData AffData = (NTHumanLimbSymptomData)Data;
-        NTLimbSymptom Aff = AffData.SymTemplate;
-        if ((!Aff.Const) && AffData.Strength[Limb] == 0 && (AffData.HumanUpdateTime[Limb] <= 0 || AffData.HumanUpdateStoptime[Limb] > 0)) return true;
-        return false;
-    }
-
-    private static void PostSymptomCheck(NTHumanSymptomData SymData)
-    {
-        NTSymptom Sym = SymData.SymTemplate;
-        if (Sym.IsBoolSymptom && SymData.Strength > 0) { SymData.Strength = Sym.MaxStrength; }
-        if (SymData.HumanUpdateTime > 0)
-        {
-            SymData.Strength = 100;
-            SymData.HumanUpdateTime--;
-
-            if (SymData.HumanUpdateTime <= 0)
-            {
-                SymData.Strength = 0;
-            }
-        }
-
-        if (SymData.HumanUpdateStoptime > 0)
-        {
-            SymData.Strength = 0;
-            SymData.HumanUpdateStoptime--;
-
-            if (SymData.HumanUpdateStoptime <= 0)
-            {
-                SymData.Strength = 0;
-            }
-        }
-    }
-
-    private static void PostSymptomCheck(NTHumanLimbSymptomData SymData, LimbType Limb)
-    {
-        NTLimbSymptom Sym = SymData.SymTemplate;
-        if (Sym.IsBoolSymptom && SymData.Strength[Limb] > 0) { SymData.Strength[Limb] = Sym.MaxStrength; }
-        if (SymData.HumanUpdateTime[Limb] > 0)
-        {
-            SymData.Strength[Limb] = 100;
-            SymData.HumanUpdateTime[Limb]--;
-
-            if (SymData.HumanUpdateTime[Limb] <= 0)
-            {
-                SymData.Strength[Limb] = 0;
-            }
-        }
-
-        if (SymData.HumanUpdateStoptime[Limb] > 0)
-        {
-            SymData.Strength[Limb] = 0;
-            SymData.HumanUpdateStoptime[Limb]--;
-
-            if (SymData.HumanUpdateStoptime[Limb] <= 0)
-            {
-                SymData.Strength[Limb] = 0;
-            }
-        }
-    }
-
-    private void UpdateAffliction(NTAfflictionType AffType, List<AfflictionPriority> Priorities, string Key, NTHumanAffData Data)
-    {
-        if (Data.Delay > 0) { Data.Delay--; return; }
-        switch (AffType)
-        {
-            case NTAfflictionType.NONLIMB:
-            case NTAfflictionType.BLOOD:
-            case NTAfflictionType.SYMPTOM:
-
-                // Fetch the data of the affliction
-                string ID = Key;
-                NTHumanAffData AffData = Data;
-                NTAffliction? Aff = AffData.AffTemplate;
-
-                if ((!Priorities.Contains(Aff.Priority)) || Aff.LuaOverridden)
-                {
-                    return; // Skip to the next affliction, we don't have the same priority currently.
-                }
-
-                if (AffType == NTAfflictionType.SYMPTOM)
-                {
-                    if (PreSymptomCheck(AffData))
-                    {
-                        return;
-                    }
-                }
-
-                Aff.Update(this, ID, LimbType.Torso, AffData);
-
-                break;
-
-            case NTAfflictionType.LIMB:
-            case NTAfflictionType.LIMBSYMPTOM:
-
-                // Fetch the data of the affliction
-                string LimbID = Key;
-                NTHumanLimbAffData LimbAffData = (NTHumanLimbAffData)Data;
-                NTLimbAffliction LimbAff = LimbAffData.AffTemplate;
-
-                if (LimbAff.LuaOverridden) return;
-
-                foreach (LimbType Limb in LimbsToCheck)
-                {
-
-                    if (PreLimbCheck(Limb, LimbAff, LimbAffData, Priorities)) continue;
-
-                    if (PreSymptomCheck(LimbAffData, Limb))
-                    {
-                        continue;
-                    }
-
-                    LimbAff.Update(this, LimbID, Limb, LimbAffData);
-
-                }
-
-                break;
-        }
-    }
-
-    private void SetAfflictionStrengths()
-    {
-        foreach (KeyValuePair<string, NTHumanAffData> Pair in LocalAfflictions.UpdatingAfflictions)
-        {
-            NTAfflictionType AffType = Pair.Value.AffTemplate.Type;
-            SetAfflictionStrength(AffType, Pair.Key, Pair.Value);
-        }
-    }
-
-    private void SetAfflictionStrength(NTAfflictionType AffType, string ID, NTHumanAffData Data, bool Default = false)
-    {
-
-        switch (AffType)
-        {
-            case NTAfflictionType.NONLIMB:
-            case NTAfflictionType.BLOOD:
-            case NTAfflictionType.SYMPTOM:
-
-                // Fetch the data of the affliction
-                NTHumanAffData AffData = (NTHumanAffData)Data;
-                NTAffliction? Template = AffData.AffTemplate;
-
-                if (!Template.Real) return;
-
-                if (!Default)
-                {
-                    if (AffType == NTAfflictionType.SYMPTOM)
-                    {
-                        PostSymptomCheck((NTHumanSymptomData)AffData);
-                    }
-
-                    if (AffData.Strength == AffData.PrevStrength) return;
-
-                    HF.SetAffliction(Human, ID, (float)Math.Clamp(AffData.Strength, Template.MinStrength, Template.MaxStrength));
-                }
-                else
-                {
-                    SetAffliction(Human, ID, (float)Template.DefaultStrength);
-                }
-                break;
-
-            case NTAfflictionType.LIMBSYMPTOM:
-            case NTAfflictionType.LIMB:
-
-                // Fetch the data of the affliction
-                NTHumanLimbAffData LimbAffData = (NTHumanLimbAffData)Data;
-                NTLimbAffliction LimbTemplate = LimbAffData.AffTemplate;
-
-
-                foreach (LimbType Limb in LimbsToCheck)
-                {
-
-                    if (!LimbTemplate.Real) return;
-
-                    if (!Default)
-                    {
-
-                        if (AffType == NTAfflictionType.LIMBSYMPTOM)
-                        {
-                            PostSymptomCheck((NTHumanLimbSymptomData)LimbAffData, Limb);
-                        }
-
-                        if (LimbAffData.Strength[Limb] == LimbAffData.PrevStrength[Limb]) continue;
-
-                        HF.SetAfflictionLimb(Human, ID, Limb, (float)Math.Clamp(LimbAffData.Strength[Limb], LimbTemplate.MinStrength, LimbTemplate.MaxStrength));
-                    }
-                    else
-                    {
-                        HF.SetAfflictionLimb(Human, ID, Limb, (float)LimbTemplate.DefaultStrength);
-                    }
-
-                }
-
-                break;
-        }
-    }
-
-}*/

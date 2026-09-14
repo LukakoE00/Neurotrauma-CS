@@ -1308,6 +1308,46 @@ namespace Neurotrauma
                             Name = TextManager.Get("ntconfigname_header9"),
                             Type = ConfigEntryType.Category,
                         },
+
+                        ["NT_ExperimentalDescription1"] = new ConfigEntry
+                        {
+                            Page = "experimental",
+                            Name = TextManager.Get("ntconfigname_description1"),
+                            Type = ConfigEntryType.Category,
+                        },
+
+                        ["NT_ExperimentalDescription2"] = new ConfigEntry
+                        {
+                            Page = "experimental",
+                            Name = TextManager.Get("ntconfigname_description2"),
+                            Type = ConfigEntryType.Category,
+                        },
+
+                        ["NT_UpdateInterval_High"] = new ConfigEntry
+                        {
+                            Page = "experimental",
+                            Name = TextManager.Get("ntconfigname_updateinterval_high"),
+                            Description = TextManager.Get("ntconfigdescription_updateinterval_high"),
+                            Default = 120f,
+                            Range = new float[] { 30, 480 },
+                            Type = ConfigEntryType.Float,
+                            Group = true,
+                            Resettable = true,
+                        },
+
+                        ["NT_UpdateInterval_Monster"] = new ConfigEntry
+                        {
+                            Page = "experimental",
+                            Name = TextManager.Get("ntconfigname_updateinterval_monster"),
+                            Description = TextManager.Get("ntconfigdescription_updateinterval_monster"),
+                            Default = 120,
+                            Range = new float[] { 30, 480 },
+                            Type = ConfigEntryType.Float,
+                            Group = true,
+                            Resettable = true,
+                        },
+
+                        
                     }
                 }
             );

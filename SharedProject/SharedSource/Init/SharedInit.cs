@@ -14,7 +14,7 @@ namespace Neurotrauma
         // Server-specific code
         public void InitializeServer()
         {
-            NTAfflictions.DefineAllAfflictions();
+            NTAfflictionsToAdd.AddAfflictions();
             NTStats.DefineAllStats();
             NTItemsData.DefineAllItems();
         }
@@ -76,7 +76,7 @@ namespace Neurotrauma
             LuaCsSetup.Instance.Hook.Add("think", "NTCS.ThinkUpdate", (params object[] _) => // The Hook details (TODO, make this in C#)
             { // Start of our Function
 
-                HumanUpdate.ThinkUpdate();
+                NTHumanUpdate.ThinkUpdate();
                 return null;
             }); // End of our Function
 

@@ -1,6 +1,7 @@
 ﻿using Barotrauma.LuaCs.Events;
 using MonoGame.Utilities;
 using MoonSharp.Interpreter;
+using System.Net.NetworkInformation;
 using static Barotrauma.Networking.MessageFragment;
 
 namespace Neurotrauma
@@ -18,6 +19,8 @@ namespace Neurotrauma
 
         public static NTAfflictions.NTAfflictionsLoader NTAfflLoader = new NTAfflictions.NTAfflictionsLoader(NTInfo.Name);
 
+        public static NTStats.NTStatLoader NTStatsLoader = new NTStats.NTStatLoader(NTInfo.Name);
+
         private Harmony ?harmony;
 
         // ---------------------------        Functions        --------------------------- \\
@@ -33,6 +36,9 @@ namespace Neurotrauma
         // No fucking clue what should go here for now tbh. - Lukako
         public void Initialize()
         {
+
+            //TODO: update that idk what it does but it seems to be important for lua scripts to work properly so ill let BEAN (may God strikes him down)s -Cookie
+
             UserData.RegisterType(typeof(HF));
             UserData.RegisterType(typeof(NT));
             UserData.RegisterType(typeof(NTLua));
@@ -48,7 +54,6 @@ namespace Neurotrauma
             UserData.RegisterType(typeof(NeurotraumaInit));
 
             UserData.RegisterType(typeof(NTAfflictions));
-            UserData.RegisterType(typeof(NTAffliction));
 
             UserData.RegisterType(typeof(NTItems));
 
@@ -69,8 +74,8 @@ namespace Neurotrauma
             UserData.RegisterType(typeof(HumanUpdate.CharacterStats.NTHumanStatBoolData));
             UserData.RegisterType(typeof(HumanUpdate.CharacterStats.NTHumanStatDoubleData));
 
-            UserData.RegisterType(typeof(AfflictionPriority));
-            UserData.RegisterType(typeof(List<AfflictionPriority>));
+            UserData.RegisterType(typeof(NTAfflictions.AfflictionPriority));
+            UserData.RegisterType(typeof(List<NTAfflictions.AfflictionPriority>));
 
             UserData.RegisterType(typeof(OnDamaged));
 

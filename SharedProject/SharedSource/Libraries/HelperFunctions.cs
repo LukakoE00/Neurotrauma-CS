@@ -1160,7 +1160,7 @@ namespace Neurotrauma
         /// <param name="Value">Given Value to clamp.</param>
         /// <param name="Aff">The affliction that determines the values to clamp to.</param>
         /// <returns>A double with the clamped value.</returns>
-        public static double AffClamp(double Value, NTAffliction Aff)
+        public static double AffClamp(double Value, NTAfflictions.NTAfflictionPrefab Aff)
         {
             return Math.Clamp(Value, Aff.MinStrength, Aff.MaxStrength);
         }
@@ -1997,11 +1997,11 @@ namespace Neurotrauma
         /// <param name="Limb">The limb to check.</param>
         /// <param name="Key">The stat relevant for this limb.</param>
         /// <returns>True if it should, else False.</returns>
-        public static bool LimbLockedInitial(HumanUpdate.NTHuman C, LimbType Limb, string Key)
+        public static bool LimbLockedInitial(NTHuman C, LimbType Limb, string Key)
         {
-            return (!NTC.HasSymptomFalse(C, Key))
+            return (!NTC.HasSymptomFalse(C.Human, Key))
                    && (
-                       NTC.HasSymptom(C, Key)
+                       NTC.HasSymptom(C.Human, Key)
                         || LimbIsAmputated(C.Human, Limb)
 
                         || (GetAfflictionStrengthLimb(C.Human, Limb, "bandaged") <= 0 
