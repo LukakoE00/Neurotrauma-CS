@@ -7,6 +7,7 @@ namespace Neurotrauma
     internal class ConfigurationMenu
     {
         private static Harmony? Harmony;
+        private static GUIButton NTPauseMenuButton;
 
         private static readonly List<(string uiName, string id, string type)> ExpansionNameForUI = new();
         private static readonly List<(LocalizedString name, string id)> BaseConfigPages = new()
@@ -24,6 +25,17 @@ namespace Neurotrauma
             var InitMethod = AccessTools.Method(typeof(Barotrauma.GUI), "TogglePauseMenu");
             Harmony.Patch(InitMethod, postfix: new HarmonyMethod(typeof(ConfigurationMenu), nameof(AddButtonToPauseMenu)));
         }
+        public static void RemoveConfigFromPauseMenu()
+        {
+            if (NTPauseMenuButton != null)
+            {
+                NTPauseMenuButton.RectTransform.Parent = null;
+                NTPauseMenuButton = null;
+            }
+
+            Harmony?.UnpatchSelf();
+            Harmony = null;
+        }
 
         static void AddButtonToPauseMenu()
         {
@@ -36,9 +48,9 @@ namespace Neurotrauma
             GUIComponent secondChild = frame.Children.Skip(1).First(); // The panel containing the elements
             GUIComponent list = secondChild.Children.First(); // The buttons!
 
-            var btn = new GUIButton(new RectTransform(new Vector2(1f, 0.1f), list.RectTransform), TextManager.Get("ntgui_pausemenubutton_name"), textAlignment: Alignment.Center, style: "GUIButtonSmall");
+            NTPauseMenuButton = new GUIButton(new RectTransform(new Vector2(1f, 0.1f), list.RectTransform), TextManager.Get("ntgui_pausemenubutton_name"), textAlignment: Alignment.Center, style: "GUIButtonSmall");
 
-            btn.OnClicked = (_, _) =>
+            NTPauseMenuButton.OnClicked = (_, _) =>
             {
                 CreateConfigGUI(frame);
                 return true;

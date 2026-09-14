@@ -30,6 +30,7 @@ namespace Neurotrauma
         partial void DisposeClient()
         {
             ButtonsHUI.RemoveNTButtons();
+            ConfigurationMenu.RemoveConfigFromPauseMenu();
         }
     }
 }
