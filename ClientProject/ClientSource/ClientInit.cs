@@ -11,7 +11,7 @@ namespace Neurotrauma
 
         public void InitClientOnly()
         {
-            ConfigurationMenu.AddConfigToPauseMenu();
+            ConfigurationMenu.InitNTConfig();
             DynamicItems.InitDynamicItemsClient();
             ButtonsHUI.InitClient();
 
@@ -30,7 +30,7 @@ namespace Neurotrauma
         partial void DisposeClient()
         {
             ButtonsHUI.RemoveNTButtons();
-            ConfigurationMenu.RemoveConfigFromPauseMenu();
+            ConfigurationMenu.RemoveConfigButtonFromPauseMenu();
         }
     }
 }
