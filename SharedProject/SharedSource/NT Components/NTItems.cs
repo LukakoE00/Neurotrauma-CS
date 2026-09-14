@@ -143,11 +143,11 @@ public class NTItems
     public class ItemUpdateFunctionInfos
     {
         public Item item { get; }
-        public Character user { get; }
-        public Character target { get; }
+        public NTHuman user { get; }
+        public NTHuman target { get; }
         public Limb targetLimb { get; }
 
-        public ItemUpdateFunctionInfos(Item item, Character user, Character target, Limb targetLimb)
+        public ItemUpdateFunctionInfos(Item item, NTHuman user, NTHuman target, Limb targetLimb)
         {
             this.item = item;
             this.user = user;
@@ -245,7 +245,9 @@ public class NTItems
         string itemID = __instance.Prefab.Identifier.ToString();
         if (NTItemsRegistry.ContainsKey(itemID))
         {
-            NTItemsRegistry[itemID].Invoke(new ItemUpdateFunctionInfos(__instance, user, character, targetLimb));
+
+            // TODO: null managing
+            NTItemsRegistry[itemID].Invoke(new ItemUpdateFunctionInfos(__instance, NTHuman.getNTHumanFromCharacter(user), NTHuman.getNTHumanFromCharacter(character), targetLimb));
         }
     }
 
