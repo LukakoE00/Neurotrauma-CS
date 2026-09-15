@@ -4,6 +4,8 @@ namespace Neurotrauma
 {
     public static class NTMultiscalpel
     {
+        private static NTItems.NTItemFunctionLoader loader = NeurotraumaInit.NTItemsLoader;
+
         private static readonly Random _rng = new Random();
 
         private static string GetMultiscalpelMode(Item item)
@@ -91,7 +93,9 @@ namespace Neurotrauma
                     return null;
                 });
 
-            NTItemMethods.RegisterItemUseFunction("multiscalpel", infos =>
+            
+
+            loader.Register("multiscalpel", infos =>
             {
                 string mode = GetMultiscalpelMode(infos.item);
                 if (string.IsNullOrEmpty(mode)) mode = "none";
@@ -102,7 +106,7 @@ namespace Neurotrauma
                         break;
 
                     case "incision":
-                        NTItemMethods.NTItemsRegistry["advscalpel"]?.Invoke(infos);
+                        loader.Get("advscalpel")?.Invoke(infos);
                         break;
 
                     case "bandage":
@@ -125,12 +129,12 @@ namespace Neurotrauma
             });
         }
 
-        private static void UseBandageMode(NTItemMethods.ItemUpdateFunctionInfos infos)
+        private static void UseBandageMode(NTItems.ItemUpdateFunctionInfos infos)
         {
             // Check if there's anything cuttable on this limb.
             bool canCut = false;
-            var cuttables = new List<string>(NTItemMethods.CuttableAfflictions);
-            cuttables.AddRange(NTItemMethods.TraumaShearsAfflictions);
+            var cuttables = new List<string>(NTItems.CuttableAfflictions);
+            cuttables.AddRange(NTItems.TraumaShearsAfflictions);
 
             foreach (var val in cuttables)
             {
@@ -139,94 +143,97 @@ namespace Neurotrauma
 
                 if (prefab.LimbSpecific)
                 {
-                    if (HF.HasAfflictionLimb(infos.target, val, infos.targetLimb.type, 0.1f)) { canCut = true; break; }
+                    if (infos.target.HasAfflictionLimb(val, infos.targetLimb.type,0.1f)) { canCut = true; break; }
                 }
                 else if (infos.targetLimb.type == prefab.IndicatorLimb)
                 {
-                    if (HF.HasAffliction(infos.target, val, 0.1f)) { canCut = true; break; }
+                    if (infos.target.HasAffliction(val, 0.1f)) { canCut = true; break; }
                 }
             }
 
             if (canCut)
             {
-                NTItemMethods.NTItemsRegistry["traumashears"]?.Invoke(infos);
+                loader.Get("traumashears")?.Invoke(infos);
                 return;
             }
 
             // Malpractice time!!!!!!!!!!!!!!
-            bool open = HF.HasAfflictionLimb(infos.target, "retractedskin", infos.targetLimb.type, 1f);
+            bool open = infos.target.HasAfflictionLimb("retractedskin", infos.targetLimb.type, 1f);
             bool isTorso = infos.targetLimb.type == LimbType.Torso;
             bool isHead = infos.targetLimb.type == LimbType.Head;
 
             // I'm fairly certain this is how random chance works now?
             if (!open)
             {
-                HF.AddAfflictionLimb(infos.target, "bleeding", infos.targetLimb.type, 6f + (float)_rng.NextDouble() * 4f, infos.user);
-                HF.AddAfflictionLimb(infos.target, "lacerations", infos.targetLimb.type, 2.5f + (float)_rng.NextDouble() * 5f, infos.user);
-                HF.GiveItem(infos.target, "ntsfx_slash");
+
+                infos.target.AddAfflictionLimb("bleeding", infos.targetLimb.type, 6f + (float)_rng.NextDouble() * 4f, infos.user);
+                infos.target.AddAfflictionLimb("lacerations", infos.targetLimb.type, 2.5f + (float)_rng.NextDouble() * 5f, infos.user);
+                HF.GiveItem(infos.target.Human, "ntsfx_slash");
             }
             else if (isTorso)
             {
-                HF.AddAffliction(infos.target, "internalbleeding", 6f + (float)_rng.NextDouble() * 12f, infos.user);
-                HF.AddAfflictionLimb(infos.target, "lacerations", infos.targetLimb.type, 4f + (float)_rng.NextDouble() * 6f, infos.user);
-                HF.AddAfflictionLimb(infos.target, "internaldamage", infos.targetLimb.type, 4f + (float)_rng.NextDouble() * 6f, infos.user);
+
+                infos.target.AddAffliction("internalbleeding", 6f + (float)_rng.NextDouble() * 12f, infos.user);
+                infos.target.AddAfflictionLimb("lacerations", infos.targetLimb.type, 4f + (float)_rng.NextDouble() * 6f, infos.user);
+                infos.target.AddAfflictionLimb("internaldamage", infos.targetLimb.type, 4f + (float)_rng.NextDouble() * 6f, infos.user);
 
                 float roll = (float)_rng.NextDouble();
-                if (roll < 0.25f) HF.AddAffliction(infos.target, "kidneydamage", 10f + (float)_rng.NextDouble() * 10f, infos.user);
-                else if (roll < 0.50f) HF.AddAffliction(infos.target, "liverdamage", 10f + (float)_rng.NextDouble() * 10f, infos.user);
-                else if (roll < 0.75f) HF.AddAffliction(infos.target, "lungdamage", 10f + (float)_rng.NextDouble() * 10f, infos.user);
-                else HF.AddAffliction(infos.target, "heartdamage", 10f + (float)_rng.NextDouble() * 10f, infos.user);
+                if (roll < 0.25f) infos.target.AddAffliction("kidneydamage", 10f + (float)_rng.NextDouble() * 10f, infos.user);
+                else if (roll < 0.50f) infos.target.AddAffliction("liverdamage", 10f + (float)_rng.NextDouble() * 10f, infos.user);
+                else if (roll < 0.75f) infos.target.AddAffliction("lungdamage", 10f + (float)_rng.NextDouble() * 10f, infos.user);
+                else infos.target.AddAffliction("heartdamage", 10f + (float)_rng.NextDouble() * 10f, infos.user);
 
-                HF.GiveItem(infos.target, "ntsfx_slash");
+                HF.GiveItem(infos.target.Human, "ntsfx_slash");
             }
             else if (isHead)
             {
-                HF.AddAffliction(infos.target, "cerebralhypoxia", 15f + (float)_rng.NextDouble() * 15f, infos.user);
-                HF.AddAfflictionLimb(infos.target, "internaldamage", infos.targetLimb.type, 10f + (float)_rng.NextDouble() * 10f, infos.user);
-                HF.AddAfflictionLimb(infos.target, "bleeding", infos.targetLimb.type, 6f + (float)_rng.NextDouble() * 12f, infos.user);
-                HF.GiveItem(infos.target, "ntsfx_slash");
+                infos.target.AddAffliction("cerebralhypoxia", 15f + (float)_rng.NextDouble() * 15f, infos.user);
+                infos.target.AddAfflictionLimb("internaldamage", infos.targetLimb.type, 10f + (float)_rng.NextDouble() * 10f, infos.user);
+                infos.target.AddAfflictionLimb("bleeding", infos.targetLimb.type, 6f + (float)_rng.NextDouble() * 12f, infos.user);
+                HF.GiveItem(infos.target.Human, "ntsfx_slash");
             }
             else
             {
                 // Open arm/leg
-                HF.AddAfflictionLimb(infos.target, "bleeding", infos.targetLimb.type, 6f + (float)_rng.NextDouble() * 6f, infos.user);
-                HF.AddAfflictionLimb(infos.target, "lacerations", infos.targetLimb.type, 4f + (float)_rng.NextDouble() * 6f, infos.user);
-                HF.AddAfflictionLimb(infos.target, "internaldamage", infos.targetLimb.type, 4f + (float)_rng.NextDouble() * 6f, infos.user);
+                infos.target.AddAfflictionLimb("bleeding", infos.targetLimb.type, 6f + (float)_rng.NextDouble() * 6f, infos.user);
+                infos.target.AddAfflictionLimb("lacerations", infos.targetLimb.type, 4f + (float)_rng.NextDouble() * 6f, infos.user);
+                infos.target.AddAfflictionLimb("internaldamage", infos.targetLimb.type, 4f + (float)_rng.NextDouble() * 6f, infos.user);
 
-                if (HF.Chance(0.1f)) HF.BreakLimb(infos.target, infos.targetLimb.type);
+                if (HF.Chance(0.1f)) HF.BreakLimb(infos.target.Human, infos.targetLimb.type);
 
-                HF.GiveItem(infos.target, "ntsfx_slash");
+                HF.GiveItem(infos.target.Human, "ntsfx_slash");
             }
         }
 
-        private static void UseSpeedflexMode(NTItemMethods.ItemUpdateFunctionInfos infos)
+        private static void UseSpeedflexMode(NTItems.ItemUpdateFunctionInfos infos)
         {
-            var torsoLimb = infos.target.AnimController?.MainLimb ?? infos.targetLimb;
+
+            var torsoLimb = infos.target.Human.AnimController?.MainLimb ?? infos.targetLimb;
             // Me when I LIE!!!!
             // Act like its the torso (even when we apply to a limb)
-            var torsoInfos = new NTItemMethods.ItemUpdateFunctionInfos(infos.item, infos.user, infos.target, torsoLimb);
+            var torsoInfos = new NTItems.ItemUpdateFunctionInfos(infos.item, infos.user, infos.target, torsoLimb);
             var UsedOnLimb = HF.NormalizeLimbType(infos.targetLimb.type);
 
             switch (UsedOnLimb)
             {
                 case LimbType.Head:
-                    NTItemMethods.NTItemsRegistry["organscalpel_brain"]?.Invoke(infos);
+                    loader.Get("organscalpel_brain")?.Invoke(infos);
                     break;
 
                 case LimbType.LeftArm:
-                    NTItemMethods.NTItemsRegistry["organscalpel_kidneys"]?.Invoke(torsoInfos);
+                    loader.Get("organscalpel_kidneys")?.Invoke(infos);
                     break;
 
                 case LimbType.Torso:
-                    NTItemMethods.NTItemsRegistry["organscalpel_liver"]?.Invoke(torsoInfos);
+                    loader.Get("organscalpel_liver")?.Invoke(infos);
                     break;
 
                 case LimbType.RightArm:
-                    NTItemMethods.NTItemsRegistry["organscalpel_heart"]?.Invoke(torsoInfos);
+                    loader.Get("organscalpel_heart")?.Invoke(infos);
                     break;
 
                 case LimbType.LeftLeg:
-                    NTItemMethods.NTItemsRegistry["organscalpel_lungs"]?.Invoke(torsoInfos);
+                    loader.Get("organscalpel_lungs")?.Invoke(infos);
                     break;
             }
         }

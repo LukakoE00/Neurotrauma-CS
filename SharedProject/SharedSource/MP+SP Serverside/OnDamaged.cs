@@ -253,7 +253,7 @@ public static class OnDamaged
             HF.AddAfflictionLimb(Character, "foreignbody", LimbType, Math.Clamp(Strength / 4f, 0, 20));
         }
 
-        HumanUpdate.NTHuman? NTCharacter = HumanUpdate.CharacterToNTHuman(Character);
+        NTHuman? NTCharacter = NTHuman.getNTHumanFromCharacter(Character);
         FallOffChair(NTCharacter, Character, Strength);
     }
 
@@ -264,7 +264,7 @@ public static class OnDamaged
         LimbType = HF.NormalizeLimbType(LimbType);
 
         // Deal with Multipliers
-        HumanUpdate.NTHuman ?NTCharacter = HumanUpdate.CharacterToNTHuman(Character);
+        NTHuman ?NTCharacter = NTHuman.getNTHumanFromCharacter(Character);
 
         // Possible Foreign Bodies
         if (HF.Chance(0.75f))
@@ -364,7 +364,7 @@ public static class OnDamaged
         LimbType = HF.NormalizeLimbType(LimbType);
 
         // Deal with Multipliers
-        var NTCharacter = HumanUpdate.CharacterToNTHuman(Character);
+        var NTCharacter = NTHuman.getNTHumanFromCharacter(Character);
 
         // Torso-specific injuries
         if (Strength >= 1 && LimbType == LimbType.Torso)
@@ -435,7 +435,7 @@ public static class OnDamaged
         LimbType = HF.NormalizeLimbType(LimbType);
 
         // Deal with Multipliers
-        var NTCharacter = HumanUpdate.CharacterToNTHuman(Character);
+        var NTCharacter = NTHuman.getNTHumanFromCharacter(Character);
 
         // Torso-specific injuries
         if (Strength >= 1 && LimbType == LimbType.Torso)
@@ -500,7 +500,7 @@ public static class OnDamaged
         LimbType = HF.NormalizeLimbType(LimbType);
 
         // Deal with Multipliers
-        var NTCharacter = HumanUpdate.CharacterToNTHuman(Character);
+        NTHuman? NTCharacter = NTHuman.getNTHumanFromCharacter(Character);
 
         bool FractureImmune = HF.HasAffliction(Character, "cpr_fracturebuff");
 
@@ -599,7 +599,7 @@ public static class OnDamaged
         LimbType = HF.NormalizeLimbType(LimbType);
 
         // Deal with Multipliers
-        var NTCharacter = HumanUpdate.CharacterToNTHuman(Character);
+        var NTCharacter = NTHuman.getNTHumanFromCharacter(Character);
 
         // Torso
         if (Strength >= 1 && LimbType == LimbType.Torso)
@@ -678,11 +678,11 @@ public static class OnDamaged
         }
     }
 
-    private static void FallOffChair(HumanUpdate.NTHuman NTCharacter, Character Character, double Strength, double MinimumStrength = 20)
+    private static void FallOffChair(NTHuman NTCharacter, Character Character, double Strength, double MinimumStrength = 20)
     {
         if (NTCharacter != null && HF.IsCharacterValid(Character))
         {
-            if (NTCharacter.GetAffData("onwheelchair").Strength > 0 && Strength > MinimumStrength)
+            if (NTCharacter.GetAffliction("onwheelchair").Strength > 0 && Strength > MinimumStrength)
             {
                 Item WheelChair = HF.GetItemInOuterWear(Character);
                 if (WheelChair == null) return;
@@ -690,7 +690,7 @@ public static class OnDamaged
                 Vector2 CharacterDirection = HF.GetCharacterLimb(Character, LimbType.Torso).LinearVelocity;
                 WheelChair.body.ApplyLinearImpulse(CharacterDirection * 15); // Move the wheel chair in the direction of the damage.
                 WheelChair.body.ApplyTorque((float)HF.Magnitude(CharacterDirection * 5));
-                NTCharacter.GetAffData("onwheelchair").Strength = 0;
+                NTCharacter.GetAffliction("onwheelchair").Strength = 0;
             }
         }
     }

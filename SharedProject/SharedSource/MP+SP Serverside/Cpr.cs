@@ -19,14 +19,21 @@ namespace Neurotrauma
                 }
 
                 Character character = animController.Character.SelectedCharacter;
+                NTHuman? target = NTHuman.getNTHumanFromCharacter(character);
 
-                if (!HF.HasAffliction(character, "cpr_buff_auto"))
+                if (target == null)
                 {
-                    HF.AddAffliction(character, "cpr_buff", 2f, null);
+                    HF.PrintError($"CPR Success error: target character {character.Name} is not NTHuman!");
+                    return null;
+                }
+
+                if (!target.HasAffliction("cpr_buff_auto"))
+                {
+                    target.AddAffliction("cpr_buff", 2f);
                 }
 
                 // Prevent fractures during CPR
-                HF.AddAffliction(character, "cpr_fracturebuff", 2f, null);
+                target.AddAffliction("cpr_fracturebuff", 2f);
 
                 return null;
             });
@@ -39,10 +46,17 @@ namespace Neurotrauma
                 if (animController?.Character?.SelectedCharacter == null) return null;
 
                 Character character = animController.Character.SelectedCharacter;
+                NTHuman? target = NTHuman.getNTHumanFromCharacter(character);
+
+                if (target == null)
+                {
+                    HF.PrintError($"CPR Success error: target character {character.Name} is not NTHuman!");
+                    return null;
+                }
 
                 // Prevent fractures during CPR
-                HF.AddAffliction(character, "cpr_fracturebuff", 2f, null);
-                HF.AddAfflictionLimb(character, "blunttrauma", LimbType.Torso, 0.3f, null);
+                target.AddAffliction("cpr_fracturebuff", 2f);
+                target.AddAfflictionLimb("blunttrauma", LimbType.Torso, 0.3f);
 
                 float fractureChance =
                     NTConfig.Get("NT_fractureChance", 1f) *
@@ -50,7 +64,8 @@ namespace Neurotrauma
                     0.2f /
                     HF.GetSkillLevel(animController.Character, "medical");
 
-                if (HF.Chance(fractureChance)) HF.AddAffliction(character, "t_fracture", 1f, null);
+                if (HF.Chance(fractureChance)) target.AddAffliction("t_fracture", 1f);
+                    
 
                 return null;
             });
