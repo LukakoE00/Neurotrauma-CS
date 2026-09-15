@@ -5,7 +5,7 @@ namespace Neurotrauma;
 
 public class NTHuman
 {
-    public static List<NTHuman> NTHumans = new List<NTHuman>();
+    public static Dictionary<Character, NTHuman> NTHumans = new Dictionary<Character, NTHuman>();
 
     // TODO: We might want to get our own ?
     private static IEventService EventService = LuaCsSetup.Instance.EventService;
@@ -15,16 +15,19 @@ public class NTHuman
     private NTSymptomsStorage Symptoms;
     public Character Human {  get; private set; }
 
+    public CharacterTags Tags { get; private set; }
+
     public NTHuman(Character Human)
     {
         this.Human = Human;
         this.Symptoms = new NTSymptomsStorage(this);
 
-
         this.BoolStats = new Dictionary<String, bool>();
         this.DoubleStats = new Dictionary<String, double>();
 
-        NTHumans.Add(this);
+        this.Tags = new CharacterTags();
+
+        NTHumans.Add(Human, this);
 
         foreach (var item in NTStats.StatRegistry)
         {
@@ -44,11 +47,16 @@ public class NTHuman
 
     public static NTHuman? getNTHumanFromCharacter(Character Human)
     {
-        foreach (NTHuman ntHuman in NTHumans)
+        if (NTHumans.ContainsKey(Human))
         {
-            if (ntHuman.Human == Human) return ntHuman;
+            return NTHumans[Human];
         }
         return null;
+    }
+
+    public static void RemoveNTHuman(NTHuman Human)
+    {
+        NTHumans.Remove(Human.Human);
     }
 
     #region Stats
@@ -168,11 +176,15 @@ public class NTHuman
         return HF.NormalizeFloat(aff.Strength);
     }
 
+    public void AddAffliction(string AfflictionID, float Strength, NTHuman Aggressor) => AddAffliction(AfflictionID, Strength, Aggressor.Human);
+
     public void AddAffliction(string AfflictionID, float Strength, Character? Aggressor = null)
     {
         float prev = this.GetAfflictionStrength(AfflictionID, 0f);
         this.SetAffliction(AfflictionID, prev + Strength, Aggressor == null ? this.Human : Aggressor);
     }
+
+    public void AddAfflictionLimb(string AfflictionID, LimbType Limb, float Strength, NTHuman Aggressor) => AddAfflictionLimb(AfflictionID, Limb, Strength, Aggressor.Human);
 
     public void AddAfflictionLimb(string AfflictionID, LimbType Limb, float Strength, Character? Aggressor = null)
     {
@@ -368,8 +380,8 @@ public class NTHuman
         IReadOnlyCollection<Affliction> afflictions = this.Human.CharacterHealth.GetAllAfflictions();
 
         var r = new Dictionary<LimbType, List<String>>();
-        
-        
+
+        // Remember to add constant afflictions from NTAfflictions.ConstantAfflicitonPrefabs
 
         return r;
         
@@ -410,6 +422,18 @@ public class NTHuman
     public void PostHook()
     {
         EventService.Call("Neurotrauma.HumanUpdate.PostHook", this);
+
+        if (this.Human != null && this.Human.IdFreed == false)
+        {
+            this.Human.SetStun((float)GetAfflictionStrength("stun"));
+
+            if (this.Human.Health < 0)
+            {
+                SetSymptomTrue("unconsciousness", 2);
+                SetAffliction("unconsciousness", 100);
+            }
+        }
+
         return;
     }
 
@@ -727,4 +751,62 @@ probably the most disgusting code i've ever written
  
     }
     #endregion
+
+    #region Tags
+
+    /// <summary>
+    /// Stores the Tags that our character has. Used by NTCompat for adding/setting tags and for giving speed multipliers.
+    /// This acts as a replacement for NT's old Data system it used.
+    /// </summary>
+    public class CharacterTags
+    {
+        public Dictionary<string, double> Tags = new();
+
+        public void SetTag(string Prefix, string TagID, double Amount = 1)
+        {
+            Tags[Prefix + "_" + TagID] = Amount;
+        }
+
+        public void SetTagsByPrefix(string Prefix, double Amount)
+        {
+            foreach (KeyValuePair<string, double> Pair in Tags) // Why is this read only?????
+            {
+                if (Pair.Key.StartsWith(Prefix))
+                {
+                    Tags[Pair.Key] = Amount;
+                }
+            }
+        }
+
+        public void SetTagsByTagID(string TagID, double Amount)
+        {
+            foreach (KeyValuePair<string, double> Pair in Tags)
+            {
+                if (Pair.Key.EndsWith(TagID))
+                {
+                    Tags[Pair.Key] = Amount;
+                }
+            }
+        }
+
+        public void RemoveTag(string Prefix, string TagID)
+        {
+            if (!HasTag(Prefix, TagID)) return;
+            Tags.Remove(Prefix + "_" + TagID);
+        }
+
+        public bool HasTag(string Prefix, string TagID)
+        {
+            return Tags.ContainsKey(Prefix + "_" + TagID);
+        }
+
+        public double GetTag(string Prefix, string TagID)
+        {
+            if (!HasTag(Prefix, TagID)) return 1;
+            return Tags[Prefix + "_" + TagID];
+        }
+    }
+
+    #endregion
+
 }
