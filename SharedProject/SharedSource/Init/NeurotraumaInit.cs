@@ -43,7 +43,6 @@ namespace Neurotrauma
 
             UserData.RegisterType(typeof(HF));
             UserData.RegisterType(typeof(NT));
-            UserData.RegisterType(typeof(NTLua));
             UserData.RegisterType(typeof(NTInfo));
             UserData.RegisterType(typeof(NTC));
 
@@ -61,20 +60,6 @@ namespace Neurotrauma
 
             UserData.RegisterType(typeof(SpeakAboutIssuesPatch));
 
-            UserData.RegisterType(typeof(HumanUpdate));
-            UserData.RegisterType(typeof(HumanUpdate.NTHuman));
-            UserData.RegisterType(typeof(HumanUpdate.CharacterAfflictions));
-            UserData.RegisterType(typeof(HumanUpdate.CharacterStats));
-            UserData.RegisterType(typeof(HumanUpdate.CharacterTags));
-            UserData.RegisterType(typeof(HumanUpdate.NTHumanAffData));
-            UserData.RegisterType(typeof(HumanUpdate.NTHumanNonLimbAffData));
-            UserData.RegisterType(typeof(HumanUpdate.NTHumanLimbAffData));
-            UserData.RegisterType(typeof(HumanUpdate.NTHumanBloodAffData));
-            UserData.RegisterType(typeof(HumanUpdate.NTHumanSymptomData));
-            UserData.RegisterType(typeof(HumanUpdate.NTHumanLimbSymptomData));
-
-            UserData.RegisterType(typeof(HumanUpdate.CharacterStats.NTHumanStatBoolData));
-            UserData.RegisterType(typeof(HumanUpdate.CharacterStats.NTHumanStatDoubleData));
 
             UserData.RegisterType(typeof(NTAfflictions.AfflictionPriority));
             UserData.RegisterType(typeof(List<NTAfflictions.AfflictionPriority>));
@@ -165,12 +150,23 @@ namespace Neurotrauma
 
         public void OnCharacterCreated(Character character)
         {
-            HumanUpdate.AddCharacterToUpdate(character);
+            if (character.IsHuman)
+            {
+                var h = new NTHuman(character);
+                h.AddAffliction("luabotomy", 100f);
+            }
         }
 
         public void OnCharacterDeath(Character character, Affliction causeOfDeathAffliction, CauseOfDeathType causeOfDeathType)
         {
-            HumanUpdate.RemoveCharacterFromUpdate(character);
+            if (character.IsHuman)
+            {
+                NTHuman? human = NTHuman.getNTHumanFromCharacter(character);
+
+                if (human == null) return;
+
+                NTHuman.RemoveNTHuman(human);
+            }
         }
     }
 

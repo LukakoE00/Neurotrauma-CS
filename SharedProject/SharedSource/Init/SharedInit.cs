@@ -35,7 +35,6 @@ namespace Neurotrauma
             NTItemsData.EnsureWorkingItems(); // Runs the FixItems hooks
             NTSurgeryTable.InitializeSurgeryTableHooks(); // Adds hook for surgery table
             InitLuaHooks(); // Initializes the Lua hooks at the bottom of this file
-            AddApplyHooks();
 
             // What a mess. - Lukako (holy old status)
             harmony = new Harmony("neurotrauma.server");
@@ -100,24 +99,6 @@ namespace Neurotrauma
 #pragma warning restore CS0618 // Type or member is obsolete
         }
 
-        public static void AddApplyHooks()
-        {
-            NTC.AddPostHumanUpdateHook((HumanUpdate.NTHuman C) =>
-            {
-                if (C != null && C.Human != null && C.Human.IdFreed == false)
-                {
-                    C.Human.SetStun((float)C.GetAffStrength("stun"));
-                }
-            });
-
-            NTC.AddPostHumanUpdateHook((HumanUpdate.NTHuman C) =>
-            {
-                if (C != null && C.Human != null && C.Human.IdFreed == false && C.Human.Health < 0)
-                {
-                    NTC.SetSymptomTrue(C.Human, "unconsciousness", 2);
-                    HF.SetAffliction(C.Human, "unconsciousness", 100);
-                }
-            });
-        }
+        
     }
-    }
+}
