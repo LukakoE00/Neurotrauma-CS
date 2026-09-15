@@ -188,7 +188,7 @@ public class NTItems
         /// This function will be called when the item is used successfully. Useful for removing symptoms.
         /// </summary>
         public Action<ItemUpdateFunctionInfos>? Used { get; }
-        public LuaCsAction LuaConditions { get; }
+        public LuaCsAction? LuaConditions { get; }
 
         public ItemsAfflictionInfos(string affID, int xpGain, Func<ItemUpdateFunctionInfos, bool> conditions, string newCase = "", Action<ItemUpdateFunctionInfos>? used = null)
         {
@@ -246,8 +246,34 @@ public class NTItems
         if (NTItemsRegistry.ContainsKey(itemID))
         {
 
-            // TODO: null managing
-            NTItemsRegistry[itemID].Invoke(new ItemUpdateFunctionInfos(__instance, NTHuman.getNTHumanFromCharacter(user), NTHuman.getNTHumanFromCharacter(character), targetLimb));
+            if (user == null)
+            {
+                HF.PrintError($"Error trying to ApplyTreatment of item {__instance.Name} : user is null");
+                return;
+            }
+
+            if (character == null)
+            {
+                HF.PrintError($"Error trying to ApplyTreatment of item {__instance.Name} : target character is null");
+                return;
+            }
+
+            NTHuman? u = NTHuman.getNTHumanFromCharacter(user);
+            NTHuman? t = NTHuman.getNTHumanFromCharacter(character);
+
+            if (u == null)
+            {
+                HF.PrintError($"Error trying to ApplyTreatment of item {__instance.Name} : {user.Name} is not an NTHuman!");
+                return;
+            }
+
+            if (t == null)
+            {
+                HF.PrintError($"Error trying to ApplyTreatment of item {__instance.Name} : {character.Name} is not an NTHuman!");
+                return;
+            }
+
+            NTItemsRegistry[itemID].Invoke(new ItemUpdateFunctionInfos(__instance, u, t, targetLimb));
         }
     }
 

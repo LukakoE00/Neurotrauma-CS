@@ -1,5 +1,3 @@
-using System.IO.IsolatedStorage;
-using static Neurotrauma.HumanUpdate;
 using static Neurotrauma.NTItems;
 
 namespace Neurotrauma;
@@ -230,7 +228,7 @@ public class NTItemsData
     /// </summary>
     public static void DefineAllItems()
     {
-        NTItemFunctionLoader loader = new NTItemFunctionLoader("Neurotrauma");
+        NTItemFunctionLoader loader = NeurotraumaInit.NTItemsLoader;
 
 
         // ============== Blood ==============
@@ -2080,7 +2078,7 @@ public class NTItemsData
                 if (damage < 90)
                 {
                     string transplantID = "livertransplant_q1";
-                    if (NTC.HasTag(CharacterToNTHuman(infos.user.Human), "organssellforfull")) transplantID = "livertransplant";
+                    if (infos.user.Tags.HasTag("tag", "organssellforfull")) transplantID = "livertransplant";
                     SpawnOrganTransplantInContainer(transplantID, infos.user.Human, 100 - damage);
                 }
             }
@@ -2132,10 +2130,10 @@ public class NTItemsData
                 if (damage < 90)
                 {
                     string transplantID = "lungtransplant_q1";
-                    if (NTC.HasTag(CharacterToNTHuman(infos.user.Human), "organssellforfull")) transplantID = "lungtransplant";
-                    {
-                        SpawnOrganTransplantInContainer(transplantID, infos.user.Human, 100 - damage);
-                    }
+                    if (infos.user.Tags.HasTag("tag", "organssellforfull")) transplantID = "lungtransplant";
+                    
+                    SpawnOrganTransplantInContainer(transplantID, infos.user.Human, 100 - damage);
+                    
                 }
             }
         });
@@ -2186,7 +2184,8 @@ public class NTItemsData
                 if (damage < 90)
                 {
                     string transplantID = "hearttransplant_q1";
-                    if (NTC.HasTag(CharacterToNTHuman(infos.user.Human), "organssellforfull")) transplantID = "hearttransplant";
+                    if (infos.user.Tags.HasTag("tag", "organssellforfull")) transplantID = "hearttransplant";
+
                     SpawnOrganTransplantInContainer(transplantID, infos.user.Human, 100 - damage);
                 }
             }
@@ -2227,7 +2226,7 @@ public class NTItemsData
                 if (damage >= 100) return;
 
                 string transplantID = "kidneytransplant_q1";
-                if (NTC.HasTag(CharacterToNTHuman(infos.user.Human), "organssellforfull")) transplantID = "kidneytransplant";
+                if (infos.user.Tags.HasTag("tag", "organssellforfull")) transplantID = "kidneytransplant";
 
                 if (damage < 50)
                 {

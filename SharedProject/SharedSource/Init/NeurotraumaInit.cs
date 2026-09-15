@@ -21,6 +21,8 @@ namespace Neurotrauma
 
         public static NTStats.NTStatLoader NTStatsLoader = new NTStats.NTStatLoader(NTInfo.Name);
 
+        public static NTItems.NTItemFunctionLoader NTItemsLoader = new NTItems.NTItemFunctionLoader(NTInfo.Name);
+
         private Harmony ?harmony;
 
         // ---------------------------        Functions        --------------------------- \\
