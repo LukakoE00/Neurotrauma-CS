@@ -10,12 +10,6 @@ namespace Neurotrauma
                     Name = "Neurotrauma",
                     ConfigData = new Dictionary<string, ConfigEntry>
                     {
-                        ["NT_header1"] = new ConfigEntry
-                        {
-                            Name = TextManager.Get("ntconfigname_header1"),
-                            Type = ConfigEntryType.Category,
-                        },
-
                         ["NT_dislocationChance"] = new ConfigEntry
                         {
                             Name = TextManager.Get("ntconfigname_dislocationchance"),
@@ -184,6 +178,14 @@ namespace Neurotrauma
                             Type = ConfigEntryType.Float,
                             Group = true,
                             Resettable = true,
+                        },
+
+                        ["NT_cl_DoHUIButtons"] = new ConfigEntry
+                        {
+                            Name = TextManager.Get("ntconfigname_DoHUIButtons"),
+                            Default = true,
+                            Type = ConfigEntryType.Bool,
+                            Description = TextManager.Get("ntconfigdescription_DoHUIButtons")
                         },
 
                         ["NT_Calculations"] = new ConfigEntry
