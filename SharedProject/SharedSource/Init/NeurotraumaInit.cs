@@ -16,6 +16,8 @@ namespace Neurotrauma
         public ILoggerService LoggerService { get; set; }
         public ILuaScriptManagementService luaScriptManagementService = LuaCsSetup.Instance.LuaScriptManagementService;
         private Harmony ?harmony;
+        public static ContentPackage NeurotraumaContentPackage;
+        public static string NeurotraumaModDir;
 
         // ---------------------------        Functions        --------------------------- \\
         // Called right after the constructor
@@ -30,6 +32,9 @@ namespace Neurotrauma
         // No fucking clue what should go here for now tbh. - Lukako
         public void Initialize()
         {
+            PluginService.TryGetPackageForPlugin<NeurotraumaInit>(out NeurotraumaContentPackage);
+            NeurotraumaModDir = Path.GetDirectoryName(NeurotraumaContentPackage.Path.ToString());
+
             UserData.RegisterType(typeof(HF));
             UserData.RegisterType(typeof(NT));
             UserData.RegisterType(typeof(NTLua));
