@@ -11,7 +11,7 @@ public class NTHuman
     private static IEventService EventService = LuaCsSetup.Instance.EventService;
 
     public Dictionary<String, bool> BoolStats { get; private set; }
-    public Dictionary<String, double> DoubleStats { get; private set; }
+    public Dictionary<String, float> FloatStats { get; private set; }
     private NTSymptomsStorage Symptoms;
     public Character Human {  get; private set; }
 
@@ -23,7 +23,7 @@ public class NTHuman
         this.Symptoms = new NTSymptomsStorage(this);
 
         this.BoolStats = new Dictionary<String, bool>();
-        this.DoubleStats = new Dictionary<String, double>();
+        this.FloatStats = new Dictionary<String, float>();
 
         this.Tags = new CharacterTags();
 
@@ -38,9 +38,9 @@ public class NTHuman
             {
                 this.BoolStats.Add(name, ((NTStats.NTStatBool)stat).DefaultValue);
             }
-            else if (stat is NTStats.NTStatDouble)
+            else if (stat is NTStats.NTStatFloat)
             {
-                this.DoubleStats.Add(name, ((NTStats.NTStatDouble)stat).DefaultStrength);
+                this.FloatStats.Add(name, ((NTStats.NTStatFloat)stat).DefaultStrength);
             }
         }
     }
@@ -76,14 +76,14 @@ public class NTHuman
             BoolStats[id] = ((NTStats.NTStatBool)stat).UpdateFunction?.Invoke(this, deltaTime) ?? val;
         }
 
-        foreach (var i in DoubleStats)
+        foreach (var i in FloatStats)
         {
             string id = i.Key;
-            double val = i.Value;
+            float val = i.Value;
 
             var stat = NTStats.StatRegistry[id];
 
-            DoubleStats[id] = ((NTStats.NTStatDouble)stat).UpdateFunction?.Invoke(this, deltaTime) ?? val;
+            FloatStats[id] = ((NTStats.NTStatFloat)stat).UpdateFunction?.Invoke(this, deltaTime) ?? val;
         }
     }
 
@@ -99,11 +99,11 @@ public class NTHuman
         return false;
     }
 
-    public double GetDoubleStat(string StatID)
+    public float GetFloatStat(string StatID)
     {
-        if (DoubleStats.ContainsKey(StatID))
+        if (FloatStats.ContainsKey(StatID))
         {
-            return DoubleStats[StatID];
+            return FloatStats[StatID];
         }
 
         HF.PrintError($"Trying to get an unknown double stat : {StatID}. Target character : {this.Human.DisplayName}");
@@ -122,11 +122,11 @@ public class NTHuman
         HF.PrintError($"Trying to set an unknown bool stat : {StatID}. Target character : {this.Human.DisplayName}");
     }
 
-    public void SetDoubleStat(string StatID, double val)
+    public void SetFloatStat(string StatID, float val)
     {
-        if (DoubleStats.ContainsKey(StatID))
+        if (FloatStats.ContainsKey(StatID))
         {
-            DoubleStats[StatID] = val;
+            FloatStats[StatID] = val;
             return;
         }
 
@@ -760,16 +760,16 @@ probably the most disgusting code i've ever written
     /// </summary>
     public class CharacterTags
     {
-        public Dictionary<string, double> Tags = new();
+        public Dictionary<string, float> Tags = new();
 
-        public void SetTag(string Prefix, string TagID, double Amount = 1)
+        public void SetTag(string Prefix, string TagID, float Amount = 1)
         {
             Tags[Prefix + "_" + TagID] = Amount;
         }
 
-        public void SetTagsByPrefix(string Prefix, double Amount)
+        public void SetTagsByPrefix(string Prefix, float Amount)
         {
-            foreach (KeyValuePair<string, double> Pair in Tags) // Why is this read only?????
+            foreach (KeyValuePair<string, float> Pair in Tags) // Why is this read only?????
             {
                 if (Pair.Key.StartsWith(Prefix))
                 {
@@ -778,9 +778,9 @@ probably the most disgusting code i've ever written
             }
         }
 
-        public void SetTagsByTagID(string TagID, double Amount)
+        public void SetTagsByTagID(string TagID, float Amount)
         {
-            foreach (KeyValuePair<string, double> Pair in Tags)
+            foreach (KeyValuePair<string, float> Pair in Tags)
             {
                 if (Pair.Key.EndsWith(TagID))
                 {
@@ -800,7 +800,7 @@ probably the most disgusting code i've ever written
             return Tags.ContainsKey(Prefix + "_" + TagID);
         }
 
-        public double GetTag(string Prefix, string TagID)
+        public float GetTag(string Prefix, string TagID)
         {
             if (!HasTag(Prefix, TagID)) return 1;
             return Tags[Prefix + "_" + TagID];

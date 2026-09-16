@@ -16,16 +16,16 @@ public partial class NTStats
     }
 
 
-    public class NTStatDouble : NTStat
+    public class NTStatFloat : NTStat
     {
-        public double MinStrength { get; private set; }
-        public double MaxStrength { get; private set; }
-        public double DefaultStrength { get; private set; }
+        public float MinStrength { get; private set; }
+        public float MaxStrength { get; private set; }
+        public float DefaultStrength { get; private set; }
         public string ID;
 
-        public Func<NTHuman, float, double>? UpdateFunction { get; private set; }
+        public Func<NTHuman, float, float>? UpdateFunction { get; private set; }
 
-        public NTStatDouble(string Name, double MinStrength, double MaxStrength, double DefaultStrength, Func<NTHuman, float, double>? Update) : base(Name)
+        public NTStatFloat(string Name, float MinStrength, float MaxStrength, float DefaultStrength, Func<NTHuman, float, float>? Update) : base(Name)
         {
             this.MinStrength = MinStrength;
             this.MaxStrength = MaxStrength;
@@ -33,7 +33,7 @@ public partial class NTStats
             this.ID = Name;
         }
 
-        public double Get(NTHuman C, float deltaTime, double defaultStrength = 0)
+        public float Get(NTHuman C, float deltaTime, float defaultStrength = 0)
         {
             return (UpdateFunction != null) ? UpdateFunction.Invoke(C, deltaTime) : defaultStrength;
         }

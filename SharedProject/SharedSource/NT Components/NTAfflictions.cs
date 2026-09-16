@@ -332,17 +332,17 @@ public class NTAfflictions
         /// <summary>
         /// The minimum strength the affliction can have.
         /// </summary>
-        public double MinStrength { get; set; } = 0;
+        public float MinStrength { get; set; } = 0;
 
         /// <summary>
         /// The maximum strength the affliction can have.
         /// </summary>
-        public double MaxStrength { get; set; } = 100;
+        public float MaxStrength { get; set; } = 100;
 
         /// <summary>
         /// The strength of the affliction on creation.
         /// </summary>
-        public double DefaultStrength { get; set; } = 0;
+        public float DefaultStrength { get; set; } = 0;
 
         /// <summary>
         /// The priority of our affliction, higher intervals mean more updates.

@@ -264,15 +264,15 @@ namespace Neurotrauma
             }
         }
 
-        public static void SetMultiplier(NTHuman ?Character, string MultiplierIdentifier, double Multiplier)
+        public static void SetMultiplier(NTHuman ?Character, string MultiplierIdentifier, float Multiplier)
         {
             if (Character == null) return;
             NTHuman.CharacterTags Tags = Character.Tags;
-            double CurrentMultiplier = GetMultiplier(Character, MultiplierIdentifier);
+            float CurrentMultiplier = GetMultiplier(Character, MultiplierIdentifier);
             Tags.SetTag("mult", MultiplierIdentifier, CurrentMultiplier * Multiplier);
         }
 
-        public static void SetMultiplier(Character ?Char, string MultiplierIdentifier, double Multiplier)
+        public static void SetMultiplier(Character ?Char, string MultiplierIdentifier, float Multiplier)
         {
             if (Char == null) return;
             NTHuman ?Human = NTHuman.getNTHumanFromCharacter(Char);
@@ -285,11 +285,11 @@ namespace Neurotrauma
             
 
             NTHuman.CharacterTags Tags = Human.Tags;
-            double CurrentMultiplier = GetMultiplier(Human, MultiplierIdentifier);
+            float CurrentMultiplier = GetMultiplier(Human, MultiplierIdentifier);
             Tags.SetTag("mult", MultiplierIdentifier, CurrentMultiplier * Multiplier);
         }
 
-        public static double GetMultiplier(NTHuman ?Character, string MultiplierIdentifier)
+        public static float GetMultiplier(NTHuman ?Character, string MultiplierIdentifier)
         {
             if (Character == null) return 1;
             NTHuman.CharacterTags Tags = Character.Tags;
@@ -297,7 +297,7 @@ namespace Neurotrauma
             return Tags.GetTag("mult", MultiplierIdentifier);
         }
 
-        public static double GetMultiplier(Character ?Char, string MultiplierIdentifier)
+        public static float GetMultiplier(Character ?Char, string MultiplierIdentifier)
         {
             if (Char == null) return 1;
             NTHuman ?Human = NTHuman.getNTHumanFromCharacter(Char);
@@ -343,7 +343,7 @@ namespace Neurotrauma
         {
             if (Character == null) return;
             List<string> TagsToRemove = new();
-            foreach (KeyValuePair<string,double> Pair in Character.Tags.Tags)
+            foreach (KeyValuePair<string,float> Pair in Character.Tags.Tags)
             {
                 string Tag = Pair.Key;
                 if (Tag.StartsWith("mult"))

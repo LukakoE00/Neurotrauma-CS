@@ -1974,8 +1974,8 @@ namespace Neurotrauma
             }
 
             return DamageValue - 0.01 
-                * C.GetDoubleStat("healingrate") 
-                * C.GetDoubleStat("specificOrganDamageHealMultiplier") 
+                * C.GetFloatStat("healingrate") 
+                * C.GetFloatStat("specificOrganDamageHealMultiplier") 
                 * NTHumanUpdate.GetUpdateInterval(NTAfflictions.AfflictionPriority.HIGH);
         }
 
@@ -1999,9 +1999,9 @@ namespace Neurotrauma
                     return DamageValue; 
                 }
 
-                return DamageValue - 0.01 * C.GetDoubleStat("healingrate") * C.GetDoubleStat("specificOrganDamageHealMultiplier") * NT.DeltaTime;
+                return DamageValue - 0.01 * C.GetFloatStat("healingrate") * C.GetFloatStat("specificOrganDamageHealMultiplier") * NTHumanUpdate.GetUpdateInterval(NTAfflictions.AfflictionPriority.HIGH);
             }
-            return DamageValue - 0.02 * C.GetDoubleStat("healingrate") * C.GetDoubleStat("specificOrganDamageHealMultiplier") * NT.DeltaTime;
+            return DamageValue - 0.02 * C.GetFloatStat("healingrate") * C.GetFloatStat("specificOrganDamageHealMultiplier") * NTHumanUpdate.GetUpdateInterval(NTAfflictions.AfflictionPriority.HIGH);
         }
 
         // ---------------------------------------- Client Related Helper Functions -------------------------------------------------- \\

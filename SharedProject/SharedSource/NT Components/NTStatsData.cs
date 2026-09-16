@@ -9,17 +9,17 @@ public partial class NTStats
 
         List<NTStat> l = new List<NTStat>();
 
-        l.Add(new NTStatDouble("healingrate", 0, 100, 1, (C, dt) =>
+        l.Add(new NTStatFloat("healingrate", 0, 100, 1, (C, dt) =>
         {
             return NTC.GetMultiplier(C.Human, "healingrate");
         }));
 
-        l.Add(new NTStatDouble("specificOrganDamageHealMultiplier", 0, 100, 1, (C, dt) =>
+        l.Add(new NTStatFloat("specificOrganDamageHealMultiplier", 0, 100, 1, (C, dt) =>
         {
             return NTC.GetMultiplier(C.Human, "anyspecificorgandamage") + Math.Clamp(C.GetAfflictionStrength("afthiamine"), 0, 1) * 4;
         }));
 
-        l.Add(new NTStatDouble("neworgandamage", 0, 100, 1, (C,dt) =>
+        l.Add(new NTStatFloat("neworgandamage", 0, 100, 1, (C,dt) =>
         {
             return (
                 C.GetAfflictionStrength("sepsis") / 300
@@ -31,7 +31,7 @@ public partial class NTStats
                 * dt;
         }));
 
-        l.Add(new NTStatDouble("clottingrate", 0, 100, 1, (C, dt) =>
+        l.Add(new NTStatFloat("clottingrate", 0, 100, 1, (C, dt) =>
         {
             return Math.Clamp(1 - C.GetAfflictionStrength("liverdamage") / 100, 0, 1)
                     * C.GetDoubleStat("healingrate")
@@ -39,7 +39,7 @@ public partial class NTStats
                     * NTC.GetMultiplier(C.Human, "clottingrate");
         }));
 
-        l.Add(new NTStatDouble("bloodamount", 0, 100, 1, (C, dt) =>
+        l.Add(new NTStatFloat("bloodamount", 0, 100, 1, (C, dt) =>
         {
             return Math.Clamp(100 - C.GetAfflictionStrength("bloodloss"), 0, 100);
         }));
@@ -57,14 +57,14 @@ public partial class NTStats
                     || C.GetAfflictionStrength("stasis") > 0;
         }));
 
-        l.Add(new NTStatDouble("withdrawal", 0, 100, 1, (C, dt) =>
+        l.Add(new NTStatFloat("withdrawal", 0, 100, 1, (C, dt) =>
         {
             return Math.Max(Math.Max(C.GetAfflictionStrength("opiatewithdrawal"), C.GetAfflictionStrength("chemwithdrawal")), C.GetAfflictionStrength("alcoholwithdrawal"));
         }));
 
-        l.Add(new NTStatDouble("availableoxygen", 0, 100, 1, (C, dt) =>
+        l.Add(new NTStatFloat("availableoxygen", 0, 100, 1, (C, dt) =>
         {
-            double Res = Math.Clamp(C.Human.Oxygen, 0, 100);
+            float Res = Math.Clamp(C.Human.Oxygen, 0, 100);
             // heart isnt pumping blood? no new oxygen is getting into the bloodstream, no matter how oxygen rich the air in the lungs
             Res *= (1 - C.GetAfflictionStrength("fibrillation") / 100);
             // and uuuh, maybe also dont let people without lungs or broken lungs use the oxygen where their lungs should be
@@ -72,49 +72,49 @@ public partial class NTStats
             return Res;
         }));
 
-        l.Add(new NTStatDouble("speedmultiplier", 0, 100, 1, (C, dt) =>
+        l.Add(new NTStatFloat("speedmultiplier", 0, 100, 1, (C, dt) =>
         {
-            double Res = 1;
-            if (C.GetAfflictionStrength("spinalcordinjury") > 0) Res = -9001; // Wow, I find this to be a bit overkill    // It indeed might be overkill -Cookie
-            if (C.GetAfflictionStrength("vomiting") > 0) Res *= .8;
-            if (C.GetAfflictionStrength("nausea") > 0) Res *= .9;
-            if (C.GetAfflictionStrength("anesthesia") > 0) Res *= .5;
-            if (C.GetAfflictionStrength("opiateoverdose") > 50) Res *= .5;
+            float Res = 1;
+            if (C.GetAfflictionStrength("spinalcordinjury") > 0) Res = -9001f; // Wow, I find this to be a bit overkill    // It indeed might be overkill -Cookie
+            if (C.GetAfflictionStrength("vomiting") > 0) Res *= .8f;
+            if (C.GetAfflictionStrength("nausea") > 0) Res *= .9f;
+            if (C.GetAfflictionStrength("anesthesia") > 0) Res *= .5f;
+            if (C.GetAfflictionStrength("opiateoverdose") > 50) Res *= .5f;
 
             if (C.GetDoubleStat("withdrawal") > 80)
             {
-                Res *= .5;
+                Res *= .5f;
             }
             else if (C.GetDoubleStat("withdrawal") > 40)
             {
-                Res *= .7;
+                Res *= .7f;
             }
             else if (C.GetDoubleStat("withdrawal") > 20)
             {
-                Res *= .9;
+                Res *= .9f;
             }
 
             if (C.GetAfflictionStrength("drunk") > 80)
             {
-                Res *= .5;
+                Res *= .5f;
             }
             else if (C.GetAfflictionStrength("drunk") > 40)
             {
-                Res *= .7;
+                Res *= .7f;
             }
             else if (C.GetAfflictionStrength("drunk") > 20)
             {
-                Res *= .8;
+                Res *= .8f;
             }
 
             Res += C.GetAfflictionStrength("afadrenaline") / 100;
 
-            Res *= NTC.GetSpeed(C.Human);
+            Res *= (float) NTC.GetSpeed(C.Human);
 
             return Res;
         }));
 
-        l.Add(new NTStatDouble("slowdown", 0, 100, 0, (C, dt) =>
+        l.Add(new NTStatFloat("slowdown", 0, 100, 0, (C, dt) =>
         {
             return Math.Clamp(100 * (1 - C.GetDoubleStat("speedmultiplier")), 0, 100);
         }));
@@ -182,9 +182,9 @@ public partial class NTStats
             return Res;
         }));
 
-        l.Add(new NTStatDouble("bonegrowthCount", 0, 100, 0, (C, dt) =>
+        l.Add(new NTStatFloat("bonegrowthCount", 0, 100, 0, (C, dt) =>
         {
-            double count = 0;
+            float count = 0;
             foreach (LimbType Limb in HF.LimbsToCheck)
             {
                 if (C.GetAfflictionStrengthLimb("bonegrowth", Limb) > 0) count++;
@@ -192,9 +192,9 @@ public partial class NTStats
             return count;
         }));
 
-        l.Add(new NTStatDouble("burndamage", 0, 100, 0, (C, dt) =>
+        l.Add(new NTStatFloat("burndamage", 0, 100, 0, (C, dt) =>
         {
-            double total = 0;
+            float total = 0;
             foreach (LimbType Limb in HF.LimbsToCheck)
             {
                 total += C.GetAfflictionStrengthLimb("burn", Limb, 0);
