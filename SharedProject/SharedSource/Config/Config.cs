@@ -14,7 +14,8 @@ namespace Neurotrauma
         Category,
         Float,
         Bool,
-        String
+        String,
+        Integer
     }
 
     public class ConfigEntry
@@ -32,6 +33,7 @@ namespace Neurotrauma
         public bool NoMLTB;
         public string ?Page;
         public string ?Expansion;
+        public bool ?IsClientside = false;
     }
 
     public class ConfigExpansion
@@ -45,8 +47,36 @@ namespace Neurotrauma
         public static Dictionary<string, ConfigEntry> Entries = new Dictionary<string, ConfigEntry>();
         public static List<ConfigExpansion> Expansions = new List<ConfigExpansion>();
 
-        private static readonly string ConfigDirectoryPath = Path.Combine(SaveUtil.DefaultSaveFolder, "ModConfigs").Replace('\\', '/');
-        private static readonly string ConfigFilePath = Path.Combine(ConfigDirectoryPath, "Neurotrauma.json").Replace('\\', '/');
+        private static readonly string PresetDirectoryPath = Path.Combine(SaveUtil.DefaultSaveFolder, "ModConfigs", "Neurotrauma Configs").Replace('\\', '/');
+        private static readonly string DefaultConfigFilePath = Path.Combine(PresetDirectoryPath, "Default Config.json").Replace('\\', '/');
+        public static string CurrentConfigPath { get; private set; } = DefaultConfigFilePath;
+        public static string DefaultConfigName => Path.GetFileNameWithoutExtension(DefaultConfigFilePath);
+
+        private static readonly string DefaultPresetDirectory = Path.Combine(NeurotraumaInit.NeurotraumaModDir, "DefaultPresets").Replace('\\', '/');
+        private static readonly string DefaultPresetDirectoryFull = Path.GetFullPath(DefaultPresetDirectory).Replace('\\', '/');
+
+        public static IEnumerable<string> GetDefaultPresetFiles() => Directory.GetFiles(DefaultPresetDirectory, "*.json");
+
+        public static bool IsDefaultPreset(string PresetPath)
+        {
+            string FullPresetPath = Path.GetFullPath(PresetPath).Replace('\\', '/');
+            return FullPresetPath.StartsWith(DefaultPresetDirectoryFull);
+        }
+
+        public static string ResolvePathFromName(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name) || name.Equals(DefaultConfigName))
+            {
+                return DefaultPresetDirectory;
+            }
+
+            return GetPresetFilePath(name);
+        }
+
+        public static void SetCurrentConfigPath(string path)
+        {
+            CurrentConfigPath = path;
+        }
 
         private static ConfigEntryType StringToConfigEntry(string Type)
         {
@@ -56,6 +86,8 @@ namespace Neurotrauma
                     return ConfigEntryType.Category;
                 case "float":
                     return ConfigEntryType.Float;
+                case "integer":
+                    return ConfigEntryType.Integer;
                 case "bool":
                     return ConfigEntryType.Bool;
                 case "string":
@@ -177,17 +209,51 @@ namespace Neurotrauma
             }
         }
 
-        public static void SaveConfig()
+        public static string GetPresetFilePath(string PresetName) => Path.Combine(PresetDirectoryPath, SanitizePresetName(PresetName) + ".json").Replace('\\', '/');
+
+        private static string SanitizePresetName(string PresetName)
         {
-            // Prevent both owner client and server saving config at the same time and potentially erroring from file access
-#if CLIENT
-            if (HF.GameIsMultiplayer() && GameMain.Client.IsServerOwner)
+            foreach (char Character in Path.GetInvalidFileNameChars())
             {
+                PresetName = PresetName.Replace(Character, '_');
+            }
+
+            return PresetName;
+        }
+
+        public static void SavePreset(string PresetName)
+        {
+            string PresetPath = GetPresetFilePath(PresetName);
+            SaveConfig(PresetPath);
+            CurrentConfigPath = PresetPath;
+        }
+
+        public static void LoadPreset(string PresetPath)
+        {
+            LoadConfig(PresetPath);
+            CurrentConfigPath = PresetPath;
+        }
+
+        public static IEnumerable<string> GetPresetFiles() => Directory.Exists(PresetDirectoryPath) ? Directory.GetFiles(PresetDirectoryPath, "*.json") : Array.Empty<string>();
+
+        public static void SaveConfig(string? TargetPath = null)
+        {
+            TargetPath = TargetPath ?? CurrentConfigPath;
+
+            if (IsDefaultPreset(TargetPath))
+            {
+                HF.PrintError("Error: Can't overwrite a default Preset!");
                 return;
             }
+
+#if CLIENT
+                if (TargetPath == DefaultPresetDirectory && HF.GameIsMultiplayer() && GameMain.Client.IsServerOwner)
+                {
+                    return;
+                }
 #endif
 
-            Dictionary<string, object> tableToSave = new Dictionary<string, object>();
+            Dictionary<string, object> tableToSave = new Dictionary<string, object>(Entries.Count);
             foreach (KeyValuePair<string, ConfigEntry> kvp in Entries)
             {
                 if (kvp.Value.Type != ConfigEntryType.Category)
@@ -198,30 +264,52 @@ namespace Neurotrauma
 
             try
             {
-                if (!Directory.Exists(ConfigDirectoryPath))
+                string? TargetDirectory = Path.GetDirectoryName(TargetPath);
+                if (!string.IsNullOrEmpty(TargetDirectory) && !Directory.Exists(TargetDirectory))
                 {
-                    Directory.CreateDirectory(ConfigDirectoryPath);
+                    Directory.CreateDirectory(TargetDirectory);
                 }
-                
+
                 string json = JsonSerializer.Serialize(tableToSave, new JsonSerializerOptions { WriteIndented = true });
-                File.WriteAllText(ConfigFilePath, json);
+                File.WriteAllText(TargetPath, json);
             }
             catch (Exception ex)
             {
-                LuaCsLogger.LogError("[Neurotrauma] Error saving config: " + ex.Message);
+                LuaCsLogger.LogError("Error saving config: " + ex.Message);
             }
         }
 
-        public static void LoadConfig()
+        public static void SendConfig()
         {
-            if (!File.Exists(ConfigFilePath))
+            Dictionary<string, object> tableToSend = new Dictionary<string, object>();
+
+            foreach (var kvp in Entries)
+            {
+                if (kvp.Value.Type != ConfigEntryType.Category || kvp.Value.IsClientside == true)
+                {
+                    tableToSend[kvp.Key] = kvp.Value.Value;
+                }
+            }
+
+            IWriteMessage msg = LuaCsSetup.Instance.Networking.Start("NT.ConfigUpdate");
+
+            msg.WriteString(JsonSerializer.Serialize(tableToSend));
+
+            LuaCsSetup.Instance.Networking.Send(msg);
+        }
+
+        public static void LoadConfig(string? path = null)
+        {
+            string TargetPath = path ?? DefaultPresetDirectory;
+
+            if (!File.Exists(TargetPath))
             {
                 return;
             }
 
             try
             {
-                string jsonContent = File.ReadAllText(ConfigFilePath);
+                string jsonContent = File.ReadAllText(TargetPath);
                 var readConfig = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(jsonContent);
                 if (readConfig == null)
                 {
@@ -230,9 +318,8 @@ namespace Neurotrauma
 
                 foreach (KeyValuePair<string, JsonElement> kvp in readConfig)
                 {
-                    if (Entries.TryGetValue(kvp.Key, out var value))
+                    if (Entries.TryGetValue(kvp.Key, out ConfigEntry? entry))
                     {
-                        ConfigEntry entry = Entries[kvp.Key];
                         switch (entry.Type)
                         {
                             case ConfigEntryType.Bool:
@@ -265,139 +352,6 @@ namespace Neurotrauma
             }
         }
 
-        public static void ResetConfig()
-        {
-            foreach (var kvp in Entries)
-            {
-                ConfigEntry entry = kvp.Value;
-
-                if (entry.Type == ConfigEntryType.Category)
-                {
-                    continue;
-                }
-                    
-                entry.Value = entry.Default;
-            }
-        }
-
-        //public static T Get<T>(string key, T defaultValue)
-        //{
-            //HF.Print(key);
-            //HF.Print($"{defaultValue}");
-            //if (Entries.TryGetValue(key, out ConfigEntry entry))
-            //{
-                //if (entry.Value == null) return defaultValue;
-
-                //if (entry.Value is T directMatch) return directMatch;
-
-                //try
-                //{
-                    //return (T)Convert.ChangeType(entry.Value, typeof(T));
-                //}
-                //catch
-                //{
-                    //return defaultValue;
-               // }
-            //}
-            ///return defaultValue;
-        //}
-
-        public static bool Get(string key, bool defaultValue)
-        {
-            if (Entries.TryGetValue(key, out ConfigEntry ?entry))
-            {
-                if (entry.Value == null) return defaultValue;
-                if (entry.Value is bool) return (bool)entry.Value;
-            }
-            return defaultValue;
-        }
-
-        public static float Get(string key, float defaultValue)
-        {
-            if (Entries.TryGetValue(key, out ConfigEntry ?entry))
-            {
-                if (entry.Value == null) return defaultValue;
-                if (entry.Value is float) return (float)entry.Value;
-            }
-            return defaultValue;
-        }
-
-        public static string Get(string key, string defaultValue)
-        {
-            if (Entries.TryGetValue(key, out ConfigEntry ?entry))
-            {
-                if (entry.Value == null) return defaultValue;
-                if (entry.Value is string) return (string)entry.Value;
-            }
-            return defaultValue;
-        }
-
-        public static double Get(string key, double defaultValue)
-        {
-            if (Entries.TryGetValue(key, out ConfigEntry ?entry))
-            {
-                if (entry.Value == null) return defaultValue;
-                if (entry.Value is double) return (double)entry.Value;
-            }
-            return defaultValue;
-        }
-
-        public static List<string> Get(string key, List<string> defaultValue)
-        {
-            if (Entries.TryGetValue(key, out ConfigEntry ?entry))
-            {
-                if (entry.Value == null) return defaultValue;
-                if (entry.Value is List<string>) return (List<string>)entry.Value;
-            }
-            return defaultValue;
-        }
-
-        public static IEnumerable<string> Get(string key, IEnumerable<string> defaultValue)
-        {
-            if (Entries.TryGetValue(key, out ConfigEntry ?entry))
-            {
-                if (entry.Value == null) return defaultValue;
-                if (entry.Value is IEnumerable<string>) return (IEnumerable<string>)entry.Value;
-            }
-            return defaultValue;
-        }
-        public static object ?Get(string key)
-        {
-            if (Entries.TryGetValue(key, out ConfigEntry ?entry))
-            {
-                if (entry.Value == null) return null;
-                if (entry.Value is object) return (object)entry.Value;
-            }
-            return null;
-        }
-
-        public static void Set(string key, object value)
-        {
-            if (Entries.ContainsKey(key))
-            {
-                Entries[key].Value = value;
-            }
-        }
-
-        public static void SendConfig()
-        {
-            Dictionary<string, object> tableToSend = new Dictionary<string, object>();
-
-            foreach (var kvp in Entries)
-            {
-                if (kvp.Value.Type != ConfigEntryType.Category)
-                {
-                    tableToSend[kvp.Key] = kvp.Value.Value;
-                }
-            }
-
-            IWriteMessage msg = LuaCsSetup.Instance.Networking.Start("NT.ConfigUpdate");
-
-            msg.WriteString(JsonSerializer.Serialize(tableToSend));
-
-            LuaCsSetup.Instance.Networking.Send(msg);
-        }
-
         public static void ReceiveConfig(IReadMessage msg)
         {
             try
@@ -408,9 +362,8 @@ namespace Neurotrauma
 
                 foreach (KeyValuePair<string, JsonElement> kvp in receivedTable)
                 {
-                    if (Entries.ContainsKey(kvp.Key))
+                    if (Entries.TryGetValue(kvp.Key, out ConfigEntry? entry))
                     {
-                        ConfigEntry entry = Entries[kvp.Key];
                         if (entry.Type == ConfigEntryType.Bool) entry.Value = kvp.Value.GetBoolean();
                         else if (entry.Type == ConfigEntryType.Float) entry.Value = (float)kvp.Value.GetDouble();
                         else if (entry.Type == ConfigEntryType.String)
@@ -428,12 +381,104 @@ namespace Neurotrauma
                         }
                     }
                 }
-
-                SaveConfig();
             }
             catch (Exception ex)
             {
                 LuaCsLogger.LogError("[Neurotrauma] Error receiving network config: " + ex.Message);
+            }
+        }
+
+        public static void ResetConfig()
+        {
+            foreach (var kvp in Entries)
+            {
+                ConfigEntry entry = kvp.Value;
+
+                if (entry.Type == ConfigEntryType.Category)
+                {
+                    continue;
+                }
+
+                entry.Value = entry.Default;
+            }
+        }
+
+        // GO MY GETS!!!!!!!!
+        public static bool Get(string key, bool defaultValue)
+        {
+            if (Entries.TryGetValue(key, out ConfigEntry? entry))
+            {
+                if (entry.Value == null) return defaultValue;
+                if (entry.Value is bool) return (bool)entry.Value;
+            }
+            return defaultValue;
+        }
+
+        public static float Get(string key, float defaultValue)
+        {
+            if (Entries.TryGetValue(key, out ConfigEntry? entry))
+            {
+                if (entry.Value == null) return defaultValue;
+                if (entry.Value is float) return (float)entry.Value;
+            }
+            return defaultValue;
+        }
+
+        public static string Get(string key, string defaultValue)
+        {
+            if (Entries.TryGetValue(key, out ConfigEntry? entry))
+            {
+                if (entry.Value == null) return defaultValue;
+                if (entry.Value is string) return (string)entry.Value;
+            }
+            return defaultValue;
+        }
+
+        public static double Get(string key, double defaultValue)
+        {
+            if (Entries.TryGetValue(key, out ConfigEntry? entry))
+            {
+                if (entry.Value == null) return defaultValue;
+                if (entry.Value is double) return (double)entry.Value;
+            }
+            return defaultValue;
+        }
+
+        public static List<string> Get(string key, List<string> defaultValue)
+        {
+            if (Entries.TryGetValue(key, out ConfigEntry? entry))
+            {
+                if (entry.Value == null) return defaultValue;
+                if (entry.Value is List<string>) return (List<string>)entry.Value;
+            }
+            return defaultValue;
+        }
+
+        public static IEnumerable<string> Get(string key, IEnumerable<string> defaultValue)
+        {
+            if (Entries.TryGetValue(key, out ConfigEntry? entry))
+            {
+                if (entry.Value == null) return defaultValue;
+                if (entry.Value is IEnumerable<string>) return (IEnumerable<string>)entry.Value;
+            }
+            return defaultValue;
+        }
+
+        public static object? Get(string key)
+        {
+            if (Entries.TryGetValue(key, out ConfigEntry? entry))
+            {
+                if (entry.Value == null) return null;
+                if (entry.Value is object) return (object)entry.Value;
+            }
+            return null;
+        }
+
+        public static void Set(string key, object value)
+        {
+            if (Entries.ContainsKey(key))
+            {
+                Entries[key].Value = value;
             }
         }
     }
