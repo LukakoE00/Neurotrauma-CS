@@ -42,7 +42,6 @@ namespace Neurotrauma
             //TODO: update that idk what it does but it seems to be important for lua scripts to work properly so ill let BEAN (may God strikes him down)s -Cookie
 
             UserData.RegisterType(typeof(HF));
-            UserData.RegisterType(typeof(NT));
             UserData.RegisterType(typeof(NTInfo));
             UserData.RegisterType(typeof(NTC));
 
@@ -168,11 +167,5 @@ namespace Neurotrauma
                 NTHuman.RemoveNTHuman(human);
             }
         }
-    }
-
-    // Stores our random shit.
-    public static class NT
-    {
-        public static double DeltaTime = 2;
     }
 }

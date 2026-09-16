@@ -169,9 +169,7 @@ public static class NTInfo
                 HF.PrintWarning("Possibly incompatible addons detected! These may causes issues when using NT C#!\n" + warnedMods);
             }
 
-            NTLua.Call("OverrideC#Afflictions");
-            NTLua.Call("OverrideC#Items");
-            NTLua.Call("SyncLegacyTables");
+
         }, 1000);
     }
 }
