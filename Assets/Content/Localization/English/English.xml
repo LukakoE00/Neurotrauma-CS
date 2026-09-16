@@ -1264,10 +1264,20 @@ Can give blood to: AB+</entitydescription.ab_positivecard>
 <!-- Pause Menu Button -->
 <ntgui_pausemenubutton_name>Neurotrauma Config</ntgui_pausemenubutton_name>
 
+<!-- Save Preset -->
+<ntgui_config_tooltip_savepresetbutton>Create a new Preset with the currently selected settings.</ntgui_config_tooltip_savepresetbutton>
+
+<ntgui_save_preset_header>Create new Preset</ntgui_save_preset_header>
+
+<!-- Load Preset -->
+<ntgui_config_tooltip_loadpresetbutton>Load an existing Preset and change the settings accordingly.</ntgui_config_tooltip_loadpresetbutton>
+
+<ntgui_load_preset_header>Load existing Preset</ntgui_load_preset_header>
+
 <!-- Button Row-->
-<ntgui_configmenubutton_saveexit>Save and Exit</ntgui_configmenubutton_saveexit>
-<ntgui_configmenubutton_discardexit>Discard and Exit</ntgui_configmenubutton_discardexit>
-<ntgui_configmenubutton_resetvalues>Reset Settings</ntgui_configmenubutton_resetvalues>
+<ntgui_configmenubutton_saveexit>Save Settings to Preset and Exit</ntgui_configmenubutton_saveexit>
+<ntgui_configmenubutton_discardexit>Discard Changes and Exit</ntgui_configmenubutton_discardexit>
+<ntgui_configmenubutton_resetvalues>Reset Settings to Default and Exit</ntgui_configmenubutton_resetvalues>
 
 <ntgui_resetconfirm_title>Reset Neurotrauma Settings</ntgui_resetconfirm_title>
 <ntgui_resetconfirm_body>Are you sure you want to reset the Neurotrauma settings to their default values?</ntgui_resetconfirm_body>
@@ -1288,8 +1298,6 @@ Can give blood to: AB+</entitydescription.ab_positivecard>
 <ntgui_resetbutton_tooltip>Reset to Default</ntgui_resetbutton_tooltip>
 
 <!-- =================== Default Config Content =================== -->
-<ntconfigname_header1>Neurotrauma</ntconfigname_header1>
-
 <!-- Dislocation chance multiplier -->
 <ntconfigname_dislocationchance>Dislocation chance multiplier</ntconfigname_dislocationchance>
 
@@ -1340,6 +1348,10 @@ Can give blood to: AB+</entitydescription.ab_positivecard>
 
 <!-- Falldamage serious injury chance multiplier -->
 <ntconfigname_falldamageseriousinjurychance>Falldamage serious injury chance multiplier</ntconfigname_falldamageseriousinjurychance>
+
+<!-- Clientside: Show HUI Buttons -->
+<ntconfigname_DoHUIButtons>Show Neurotrauma Tool Buttons</ntconfigname_DoHUIButtons>
+<ntconfigdescription_DoHUIButtons>Clientside option. \n\nAdds an extra overlay to the HealthUI that can be clicked to use the depicted item. Disable this if you don't plan on using them and find them annoying.</ntconfigdescription_DoHUIButtons>
 
 <!-- Character calculations -->
 <ntconfigname_calculations>Character calculations</ntconfigname_calculations>
