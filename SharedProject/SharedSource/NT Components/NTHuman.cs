@@ -382,6 +382,7 @@ public class NTHuman
         var r = new Dictionary<LimbType, List<String>>();
 
         // Remember to add constant afflictions from NTAfflictions.ConstantAfflicitonPrefabs
+        // And ignore those with no Update functions
 
         return r;
         
@@ -402,7 +403,7 @@ public class NTHuman
 
             foreach (var id in limbList.Value)
             {
-
+                
                 var aff = NeurotraumaInit.NTAfflLoader.Get(id);
 
                 if (aff == null)
@@ -412,6 +413,9 @@ public class NTHuman
                 }
 
                 float deltaTime = ((float)NTHumanUpdate.GetUpdateInterval(aff.Priority)) / 60f;
+
+                // Should be updated ? Not present ? Set it as default value
+                if (!this.HasAfflictionLimb(id, limb)) this.SetAfflictionLimb(id, limb, aff.DefaultStrength);
 
                 aff.Update(this, id, limb, deltaTime);
             }

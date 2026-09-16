@@ -1,5 +1,3 @@
-using static Neurotrauma.HumanUpdate;
-
 namespace Neurotrauma;
 
 
@@ -36,6 +34,8 @@ public class NTAfflictions
     /// The Key is a tuple of (ModName, AfflictionID) and the Value is the old Prefab.
     /// </summary>
     public static Dictionary<(string, string), NTAfflictionPrefab> NTOldAfflictionsPrefabRegistry { get; } = new Dictionary<(string, string), NTAfflictionPrefab>();
+
+    public static List<string> ConstantAfflicitonPrefabs { get; } = new List<string>();
 
     public class NTAfflictionsLoader
     {
@@ -205,7 +205,10 @@ public class NTAfflictions
     /// </summary>
     public class NTAfflictionPrefabBuilder
     {
+
+#pragma warning disable CS8618 // Un champ non-nullable doit contenir une valeur autre que Null lors de la fermeture du constructeur. Envisagez d’ajouter le modificateur « required » ou de déclarer le champ comme pouvant accepter la valeur Null.
         private NTAfflictionPrefab Affliction;
+#pragma warning restore CS8618 // Un champ non-nullable doit contenir une valeur autre que Null lors de la fermeture du constructeur. Envisagez d’ajouter le modificateur « required » ou de déclarer le champ comme pouvant accepter la valeur Null.
 
         public NTAfflictionPrefabBuilder New(string AfflictionID)
         {
@@ -219,6 +222,25 @@ public class NTAfflictions
         public NTAfflictionPrefabBuilder IsConst(bool Const)
         {
             this.Affliction.Const = Const;
+
+            if (Const)
+            {
+                if (!ConstantAfflicitonPrefabs.Contains(this.Affliction.ID))
+                {
+                    ConstantAfflicitonPrefabs.Add(this.Affliction.ID);
+                }
+
+            } else
+            {
+                // In case we have an override.
+                if (ConstantAfflicitonPrefabs.Contains(this.Affliction.ID)) {
+                    ConstantAfflicitonPrefabs.Remove(this.Affliction.ID);
+                }
+
+            }
+
+
+
             return this;
         }
 
