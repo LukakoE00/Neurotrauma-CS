@@ -75,11 +75,18 @@ namespace Neurotrauma.ClientSource
                 return;
             }
 
-            Frame.Visible = __0 != null;
-
             if (!Frame.Visible)
             {
                 CloseContextMenu();
+            }
+
+            if (NTConfig.Get("NT_cl_DoHUIButtons", true) == true)
+            {
+                Frame.Visible = __0 != null;
+            }
+            else
+            {
+                return;
             }
         }
 
