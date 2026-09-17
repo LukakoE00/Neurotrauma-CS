@@ -4082,6 +4082,35 @@ public class NTAfflictionsToAdd
         //SymptomsToAdd["lockrightleg"] = new("lockrightleg", 0, 100, 0, AfflictionPriority.HIGH);
         //SymptomsToAdd["lockrightleg"].Real = false;
 
+        AfflictionsToAdd.Add(
+            builder.New("lockleftarm")
+            .IsReal(false)
+            .IsSymptom(true)
+            .Build()
+            );
+
+        AfflictionsToAdd.Add(
+            builder.New("lockrightarm")
+            .IsReal(false)
+            .IsSymptom(true)
+            .Build()
+            );
+
+        AfflictionsToAdd.Add(
+            builder.New("lockleftleg")
+            .IsReal(false)
+            .IsSymptom(true)
+            .Build()
+            );
+
+        AfflictionsToAdd.Add(
+            builder.New("lockrightleg")
+            .IsReal(false)
+            .IsSymptom(true)
+            .Build()
+            );
+
+
         //SymptomsToAdd["triggersym_respiratoryarrest"] = new("triggersym_respiratoryarrest", 0, 100, 0, AfflictionPriority.HIGH);
         //SymptomsToAdd["triggersym_respiratoryarrest"].Real = false;
         //SymptomsToAdd["triggersym_respiratoryarrest"].Const = true;
