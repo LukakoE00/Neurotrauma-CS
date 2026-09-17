@@ -34,7 +34,7 @@ public partial class NTStats
         l.Add(new NTStatFloat("clottingrate", 0, 100, 1, (C, dt) =>
         {
             return Math.Clamp(1 - C.GetAfflictionStrength("liverdamage") / 100, 0, 1)
-                    * C.GetDoubleStat("healingrate")
+                    * C.GetFloatStat("healingrate")
                     * Math.Clamp(1 - C.GetAfflictionStrength("afstreptokinase"), 0, 1)
                     * NTC.GetMultiplier(C.Human, "clottingrate");
         }));
@@ -81,15 +81,15 @@ public partial class NTStats
             if (C.GetAfflictionStrength("anesthesia") > 0) Res *= .5f;
             if (C.GetAfflictionStrength("opiateoverdose") > 50) Res *= .5f;
 
-            if (C.GetDoubleStat("withdrawal") > 80)
+            if (C.GetFloatStat("withdrawal") > 80)
             {
                 Res *= .5f;
             }
-            else if (C.GetDoubleStat("withdrawal") > 40)
+            else if (C.GetFloatStat("withdrawal") > 40)
             {
                 Res *= .7f;
             }
-            else if (C.GetDoubleStat("withdrawal") > 20)
+            else if (C.GetFloatStat("withdrawal") > 20)
             {
                 Res *= .9f;
             }
@@ -116,7 +116,7 @@ public partial class NTStats
 
         l.Add(new NTStatFloat("slowdown", 0, 100, 0, (C, dt) =>
         {
-            return Math.Clamp(100 * (1 - C.GetDoubleStat("speedmultiplier")), 0, 100);
+            return Math.Clamp(100 * (1 - C.GetFloatStat("speedmultiplier")), 0, 100);
         }));
 
         l.Add(new NTStatBool("lockleftarm", false, (C, dt) =>
@@ -159,7 +159,7 @@ public partial class NTStats
             {
                 if (C.GetAfflictionStrength("afadrenaline") < 0.1 || Res)
                 {
-                    C.SetDoubleStat("speedmultiplier", C.GetDoubleStat("speedmultiplier") * .5);
+                    C.SetFloatStat("speedmultiplier", C.GetFloatStat("speedmultiplier") * .5f);
                 }
             }
 
@@ -167,16 +167,16 @@ public partial class NTStats
 
             if (IsProne && C.Human.IsClimbing)
             {
-                C.SetDoubleStat("speedmultiplier", C.GetDoubleStat("speedmultiplier") * .5);
+                C.SetFloatStat("speedmultiplier", C.GetFloatStat("speedmultiplier") * .5f);
             }
 
             if ((IsProne || Res) && C.GetBoolStat("lockleftarm") && C.GetBoolStat("lockrightarm"))
             {
-                C.SetDoubleStat("speedmultiplier", -9001);
+                C.SetFloatStat("speedmultiplier", -9001);
             }
             else if (IsProne && (C.GetBoolStat("lockleftarm") || C.GetBoolStat("lockrightarm")))
             {
-                C.SetDoubleStat("speedmultiplier", C.GetDoubleStat("speedmultiplier") * .8);
+                C.SetFloatStat("speedmultiplier", C.GetFloatStat("speedmultiplier") * .8f);
             }
 
             return Res;
