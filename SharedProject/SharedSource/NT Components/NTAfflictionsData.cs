@@ -17,7 +17,8 @@ public class NTAfflictionsToAdd
         // Type: Non-Limb Specific, Vanilla Override
         // Caused By: Lack of Oxygen, Respiratory Arrest
         // Effects: Hypoxemia
-        NTAfflictionPrefab OxygenLow = builder.New("oxygenlow")
+        AfflictionsToAdd.Add(
+            builder.New("oxygenlow")
             .SetStrengths(0, 200, 0)
             .SetUpdateAction((NTHuman C, string ID, LimbType Limb, float DeltaTime) =>
             {
@@ -26,22 +27,20 @@ public class NTAfflictionsToAdd
                     C.AddAffliction(ID, 15f * DeltaTime);
                 }
             })
-            .Build();
-
-        AfflictionsToAdd.Add(OxygenLow);
-
-        NeurotraumaInit.NTAfflLoader.Registers(AfflictionsToAdd);
+            .Build()
+            );
 
         // Drunk
         // Not constant; gets applied by other sources.
         // Type: Non-Limb Specific, Vanilla Override
         // Caused By: ROOOTT BEEERRRRRR.
         // Effects: idk.
-        NTAfflictionPrefab Drunk = builder.New("drunk")
-            .SetStrengths(0, 200, 0)
-            .Build();
 
-        AfflictionsToAdd.Add(Drunk);
+        AfflictionsToAdd.Add(
+            builder.New("drunk")
+            .SetStrengths(0, 200, 0)
+            .Build()
+            );
 
         // Psychosis
         // Not constant; gets applied by other sources.
@@ -1317,7 +1316,7 @@ public class NTAfflictionsToAdd
         // Effects: Spawns the respective limb while applying the Traumatic Amputation affliction for that limb; also applies arterial bleeding, pain and a fracture.
         // Uses XML to cause TraumaAmputations.
         AfflictionsToAdd.Add(
-            builder.New("gate_ta_h_2").Build());
+            builder.New("gate_ta_ll").Build());
 
         // TraumaticAmputating Right Leg + Item
         // Not constant; gets applied by other sources.
@@ -1325,7 +1324,7 @@ public class NTAfflictionsToAdd
         // Effects: Spawns the respective limb while applying the Traumatic Amputation affliction for that limb; also applies arterial bleeding, pain and a fracture.
         // Uses XML to cause TraumaAmputations.
         AfflictionsToAdd.Add(
-            builder.New("gate_ta_h_2").Build());
+            builder.New("gate_ta_rl").Build());
 
         // TraumaticAmputating Left Arm + Item
         // Not constant; gets applied by other sources.
@@ -1333,7 +1332,7 @@ public class NTAfflictionsToAdd
         // Effects: Spawns the respective limb while applying the Traumatic Amputation affliction for that limb; also applies arterial bleeding, pain and a fracture.
         // Uses XML to cause TraumaAmputations.
         AfflictionsToAdd.Add(
-            builder.New("gate_ta_h_2").Build());
+            builder.New("gate_ta_la").Build());
 
         // TraumaticAmputating Right Arm + Item
         // Not constant; gets applied by other sources.
@@ -1341,7 +1340,7 @@ public class NTAfflictionsToAdd
         // Effects: Spawns the respective limb while applying the Traumatic Amputation affliction for that limb; also applies arterial bleeding, pain and a fracture.
         // Uses XML to cause TraumaAmputations.
         AfflictionsToAdd.Add(
-            builder.New("gate_ta_h_2").Build());
+            builder.New("gate_ta_ra").Build());
 
         // TraumaticAmputating Head + Item
         // Not constant; gets applied by other sources.
@@ -1349,7 +1348,7 @@ public class NTAfflictionsToAdd
         // Effects: Kills you ontop of spawning a severed head.
         // Uses XML to cause TraumaAmputations.
         AfflictionsToAdd.Add(
-            builder.New("gate_ta_h_2").Build());
+            builder.New("gate_ta_h").Build());
 
         // TraumaticAmputating Left Leg
         // Not constant; gets applied by other sources.
@@ -1357,7 +1356,7 @@ public class NTAfflictionsToAdd
         // Effects: Traumatically amputates a limb, causes a fracture, pain and an arterial bleed without spawning an item.
         // Uses XML to cause TraumaAmputations.
         AfflictionsToAdd.Add(
-            builder.New("gate_ta_h_2").Build());
+            builder.New("gate_ta_ll_2").Build());
 
         // TraumaticAmputating Right Leg
         // Not constant; gets applied by other sources.
@@ -1365,7 +1364,7 @@ public class NTAfflictionsToAdd
         // Effects: Traumatically amputates a limb, causes a fracture, pain and an arterial bleed without spawning an item.
         // Uses XML to cause TraumaAmputations.
         AfflictionsToAdd.Add(
-            builder.New("gate_ta_h_2").Build());
+            builder.New("gate_ta_rl_2").Build());
 
         // TraumaticAmputating Left Arm
         // Not constant; gets applied by other sources.
@@ -1373,7 +1372,7 @@ public class NTAfflictionsToAdd
         // Effects: Traumatically amputates a limb, causes a fracture, pain and an arterial bleed without spawning an item.
         // Uses XML to cause TraumaAmputations.
         AfflictionsToAdd.Add(
-            builder.New("gate_ta_h_2").Build());
+            builder.New("gate_ta_la_2").Build());
 
         // TraumaticAmputating Right Arm
         // Not constant; gets applied by other sources.
@@ -1381,7 +1380,7 @@ public class NTAfflictionsToAdd
         // Effects: Traumatically amputates a limb, causes a fracture, pain and an arterial bleed without spawning an item.
         // Uses XML to cause TraumaAmputations.
         AfflictionsToAdd.Add(
-            builder.New("gate_ta_h_2").Build());
+            builder.New("gate_ta_ra_2").Build());
 
         // TraumaticAmputating Head
         // Not constant; gets applied by other sources.
@@ -1471,11 +1470,6 @@ public class NTAfflictionsToAdd
                     C.AddAffliction("oxygenlow", -100 * dT);
                 }
             })
-            .Build()
-            );
-
-        AfflictionsToAdd.Add(
-            builder.New("opiatewithdrawal")
             .Build()
             );
 
@@ -1948,7 +1942,7 @@ public class NTAfflictionsToAdd
         // Caused By: Azathioprine Item.
         // Effects: Reduce Immunity.
         AfflictionsToAdd.Add(
-            builder.New("afpressuredrug")
+            builder.New("afimmunosuppressant")
             .SetUpdateAction((C, ID, Limb, dT) =>
             {
                 // Passive Decrease
@@ -2165,7 +2159,7 @@ public class NTAfflictionsToAdd
         // Caused By: Damage.
         // Effects: Blood Loss (XML), Internal Bleeding (XML), Chest Pain, Abdominal Pain, Unconsciousness.
         AfflictionsToAdd.Add(
-            builder.New("internalbleeding")
+            builder.New("aorticrupture")
             .SetUpdateAction((C, ID, Limb, dT) =>
             {
                 float str = C.GetAfflictionStrength(ID);
