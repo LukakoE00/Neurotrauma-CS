@@ -1,3 +1,4 @@
+using static Barotrauma.Networking.MessageFragment;
 using static Neurotrauma.NTAfflictions;
 
 namespace Neurotrauma;
@@ -109,29 +110,29 @@ public class NTAfflictionsToAdd
             .SetUpdateAction((NTHuman C, string ID, LimbType Limb, float DeltaTime) =>
             {
                 // Removal Conditions
-                if ((!C.GetBoolStatStrength("stasis")) // Not in Stasis
-                        && C.GetAffData("lungremoved").Strength <= 0 // No Lungs Removed
-                        && C.GetAffData("brainremoved").Strength <= 0 // No Brain Removed
-                        && C.GetAffData("opiateoverdose").Strength <= 60 // Below Opiate Overdose Threshold
-                        && C.GetAffData("lungdamage").Strength <= 99 // Below Lung Damage Threshold
-                        && C.GetAffData("traumaticshock").Strength <= 30 // Below Traumatic Shock Threshold
-                        && C.GetAffData("neurotrauma").Strength <= 100 // Below Neurotrauma Threshold
-                        && C.GetAffData("hypoxemia").Strength <= 70 // Below Hypoxemia Threshold
+                if ((!C.GetBoolStat("stasis")) // Not in Stasis
+                        && C.GetAfflictionStrength("lungremoved")<= 0 // No Lungs Removed
+                        && C.GetAfflictionStrength("brainremoved")<= 0 // No Brain Removed
+                        && C.GetAfflictionStrength("opiateoverdose")<= 60 // Below Opiate Overdose Threshold
+                        && C.GetAfflictionStrength("lungdamage")<= 99 // Below Lung Damage Threshold
+                        && C.GetAfflictionStrength("traumaticshock")<= 30 // Below Traumatic Shock Threshold
+                        && C.GetAfflictionStrength("neurotrauma")<= 100 // Below Neurotrauma Threshold
+                        && C.GetAfflictionStrength("hypoxemia")<= 70 // Below Hypoxemia Threshold
                         )
                 {
                     // Passive Regeneration
-                    AffData.Strength -= (5f + HF.BoolToNum(C.GetAffStrength("unconsciousness") < 0.1f, 45f)) * NT.DeltaTime;
+                    AffData.Strength -= (5f + HF.BoolToNum(C.GetAffStrength("unconsciousness") < 0.1f, 45f)) * dT;
                 }
 
                 // Effects:
                 // Acidosis
                 // Shares increase with Cardiac Arrest
-                double AcidosisIncrease = HF.BoolToNum(C.GetAffData("cardiacarrest").Strength <= 0
-                        && C.GetAffData("respiratoryarrest").Strength > 0
-                        && C.GetAffData("artificialventilation").Strength <= 0.1)
-                    * 0.18 * NT.DeltaTime;
+                double AcidosisIncrease = HF.BoolToNum(C.GetAfflictionStrength("cardiacarrest")<= 0
+                        && C.GetAfflictionStrength("respiratoryarrest")> 0
+                        && C.GetAfflictionStrength("artificialventilation")<= 0.1)
+                    * 0.18 * dT;
 
-                C.GetAffData("acidosis").Strength += AcidosisIncrease;
+                C.AddAffliction("acidosis", AcidosisIncrease);
 
                 C.SetSymptomFalse("hypoventilation");
                 C.SetSymptomFalse("hyperventilation");
@@ -151,14 +152,14 @@ public class NTAfflictionsToAdd
                 if (AffData.Strength > 0)
                 {
                     // Passive Increase
-                    AffData.Strength += 4 * NT.DeltaTime;
+                    AffData.Strength += 4 * dT;
                 }
 
                 // Effects:
                 // Chest Pain
-                if (AffData.Strength > 0 && C.GetSymptomAffData("unconsciousness").Strength <= 0 && (!C.GetBoolStatStrength("sedated")))
+                if (AffData.Strength > 0 && C.GetSymptomAffData("unconsciousness").Strength <= 0 && (!C.GetBoolStat("sedated")))
                 {
-                    NTC.SetSymptomTrue(C, "chestpain", 3);
+                    C.SetSymptomTrue("chestpain", 3);
                 }
             };
 
@@ -174,7 +175,7 @@ public class NTAfflictionsToAdd
                 if (AffData.Strength > 0)
                 {
                     // Passive Increase
-                    AffData.Strength += 4 * NT.DeltaTime;
+                    AffData.Strength += 4 * dT;
                 }
             };
 
@@ -190,14 +191,14 @@ public class NTAfflictionsToAdd
                 if (AffData.Strength > 0)
                 {
                     // Passive Increase
-                    AffData.Strength += 4 * NT.DeltaTime;
+                    AffData.Strength += 4 * dT;
                 }
 
                 // Effects:
                 // Headache
-                if (AffData.Strength > 0 && C.GetAffData("unconsciousness").Strength <= 0)
+                if (AffData.Strength > 0 && C.GetAfflictionStrength("unconsciousness")<= 0)
                 {
-                    NTC.SetSymptomTrue(C, "headache", 3);
+                    C.SetSymptomTrue("headache", 3);
                 }
 
                 // Neurotrauma Regeneration (in Neurotrauma itself)
@@ -218,15 +219,15 @@ public class NTAfflictionsToAdd
                 if (AffData.Strength > 60)
                 {
                     // Respiratory Arrest
-                    C.GetAffData("respiratoryarrest").Strength += 200;
+                    C.AddAffliction("respiratoryarrest", 200);
 
                     // Unconsciousness
-                    NTC.SetSymptomTrue(C, "unconsciousness", 2);
+                    C.SetSymptomTrue("unconsciousness", 2);
 
                     // Seizures
                     if (HF.Chance((float)AffData.Strength / 500f))
                     {
-                        C.GetAffData("seizure").Strength += 10;
+                        C.AddAffliction("seizure", 10);
                     }
                 }
             };
@@ -244,9 +245,9 @@ public class NTAfflictionsToAdd
             (NTHuman C, string ID, LimbType Limb, NTHumanNonLimbAffData AffData) =>
             {
                 // Does not progress while in Stasis
-                if (C.GetBoolStatStrength("stasis")) return;
+                if (C.GetBoolStat("stasis")) return;
 
-                double LungDamage = HF.OrganDamageCalc(C, AffData.Strength + NTC.GetMultiplier(C, "lungdamagegain") * C.GetDoubleStatStrength("neworgandamage"));
+                double LungDamage = HF.OrganDamageCalc(C, AffData.Strength + NTC.GetMultiplier(C, "lungdamagegain") * C.GetFloatStat("neworgandamage"));
 
                 // Passive Regeneration / Increase
                 AffData.Strength = LungDamage;
@@ -255,21 +256,21 @@ public class NTAfflictionsToAdd
                 // Shortness of Breath
                 if (AffData.Strength > 45)
                 {
-                    if (C.GetAffData("respiratoryarrest").Strength <= 0)
+                    if (C.GetAfflictionStrength("respiratoryarrest")<= 0)
                     {
-                        NTC.SetSymptomTrue(C, "shortnessofbreath", 2);
+                        C.SetSymptomTrue("shortnessofbreath", 2);
                     }
 
                     // Cough
-                    if (AffData.Strength > 50 && C.GetAffData("unconsciousness").Strength <= 0 && C.GetAffData("lungremoved").Strength <= 0)
+                    if (AffData.Strength > 50 && C.GetAfflictionStrength("unconsciousness")<= 0 && C.GetAfflictionStrength("lungremoved")<= 0)
                     {
-                        NTC.SetSymptomTrue(C, "cough", 2);
+                        C.SetSymptomTrue("cough", 2);
                     }
 
                     // Respiratory Arrest
                     if (AffData.Strength > 99 && HF.Chance(0.8f))
                     {
-                        C.GetAffData("respiratoryarrest").Strength += 200;
+                        C.AddAffliction("respiratoryarrest", 200);
                     }
                 }
             };
@@ -289,10 +290,10 @@ public class NTAfflictionsToAdd
 
                 // Effects:
                 // Respiratory Arrest
-                C.GetAffData("respiratoryarrest").Strength += 200;
+                C.AddAffliction("respiratoryarrest", 200);
 
                 // Unconsciousness
-                NTC.SetSymptomTrue(C, "unconsciousness", 2);
+                C.SetSymptomTrue("unconsciousness", 2);
             };
 
         // Lung Swap
@@ -317,22 +318,22 @@ public class NTAfflictionsToAdd
 
                 // Effects:
                 // Cardiac Arrest
-                C.GetAffData("cardiacarrest").Strength += 200;
+                C.AddAffliction("cardiacarrest", 200);
 
                 // Respiratory Arrest
-                C.GetAffData("respiratoryarrest").Strength += 200;
+                C.AddAffliction("respiratoryarrest", 200);
 
                 // Unconsciousness
-                NTC.SetSymptomTrue(C, "unconsciousness", 2);
+                C.SetSymptomTrue("unconsciousness", 2);
 
                 // Neurotrauma
                 float NeurotraumaGain = 2.4f;
-                if (C.GetAffData("afmannitol").Strength <= 0.5)
+                if (C.GetAfflictionStrength("afmannitol")<= 0.5)
                 {
                     NeurotraumaGain += 1.6f;
                 }
 
-                C.GetAffData("neurotrauma").Strength += NeurotraumaGain;
+                C.AddAffliction("neurotrauma", NeurotraumaGain);
             };
 
         // Brain Swap
@@ -353,7 +354,7 @@ public class NTAfflictionsToAdd
             (NTHuman C, string ID, LimbType Limb, NTHumanNonLimbAffData AffData) =>
             {
                 // Cannot have Cardiac Tamponade without a heart.
-                if (C.GetAffData("heartremoved").Strength > 0)
+                if (C.GetAfflictionStrength("heartremoved")> 0)
                 {
                     AffData.Strength = 0;
                 }
@@ -362,7 +363,7 @@ public class NTAfflictionsToAdd
                 // Increases if there is no needle until 100%; else decreases until 5%.
                 if (AffData.Strength > 0)
                 {
-                    AffData.Strength = Math.Clamp(AffData.Strength + NT.DeltaTime * (0.5f - HF.BoolToNum(AffData.Strength > 5) * Math.Clamp(C.GetAffData("needlec").Strength, 0, 1)),
+                    AffData.Strength = Math.Clamp(AffData.Strength + dT * (0.5f - HF.BoolToNum(AffData.Strength > 5) * Math.Clamp(C.GetAffData("needlec").Strength, 0, 1)),
                         0,
                         100
                     );
@@ -372,21 +373,21 @@ public class NTAfflictionsToAdd
                 // Shortness of Breath
                 if (AffData.Strength > 10)
                 {
-                    if (C.GetAffData("respiratoryarrest").Strength <= 0)
+                    if (C.GetAfflictionStrength("respiratoryarrest")<= 0)
                     {
-                        NTC.SetSymptomTrue(C, "shortnessofbreath", 3);
+                        C.SetSymptomTrue("shortnessofbreath", 3);
                     }
 
                     // Cough
-                    if (AffData.Strength > 20 && C.GetAffData("unconsciousness").Strength <= 0 && C.GetAffData("lungremoved").Strength <= 0)
+                    if (AffData.Strength > 20 && C.GetAfflictionStrength("unconsciousness")<= 0 && C.GetAfflictionStrength("lungremoved")<= 0)
                     {
-                        NTC.SetSymptomTrue(C, "cough", 3);
+                        C.SetSymptomTrue("cough", 3);
                     }
 
                     // Weakness
                     if (AffData.Strength > 30)
                     {
-                        NTC.SetSymptomTrue(C, "weakness", 3);
+                        C.SetSymptomTrue("weakness", 3);
                     }
                 }
             };
@@ -404,7 +405,7 @@ public class NTAfflictionsToAdd
             {
 
                 // Fibrillation cannot occur without a (beating) heart
-                if (C.GetAffData("cardiacarrest").Strength > 0 || C.GetAffData("heartremoved").Strength > 0)
+                if (C.GetAfflictionStrength("cardiacarrest")> 0 || C.GetAfflictionStrength("heartremoved")> 0)
                 {
                     C.GetNonLimbAffData("fibrillation").Strength = 0;
                     AffData.Strength = 0;
@@ -414,12 +415,12 @@ public class NTAfflictionsToAdd
 
                 // Harmless symptom (does not lead to Fibrillation)
                 bool hasSymHarmless =
-                    C.GetAffData("sepsis").Strength > 20
-                    || C.GetDoubleStatStrength("bloodamount") < 60
-                    || C.GetAffData("acidosis").Strength > 20
-                    || C.GetAffData("pneumothorax").Strength > 30
-                    || C.GetAffData("afadrenaline").Strength > 1
-                    || C.GetAffData("alcoholwithdrawal").Strength > 75;
+                    C.GetAfflictionStrength("sepsis")> 20
+                    || C.GetFloatStat("bloodamount") < 60
+                    || C.GetAfflictionStrength("acidosis")> 20
+                    || C.GetAfflictionStrength("pneumothorax")> 30
+                    || C.GetAfflictionStrength("afadrenaline")> 1
+                    || C.GetAfflictionStrength("alcoholwithdrawal")> 75;
 
                 AffData.Strength = Math.Max(AffData.Strength, HF.BoolToNum(hasSymHarmless, 2));
 
@@ -427,17 +428,17 @@ public class NTAfflictionsToAdd
                 // Fibrillation speed calculation
                 double fibrillationSpeed = -0.1
                     + Math.Clamp(C.GetNonLimbAffData("aorticrupture").Strength, 0, 2)
-                    + Math.Clamp(C.GetAffData("acidosis").Strength / 200, 0, 0.5)
+                    + Math.Clamp(C.GetAfflictionStrength("acidosis")/ 200, 0, 0.5)
                     + Math.Clamp(
-                        0.9 - ((C.GetAffData("bloodpressure").Strength + Math.Clamp(C.GetAffData("afpressuredrug").Strength * 5, 0, 20)) / 90),
+                        0.9 - ((C.GetAfflictionStrength("bloodpressure")+ Math.Clamp(C.GetAfflictionStrength("afpressuredrug")* 5, 0, 20)) / 90),
                         0, 1
                     ) * 2
-                    + Math.Clamp(C.GetAffData("hypoxemia").Strength / 100, 0, 1) * 1.5
-                    + Math.Clamp((C.GetAffData("traumaticshock").Strength - 5) / 40, 0, 3)
+                    + Math.Clamp(C.GetAfflictionStrength("hypoxemia")/ 100, 0, 1) * 1.5
+                    + Math.Clamp((C.GetAfflictionStrength("traumaticshock")- 5) / 40, 0, 3)
                     - Math.Clamp(C.GetAffData("afadrenaline").Strength, 0, 0.9);
 
                 // Adrenaline halves Fibrillation speed
-                if (fibrillationSpeed > 0 && C.GetAffData("afadrenaline").Strength > 0)
+                if (fibrillationSpeed > 0 && C.GetAfflictionStrength("afadrenaline")> 0)
                 {
                     fibrillationSpeed /= 2;
                 }
@@ -453,7 +454,7 @@ public class NTAfflictionsToAdd
                 // Progress IncreasedHeartrate or Fibrillation
                 if (C.GetNonLimbAffData("fibrillation").Strength <= 0)
                 {
-                    AffData.Strength += fibrillationSpeed * 5 * NT.DeltaTime;
+                    AffData.Strength += fibrillationSpeed * 5 * dT;
 
                     if (AffData.Strength >= 100)
                     {
@@ -463,7 +464,7 @@ public class NTAfflictionsToAdd
                 }
                 else
                 {
-                    C.GetNonLimbAffData("fibrillation").Strength += fibrillationSpeed * NT.DeltaTime;
+                    C.GetNonLimbAffData("fibrillation").Strength += fibrillationSpeed * dT;
                     AffData.Strength = 0;
                 }
 
@@ -478,7 +479,7 @@ public class NTAfflictionsToAdd
             (NTHuman C, string ID, LimbType Limb, NTHumanNonLimbAffData AffData) =>
             {
                 // Fibrillation cannot occur without a (beating) heart
-                if (C.GetAffData("cardiacarrest").Strength >= 1 || C.GetAffData("heartremoved").Strength >= 1)
+                if (C.GetAfflictionStrength("cardiacarrest")>= 1 || C.GetAfflictionStrength("heartremoved")>= 1)
                 {
                     AffData.Strength = 0;
                     return;
@@ -487,7 +488,7 @@ public class NTAfflictionsToAdd
                 // Cardiac Arrest
                 if (AffData.Strength > 20 && HF.Chance((float)Math.Pow(AffData.Strength / 100f, 4f)))
                 {
-                    C.GetAffData("cardiacarrest").Strength += 200;
+                    C.AddAffliction("cardiacarrest", 200);
                 }
             };
 
@@ -501,29 +502,29 @@ public class NTAfflictionsToAdd
             (NTHuman C, string ID, LimbType Limb, NTHumanNonLimbAffData AffData) =>
             {
                 // Removal Conditions
-                if ((!C.GetBoolStatStrength("stasis")) // Not in Stasis
-                    && C.GetAffData("heartremoved").Strength <= 0 // Heart not removed
-                    && C.GetAffData("brainremoved").Strength <= 0 // Brain not removed
-                    && C.GetAffData("heartdamage").Strength <= 99 // Below Heart Damage threshold
-                    && C.GetAffData("traumaticshock").Strength <= 40 // Below Traumatic Shock threshold
-                    && C.GetAffData("coma").Strength <= 40 // Below Coma threshold
-                    && C.GetAffData("hypoxemia").Strength <= 80 // Below Hypoxemia threshold
+                if ((!C.GetBoolStat("stasis")) // Not in Stasis
+                    && C.GetAfflictionStrength("heartremoved")<= 0 // Heart not removed
+                    && C.GetAfflictionStrength("brainremoved")<= 0 // Brain not removed
+                    && C.GetAfflictionStrength("heartdamage")<= 99 // Below Heart Damage threshold
+                    && C.GetAfflictionStrength("traumaticshock")<= 40 // Below Traumatic Shock threshold
+                    && C.GetAfflictionStrength("coma")<= 40 // Below Coma threshold
+                    && C.GetAfflictionStrength("hypoxemia")<= 80 // Below Hypoxemia threshold
                     && C.GetNonLimbAffData("fibrillation").Strength <= 20) // Below Fibrillation threshold
                 {
-                    AffData.Strength -= 50 * NT.DeltaTime;
+                    AffData.Strength -= 50 * dT;
                 }
 
                 // Effects:
                 // Acidosis
                 // Shares increase with Respiratory Arrest
-                double AcidosisIncrease = 0.18 * NT.DeltaTime;
+                double AcidosisIncrease = 0.18 * dT;
 
-                C.GetAffData("acidosis").Strength += AcidosisIncrease;
+                C.AddAffliction("acidosis", AcidosisIncrease);
 
                 // Coma
                 if (AffData.Strength > 1 && HF.Chance(0.05f))
                 {
-                    C.GetAffData("coma").Strength += 14;
+                    C.AddAffliction("coma", 14);
                 }
 
                 // Hypotension (in BloodPressure constant itself)
@@ -540,21 +541,21 @@ public class NTAfflictionsToAdd
             (NTHuman C, string ID, LimbType Limb, NTHumanNonLimbAffData AffData) =>
             {
                 // Does not progress in Stasis
-                if ((C.GetBoolStatStrength("stasis"))) return;
+                if ((C.GetBoolStat("stasis"))) return;
 
                 if (AffData.Strength > 0)
                 {
-                    C.GetAffData("immunity").Strength -= NT.DeltaTime * (Math.Min(1.4, Math.Max(1, .8 + AffData.Strength / 100))); // Lose Immunity
+                    C.AddAffliction("immunity", dT * (Math.Min(1.4, Math.Max(1, .8 + AffData.Strength / 100)))); // Lose Immunity
 
-                    if (C.GetAffData("afantibiotics").Strength < 0.1 || AffData.Strength > 20)
+                    if (C.GetAfflictionStrength("afantibiotics")< 0.1 || AffData.Strength > 20)
                     {
-                        if (C.GetAffData("combatstimulant").Strength > 0) return;
+                        if (C.GetAfflictionStrength("combatstimulant")> 0) return;
 
-                        AffData.Strength += NT.DeltaTime * (.65 - .0125 * Math.Max(.44 * C.GetAffData("immunity").PrevStrength, 20)); // Gain infection
+                        AffData.Strength += dT * (.65 - .0125 * Math.Max(.44 * C.GetAffData("immunity").PrevStrength, 20)); // Gain infection
                     }
                     else
                     {
-                        AffData.Strength -= NT.DeltaTime * .8; // Lose infection
+                        AffData.Strength -= dT * .8; // Lose infection
                     }
                 }
             };
@@ -569,27 +570,27 @@ public class NTAfflictionsToAdd
             (NTHuman C, string ID, LimbType Limb, NTHumanNonLimbAffData AffData) =>
             {
                 // Cannot have a heart attack without a heart.
-                if (C.GetAffData("heartremoved").Strength > 0)
+                if (C.GetAfflictionStrength("heartremoved")> 0)
                 {
                     AffData.Strength = 0;
                     return;
                 }
 
                 // Passive Regeneration
-                AffData.Strength -= NT.DeltaTime;
+                AffData.Strength -= dT;
 
                 // Effects:
                 // Sweating
-                NTC.SetSymptomTrue(C, "sweating", 2);
+                C.SetSymptomTrue("sweating", 2);
 
                 // Shortness of Breath
-                if (C.GetAffData("respiratoryarrest").Strength <= 0)
+                if (C.GetAfflictionStrength("respiratoryarrest")<= 0)
                 {
-                    NTC.SetSymptomTrue(C, "shortnessofbreath", 2);
+                    C.SetSymptomTrue("shortnessofbreath", 2);
                 }
 
                 // Heart Damage
-                C.GetAffData("heartdamage").Strength += (Math.Clamp(C.GetAffData("heartattack").Strength, 0, 0.5) * NT.DeltaTime);
+                C.AddAffliction("heartdamage", (Math.Clamp(C.GetAffData("heartattack").Strength, 0, 0.5) * dT));
             };
 
         // Heart Damage
@@ -603,9 +604,9 @@ public class NTAfflictionsToAdd
             (NTHuman C, string ID, LimbType Limb, NTHumanNonLimbAffData AffData) =>
             {
                 // Does not progress while in Stasis
-                if (C.GetBoolStatStrength("stasis")) return;
+                if (C.GetBoolStat("stasis")) return;
 
-                double HeartDamage = HF.OrganDamageCalc(C, AffData.Strength + NTC.GetMultiplier(C, "heartdamagegain") * C.GetDoubleStatStrength("neworgandamage"));
+                double HeartDamage = HF.OrganDamageCalc(C, AffData.Strength + NTC.GetMultiplier(C, "heartdamagegain") * C.GetFloatStat("neworgandamage"));
 
                 // Passive Regeneration / Increase
                 AffData.Strength = HeartDamage;
@@ -614,9 +615,9 @@ public class NTAfflictionsToAdd
                 // Cough
                 if (AffData.Strength > 50)
                 {
-                    if (C.GetAffData("unconsciousness").Strength <= 0 && C.GetAffData("lungremoved").Strength <= 0)
+                    if (C.GetAfflictionStrength("unconsciousness")<= 0 && C.GetAfflictionStrength("lungremoved")<= 0)
                     {
-                        NTC.SetSymptomTrue(C, "cough", 2);
+                        C.SetSymptomTrue("cough", 2);
                     }
 
                     // Leg Swelling & Shortness of Breath
@@ -624,18 +625,18 @@ public class NTAfflictionsToAdd
                     {
                         if (HF.GetAfflictionStrength(C.Human, "rl_cyber", 0) < 0.1)
                         {
-                            NTC.SetSymptomTrue(C, "legswelling", 2);
+                            C.SetSymptomTrue("legswelling", 2);
                         }
 
-                        if (C.GetAffData("respiratoryarrest").Strength <= 0)
+                        if (C.GetAfflictionStrength("respiratoryarrest")<= 0)
                         {
-                            NTC.SetSymptomTrue(C, "shortnessofbreath", 2);
+                            C.SetSymptomTrue("shortnessofbreath", 2);
                         }
 
                         // Cardiac Arrest
                         if (AffData.Strength > 99 && HF.Chance(0.3f))
                         {
-                            C.GetAffData("cardiacarrest").Strength += 200;
+                            C.AddAffliction("cardiacarrest", 200);
                         }
                     }
                 }
@@ -656,7 +657,7 @@ public class NTAfflictionsToAdd
 
                 // Effects:
                 // Cardiac Arrest
-                C.GetAffData("cardiacarrest").Strength += 200;
+                C.AddAffliction("cardiacarrest", 200);
             };
 
         // Heart Swap
@@ -677,50 +678,50 @@ public class NTAfflictionsToAdd
             (NTHuman C, string ID, LimbType Limb, NTHumanNonLimbAffData AffData) =>
             {
                 // Does not progress while in Stasis
-                if (C.GetBoolStatStrength("stasis")) return;
+                if (C.GetBoolStat("stasis")) return;
 
                 double KidneyDamage = HF.KidneyDamageCalc(C, AffData.Strength
-                    + NTC.GetMultiplier(C, "kidneydamagegain") * (C.GetDoubleStatStrength("neworgandamage")
-                    + Math.Clamp((C.GetBloodAffData("bloodpressure").Strength - 120) / 160, 0, 0.5) * NT.DeltaTime * 0.5));
+                    + NTC.GetMultiplier(C, "kidneydamagegain") * (C.GetFloatStat("neworgandamage")
+                    + Math.Clamp((C.GetBloodAffData("bloodpressure").Strength - 120) / 160, 0, 0.5) * dT * 0.5));
 
                 // Passive Regeneration / Increase
                 AffData.Strength = KidneyDamage;
 
                 // Effects:
                 // Acidosis
-                double AcidosisIncrease = Math.Max(0, AffData.Strength - 80) / 20.0 * 0.1 * NT.DeltaTime;
-                C.GetAffData("acidosis").Strength += AcidosisIncrease;
+                double AcidosisIncrease = Math.Max(0, AffData.Strength - 80) / 20.0 * 0.1 * dT;
+                C.AddAffliction("acidosis", AcidosisIncrease);
 
                 // Neurotrauma
-                double NeurotraumaIncrease = AffData.Strength / 1000.0 * NT.DeltaTime
+                double NeurotraumaIncrease = AffData.Strength / 1000.0 * dT
                     * NTC.GetMultiplier(C, "neurotraumagain")
                     * NTConfig.Get("NT_neurotraumaGain", 1)
                     * (1 - Math.Clamp(C.GetAffData("afmannitol").Strength, 0, 0.5));
 
-                C.GetAffData("neurotrauma").Strength += NeurotraumaIncrease;
+                C.AddAffliction("neurotrauma", NeurotraumaIncrease);
 
                 // Hypertension (in BloodPressure constant)
 
                 // Nausea & Leg Swelling
                 if (AffData.Strength > 60)
                 {
-                    NTC.SetSymptomTrue(C, "nausea", 2);
+                    C.SetSymptomTrue("nausea", 2);
 
                     if (HF.GetAfflictionStrength(C.Human, "rl_cyber", 0) < 0.1)
                     {
-                        NTC.SetSymptomTrue(C, "legswelling", 2);
+                        C.SetSymptomTrue("legswelling", 2);
                     }
 
                     // Vomiting
                     if (!NTC.HasSymptom(C, "vomiting") && HF.Chance((float)(AffData.Strength - 60) / 40f * 0.07f))
                     {
-                        NTC.SetSymptomTrue(C, "vomiting", Rand.Range(3, 11));
+                        C.SetSymptomTrue("vomiting", Rand.Range(3, 11));
                     }
 
                     // Bone Damage
                     if (AffData.Strength > 70)
                     {
-                        C.GetAffData("bonedamage").Strength += ((AffData.Strength - 70) / 30 * 0.15 * NT.DeltaTime);
+                        C.AddAffliction("bonedamage", ((AffData.Strength - 70) / 30 * 0.15 * dT));
                     }
                 }
             };
@@ -750,21 +751,21 @@ public class NTAfflictionsToAdd
             (NTHuman C, string ID, LimbType Limb, NTHumanNonLimbAffData AffData) =>
             {
                 // Does not progress in Stasis
-                if (C.GetBoolStatStrength("stasis")) return;
+                if (C.GetBoolStat("stasis")) return;
 
-                double LiverDamage = HF.OrganDamageCalc(C, AffData.Strength + NTC.GetMultiplier(C, "liverdamagegain") * C.GetDoubleStatStrength("neworgandamage"));
+                double LiverDamage = HF.OrganDamageCalc(C, AffData.Strength + NTC.GetMultiplier(C, "liverdamagegain") * C.GetFloatStat("neworgandamage"));
 
                 // Passive Regeneration / Increase
                 AffData.Strength = LiverDamage;
 
                 // Effects:
                 // Neurotrauma
-                double NeurotraumaIncrease = (AffData.Strength / 800.0 * NT.DeltaTime)
+                double NeurotraumaIncrease = (AffData.Strength / 800.0 * dT)
                     * NTC.GetMultiplier(C, "neurotraumagain")
                     * NTConfig.Get("NT_neurotraumaGain", 1)
                     * (1 - Math.Clamp(C.GetAffData("afmannitol").Strength, 0, 0.5));
 
-                C.GetAffData("neurotrauma").Strength += NeurotraumaIncrease;
+                C.AddAffliction("neurotrauma", NeurotraumaIncrease);
 
                 // Hypertension (in BloodPressure constant itself)
 
@@ -773,32 +774,32 @@ public class NTAfflictionsToAdd
                 {
                     if (HF.GetAfflictionStrength(C.Human, "rl_cyber", 0) < 0.1)
                     {
-                        NTC.SetSymptomTrue(C, "legswelling", 2);
+                        C.SetSymptomTrue("legswelling", 2);
                     }
 
                     if (AffData.Strength > 50)
                     {
                         // Bloating
-                        NTC.SetSymptomTrue(C, "bloating", 2);
+                        C.SetSymptomTrue("bloating", 2);
 
                         if (AffData.Strength > 65)
                         {
                             // Abdominal Discomfort
-                            if (C.GetAffData("unconsciousness").Strength <= 0)
+                            if (C.GetAfflictionStrength("unconsciousness")<= 0)
                             {
-                                NTC.SetSymptomTrue(C, "abdominaldiscomfort", 2);
+                                C.SetSymptomTrue("abdominaldiscomfort", 2);
                             }
 
                             if (AffData.Strength > 80)
                             {
                                 // Jaundice
-                                NTC.SetSymptomTrue(C, "jaundice", 2);
+                                C.SetSymptomTrue("jaundice", 2);
 
                                 if (AffData.Strength >= 99 && HF.Chance(0.05f))
                                 {
                                     // Internal Bleeding & Vomiting Blood
-                                    NTC.SetSymptomTrue(C, "vomitingblood", Random.Shared.Next(3, 10));
-                                    C.GetAffData("internalbleeding").Strength += 2;
+                                    C.SetSymptomTrue("vomitingblood", Random.Shared.Next(3, 10));
+                                    C.AddAffliction("internalbleeding", 2);
                                 }
                             }
                         }
@@ -845,7 +846,7 @@ public class NTAfflictionsToAdd
                 // Increases if there is no needle until 100%; else decreases until 5%.
                 if (AffData.Strength > 0)
                 {
-                    AffData.Strength = Math.Clamp(AffData.Strength + NT.DeltaTime * (0.5 - HF.BoolToNum(AffData.Strength > 15) * Math.Clamp(C.GetAffData("needlec").Strength, 0, 1)),
+                    AffData.Strength = Math.Clamp(AffData.Strength + dT * (0.5 - HF.BoolToNum(AffData.Strength > 15) * Math.Clamp(C.GetAffData("needlec").Strength, 0, 1)),
                         0,
                         100
                     );
@@ -860,9 +861,9 @@ public class NTAfflictionsToAdd
                     NTC.SetSymptomTrue(C.Human, "hyperventilation", 2);
 
                     // Shortness of Breath
-                    if (AffData.Strength > 40 && C.GetAffData("respiratoryarrest").Strength <= 0)
+                    if (AffData.Strength > 40 && C.GetAfflictionStrength("respiratoryarrest")<= 0)
                     {
-                        NTC.SetSymptomTrue(C, "shortnessofbreath", 2);
+                        C.SetSymptomTrue("shortnessofbreath", 2);
                     }
                 }
             };
@@ -962,7 +963,7 @@ public class NTAfflictionsToAdd
             {
                 // Passive Decrease
                 // Removes Luabotomy and itself; originally done in XML
-                C.GetAffData("luabotomy").Strength = 0;
+                C.GetAfflictionStrength("luabotomy")= 0;
                 AffData.Strength = 0;
             };
 
@@ -1019,20 +1020,20 @@ public class NTAfflictionsToAdd
 
                 // Effects:
                 // Reduce Cardiac Arrest
-                C.GetAffData("cardiacarrest").Strength = Math.Max(0, C.GetAffData("cardiacarrest").Strength - 4);
+                C.GetAfflictionStrength("cardiacarrest")= Math.Max(0, C.GetAfflictionStrength("cardiacarrest")- 4);
 
                 // Reduce Fibrillation
-                C.GetAffData("fibrillation").Strength = Math.Max(0, C.GetAffData("fibrillation").Strength - 2);
+                C.GetAfflictionStrength("fibrillation")= Math.Max(0, C.GetAfflictionStrength("fibrillation")- 2);
 
                 // Increase Blood Pressure
-                C.GetAffData("bloodpressure").Strength += 8;
+                C.AddAffliction("bloodpressure", 8);
 
                 // If Cardiac Arrest is above 0 and below or equal to 0.5, clear it and apply Fibrillation
                 double CardiacArrest = C.GetAffData("cardiacarrest").Strength;
                 if (CardiacArrest > 0 && CardiacArrest <= 0.5)
                 {
-                    C.GetAffData("cardiacarrest").Strength = 0;
-                    C.GetAffData("fibrillation").Strength += 20;
+                    C.GetAfflictionStrength("cardiacarrest")= 0;
+                    C.AddAffliction("fibrillation", 20);
                 }
             };
 
@@ -1050,23 +1051,23 @@ public class NTAfflictionsToAdd
 
                 // Effects:
                 // Reduce Cardiac Arrest
-                C.GetAffData("cardiacarrest").Strength = Math.Max(0, C.GetAffData("cardiacarrest").Strength - 3);
+                C.GetAfflictionStrength("cardiacarrest")= Math.Max(0, C.GetAfflictionStrength("cardiacarrest")- 3);
 
                 // Reduce Fibrillation
-                C.GetAffData("cardiacarrest").Strength = Math.Max(0, C.GetNonLimbAffData("fibrillation").Strength - 2);
+                C.GetAfflictionStrength("cardiacarrest")= Math.Max(0, C.GetNonLimbAffData("fibrillation").Strength - 2);
 
                 // Increase Blood Pressure
-                C.GetAffData("bloodpressure").Strength += 10;
+                C.AddAffliction("bloodpressure", 10);
 
                 // Reduce Oxygen Low
-                C.GetAffData("oxygenlow").Strength -= Math.Max(0, C.GetAffData("oxygenlow").Strength - 6);
+                C.AddAffliction("oxygenlow", Math.Max(0, C.GetAfflictionStrength("oxygenlow")- 6));
 
                 // If Cardiac Arrest is above 0 and below or equal to 0.5, clear it and apply Fibrillation
                 double CardiacArrest = C.GetAffData("cardiacarrest").Strength;
                 if (CardiacArrest > 0 && CardiacArrest <= 0.5)
                 {
-                    C.GetAffData("cardiacarrest").Strength = 0;
-                    C.GetAffData("fibrillation").Strength += 20;
+                    C.GetAfflictionStrength("cardiacarrest")= 0;
+                    C.AddAffliction("fibrillation", 20);
                 }
             };
 
@@ -1125,14 +1126,14 @@ public class NTAfflictionsToAdd
                 AffData.Strength -= 2;
 
                 // Reduce Husk Infection if below 100
-                if (HF.HasAffliction(C.Human, "huskinfection") && C.GetAffData("huskinfection").Strength < 100)
+                if (HF.HasAffliction(C.Human, "huskinfection") && C.GetAfflictionStrength("huskinfection")< 100)
                 {
-                    C.GetAffData("huskinfection").Strength -= 0.15;
+                    C.AddAffliction("huskinfection", 0.15);
 
                     // Additional reduction if no Husk Infection Resistance
-                    if (!HF.HasAffliction(C.Human, "huskinfectionresistance") || C.GetAffData("huskinfectionresistance").Strength <= 0)
+                    if (!HF.HasAffliction(C.Human, "huskinfectionresistance") || C.GetAfflictionStrength("huskinfectionresistance")<= 0)
                     {
-                        C.GetAffData("huskinfection").Strength -= 0.15;
+                        C.AddAffliction("huskinfection", 0.15);
                     }
                 }
             };
@@ -1183,27 +1184,27 @@ public class NTAfflictionsToAdd
                 bool LeftArmLocked = LeftLockItem != null && !Handcuffed;
                 bool RightArmLocked = RightLockItem != null && !Handcuffed;
 
-                if (LeftArmLocked && !C.GetBoolStatStrength("lockleftarm"))
+                if (LeftArmLocked && !C.GetBoolStat("lockleftarm"))
                 {
                     HF.RemoveItem(LeftLockItem);
                 }
 
-                if (RightArmLocked && !C.GetBoolStatStrength("lockrightarm"))
+                if (RightArmLocked && !C.GetBoolStat("lockrightarm"))
                 {
                     HF.RemoveItem(RightLockItem);
                 }
 
-                if (!LeftArmLocked && C.GetBoolStatStrength("lockleftarm"))
+                if (!LeftArmLocked && C.GetBoolStat("lockleftarm"))
                 {
                     HF.ForceArmLock(C.Human, "LeftArm");
                 }
 
-                if (!RightArmLocked && C.GetBoolStatStrength("lockrightarm"))
+                if (!RightArmLocked && C.GetBoolStat("lockrightarm"))
                 {
                     HF.ForceArmLock(C.Human, "RightArm");
                 }
 
-                AffData.Strength = HF.BoolToNum((C.GetBoolStatStrength("lockleftarm") && C.GetBoolStatStrength("lockrightarm")) || Handcuffed, 100);
+                AffData.Strength = HF.BoolToNum((C.GetBoolStat("lockleftarm") && C.GetBoolStat("lockrightarm")) || Handcuffed, 100);
             };
 
         // TraumaticAmputating Left Leg + Item
@@ -1350,92 +1351,98 @@ public class NTAfflictionsToAdd
                AffData.Strength -= 40;
 
                // Reduce Oxygen Low if lungs are present
-               if (C.GetAffData("lungremoved").Strength <= 0)
+               if (C.GetAfflictionStrength("lungremoved")<= 0)
                {
-                   C.GetAffData("oxygenlow").Strength -= 100;
+                   C.AddAffliction("oxygenlow", 100);
                }
            };
 
+        AfflictionsToAdd.Add(
+            builder.New("opiatewithdrawal")
+            .Build()
+            );
 
-        AfflictionsToAdd["chemwithdrawal"] = new("chemwithdrawal");
-        AfflictionsToAdd["chemwithdrawal"].UpdateAction =
-            (NTHuman C, string ID, LimbType Limb, NTHumanNonLimbAffData AffData) =>
-            {
-            };
+        AfflictionsToAdd.Add(
+            builder.New("chemwithdrawal")
+            .Build()
+            );
 
-
-        AfflictionsToAdd["opiatewithdrawal"] = new("opiatewithdrawal");
-        AfflictionsToAdd["opiatewithdrawal"].UpdateAction =
-            (NTHuman C, string ID, LimbType Limb, NTHumanNonLimbAffData AffData) =>
-            {
-            };
+        AfflictionsToAdd.Add(
+            builder.New("opiatewithdrawal")
+            .Build()
+            );
 
         // Alcohol Addiction
         // Not constant; gets applied by other sources.
         // Type: Functionality
         // Caused By: Consuming alcohol.
         // Effects: Alcohol Withdrawal if not eternally drinking (XML).
-        AfflictionsToAdd["alcoholaddiction"] = new("alcoholaddiction", 0, 100, 0);
+        AfflictionsToAdd.Add(
+            builder.New("alcoholaddiction")
+            .Build()
+            );
 
         // Alcohol Withdrawal
         // Not constant; gets applied by other sources.
         // Type: Functionality
         // Caused By: Not consuming Alcohol with an addiction (applies via XML).
         // Effects: Craving, Sweating, Nausea, Fever, Vomiting, Headache, Confusion, Increased Heartrate, Seizure, Hypertension. 
-        AfflictionsToAdd["alcoholwithdrawal"] = new("alcoholwithdrawal");
-        AfflictionsToAdd["alcoholwithdrawal"].UpdateAction =
-            (NTHuman C, string ID, LimbType Limb, NTHumanNonLimbAffData AffData) =>
+        AfflictionsToAdd.Add(
+            builder.New("alcoholwithdrawal")
+            .SetUpdateAction((C,ID,Limb,dT) =>
             {
                 // Effects:
                 // Hypertension (in BloodPressure constant)
                 // Increased Heartrate (in IncreasedHeartrate constant)
 
+                float str = C.GetAfflictionStrength(ID);
+
                 // Craving
-                if (AffData.Strength > 20)
+                if (str > 20)
                 {
-                    if (C.GetAffData("unconsciousness").Strength <= 0)
+                    if (C.GetAfflictionStrength("unconsciousness") <= 0)
                     {
-                        NTC.SetSymptomTrue(C, "craving", 2);
+                        C.SetSymptomTrue("craving", 2);
                     }
 
                     // Sweating
-                    if (AffData.Strength > 30)
+                    if (str > 30)
                     {
-                        NTC.SetSymptomTrue(C, "sweating", 2);
+                        C.SetSymptomTrue("sweating", 2);
 
                         // Nausea
-                        if (AffData.Strength > 40)
+                        if (str > 40)
                         {
-                            NTC.SetSymptomTrue(C, "nausea", 2);
+                            C.SetSymptomTrue("nausea", 2);
 
-                            if (AffData.Strength > 50)
+                            if (str > 50)
                             {
                                 // Headache
-                                if (C.GetAffData("unconsciousness").Strength <= 0)
+                                if (C.GetAfflictionStrength("unconsciousness") <= 0)
                                 {
-                                    NTC.SetSymptomTrue(C, "headache", 2);
+                                    C.SetSymptomTrue("headache", 2);
                                 }
 
                                 // Seizure
-                                if (HF.Chance((float)AffData.Strength / 1000f))
+                                if (HF.Chance((float)str / 1000f))
                                 {
-                                    C.GetAffData("seizure").Strength += 10;
+                                    C.AddAffliction("seizure", 10);
                                 }
 
                                 // Vomiting
-                                if (AffData.Strength > 60)
+                                if (str > 60)
                                 {
-                                    NTC.SetSymptomTrue(C, "vomiting", 2);
+                                    C.SetSymptomTrue("vomiting", 2);
 
                                     // Confusion
-                                    if (AffData.Strength > 80 && C.GetAffData("unconsciousness").Strength <= 0)
+                                    if (str > 80 && C.GetAfflictionStrength("unconsciousness") <= 0)
                                     {
-                                        NTC.SetSymptomTrue(C, "confusion", 2);
+                                        C.SetSymptomTrue("confusion", 2);
 
                                         // Fever
-                                        if (AffData.Strength > 90)
+                                        if (str > 90)
                                         {
-                                            NTC.SetSymptomTrue(C, "fever", 2);
+                                            C.SetSymptomTrue("fever", 2);
                                         }
                                     }
                                 }
@@ -1443,259 +1450,286 @@ public class NTAfflictionsToAdd
                         }
                     }
                 }
-            };
+            })
+            .Build()
+            );
 
         // On Fire!
         // Not constant; gets applied by other sources.
         // Type: Functionality
         // Caused By: Being on fire too long.
         // Effects: Visibly on fire (XML), burns (XML).
-        AfflictionsToAdd["onfire"] = new("onfire", 0, 1, 0);
+        AfflictionsToAdd.Add(builder.New("onfire").SetStrengths(0, 1, 0).Build());
 
         // Screaming
         // Not constant; gets applied by other sources.
         // Type: Functionality
         // Caused By: Fractures, Amputations, Dislocations.
         // Effects: Character screams (XML).
-        AfflictionsToAdd["screaming"] = new("screaming", 0, 1, 0);
+        AfflictionsToAdd.Add(builder.New("screaming").SetStrengths(0, 1, 0).Build());
 
         // Severe Pain
         // Not constant; gets applied by other sources.
         // Type: Functionality
         // Caused By: Fractures, Amputations, Dislocations.
         // Effects: Character screams (XML), gets momentarily stunned (XML).
-        AfflictionsToAdd["severepain"] = new("severepain", 0, 2, 0);
+        AfflictionsToAdd.Add(builder.New("severepain").SetStrengths(0, 2, 0).Build());
 
         // Pain
         // Not constant; gets applied by other sources.
         // Type: Functionality
         // Caused By: Damage.
         // Effects: Damage Sounds (XML), Slowdown (XML). Removes self via XML.
-        AfflictionsToAdd["pain"] = new("pain", 0, 2, 0);
+        AfflictionsToAdd.Add(builder.New("pain").SetStrengths(0, 2, 0).Build());
 
         // Shock Pain
         // Not constant; gets applied by other sources.
         // Type: Functionality
         // Caused By: Traumatic Shock.
         // Effects: Damage Sounds (XML), Slowdown (XML). Removes self via XML.
-        AfflictionsToAdd["shockpain"] = new("shockpain", 0, 2, 0);
+        AfflictionsToAdd.Add(builder.New("shockpain").SetStrengths(0,2,0).Build());
 
         // Analgesia
         // Not constant; gets applied by other sources.
         // Type: Functionality, Surgery, Buff
         // Caused By: Painkillers.
         // Effects: Damage resistance (XML), allows surgery, reduces Pain (XML), applies screen changes (XML). Removes self via XML.
-        AfflictionsToAdd["analgesia"] = new("analgesia", 0, 100, 0);
+        AfflictionsToAdd.Add(builder.New("analgesia").Build());
 
         // Anesthesia
         // Not constant; gets applied by other sources.
         // Type: Functionality, Surgery
         // Caused By: Propofol.
         // Effects: Applies Analgesia (XML) and has side effects. Increases and removes self via XML.
-        AfflictionsToAdd["anesthesia"] = new("anesthesia", 0, 100, 0, AfflictionPriority.HIGH);
-        AfflictionsToAdd["anesthesia"].UpdateAction =
-            (NTHuman C, string ID, LimbType Limb, NTHumanNonLimbAffData AffData) =>
-            {
-                // Apply random side-effects.
-                if (!HF.Chance(0.06f)) return;
+        AfflictionsToAdd.Add(
+           builder.New("anesthesia")
+           .SetUpdateAction((C, ID, Limb, dT) =>
+           {
+               // Technically speaking, the lower the update interval the mroe frequent side-effects are. side effects chance should scale with delta time -Cookie 
 
-                double casecount = 7;
-                double case_ = Random.Shared.NextDouble();
+               // Apply random side-effects.
+               if (!HF.Chance(0.06f)) return;
 
-                if (case_ < 1 / casecount)
-                {
-                    NTC.SetSymptomTrue(C, "vomitingblood", (int)(5 + Random.Shared.NextDouble() * 10));
-                }
-                else if (case_ < 2 / casecount)
-                {
-                    if (C.GetAffData("unconsciousness").Strength <= 0)
-                    {
-                        NTC.SetSymptomTrue(C, "blurredvision", (int)(5 + Random.Shared.NextDouble() * 10));
-                    }
-                }
-                else if (case_ < 3 / casecount)
-                {
-                    if (C.GetAffData("unconsciousness").Strength <= 0)
-                    {
-                        NTC.SetSymptomTrue(C, "confusion", (int)(5 + Random.Shared.NextDouble() * 10));
-                    }
-                }
-                else if (case_ < 4 / casecount)
-                {
-                    NTC.SetSymptomTrue(C, "fever", (int)(5 + Random.Shared.NextDouble() * 10));
-                }
-                else if (case_ < 5 / casecount)
-                {
-                    NTC.SetSymptomTrue(C, "triggersym_seizure", (int)(1 + Random.Shared.NextDouble() * 2));
-                }
-                else if (case_ < 6 / casecount)
-                {
-                    HF.Fibrillate(C.Human, (float)(5 + Random.Shared.NextDouble() * 30));
-                }
-                else
-                {
-                    C.GetAffData("psychosis").Strength += 10;
-                }
-            };
+               double casecount = 7;
+               double case_ = Random.Shared.NextDouble();
 
-        // =============== Head =============== //
+               if (case_ < 1 / casecount)
+               {
+                   C.SetSymptomTrue("vomitingblood", (int)(5 + Random.Shared.NextDouble() * 10));
+               }
+               else if (case_ < 2 / casecount)
+               {
+                   if (C.GetAfflictionStrength("unconsciousness") <= 0)
+                   {
+                       C.SetSymptomTrue("blurredvision", (int)(5 + Random.Shared.NextDouble() * 10));
+                   }
+               }
+               else if (case_ < 3 / casecount)
+               {
+                   if (C.GetAfflictionStrength("unconsciousness") <= 0)
+                   {
+                       C.SetSymptomTrue("confusion", (int)(5 + Random.Shared.NextDouble() * 10));
+                   }
+               }
+               else if (case_ < 4 / casecount)
+               {
+                   C.SetSymptomTrue("fever", (int)(5 + Random.Shared.NextDouble() * 10));
+               }
+               else if (case_ < 5 / casecount)
+               {
+                   C.SetSymptomTrue("triggersym_seizure", (int)(1 + Random.Shared.NextDouble() * 2));
+               }
+               else if (case_ < 6 / casecount)
+               {
+                   HF.Fibrillate(C.Human, (float)(5 + Random.Shared.NextDouble() * 30));
+               }
+               else
+               {
+                   C.AddAffliction("psychosis", 10);
+               }
+           })
+           .Build()
+           );
 
-        // Stroke
-        // Not constant; gets applied by other sources.
-        // Type: Non-Limb Specific
-        // Caused By: Hypertension.
-        // Effects: Headache, Coma, Seizure, Neurotrauma.
-        AfflictionsToAdd["stroke"] = new("stroke", 0, 100, 0, AfflictionPriority.HIGH);
-        AfflictionsToAdd["stroke"].UpdateAction =
-            (NTHuman C, string ID, LimbType Limb, NTHumanNonLimbAffData AffData) =>
+       // =============== Head =============== //
+
+       // Stroke
+       // Not constant; gets applied by other sources.
+       // Type: Non-Limb Specific
+       // Caused By: Hypertension.
+       // Effects: Headache, Coma, Seizure, Neurotrauma.
+       AfflictionsToAdd.Add(
+            builder.New("stroke")
+            .SetUpdateAction((C, ID, Limb, dT) =>
             {
                 // Does not progress in Stasis
-                if (C.GetBoolStatStrength("stasis")) return;
+                if (C.GetBoolStat("stasis")) return;
 
                 // Passive Regeneration
-                AffData.Strength -= (1.0 / 20) * C.GetDoubleStatStrength("clottingrate") * NT.DeltaTime;
+                C.AddAffliction(ID, (1.0f / 20f) * C.GetFloatStat("clottingrate") * -dT);
+
+                float str = C.GetAfflictionStrength(ID);
 
                 // Effects:
                 // Neurotrauma
-                double NeurotraumaGain = Math.Clamp(AffData.Strength, 0, 20) * 0.1 * NT.DeltaTime
+                float NeurotraumaGain = Math.Clamp(str, 0, 20) * 0.1f * dT
                     * NTC.GetMultiplier(C, "neurotraumagain")
                     * NTConfig.Get("NT_neurotraumaGain", 1)
-                    * (1 - Math.Clamp(C.GetAffData("afmannitol").Strength, 0, 0.5));
+                    * (1 - Math.Clamp(C.GetAfflictionStrength("afmannitol"), 0f, 0.5f));
 
-                C.GetAffData("neurotrauma").Strength += NeurotraumaGain;
+                C.AddAffliction("neurotrauma", NeurotraumaGain);
 
                 // Headache
-                if (AffData.Strength > 1 && C.GetAffData("unconsciousness").Strength <= 0)
+                if (str > 1 && C.GetAfflictionStrength("unconsciousness") <= 0)
                 {
-                    NTC.SetSymptomTrue(C, "headache", 2);
+                    C.SetSymptomTrue("headache", 2);
                 }
 
                 // Coma & Seizure
-                if (AffData.Strength > 1 && HF.Chance(0.05f))
+                if (str > 1 && HF.Chance(0.05f))
                 {
-                    C.GetAffData("coma").Strength += 14;
-                    C.GetAffData("seizure").Strength += 10;
+                    C.AddAffliction("coma", 14);
+                    C.AddAffliction("seizure", 10);
                 }
-            };
+            })
+            .Build()
+            );
 
         // Neurotrauma
         // Constant for Regeneration
         // Type: Non-Limb Specific, Organ Damage, Lethal
         // Caused By: Stroke, Liver Damage, Kidney Damage, Sepsis, Hypoxemia, Items, Traumatic Shock, Cyanide Poisoning, GSW (DMG).
         // Effects: Unconsciousness, Respiratory Arrest
-        AfflictionsToAdd["neurotrauma"] = new("neurotrauma", 0, 200, 0, AfflictionPriority.HIGH);
-        AfflictionsToAdd["neurotrauma"].Const = true;
-        AfflictionsToAdd["neurotrauma"].UpdateAction =
-            (NTHuman C, string ID, LimbType Limb, NTHumanNonLimbAffData AffData) =>
+         AfflictionsToAdd.Add(
+            builder.New("neurotrauma")
+            .IsConst(true)
+            .SetStrengths(0, 200, 0)
+            .SetUpdateAction((C, ID, Limb, dT) =>
             {
                 // Does not progress in Stasis
-                if (C.GetBoolStatStrength("stasis")) return;
+                if (C.GetBoolStat("stasis")) return;
 
                 // Does not regenerate with a Skull Fracture
-                bool HasFracture = HF.HasAfflictionLimb(C.Human, "fracturedskull", LimbType.Head, 1);
-                double FractureModifier = HasFracture ? 0 : 1;
+                bool HasFracture = C.HasAfflictionLimb("fracturedskull", LimbType.Head, 1);
+                float FractureModifier = HasFracture ? 0 : 1;
 
-                double PassiveRegeneration = -0.1 * C.GetDoubleStatStrength("healingrate") * FractureModifier * NT.DeltaTime;
+                float PassiveRegeneration = -0.1f * C.GetFloatStat("healingrate") * FractureModifier * dT;
 
-                if (PassiveRegeneration < -0.08 * NT.DeltaTime)
+                if (PassiveRegeneration < -0.08f * dT)
                 {
-                    PassiveRegeneration *= 2.5;
+                    PassiveRegeneration *= 2.5f;
                 }
 
-                AffData.Strength = Math.Clamp(AffData.Strength + PassiveRegeneration, 0, 200);
+                float str = C.GetAfflictionStrength(ID);
+
+                C.SetAffliction(ID, Math.Clamp(str + PassiveRegeneration, 0, 200));
+
 
                 // Effects:
                 // Unconsciousness & Respiratory Arrest
-                if (AffData.Strength > 100)
+                if (str > 100)
                 {
-                    NTC.SetSymptomTrue(C, "unconsciousness", 2);
+                    C.SetSymptomTrue("unconsciousness", 2);
                     if (HF.Chance(0.05f))
                     {
-                        C.GetAffData("respiratoryarrest").Strength += 200;
+                        C.AddAffliction("respiratoryarrest", 200);
                     }
                 }
-            };
+            })
+            .Build()
+            );
 
         // Seizure
         // Not constant; gets applied by other sources.
         // Type: Non-Limb Specific
         // Caused By: Stroke, Acidosis, Alkalosis, Withdrawal, Opiate Overdose, Anesthesia, Radiation Sickness
         // Effects: Unconsciousness, Spasms
-        AfflictionsToAdd["seizure"] = new("seizure", 0, 100, 0, AfflictionPriority.HIGH);
-        AfflictionsToAdd["seizure"].UpdateAction =
-            (NTHuman C, string ID, LimbType Limb, NTHumanNonLimbAffData AffData) =>
+        AfflictionsToAdd.Add(
+            builder.New("seizure")
+            .SetUpdateAction((C, ID, Limb, dT) =>
             {
                 // Passive Regeneration:
-                AffData.Strength -= NT.DeltaTime;
+                C.AddAffliction(ID, -1f * dT);
 
                 // Effects:
                 // Spasms
-                if (AffData.Strength > 0.1)
+                if (C.GetAfflictionStrength(ID) > 0.1f)
                 {
-                    NTC.SetSymptomTrue(C, "unconsciousness", 2);
+                    C.SetSymptomTrue("unconsciousness", 2);
 
-                    foreach (LimbType type in Enum.GetValues<LimbType>())
+                    foreach (LimbType l in HF.LimbsToCheck)
                     {
-                        HF.AddAfflictionLimb(C.Human, "spasm", type, 10, null);
+                        C.AddAfflictionLimb("spasm", l, 10);
                     }
                 }
-            };
+            })
+            .Build()
+            );
 
         // Coma
         // Not constant; gets applied by other sources.
         // Type: Non-Limb Specific
         // Caused By: Stroke, Cardiac Arrest, High Acidosis, Morbusine Poisoning, Naloxone fail.
         // Effects: Cardiac Arrest, Unconsciousness.
-        AfflictionsToAdd["coma"] = new("coma", 0, 100, 0, AfflictionPriority.HIGH);
-        AfflictionsToAdd["coma"].UpdateAction =
-            (NTHuman C, string ID, LimbType Limb, NTHumanNonLimbAffData AffData) =>
+        AfflictionsToAdd.Add(
+            builder.New("coma")
+            .SetUpdateAction((C, ID, Limb, dT) =>
             {
                 // Does not progress in Stasis
-                if (C.GetBoolStatStrength("stasis")) return;
+                if (C.GetBoolStat("stasis")) return;
 
                 // Passive Regeneration
-                if (C.GetAffData("acidosis").Strength < 20
-                    && C.GetAffData("alkalosis").Strength < 20
-                    && C.GetAffData("heartdamage").Strength < 30
-                    && C.GetAffData("lungdamage").Strength < 40
-                    && C.GetDoubleStatStrength("availableoxygen") > 60)
+                if (C.GetAfflictionStrength("acidosis") < 20
+                    && C.GetAfflictionStrength("alkalosis") < 20
+                    && C.GetAfflictionStrength("heartdamage") < 30
+                    && C.GetAfflictionStrength("lungdamage") < 40
+                    && C.GetFloatStat("availableoxygen") > 60)
                 {
-                    AffData.Strength -= NT.DeltaTime / 2;
+                    C.AddAffliction(ID, -1f * dT);
                 }
                 else
                 {
-                    AffData.Strength -= NT.DeltaTime / 5;
+                    C.AddAffliction(ID, -0.4f * dT);
                 }
 
                 // Effects:
 
+                float str = C.GetAfflictionStrength(ID);
 
                 // Unconsciousness
-                if (AffData.Strength > 15)
+                if (str > 15)
                 {
-                    NTC.SetSymptomTrue(C, "unconsciousness", 2);
+                    C.SetSymptomTrue("unconsciousness", 2);
 
                     // Cardiac Arrest
-                    if (AffData.Strength > 40 && HF.Chance(0.03f))
+                    if (str > 40 && HF.Chance(0.03f))
                     {
-                        C.GetAffData("cardiacarrest").Strength += 200;
+                        C.AddAffliction("cardiacarrest", 200);
                     }
                 }
-            };
+            })
+            .Build()
+            );
 
         // Spinal Cord Injury
         // Not constant; gets applied by other sources.
         // Type: Non-Limb Specific
         // Caused By: Unstable Neck Fractures.
         // Effects: Paralysis (XML), Analgesia (XML).
-        AfflictionsToAdd["spinalcordinjury"] = new("spinalcordinjury", 0, 100, 0);
+        AfflictionsToAdd.Add(
+            builder.New("spinalcordinjury")
+            .Build()
+            );
 
         // Carotid Arterial Cut
         // Not constant; gets applied by other sources.
         // Type: Non-Limb Specific
         // Caused By: Damage.
         // Effects: Blood Loss (XML), Internal Bleeding (XML). Increases self via XML.
-        AfflictionsToAdd["carotidarterialcut"] = new("carotidarterialcut", 0, 100, 0);
+        AfflictionsToAdd.Add(
+            builder.New("carotidarterialcut")
+            .Build()
+            );
 
         // =============== Item Derived =============== //
 
@@ -1704,70 +1738,66 @@ public class NTAfflictionsToAdd
         // Type: Non-Limb Specific, Item Derived
         // Caused By: Adrenaline item.
         // Effects: Melee Damage increased (XML), Analgesia (XML).
-        AfflictionsToAdd["afadrenaline"] = new("afadrenaline", 0, 100, 0, AfflictionPriority.HIGH);
-        AfflictionsToAdd["afadrenaline"].UpdateAction =
-            (NTHuman C, string ID, LimbType Limb, NTHumanNonLimbAffData AffData) =>
+        AfflictionsToAdd.Add(
+            builder.New("afadrenaline")
+            .SetUpdateAction((C, ID, Limb, dT) =>
             {
-                // Passive Decrease
-                // Originally had a maxstrength of 100, and reduced by 1 per second in XML.
-                // Adjusted, that became 2 per 2 seconds.
-                AffData.Strength -= 2;
-            };
+                C.AddAffliction(ID, -1f * dT);
+            })
+            .Build()
+            );
 
         // Needle in Chest
         // Not constant; gets applied by other sources.
         // Type: Non-Limb Specific, Item Derived
         // Caused By: Needle item.
         // Effects: Reduced Pneumothorax / Cardiac Tamponade.
-        AfflictionsToAdd["needlec"] = new("needlec", 0, 100, 0, AfflictionPriority.HIGH);
-        AfflictionsToAdd["needlec"].UpdateAction =
-            (NTHuman C, string ID, LimbType Limb, NTHumanNonLimbAffData AffData) =>
+        AfflictionsToAdd.Add(
+            builder.New("needlec")
+            .SetUpdateAction((C, ID, Limb, dT) =>
             {
-                // Passive Decrease
-                AffData.Strength -= 0.15 * NT.DeltaTime;
-            };
+                C.AddAffliction(ID, -0.15f * dT);
+            })
+            .Build()
+            );
 
         // Saline in Blood
         // Not constant; gets applied by other sources.
         // Type: Non-Limb Specific, Item Derived
         // Caused By: Saline item.
         // Effects: Increased Acidosis, Blood Pressure.
-        AfflictionsToAdd["afsaline"] = new("afsaline", 0, 100, 0, AfflictionPriority.HIGH);
-        AfflictionsToAdd["afsaline"].UpdateAction =
-            (NTHuman C, string ID, LimbType Limb, NTHumanNonLimbAffData AffData) =>
+        AfflictionsToAdd.Add(
+            builder.New("afsaline")
+            .SetUpdateAction((C, ID, Limb, dT) =>
             {
-                // Passive Decrease
-                // Originally had a maxstrength of 100, and reduced by 0.25 per second in XML.
-                // Adjusted, that became 0.5 per 2 seconds.
-                AffData.Strength -= 0.5;
-
-                // Effects:
-                // Acidosis
-                C.GetAffData("acidosis").Strength += 0.2;
-
-                // Blood Pressure (in BloodPressure constant)
-            };
+                C.AddAffliction(ID, -0.25f * dT);
+                C.AddAffliction("acidosis", 0.1f * dT);
+            })
+            .Build()
+            );
 
         // Ringers Solution in Blood
         // Not constant; gets applied by other sources.
         // Type: Non-Limb Specific, Item Derived
         // Caused By: Ringer's Solution item.
         // Effects: Increased Alkalosis, Blood Pressure.
-        AfflictionsToAdd["afringerssolution"] = new("afringerssolution", 0, 100, 0, AfflictionPriority.HIGH);
-        AfflictionsToAdd["afringerssolution"].UpdateAction =
-            (NTHuman C, string ID, LimbType Limb, NTHumanNonLimbAffData AffData) =>
+        AfflictionsToAdd.Add(
+            builder.New("afringerssolution")
+            .SetUpdateAction((C, ID, Limb, dT) =>
             {
                 // Passive Decrease
                 // Originally had a maxstrength of 100, and reduced by 0.25 per second in XML.
                 // Adjusted, that became 0.5 per 2 seconds.
-                AffData.Strength -= 0.5;
+                C.AddAffliction(ID, -0.25f * dT);
 
                 // Effects:
                 // Alkalosis
-                C.GetAffData("acidosis").Strength += 0.2;
+                C.AddAffliction("acidosis", 0.2f);
 
                 // Blood Pressure (in BloodPressure constant)
-            };
+            })
+            .Build()
+            );
 
 
         // Mannitol in Blood
@@ -1775,134 +1805,147 @@ public class NTAfflictionsToAdd
         // Type: Non-Limb Specific, Item Derived
         // Caused By: Mannitol Item.
         // Effects: Reduce Neurotrauma.
-        AfflictionsToAdd["afmannitol"] = new("afmannitol", 0, 100, 0, AfflictionPriority.HIGH);
-        AfflictionsToAdd["afmannitol"].UpdateAction =
-            (NTHuman C, string ID, LimbType Limb, NTHumanNonLimbAffData AffData) =>
+        AfflictionsToAdd.Add(
+            builder.New("afmannitol")
+            .SetUpdateAction((C, ID, Limb, dT) =>
             {
                 // Passive Decrease
                 // Originally had a maxstrength of 100, and reduced by 0.5 per second in XML.
                 // Adjusted, that became 1 per 2 seconds.
-                AffData.Strength -= 1;
+                C.AddAffliction(ID, -0.5f * dT);
 
                 // Effects:
                 // Reduce Neurotrauma if Blood Pressure and Hypoxemia conditions are met.
-                if (C.GetAffData("bloodpressure").Strength >= 70 && C.GetAffData("hypoxemia").Strength <= 30)
+                if (C.GetAfflictionStrength("bloodpressure") >= 70 && C.GetAfflictionStrength("hypoxemia") <= 30)
                 {
-                    C.GetAffData("neurotrauma").Strength -= 2;
+                    C.AddAffliction("neurotrauma", -2 * dT);
                 }
-            };
+            })
+            .Build()
+            );
+
 
         // Immunosuppressants in Blood
         // Not constant; gets applied by other sources.
         // Type: Non-Limb Specific, Item Derived
         // Caused By: Azathioprine Item.
         // Effects: Reduce Immunity.
-        AfflictionsToAdd["afimmunosuppressant"] = new("afimmunosuppressant", 0, 100, 0, AfflictionPriority.HIGH);
-        AfflictionsToAdd["afimmunosuppressant"].UpdateAction =
-            (NTHuman C, string ID, LimbType Limb, NTHumanNonLimbAffData AffData) =>
+        AfflictionsToAdd.Add(
+            builder.New("afpressuredrug")
+            .SetUpdateAction((C, ID, Limb, dT) =>
             {
                 // Passive Decrease
                 // Originally had a maxstrength of 100, and reduced by 0.25 per second in XML.
                 // Adjusted, that became 0.5 per 2 seconds.
-                AffData.Strength -= 0.5;
+                C.AddAffliction(ID, -0.25f * dT);
 
                 // Effects:
                 // Reduce Immunity
-                if (C.GetAffData("immunity").Strength >= 2.5)
+                if (C.GetAfflictionStrength("immunity") >= 2.5)
                 {
-                    C.GetAffData("immunity").Strength -= 8;
+                    C.AddAffliction("immunity", -4 * dT);
                 }
-            };
+            })
+            .Build()
+            );
 
         // Pressure-increasing drugs in Blood
         // Not constant; gets applied by other sources.
         // Type: Non-Limb Specific, Item Derived
         // Caused By: Nitroglycerin, Sodium Nitroprusside Items.
         // Effects: Increase target Blood Pressure.
-        AfflictionsToAdd["afpressuredrug"] = new("afpressuredrug", 0, 100, 0, AfflictionPriority.HIGH);
-        AfflictionsToAdd["afpressuredrug"].UpdateAction =
-            (NTHuman C, string ID, LimbType Limb, NTHumanNonLimbAffData AffData) =>
+        AfflictionsToAdd.Add(
+            builder.New("afpressuredrug")
+            .SetUpdateAction((C, ID, Limb, dT) =>
             {
                 // Passive Decrease
                 // Originally had a maxstrength of 100, and reduced by 0.25 per second in XML.
                 // Adjusted, that became 0.5 per 2 seconds.
-                AffData.Strength -= 0.5;
+                C.AddAffliction(ID, -0.25f * dT);
 
                 // Effects:
                 // Blood Pressure (in BloodPressure constant)
-            };
+            })
+            .Build()
+            );
 
         // Thiamine in Blood
         // Not constant; gets applied by other sources.
         // Type: Non-Limb Specific, Item Derived
         // Caused By: Thiamine Item.
         // Effects: Increase specific organ damage healing.
-        AfflictionsToAdd["afthiamine"] = new("afthiamine", 0, 100, 0, AfflictionPriority.HIGH);
-        AfflictionsToAdd["afthiamine"].UpdateAction =
-           (NTHuman C, string ID, LimbType Limb, NTHumanNonLimbAffData AffData) =>
-           {
-               // Passive Decrease
-               // Originally had a maxstrength of 100, and reduced by 0.25 per second in XML.
-               // Adjusted, that became 0.5 per 2 seconds.
-               AffData.Strength -= 0.5;
+        AfflictionsToAdd.Add(
+            builder.New("afthiamine")
+            .SetUpdateAction((C, ID, Limb, dT) =>
+            {
+                // Passive Decrease
+                // Originally had a maxstrength of 100, and reduced by 0.25 per second in XML.
+                // Adjusted, that became 0.5 per 2 seconds.
+                C.AddAffliction(ID, -0.25f * dT);
 
-               // Effects:
-               // Additional Healing (in HF.NewOrganDamage)
-           };
+                // Effects:
+                // Additional Healing (in HF.NewOrganDamage)
+            })
+            .Build()
+            );
 
         // Streptokinase in Blood
         // Not constant; gets applied by other sources.
         // Type: Non-Limb Specific, Item Derived
         // Caused By: Streptokinase Item.
         // Effects: Increase stroke chance, cure Heart Attack / Hemotransfusion shock.
-        AfflictionsToAdd["afstreptokinase"] = new("afstreptokinase", 0, 100, 0, AfflictionPriority.HIGH);
-        AfflictionsToAdd["afstreptokinase"].UpdateAction =
-           (NTHuman C, string ID, LimbType Limb, NTHumanNonLimbAffData AffData) =>
-           {
-               // Passive Decrease
-               // Originally had a maxstrength of 100, and reduced by 0.25 per second in XML.
-               // Adjusted, that became 0.5 per 2 seconds.
-               AffData.Strength -= 0.5;
+        AfflictionsToAdd.Add(
+            builder.New("afstreptokinase")
+            .SetUpdateAction((C, ID, Limb, dT) =>
+            {
+                // Passive Decrease
+                // Originally had a maxstrength of 100, and reduced by 0.25 per second in XML.
+                // Adjusted, that became 0.5 per 2 seconds.
+                C.AddAffliction(ID, 0.25f * dT);
 
-               // Effects:
-               // Cures Heart Attack / HemoTransShock in ItemFunctions
-               // Hypertension Stroke (in BloodPressure constant)
-           };
+                // Effects:
+                // Cures Heart Attack / HemoTransShock in ItemFunctions
+                // Hypertension Stroke (in BloodPressure constant)
+            })
+            .Build()
+            );
 
         // Antibiotics in Blood
         // Not constant; gets applied by other sources.
         // Type: Non-Limb Specific, Item Derived
         // Caused By: Broad-Spectrum Antibiotics Item.
         // Effects: Decreases Sepsis, extra Organ Damage, decreased Husk Infection.
-        AfflictionsToAdd["afantibiotics"] = new("afantibiotics", 0, 100, 0, AfflictionPriority.HIGH);
-        AfflictionsToAdd["afantibiotics"].UpdateAction =
-           (NTHuman C, string ID, LimbType Limb, NTHumanNonLimbAffData AffData) =>
-           {
-               // Passive Decrease
-               // Originally had a maxstrength of 100, and reduced by 0.25 per second in XML.
-               // Adjusted, that became 0.5 per 2 seconds.
-               AffData.Strength -= 0.5;
+        AfflictionsToAdd.Add(
+            builder.New("afantibiotics")
+            .SetUpdateAction((C, ID, Limb, dT) =>
+            {
+                // Passive Decrease
+                // Originally had a maxstrength of 100, and reduced by 0.25 per second in XML.
+                // Adjusted, that became 0.5 per 2 seconds.
+                C.AddAffliction(ID, -0.5f * dT);
 
-               // Effects:
-               // Specific Organ Damage
-               C.GetAffData("organdamage").Strength += 0.4;
-               C.GetAffData("kidneydamage").Strength += 0.35;
-               C.GetAffData("liverdamage").Strength += 0.35;
-               C.GetAffData("heartdamage").Strength += 0.2;
-               C.GetAffData("lungdamage").Strength += 0.2;
+                // Effects:
+                // Specific Organ Damage
+                C.AddAffliction("organdamage", 0.2f * dT);
+                C.AddAffliction("kidneydamage", 0.175f * dT);
+                C.AddAffliction("liverdamage", 0.175f * dT);
+                C.AddAffliction("heartdamage", 0.1f * dT);
+                C.AddAffliction("lungdamage", 0.1f * dT);
 
-               // Reduce Husk Infection
-               if (HF.HasAffliction(C.Human, "huskinfection") && C.GetAffData("huskinfection").Strength < 75)
-               {
-                   C.GetAffData("huskinfection").Strength -= 1;
-               }
+                // Reduce Husk Infection
+                if (HF.HasAffliction(C.Human, "huskinfection") && C.GetAfflictionStrength("huskinfection") < 75)
+                {
+                    C.AddAffliction("huskinfection", 0.5f * dT);
+                }
 
-               // Sepsis
-               if (C.GetAffData("sepsis").Strength > 0)
-               {
-                   C.GetAffData("sepsis").Strength -= 2;
-               }
-           };
+                // Sepsis
+                if (C.GetAfflictionStrength("sepsis") > 0)
+                {
+                    C.AddAffliction("sepsis", 1 * dT);
+                }
+            })
+            .Build()
+            );
 
         // =============== Surgical =============== //
         // Cavity Cleaning
@@ -1910,18 +1953,19 @@ public class NTAfflictionsToAdd
         // Type: Surgery, Non-Limb Specific
         // Caused By: Antiseptic Sprayer + Saline
         // Effects: Cures Infected Cavity
-        AfflictionsToAdd["caviclean"] = new("caviclean", 0, 100, 0, AfflictionPriority.HIGH);
-        AfflictionsToAdd["caviclean"].UpdateAction =
-           (NTHuman C, string ID, LimbType Limb, NTHumanNonLimbAffData AffData) =>
-           {
-               // Once it hits 100, remove itself and infected cavity.
-               if (AffData.Strength == 100)
-               {
-                   AffData.Strength = 0;
-                   C.GetAffData("infectedcavity").Strength = 0;
-                   return;
-               }
-           };
+        AfflictionsToAdd.Add(
+            builder.New("caviclean")
+            .SetUpdateAction((C, ID, Limb, dT) =>
+            {
+                // Once it hits 100, remove itself and infected cavity.
+                if (C.GetAfflictionStrength(ID) == 100)
+                {
+                    C.SetAffliction(ID, 0);
+                    C.SetAffliction("infectedcavity", 0);
+                }
+            })
+            .Build()
+            );
 
 
         // Traumatic Shock
@@ -1929,67 +1973,73 @@ public class NTAfflictionsToAdd
         // Type: Non-Limb Specific, Lethal
         // Caused By: Unsafe Surgery
         // Effects: Hypotension, Cardiac Arrest, Respiratory Arrest, Neurotrauma, Psychosis, Pain.
-        AfflictionsToAdd["traumaticshock"] = new("traumaticshock", 0, 100, 0, AfflictionPriority.HIGH);
-        AfflictionsToAdd["traumaticshock"].UpdateAction =
-            (NTHuman C, string ID, LimbType Limb, NTHumanNonLimbAffData AffData) =>
+        AfflictionsToAdd.Add(
+            builder.New("traumaticshock")
+            .SetUpdateAction((C, ID, Limb, dT) =>
             {
                 // Removes on TShockTimeout
-                if (C.GetAffData("tshocktimeout").Strength > 0)
+                if (C.GetAfflictionStrength("tshocktimeout") > 0)
                 {
-                    AffData.Strength = 0;
+                    C.SetAffliction(ID, 0);
                     return;
                 }
 
                 // Passive Decrease
-                bool IsSedated = C.GetBoolStatStrength("sedated");
-                bool IsSafeSurgery = C.GetAffData("safesurgery").Strength > 0;
-                bool IsAnesthesized = C.GetAffData("anesthesia").Strength > 15;
+                bool IsSedated = C.GetBoolStat("sedated");
+                bool IsSafeSurgery = C.GetAfflictionStrength("safesurgery") > 0;
+                bool IsAnesthesized = C.GetAfflictionStrength("anesthesia") > 15;
 
                 bool ShouldReduce = (IsSedated && IsSafeSurgery || IsAnesthesized);
 
-                AffData.Strength -= (0.5 + HF.BoolToNum(ShouldReduce, 1.5f)) * NT.DeltaTime;
+                C.AddAffliction(ID, (0.5f + HF.BoolToNum(ShouldReduce, 1.5f)) * -dT);
+
+                float str = C.GetAfflictionStrength(ID);
 
                 // Effects:
                 // Pain & Psychosis
-                if (AffData.Strength > 5)
+                if (str > 5)
                 {
-                    if (C.GetSymptomAffData("unconsciousness").Strength < 0.1)
+                    if (C.GetAfflictionStrength("unconsciousness") < 0.1)
                     {
-                        C.GetAffData("shockpain").Strength += (10 * NT.DeltaTime);
-                        C.GetAffData("psychosis").Strength += (AffData.Strength / 100 * NT.DeltaTime);
+                        C.AddAffliction("shockpain", (10 * dT));
+                        C.AddAffliction("psychosis", (str / 100 * dT));
                     }
 
                     // Respiratory Arrest
-                    if (AffData.Strength > 30 && HF.Chance(0.2f))
+                    if (str > 30 && HF.Chance(0.2f))
                     {
-                        C.GetAffData("respiratoryarrest").Strength += 200;
+                        C.AddAffliction("respiratoryarrest", 200);
                     }
 
                     // Cardiac Arrest
-                    if (AffData.Strength > 40 && HF.Chance(0.1f))
+                    if (str > 40 && HF.Chance(0.1f))
                     {
-                        C.GetAffData("cardiacarrest").Strength += 200;
+                        C.AddAffliction("cardiacarrest", 200);
                     }
                 }
-            };
+            })
+            .Build()
+            );
 
         // Ballooned Aorta
         // Not constant; gets applied by other sources.
         // Type: Non-Limb Specific
         // Caused By: Endovascular Balloon item.
         // Effects: Gangrene in extremities (XML), Organ Damage, Specific Organ Damage, Reduced Bleeding in extremities (XML).
-        AfflictionsToAdd["balloonedaorta"] = new("balloonedaorta", 0, 100, 0, AfflictionPriority.HIGH);
-        AfflictionsToAdd["balloonedaorta"].UpdateAction =
-            (NTHuman C, string ID, LimbType Limb, NTHumanNonLimbAffData AffData) =>
+        AfflictionsToAdd.Add(
+            builder.New("balloonedaorta")
+            .SetUpdateAction((C, ID, Limb, dT) =>
             {
                 // Effects:
                 // Vanilla Organ Damage
-                C.GetAffData("organdamage").Strength += 1;
+                C.AddAffliction("organdamage", 0.5f * dT);
 
                 // Specific Organ Damage
-                C.GetAffData("liverdamage").Strength += 1;
-                C.GetAffData("kidneydamage").Strength += 1;
-            };
+                C.AddAffliction("liverdamage", 0.5f * dT);
+                C.AddAffliction("kidneydamage", 0.5f * dT);
+            })
+            .Build()
+            );
 
         // =============== Torso =============== //
         // Aortic Rupture
@@ -1997,49 +2047,57 @@ public class NTAfflictionsToAdd
         // Type: Non-Limb Specific
         // Caused By: Damage.
         // Effects: Blood Loss (XML), Internal Bleeding (XML), Chest Pain, Abdominal Pain, Unconsciousness.
-        AfflictionsToAdd["aorticrupture"] = new("aorticrupture", 0, 100, 0, AfflictionPriority.HIGH);
-        AfflictionsToAdd["aorticrupture"].UpdateAction =
-            (NTHuman C, string ID, LimbType Limb, NTHumanNonLimbAffData AffData) =>
+        AfflictionsToAdd.Add(
+            builder.New("internalbleeding")
+            .SetUpdateAction((C, ID, Limb, dT) =>
             {
+                float str = C.GetAfflictionStrength(ID);
+
                 // Chest Pain & Abdominal Pain & Unconsciousness
-                if (AffData.Strength > 0)
+                if (str > 0)
                 {
-                    if (C.GetSymptomAffData("unconsciousness").Strength <= 0 && (!C.GetBoolStatStrength("sedated")))
+                    if (C.GetAfflictionStrength("unconsciousness") <= 0 && (!C.GetBoolStat("sedated")))
                     {
-                        NTC.SetSymptomTrue(C, "chestpain", 2);
-                        NTC.SetSymptomTrue(C, "abdominalpain", 2);
+                        C.SetSymptomTrue("chestpain", 2);
+                        C.SetSymptomTrue("abdominalpain", 2);
                     }
                 }
-            };
+            })
+            .Build()
+            );
 
         // Internal Bleeding
         // Not constant; gets applied by other sources.
         // Type: Non-Limb Specific
         // Caused By: Damage.
         // Effects: Blood Loss (XML), Internal Bleeding (XML), Chest Pain, Abdominal Pain, Unconsciousness.
-        AfflictionsToAdd["internalbleeding"] = new("internalbleeding", 0, 100, 0, AfflictionPriority.HIGH);
-        AfflictionsToAdd["internalbleeding"].UpdateAction =
-            (NTHuman C, string ID, LimbType Limb, NTHumanNonLimbAffData AffData) =>
+        AfflictionsToAdd.Add(
+            builder.New("internalbleeding")
+            .SetUpdateAction((C, ID, Limb, dT) =>
             {
                 // Does not progress in Stasis
-                if (C.GetBoolStatStrength("stasis")) return;
+                if (C.GetBoolStat("stasis")) return;
 
                 // Passive Regeneration
-                AffData.Strength -= NT.DeltaTime * 0.02 * C.GetDoubleStatStrength("clottingrate");
+                C.AddAffliction(ID, -dT * 0.02f * C.GetFloatStat("clottingrate"));
+
+                float str = C.GetAfflictionStrength(ID);
 
                 // Effects:
                 // Blood Loss
-                if (AffData.Strength > 0)
+                if (str > 0)
                 {
-                    C.GetAffData("bloodloss").Strength += (AffData.Strength * (1f / 40f) * NT.DeltaTime);
+                    C.AddAffliction("bloodloss", (str * (1f / 40f) * dT));
 
                     // Vomiting Blood
-                    if (AffData.Strength > 50)
+                    if (str > 50)
                     {
-                        NTC.SetSymptomTrue(C, "vomitingblood", 2);
+                        C.SetSymptomTrue("vomitingblood", 2);
                     }
                 }
-            };
+            })
+            .Build()
+            );
 
         // =============== Bones =============== //
 
@@ -2048,32 +2106,44 @@ public class NTAfflictionsToAdd
         // Type: Non-Limb Specific
         // Caused By: Kidney Damage, Radiation Sickness, Sepsis, Hypoxemia.
         // Effects: Bone Death, Fractures.
-        AfflictionsToAdd["bonedamage"] = new("bonedamage", 0, 100, 0, AfflictionPriority.HIGH);
-        AfflictionsToAdd["bonedamage"].UpdateAction =
-            (NTHuman C, string ID, LimbType Limb, NTHumanNonLimbAffData AffData) =>
+        // Fractures
+        AfflictionsToAdd.Add(
+            builder.New("bonedamage")
+            .SetUpdateAction((C, ID, Limb, dT) =>
             {
                 // Does not progress in Stasis
-                if (C.GetBoolStatStrength("stasis")) return;
+                if (C.GetBoolStat("stasis")) return;
+
+                float str = C.GetAfflictionStrength(ID);
+
+                if (!(str > 0)) return;
 
                 // Passive Regeneration
-                AffData.Strength = HF.OrganDamageCalc(C, AffData.Strength);
+                C.SetAffliction(ID, (float) HF.OrganDamageCalc(C, str));
 
                 // Bone Regeneration
-                if (AffData.Strength < 90)
+                if (str < 90)
                 {
-                    AffData.Strength -= C.GetDoubleStatStrength("bonegrowthCount") * 0.3 * NT.DeltaTime;
+                    C.AddAffliction(ID, -C.GetFloatStat("bonegrowthCount") * 0.3f * dT);
                 }
-                else if (C.GetDoubleStatStrength("bonegrowthCount") >= 6)
+                else if (C.GetFloatStat("bonegrowthCount") >= 6)
                 {
-                    AffData.Strength -= 2 * NT.DeltaTime;
+                    C.AddAffliction(ID, -2 * dT);
                 }
 
+                if (str <= 90) return;
+
                 // Fractures
-                if (AffData.Strength > 90 && HF.Chance(0.01f))
+                foreach (var limb in HF.LimbsToCheck)
                 {
-                    HF.BreakLimb(C.Human, Limb);
+                    if (HF.Chance(0.01f))
+                    {
+                        HF.BreakLimb(C.Human, Limb);
+                    }
                 }
-            };
+            })
+            .Build()
+            );
 
         // =============== MUST RUN AFTER EVERYTHING ELSE =============== //
         // Probably needs even special treatment than this.
@@ -2082,269 +2152,329 @@ public class NTAfflictionsToAdd
         // Constant; too complicated otherwise.
         // Type: Functionality
         // Effects: Decreases character by a percentage proportional to the affliction strength.
-        AfflictionsToAdd["slowdown"] = new("slowdown", 0, 100, 0, AfflictionPriority.HIGH);
-        AfflictionsToAdd["slowdown"].Const = true;
-        AfflictionsToAdd["slowdown"].UpdateAction =
-            (NTHuman C, string ID, LimbType Limb, NTHumanNonLimbAffData AffData) =>
+
+        // TODO: move it to post update
+
+        AfflictionsToAdd.Add(
+            builder.New("slowdown")
+            .IsConst(true)
+            .SetUpdateAction((C, ID, Limb, dT) =>
             {
-                AffData.Strength = C.GetDoubleStatStrength("slowdown");
-            };
+                C.SetAffliction(ID, C.GetFloatStat("slowdown"));
+            })
+            .Build()
+            );
 
         // Stun 
         // Constant; too complicated otherwise.
         // Type: Functionality
         // Effects: Used to stun the character.
-        AfflictionsToAdd["stun"] = new("stun", 0, 30, 0, AfflictionPriority.HIGH);
-        AfflictionsToAdd["stun"].Const = true;
-        AfflictionsToAdd["stun"].UpdateAction =
-            (NTHuman C, string ID, LimbType Limb, NTHumanNonLimbAffData AffData) =>
+        AfflictionsToAdd.Add(
+            builder.New("stun")
+            .SetStrengths(0, 30, 0)
+            .IsConst(true)
+            .SetUpdateAction((C,ID,Limb,dT) =>
             {
-                if (C.GetNonLimbAffStrength("spinalcordinjury") > 0
-                    || C.GetNonLimbAffStrength("anesthesia") > 15
-                    || NTC.HasSymptom(C, "unconsciousness"))
+                if (C.GetAfflictionStrength("spinalcordinjury") > 0
+                   || C.GetAfflictionStrength("anesthesia") > 15
+                   || C.HasSymptom("unconsciousness"))
                 {
-                    AffData.Strength = Math.Max(5, AffData.Strength);
+                    C.SetAffliction(ID, Math.Max(5, C.GetAfflictionStrength(ID)));
                 }
                 else
                 {
-                    AffData.Strength = 0;
+                    C.SetAffliction(ID, 0);
                 }
-            };
+            })
+            .Build()
+            );
 
         // Stun 
         // Constant; too complicated otherwise.
         // Type: Functionality
         // Effects: Used to stun the character.
-        AfflictionsToAdd["combatstimulant"] = new("combatstimulant", 0, 100, 0, AfflictionPriority.HIGH);
-
-        // Now add these afflictions.
-        foreach (KeyValuePair<string, NTNonLimbAffliction> Pair in AfflictionsToAdd)
-        {
-            NTAfflictions.RegisterAffliction(Pair.Key, Pair.Value);
-        }
+        AfflictionsToAdd.Add(
+            builder.New("combatstimulant")
+            .Build());
 
         // Surgical Incision
         // Not constant; gets applied by other sources.
         // Type: Limb Specific, Surgical
         // Caused By: Scalpel.
         // Effects: Blood Loss, Traumatic Shock, increases self in XML.
-        LimbAfflictionsToAdd["surgeryincision"] = new("surgeryincision", 0, 100, 0);
+        AfflictionsToAdd.Add(
+            builder.New("surgeryincision")
+            .IsLimbSpecific(true)
+            .Build());
 
         // Clamped Bleeding
         // Not constant; gets applied by other sources.
         // Type: Limb Specific, Surgical
         // Caused By: Hemostat.
         // Effects: Prevents Surgery Incision Blood Loss (Scalpel XML).
-        LimbAfflictionsToAdd["clampedbleeding"] = new("clampedbleeding", 0, 100, 0);
+        AfflictionsToAdd.Add(
+            builder.New("clampedbleeding")
+            .IsLimbSpecific(true)
+            .Build());
 
         // Drilled Bones
         // Not constant; gets applied by other sources.
         // Type: Limb Specific, Surgical
         // Caused By: Surgical Drill.
         // Effects: Applies Traumatic Shock (XML).
-        LimbAfflictionsToAdd["drilledbones"] = new("drilledbones", 0, 100, 0);
+        AfflictionsToAdd.Add(
+            builder.New("drilledbones")
+            .IsLimbSpecific(true)
+            .Build());
 
         // Retracted Skin
         // Not constant; gets applied by other sources.
         // Type: Limb Specific, Surgical
         // Caused By: Skin Retractors.
         // Effects: Applies Traumatic Shock (XML).
-        LimbAfflictionsToAdd["retractedskin"] = new("retractedskin", 0, 100, 0);
+        AfflictionsToAdd.Add(
+            builder.New("retractedskin")
+            .IsLimbSpecific(true)
+            .Build());
 
         // Sutured Incision
         // Not constant; gets applied by other sources.
         // Type: Limb Specific, Surgical
         // Caused By: Stitching a Surgical Incision.
         // Effects: None.
-        LimbAfflictionsToAdd["suturedi"] = new("suturedi", 0, 100, 0, AfflictionPriority.MEDIUM);
-        LimbAfflictionsToAdd["suturedi"].UpdateAction =
-           (NTHuman C, string ID, LimbType Limb, NTHumanLimbAffData AffData) =>
-           {
-               // Passive Decrease
-               // Originally had a maxstrength of 100, and reduced by 1 per second in XML.
-               // Adjusted, that became 4 per 4 seconds.
-               AffData.Strength[Limb] -= 4;
-           };
+        AfflictionsToAdd.Add(
+            builder.New("suturedi")
+            .IsLimbSpecific(true)
+            .SetPriority(AfflictionPriority.MEDIUM)
+            .SetUpdateAction((C, ID, Limb, dT) =>
+            {
+                // Passive Decrease
+                // Originally had a maxstrength of 100, and reduced by 1 per second in XML.
+                // Adjusted, that became 0.44 per 2 seconds.
+                // math ain't mathing -cookie
+                C.AddAfflictionLimb(ID, Limb, -1f * dT);
+            })
+            .Build()
+            );
 
         // Sutured Wound
         // Not constant; gets applied by other sources.
         // Type: Limb Specific, Surgical
         // Caused By: Stitching an Open Wound.
         // Effects: Vitality damage proportional to affliction strength.
-        LimbAfflictionsToAdd["suturedw"] = new("suturedw", 0, 100, 0, AfflictionPriority.HIGH);
-        LimbAfflictionsToAdd["suturedi"].UpdateAction =
-           (NTHuman C, string ID, LimbType Limb, NTHumanLimbAffData AffData) =>
-           {
-               // Passive Decrease
-               // Originally had a maxstrength of 100, and reduced by 1 per second in XML.
-               // Adjusted, that became 0.44 per 2 seconds.
-               AffData.Strength[Limb] -= 0.4;
-           };
+        AfflictionsToAdd.Add(
+            builder.New("suturedw")
+            .IsLimbSpecific(true)
+            .SetUpdateAction((C, ID, Limb, dT) =>
+            {
+                // Passive Decrease
+                // Originally had a maxstrength of 100, and reduced by 1 per second in XML.
+                // Adjusted, that became 0.44 per 2 seconds.
+                // math ain't mathing -cookie
+                C.AddAfflictionLimb(ID, Limb, -0.3f * dT);
+            })
+            .Build()
+            );
 
         // Sawed Bones
         // Not constant; gets applied by other sources.
         // Type: Limb Specific, Surgical
         // Caused By: Surgical Saw.
         // Effects: Applies Traumatic Shock (XML).
-        LimbAfflictionsToAdd["sawedbones"] = new("sawedbones", 0, 100, 0);
+        AfflictionsToAdd.Add(
+            builder.New("sawedbones")
+            .IsLimbSpecific(true)
+            .Build());
 
         // Bleeding
         // Not constant; gets applied by other sources.
         // Type: Limb Specific, Basegame Override
         // Caused By: Damage, failed skill checks.
         // Effects: Blood Loss (Hardcoded?)
-        LimbAfflictionsToAdd["bleeding"] = new("bleeding", 0, 100, 0, AfflictionPriority.HIGH);
-        LimbAfflictionsToAdd["bleeding"].UpdateAction =
-            (NTHuman C, string ID, LimbType Limb, NTHumanLimbAffData AffData) =>
+        AfflictionsToAdd.Add(
+            builder.New("bleeding")
+            .IsLimbSpecific(true)
+            .SetUpdateAction((C, ID, Limb, dT) =>
             {
-                if (!(AffData.Strength[Limb] > 0)) return;
+                float str = C.GetAfflictionStrengthLimb(ID, Limb);
+
+                if (!(str > 0)) return;
 
                 // Passive Regeneration
-                AffData.Strength[Limb] -= (C.GetDoubleStatStrength("clottingrate") * 0.1
-                    + Math.Clamp(C.GetLimbAffStrength("bandaged", Limb), 0, 1) * 0.5
-                    + Math.Clamp(C.GetLimbAffStrength("bandageddirty", Limb), 0, 1) * 0.25
-                ) * NT.DeltaTime;
-            };
+                C.AddAfflictionLimb(ID, Limb, -(C.GetFloatStat("clottingrate") * 0.1f
+                    + Math.Clamp(C.GetAfflictionStrengthLimb("bandaged", Limb), 0, 1) * 0.5f
+                    + Math.Clamp(C.GetAfflictionStrengthLimb("bandageddirty", Limb), 0, 1) * 0.25f
+                ) * dT);
+
+            })
+            .Build()
+            );
 
         // Stimulated Bone Growth
         // Not constant; gets applied by other sources.
         // Type: Limb Specific
         // Caused By: Damage, failed skill checks.
         // Effects: Decreases bone damage.
-        LimbAfflictionsToAdd["stimulatedbonegrowth"] = new("stimulatedbonegrowth", 0, 100, 0, AfflictionPriority.MEDIUM);
-        LimbAfflictionsToAdd["stimulatedbonegrowth"].UpdateAction =
-            (NTHuman C, string ID, LimbType Limb, NTHumanLimbAffData AffData) =>
+        AfflictionsToAdd.Add(
+            builder.New("stimulatedbonegrowth")
+            .SetPriority(AfflictionPriority.MEDIUM)
+            .IsLimbSpecific(true)
+            .SetUpdateAction((C, ID, Limb, dT) =>
             {
-                if (!(AffData.Strength[Limb] > 0)) return;
+                float str = C.GetAfflictionStrengthLimb(ID, Limb);
 
-                // Passive Regeneration
-                // Originally had a maxstrength of 100, and reduced by 0.5 per second in XML.
-                // Adjusted, that became 1 per 2 seconds.
-                AffData.Strength[Limb] -= 1;
-            };
+                if (!(str > 0)) return;
+
+                C.AddAfflictionLimb(ID, Limb, -0.5f * dT);
+            })
+            .Build()
+            );
 
         // Arm + Leg Fractures
         // Not constant; gets applied by other sources.
         // Type: Limb Specific
         // Caused By: Damage, failed skill checks.
         // Effects: Pain, lost ability of limb, Internal Damage.
-        LimbAfflictionsToAdd["fracturedextremity"] = new("fracturedextremity", 0, 100, 0, AfflictionPriority.HIGH);
-        LimbAfflictionsToAdd["fracturedextremity"].UpdateAction =
-            (NTHuman C, string ID, LimbType Limb, NTHumanLimbAffData AffData) =>
-            {
-                if (!(AffData.Strength[Limb] > 0)) return;
+        AfflictionsToAdd.Add(
+           builder.New("fracturedextremity")
+           .IsLimbSpecific(true)
+           .SetUpdateAction((C, ID, Limb, dT) =>
+           {
+               float str = C.GetAfflictionStrengthLimb(ID, Limb);
 
-                bool HasCast = HF.HasAfflictionLimb(C.Human, "plastercast", Limb);
-                bool HasBandage = HF.HasAfflictionLimb(C.Human, "bandaged", Limb) || HF.HasAfflictionLimb(C.Human, "bandageddirty", Limb);
+               if (!(str > 0)) return;
 
-                // Arms: halt progression between 90-100 if bandaged
-                if (Limb == LimbType.LeftArm || Limb == LimbType.RightArm)
-                {
-                    if (AffData.Strength[Limb] > 90 && AffData.Strength[Limb] < 100 && HasBandage)
-                    {
-                        return;
-                    }
-                }
+               bool HasCast = HF.HasAfflictionLimb(C.Human, "plastercast", Limb);
+               bool HasBandage = HF.HasAfflictionLimb(C.Human, "bandaged", Limb) || HF.HasAfflictionLimb(C.Human, "bandageddirty", Limb);
 
-                // Passive Increase if no cast
-                AffData.Strength[Limb] += 2 * HF.BoolToNum(!HasCast) * NT.DeltaTime;
+               // Arms: halt progression between 90-100 if bandaged
+               if (Limb == LimbType.LeftArm || Limb == LimbType.RightArm)
+               {
+                   if (str > 90 && str < 100 && HasBandage)
+                   {
+                       return;
+                   }
+               }
 
-                // Legs: adrenaline causes Bleeding if no cast and not ragdolled
-                if (Limb == LimbType.LeftLeg || Limb == LimbType.RightLeg)
-                {
-                    if (!HasCast && HF.HasAffliction(C.Human, "afadrenaline", 1) && !C.Human.IsRagdolled)
-                    {
-                        HF.AddAfflictionLimb(C.Human, "bleeding", Limb, 15, null);
-                    }
-                }
+               // Passive Increase if no cast
+               C.AddAfflictionLimb(ID, Limb, 2 * HF.BoolToNum(!HasCast) * dT);
 
-                // Internal Damage if no cast
-                if (!HasCast && !C.GetBoolStatStrength("sedated") && (HF.LimbIsExtremity(Limb) || !HasBandage))
-                {
-                    HF.AddAfflictionLimb(C.Human, "internaldamage", Limb, (float)(0.1 * NT.DeltaTime), null);
-                }
-            };
+               // Legs: adrenaline causes Bleeding if no cast and not ragdolled
+               if (Limb == LimbType.LeftLeg || Limb == LimbType.RightLeg)
+               {
+                   if (!HasCast && HF.HasAffliction(C.Human, "afadrenaline", 1) && !C.Human.IsRagdolled)
+                   {
+                       C.AddAfflictionLimb("bleeding", Limb, 15);
+                   }
+               }
+
+               // Internal Damage if no cast
+               if (!HasCast && !C.GetBoolStat("sedated") && (HF.LimbIsExtremity(Limb) || !HasBandage))
+               {
+                   C.AddAfflictionLimb("internaldamage", Limb, 0.1f * dT);
+               }
+           })
+           .Build()
+           );
 
         // Arm + Leg Dislocation
         // Not constant; gets applied by other sources.
         // Type: Limb Specific
         // Caused By: Damage, failed skill checks.
         // Effects: Pain (XML), lost ability of limb, Internal Damage.
-        LimbAfflictionsToAdd["dislocation"] = new("dislocation", 0, 100, 0, AfflictionPriority.HIGH);
-        LimbAfflictionsToAdd["dislocation"].UpdateAction =
-            (NTHuman C, string ID, LimbType Limb, NTHumanLimbAffData AffData) =>
+        AfflictionsToAdd.Add(
+           builder.New("dislocation")
+           .IsLimbSpecific(true)
+           .SetUpdateAction((C, ID, Limb, dT) =>
+           {
+               float str = C.GetAfflictionStrengthLimb(ID, Limb);
+
+               if (!(str > 0)) return;
+
+               // If painlessness is present, don't cause problems
+               if (C.GetBoolStat("sedated")) return;
+
+               if (C.GetAfflictionStrengthLimb("plastercast", Limb) <= 0 && C.GetAfflictionStrengthLimb("bandaged", Limb) <= 0 && C.GetAfflictionStrengthLimb("bandageddirty", Limb) <= 0)
+               {
+                   C.AddAfflictionLimb("internaldamage", Limb, 0.1f * dT);
+                   if (Limb == LimbType.LeftLeg || Limb == LimbType.RightLeg)
+                   {
+                       C.SetFloatStat("speedmultiplier", C.GetFloatStat("speedmultiplier") * 0.8f); // slow the character down.
+                   }
+               }
+           })
+           .Build()
+           );
+
+       // Tourniquet around Extremity
+       // Not constant; gets applied by other sources.
+       // Type: Limb Specific
+       // Caused By: Tourniquet item.
+       // Effects: Reduces Bleeding (XML), Gangrene.
+       AfflictionsToAdd.Add(
+            builder.New("tourniqueted")
+            .IsLimbSpecific(true)
+            .SetUpdateAction((C, ID, Limb, dT) =>
             {
-                if (!(AffData.Strength[Limb] > 0)) return;
+                float str = C.GetAfflictionStrengthLimb(ID, Limb);
 
-                // If painlessness is present, don't cause problems
-                if (C.GetBoolStatStrength("sedated")) return;
+                if (!(str > 0)) return;
 
-                if (C.GetLimbAffStrength("plastercast", Limb) <= 0 && C.GetLimbAffStrength("bandaged", Limb) <= 0 && C.GetLimbAffStrength("bandageddirty", Limb) <= 0)
-                {
-                    HF.AddAfflictionLimb(C.Human, "internaldamage", Limb, (float)(0.1 * NT.DeltaTime), null);
-                    if (Limb == LimbType.LeftLeg || Limb == LimbType.RightLeg)
-                    {
-                        C.SetDoubleStatStrength("speedmultiplier", C.GetDoubleStatStrength("speedmultiplier") * 0.8); // slow the character down.
-                    }
-                }
-            };
-
-        // Tourniquet around Extremity
-        // Not constant; gets applied by other sources.
-        // Type: Limb Specific
-        // Caused By: Tourniquet item.
-        // Effects: Reduces Bleeding (XML), Gangrene.
-        LimbAfflictionsToAdd["tourniqueted"] = new("tourniqueted", 0, 100, 0, AfflictionPriority.HIGH);
-        LimbAfflictionsToAdd["tourniqueted"].UpdateAction =
-            (NTHuman C, string ID, LimbType Limb, NTHumanLimbAffData AffData) =>
-            {
-                if (!(AffData.Strength[Limb] > 0)) return;
-
-                // Effects:
-                // Gangrene
-                HF.AddAfflictionLimb(C.Human, "gangrene", Limb, (float)(HF.BoolToNum(HF.Chance(0.1f)) * 0.5 * NTConfig.Get("NT_gangrenespeed", 1) * NT.DeltaTime), null);
-            };
-
+                C.AddAfflictionLimb("gangrene", Limb, HF.BoolToNum(HF.Chance(0.1f)) * 0.5f * NTConfig.Get("NT_gangrenespeed", 1) * dT);
+            })
+            .Build()
+            );
 
         // Plaster Cast
         // Not constant; gets applied by other sources.
         // Type: Limb Specific
         // Caused By: Gypsum item.
         // Effects: Heals fractures, slows character.
-        LimbAfflictionsToAdd["plastercast"] = new("plastercast", 0, 100, 0, AfflictionPriority.HIGH);
-        LimbAfflictionsToAdd["plastercast"].UpdateAction =
-            (NTHuman C, string ID, LimbType Limb, NTHumanLimbAffData AffData) =>
+        AfflictionsToAdd.Add(
+            builder.New("plastercast")
+            .IsLimbSpecific(true)
+            .SetUpdateAction((C, ID, Limb, dT) =>
             {
-                if (!(AffData.Strength[Limb] > 0)) return;
+                float str = C.GetAfflictionStrengthLimb(ID, Limb);
+
+                if (!(str > 0)) return;
 
                 // Effects:
                 // Leg slowdown
                 if (Limb == LimbType.LeftLeg || Limb == LimbType.RightLeg)
                 {
-                    C.SetDoubleStatStrength("speedmultiplier", C.GetDoubleStatStrength("speedmultiplier") * 0.8);
+                    C.SetFloatStat("speedmultiplier", C.GetFloatStat("speedmultiplier") * 0.8f);
                 }
 
                 // Heal Fracture
-                HF.BreakLimb(C.Human, Limb, (float)(-(100.0 / 300.0) * NT.DeltaTime));
-            };
+                HF.BreakLimb(C.Human, Limb, -(100.0f / 300.0f) * dT);
+            })
+            .Build()
+            );
 
         // Arterial Cut on Extremity
         // Not constant; gets applied by other sources.
         // Type: Limb Specific
         // Caused By: Damage.
         // Effects: Blood Loss (XML).
-        LimbAfflictionsToAdd["arterialcut"] = new("arterialcut", 0, 100, 0);
+        AfflictionsToAdd.Add(
+            builder.New("arterialcut")
+            .Build()
+            );
 
         // Gangrene
         // Not constant; gets applied by other sources.
         // Type: Limb Specific
         // Caused By: Tourniquets, Sepsis, Aortic Balloon (XML).
         // Effects: Blood Loss (XML).
-        LimbAfflictionsToAdd["gangrene"] = new("gangrene", 0, 100, 0, AfflictionPriority.HIGH);
-        LimbAfflictionsToAdd["gangrene"].UpdateAction =
-            (NTHuman C, string ID, LimbType Limb, NTHumanLimbAffData AffData) =>
+        AfflictionsToAdd.Add(
+            builder.New("gangrene")
+            .IsLimbSpecific(true)
+            .SetUpdateAction((C, ID, Limb, dT) =>
             {
-                if (!(AffData.Strength[Limb] > 0)) return;
+                float str = C.GetAfflictionStrengthLimb(ID, Limb);
+
+                if (!(str > 0)) return;
 
                 // Limb must be an extremity
                 if (!HF.LimbIsExtremity(Limb)) return;
@@ -2352,273 +2482,311 @@ public class NTAfflictionsToAdd
                 // Surgical amputation prevents Gangrene on that stump
                 if (HF.LimbIsSurgicallyAmputated(C.Human, Limb))
                 {
-                    AffData.Strength[Limb] = 0;
+                    C.SetAfflictionLimb(ID, Limb, 0);
                     return;
                 }
 
                 // Passive Regeneration below 15
-                if (AffData.Strength[Limb] < 15)
+                if (str < 15)
                 {
-                    AffData.Strength[Limb] -= 0.01 * C.GetDoubleStatStrength("healingrate") * NT.DeltaTime;
+                    C.AddAfflictionLimb(ID, Limb, -0.01f * C.GetFloatStat("healingrate") * dT);
                 }
-            };
+            })
+            .Build()
+            );
 
         // Bandage applied to Limb
         // Not constant; gets applied by other sources.
         // Type: Limb Specific
         // Caused By: Bandage items.
         // Effects: Reduces bleeding, heals wounds, reduces infection.
-        LimbAfflictionsToAdd["bandaged"] = new("bandaged", 0, 100, 0, AfflictionPriority.HIGH);
-        LimbAfflictionsToAdd["bandaged"].UpdateAction =
-            (NTHuman C, string ID, LimbType Limb, NTHumanLimbAffData AffData) =>
+        AfflictionsToAdd.Add(
+            builder.New("bandaged")
+            .IsLimbSpecific(true)
+            .SetUpdateAction((C, ID, Limb, dT) =>
             {
-                if (!(AffData.Strength[Limb] > 0)) return;
 
-                double WoundDamage = C.GetLimbAffStrength("firstdegreeburn", Limb)
-                    + C.GetLimbAffStrength("seconddegreeburn", Limb)
-                    + C.GetLimbAffStrength("thirddegreeburn", Limb)
-                    + C.GetLimbAffStrength("lacerations", Limb)
-                    + C.GetLimbAffStrength("foreignbody", Limb)
-                    + C.GetLimbAffStrength("arterialcut", Limb)
-                    + C.GetLimbAffStrength("infectedwound", Limb);
+                float str = C.GetAfflictionStrengthLimb(ID, Limb);
 
-                double BandageDirtifySpeed = 0.1
-                    + Math.Clamp(WoundDamage / 100, 0, 0.4)
-                    + C.GetLimbAffStrength("bleeding", Limb) / 20;
+                if (!(str > 0)) return;
+
+                float WoundDamage = C.GetAfflictionStrengthLimb("firstdegreeburn", Limb)
+                    + C.GetAfflictionStrengthLimb("seconddegreeburn", Limb)
+                    + C.GetAfflictionStrengthLimb("thirddegreeburn", Limb)
+                    + C.GetAfflictionStrengthLimb("lacerations", Limb)
+                    + C.GetAfflictionStrengthLimb("foreignbody", Limb)
+                    + C.GetAfflictionStrengthLimb("arterialcut", Limb)
+                    + C.GetAfflictionStrengthLimb("infectedwound", Limb);
+                
+                float BandageDirtifySpeed = 0.1f
+                    + Math.Clamp(WoundDamage / 100, 0, 0.4f)
+                    + C.GetAfflictionStrengthLimb("bleeding", Limb) / 20;
 
                 // Dirtify bandage over time
-                AffData.Strength[Limb] -= BandageDirtifySpeed * NT.DeltaTime;
+                C.AddAfflictionLimb(ID, Limb, -BandageDirtifySpeed * dT);
 
-                float DirtyBandageStrength = (float)C.GetLimbAffStrength("bandageddirty", Limb);
+                float DirtyBandageStrength = C.GetAfflictionStrengthLimb("bandageddirty", Limb);
 
                 // Transition to dirty bandage
-                if (AffData.Strength[Limb] <= 0.5f)
+                if (str <= 0.5f)
                 {
-                    HF.SetAfflictionLimb(C.Human, "bandageddirty", Limb, (float)Math.Max(DirtyBandageStrength, 1), null);
-                    AffData.Strength[Limb] = 0f;
+                    
+                    C.SetAfflictionLimb("bandageddirty", Limb, Math.Max(DirtyBandageStrength, 1));
+                    C.SetAfflictionLimb(ID, Limb, 0);
                 }
 
                 if (DirtyBandageStrength > 0)
                 {
-                    HF.AddAfflictionLimb(C.Human, "bandageddirty", Limb, (float)(BandageDirtifySpeed * NT.DeltaTime), null);
+                    C.AddAfflictionLimb("bandageddirty", Limb, BandageDirtifySpeed * dT);
                 }
 
                 // Effects:
                 // Slowdown
-                C.SetDoubleStatStrength("speedmultiplier", C.GetDoubleStatStrength("speedmultiplier") * 0.9);
+                C.SetFloatStat("speedmultiplier", C.GetFloatStat("speedmultiplier") * 0.9f);
 
                 // Wound Healing
-                HF.AddAfflictionLimb(C.Human, "lacerations", Limb, (float)(-Math.Clamp(AffData.Strength[Limb], 0, 1) * 0.1 * NT.DeltaTime), null);
-                HF.AddAfflictionLimb(C.Human, "firstdegreeburn", Limb, (float)(-Math.Clamp(AffData.Strength[Limb], 0, 1) * 0.1 * NT.DeltaTime), null);
-                HF.AddAfflictionLimb(C.Human, "seconddegreeburn", Limb, (float)(-Math.Clamp(AffData.Strength[Limb], 0, 1) * 0.1 * NT.DeltaTime), null);
-                HF.AddAfflictionLimb(C.Human, "thirddegreeburn", Limb, (float)(-Math.Clamp(AffData.Strength[Limb], 0, 1) * 0.1 * NT.DeltaTime), null);
+                C.AddAfflictionLimb("lacerations", Limb, -Math.Clamp(str, 0f, 1f) * 0.1f * dT);
+                C.AddAfflictionLimb("firstdegreeburn", Limb, -Math.Clamp(str, 0f, 1f) * 0.1f * dT);
+                C.AddAfflictionLimb("seconddegreeburn", Limb, -Math.Clamp(str, 0f, 1f) * 0.1f * dT);
+                C.AddAfflictionLimb("thirddegreeburn", Limb, -Math.Clamp(str, 0f, 1f) * 0.1f * dT);
+
 
                 // Infection Healing
-                if (C.GetLimbAffStrength("infectedwound", Limb) > 0)
+                if (C.GetAfflictionStrengthLimb("infectedwound", Limb) > 0)
                 {
-                    HF.AddAfflictionLimb(C.Human, "infectedwound", Limb, (float)(-Math.Clamp(AffData.Strength[Limb], 0, 1) * 1.5 * NT.DeltaTime), null);
+                    C.AddAfflictionLimb("infectedwound", Limb, -Math.Clamp(str, 0f, 1f) * 1.5f * dT);
                 }
-            };
+            })
+            .Build()
+            );
 
         // Dirty Bandage around Limb
         // Not constant; gets applied by other sources.
         // Type: Limb Specific
         // Caused By: Dirtyfication.
         // Effects: Reduces bleeding, heals wounds, causes infection.
-        LimbAfflictionsToAdd["bandageddirty"] = new("bandageddirty", 0, 100, 0, AfflictionPriority.HIGH);
-        LimbAfflictionsToAdd["bandageddirty"].UpdateAction =
-            (NTHuman C, string ID, LimbType Limb, NTHumanLimbAffData AffData) =>
+        AfflictionsToAdd.Add(
+            builder.New("bandageddirty")
+            .IsLimbSpecific(true)
+            .SetUpdateAction((C, ID, Limb, dT) =>
             {
-                if (!(AffData.Strength[Limb] > 0)) return;
+                float str = C.GetAfflictionStrengthLimb(ID, Limb);
 
-                float BandagedStrength = (float)C.GetLimbAffStrength("bandaged", Limb);
+                if (!(str > 0)) return;
+
+                float BandagedStrength = C.GetAfflictionStrengthLimb("bandaged", Limb);
                 if (BandagedStrength > 0)
                 {
-                    HF.SetAfflictionLimb(C.Human, "bandaged", Limb, 0);
+                    C.SetAfflictionLimb("bandaged", Limb, 0);
                 }
 
-                double WoundDamage = C.GetLimbAffStrength("firstdegreeburn", Limb)
-                    + C.GetLimbAffStrength("seconddegreeburn", Limb)
-                    + C.GetLimbAffStrength("thirddegreeburn", Limb)
-                    + C.GetLimbAffStrength("lacerations", Limb)
-                    + C.GetLimbAffStrength("foreignbody", Limb)
-                    + C.GetLimbAffStrength("arterialcut", Limb)
-                    + C.GetLimbAffStrength("infectedwound", Limb);
+                float WoundDamage = C.GetAfflictionStrengthLimb("firstdegreeburn", Limb)
+                    + C.GetAfflictionStrengthLimb("seconddegreeburn", Limb)
+                    + C.GetAfflictionStrengthLimb("thirddegreeburn", Limb)
+                    + C.GetAfflictionStrengthLimb("lacerations", Limb)
+                    + C.GetAfflictionStrengthLimb("foreignbody", Limb)
+                    + C.GetAfflictionStrengthLimb("arterialcut", Limb)
+                    + C.GetAfflictionStrengthLimb("infectedwound", Limb);
 
-                double BandageDirtifySpeed = 0.1
-                    + Math.Clamp(WoundDamage / 100, 0, 0.4)
-                    + C.GetLimbAffStrength("bleeding", Limb) / 20;
+                float BandageDirtifySpeed = 0.1f
+                    + Math.Clamp(WoundDamage / 100, 0, 0.4f)
+                    + C.GetAfflictionStrengthLimb("bleeding", Limb) / 20;
 
-                AffData.Strength[Limb] += BandageDirtifySpeed * NT.DeltaTime;
+                C.AddAfflictionLimb(ID, Limb, BandageDirtifySpeed * dT);
 
                 // Effects:
                 // Slowdown
-                C.SetDoubleStatStrength("speedmultiplier", C.GetDoubleStatStrength("speedmultiplier") * 0.9);
+                C.SetFloatStat("speedmultiplier", C.GetFloatStat("speedmultiplier") * 0.9f);
 
                 // Wound Healing
-                HF.AddAfflictionLimb(C.Human, "lacerations", Limb, (float)(-Math.Clamp(AffData.Strength[Limb], 0, 1) * 0.05 * NT.DeltaTime), null);
-                HF.AddAfflictionLimb(C.Human, "firstdegreeburn", Limb, (float)(-Math.Clamp(AffData.Strength[Limb], 0, 1) * 0.05 * NT.DeltaTime), null);
-                HF.AddAfflictionLimb(C.Human, "seconddegreeburn", Limb, (float)(-Math.Clamp(AffData.Strength[Limb], 0, 1) * 0.05 * NT.DeltaTime), null);
-                HF.AddAfflictionLimb(C.Human, "thirddegreeburn", Limb, (float)(-Math.Clamp(AffData.Strength[Limb], 0, 1) * 0.05 * NT.DeltaTime), null);
-            };
+
+                C.AddAfflictionLimb("lacerations", Limb, -Math.Clamp(str, 0f, 1f) * 0.05f * dT);
+                C.AddAfflictionLimb("firstdegreeburn", Limb, -Math.Clamp(str, 0f, 1f) * 0.05f * dT);
+                C.AddAfflictionLimb("seconddegreeburn", Limb, -Math.Clamp(str, 0f, 1f) * 0.05f * dT);
+                C.AddAfflictionLimb("thirddegreeburn", Limb, -Math.Clamp(str, 0f, 1f) * 0.05f * dT);
+            })
+            .Build()
+            );
 
         // Gel Coolant Pack applied to Limb
         // Not constant; gets applied by other sources.
         // Type: Limb Specific
         // Caused By: Gel Coolant Pack.
         // Effects: Amplifies healing, slows character.
-        LimbAfflictionsToAdd["iced"] = new("iced", 0, 100, 0, AfflictionPriority.HIGH);
-        LimbAfflictionsToAdd["iced"].UpdateAction =
-            (NTHuman C, string ID, LimbType Limb, NTHumanLimbAffData AffData) =>
+        AfflictionsToAdd.Add(
+            builder.New("iced")
+            .IsLimbSpecific(true)
+            .SetUpdateAction((C, ID, Limb, dT) =>
             {
-                if (!(AffData.Strength[Limb] > 0)) return;
+                float str = C.GetAfflictionStrengthLimb(ID, Limb);
+
+                if (!(str > 0)) return;
 
                 // Passive Decrease
-                AffData.Strength[Limb] -= 1.7 * NT.DeltaTime;
+                C.AddAfflictionLimb(ID, Limb, -1.7f * dT);
 
                 // Effects:
                 // Slowdown (5% per limb)
-                C.SetDoubleStatStrength("speedmultiplier", C.GetDoubleStatStrength("speedmultiplier") * 0.95);
-
+                C.SetFloatStat("speedmultiplier", C.GetFloatStat("speedmultiplier") * 0.95f);
+                
                 // Effects:
                 // Reduce Internal Bleeding if on Torso
                 if (Limb == LimbType.Torso)
                 {
-                    C.GetAffData("internalbleeding").Strength -= (0.2 * NT.DeltaTime);
+                    C.AddAffliction("internalbleeding", -0.2f * dT);
                 }
 
                 // Heal Blunt Force Trauma
-                HF.AddAfflictionLimb(C.Human, "blunttrauma", Limb, (float)(-Math.Clamp(AffData.Strength[Limb], 0, 1) * 0.3 * C.GetDoubleStatStrength("healingrate") * NT.DeltaTime), null);
-            };
+                C.AddAfflictionLimb("blunttrauma", Limb, -Math.Clamp(str, 0f, 1f) * 0.3f * C.GetFloatStat("healingrate") * dT);
+            })
+            .Build()
+            );
 
         // Antibiotic Ointment applied to Limb
         // Not constant; gets applied by other sources.
         // Type: Limb Specific
         // Caused By: Antibiotic Ointment.
         // Effects: Amplifies healing.
-        LimbAfflictionsToAdd["ointmented"] = new("ointmented", 0, 100, 0, AfflictionPriority.MEDIUM);
-        LimbAfflictionsToAdd["ointmented"].UpdateAction =
-            (NTHuman C, string ID, LimbType Limb, NTHumanLimbAffData AffData) =>
+        AfflictionsToAdd.Add(
+            builder.New("ointmented")
+            .IsLimbSpecific(true)
+            .SetPriority(AfflictionPriority.MEDIUM)
+            .SetUpdateAction((C, ID, Limb, dT) =>
             {
-                if (!(AffData.Strength[Limb] > 0)) return;
+                float str = C.GetAfflictionStrengthLimb(ID, Limb);
+
+                if (!(str > 0)) return;
 
                 // Passive Decrease
-                AffData.Strength[Limb] -= 1.2 * NT.DeltaTime;
+                C.AddAfflictionLimb(ID, Limb, -1.2f * dT);
 
                 // Effects:
                 // Reduce Infected Wounds
-                if (C.GetLimbAffStrength("infectedwound", Limb) <= 60)
+                if (C.GetAfflictionStrengthLimb("infectedwound", Limb) <= 60)
                 {
-                    HF.AddAfflictionLimb(C.Human, "infectedwound", Limb, (float)(-3 * NT.DeltaTime), null);
+                    C.AddAfflictionLimb("infectedwound", Limb, -3f * dT);
                 }
-            };
+            })
+            .Build()
+            );
 
         // Infected Wound
         // Not constant; gets applied by other sources.
         // Type: Limb Specific
         // Caused By: Burns, Foreign Bodies, Lacerations, Explosive Damage, Gunshot Wounds.
         // Effects: Inflammation.
-        LimbAfflictionsToAdd["infectedwound"] = new("infectedwound", 0, 100, 0, AfflictionPriority.HIGH);
-        LimbAfflictionsToAdd["infectedwound"].UpdateAction =
-            (NTHuman C, string ID, LimbType Limb, NTHumanLimbAffData AffData) =>
+        AfflictionsToAdd.Add(
+            builder.New("infectedwound")
+            .IsLimbSpecific(true)
+            .SetUpdateAction((C, ID, Limb, dT) =>
             {
-                if (!(AffData.Strength[Limb] > 0)) return;
+                float str = C.GetAfflictionStrengthLimb(ID, Limb);
+
+                if (!(str > 0)) return;
 
                 // Does not progress in Stasis
-                if (C.GetBoolStatStrength("stasis")) return;
+                if (C.GetBoolStat("stasis")) return;
 
                 // Passive decrease from immunity, bandaged, ointmented
-                double InfectIndex = (-C.GetBloodAffData("immunity").PrevStrength / 200
-                    - Math.Clamp(C.GetLimbAffStrength("bandaged", Limb), 0, 1) * 1.5
-                    - C.GetLimbAffStrength("ointmented", Limb) * 3
-                ) * NT.DeltaTime;
+                float InfectIndex = (-C.GetAfflictionStrength("immunity") / 200
+                    - Math.Clamp(C.GetAfflictionStrengthLimb("bandaged", Limb), 0, 1) * 1.5f
+                    - C.GetAfflictionStrengthLimb("ointmented", Limb) * 3
+                ) * dT;
 
                 // Dirty bandage :skull:
-                if (C.GetLimbAffStrength("bandageddirty", Limb) > 10)
+                if (C.GetAfflictionStrengthLimb("bandageddirty", Limb) > 10)
                 {
-                    InfectIndex += (C.GetLimbAffStrength("bandageddirty", Limb) / 20) * NT.DeltaTime;
+                    InfectIndex += (C.GetAfflictionStrengthLimb("bandageddirty", Limb) / 20) * dT;
                 }
 
                 if (InfectIndex > 0)
                 {
-                    InfectIndex *= NTConfig.Get("NT_infectionRate", 1) * Math.Clamp(C.GetLimbAffStrength("iced", Limb), 1, 10);
+                    InfectIndex *= NTConfig.Get("NT_infectionRate", 1) * Math.Clamp(C.GetAfflictionStrengthLimb("iced", Limb), 1, 10);
                 }
 
-                AffData.Strength[Limb] += InfectIndex;
+                C.AddAfflictionLimb(ID, Limb, InfectIndex);
 
                 // Effects:
                 // Inflammation
-                if (AffData.Strength[Limb] > 10)
+                if (str > 10)
                 {
-                    C.GetLimbSymptomData("inflammation").Strength[Limb] += .5 * NT.DeltaTime;
+                    C.AddAfflictionLimb("inflammation", Limb, 0.5f * dT);
                 }
-            };
+            })
+            .Build()
+            );
 
         // Foreign Body
         // Not constant; gets applied by other sources.
         // Type: Limb Specific
         // Caused By: Damage, fractures.
         // Effects: Inflammation, Sepsis.
-        LimbAfflictionsToAdd["foreignbody"] = new("foreignbody", 0, 100, 0, AfflictionPriority.HIGH);
-        LimbAfflictionsToAdd["foreignbody"].UpdateAction =
-            (NTHuman C, string ID, LimbType Limb, NTHumanLimbAffData AffData) =>
+        AfflictionsToAdd.Add(
+            builder.New("foreignbody")
+            .IsLimbSpecific(true)
+            .SetUpdateAction((C, ID, Limb, dT) =>
             {
-                if (!(AffData.Strength[Limb] > 0)) return;
+                float str = C.GetAfflictionStrengthLimb(ID, Limb);
+
+                if (!(str > 0)) return;
 
                 // Passive Decrease
-                if (AffData.Strength[Limb] < 15)
+                if (str < 15)
                 {
-                    AffData.Strength[Limb] -= 0.05 * C.GetDoubleStatStrength("healingrate") * NT.DeltaTime;
+                    C.AddAfflictionLimb(ID, Limb, 0.05f * C.GetFloatStat("healingrate") * dT);
                 }
 
                 // Arterial Cut chance
-                double ForeignBodyAbove20 = AffData.Strength[Limb] >= 20 ? AffData.Strength[Limb] : 0;
-                double ForeignBodyCutChance = Math.Pow(ForeignBodyAbove20 / 100, 6) * 0.5;
+                float ForeignBodyAbove20 = str >= 20 ? str : 0;
+                float ForeignBodyCutChance = (float) Math.Pow(ForeignBodyAbove20 / 100, 6) * 0.5f;
 
-                if (C.GetLimbAffStrength("bleeding", Limb) > 80 || HF.Chance((float)ForeignBodyCutChance))
+                if (C.GetAfflictionStrengthLimb("bleeding", Limb) > 80 || HF.Chance(ForeignBodyCutChance))
                 {
                     HF.ArteryCutLimb(C.Human, Limb);
                 }
 
                 // Effects:
                 // Sepsis
-                double GangreneAbove15 = C.GetLimbAffStrength("gangrene", Limb) >= 15 ? C.GetLimbAffStrength("gangrene", Limb) : 0;
-                double InfectedAbove50 = C.GetLimbAffStrength("infectedwound", Limb) >= 50 ? C.GetLimbAffStrength("infectedwound", Limb) : 0;
+                float GangreneAbove15 = C.GetAfflictionStrengthLimb("gangrene", Limb) >= 15 ? C.GetAfflictionStrengthLimb("gangrene", Limb) : 0;
+                float InfectedAbove50 = C.GetAfflictionStrengthLimb("infectedwound", Limb) >= 50 ? C.GetAfflictionStrengthLimb("infectedwound", Limb) : 0;
 
-                double SepsisChance = GangreneAbove15 / 400
+                float SepsisChance = GangreneAbove15 / 400
                     + InfectedAbove50 / 1000
                     + ForeignBodyCutChance;
 
                 if (HF.Chance((float)SepsisChance))
                 {
-                    C.GetAffData("sepsis").Strength += (NT.DeltaTime * NTConfig.Get("NT_SepsisRate", 1));
+                    C.AddAffliction("sepsis", dT * NTConfig.Get("NT_SepsisRate", 1));
                 }
 
                 // Inflammation
-                if (AffData.Strength[Limb] > 15)
+                if (str > 15)
                 {
-                    C.GetLimbSymptomData("inflammation").Strength[Limb] += .5 * NT.DeltaTime;
+
+                    C.AddAfflictionLimb("inflammation", Limb, 0.5f * dT);
                 }
 
                 // Infected Wounds
                 // Does not progress in Stasis
-                if (C.GetBoolStatStrength("stasis")) return;
+                if (C.GetBoolStat("stasis")) return;
 
-                double ForeignBodyInfectIndex = AffData.Strength[Limb] / 40 * NT.DeltaTime;
-                C.GetLimbAffData("infectedwound").Strength[Limb] += ForeignBodyInfectIndex / 5;
+                float ForeignBodyInfectIndex = str / 40 * dT;
+                C.AddAfflictionLimb("infectedwound", Limb, ForeignBodyInfectIndex / 5);
 
                 // Decrease Immunity
-                C.GetAffData("immunity").Strength -= Math.Clamp(ForeignBodyInfectIndex / 3, 0, 10);
+                C.AddAffliction("immunity", -(Math.Clamp(ForeignBodyInfectIndex / 3, 0, 10)));
 
-                if (C.GetLimbAffStrength("bandageddirty", Limb) > 10)
+                if (C.GetAfflictionStrengthLimb("bandageddirty", Limb) > 10)
                 {
-                    double ForeignBodyDirtyIndex = AffData.Strength[Limb] / 40 * NT.DeltaTime;
-                    C.GetLimbAffData("infectedwound").Strength[Limb] += ForeignBodyInfectIndex / 5;
+                    float ForeignBodyDirtyIndex = str / 40 * dT;
+                    C.AddAffliction("infectedwound", ForeignBodyInfectIndex / 5);
 
                     // Decrease Immunity
-                    C.GetAffData("immunity").Strength -= Math.Clamp(ForeignBodyDirtyIndex / 3, 0, 10);
+                    C.AddAffliction("immunity", -(Math.Clamp(ForeignBodyDirtyIndex / 3, 0, 10)));
                 }
-            };
+            })
+            .Build()
+            );
 
         // Burn
         // Not constant; gets applied by other sources.
@@ -3810,7 +3978,7 @@ public class NTAfflictionsToAdd
         //    (NTHuman C, string ID, LimbType Limb, NTHumanSymptomData AffData) =>
         //    {
         //        if (AffData.Strength <= 0) return;
-        //        C.GetAffData("respiratoryarrest").Strength = 100;
+        //        C.GetAfflictionStrength("respiratoryarrest")= 100;
         //    };
         //SymptomsToAdd["triggersym_seizure"] = new("triggersym_seizure", 0, 100, 0, AfflictionPriority.HIGH);
         //SymptomsToAdd["triggersym_seizure"].Real = false;
@@ -3819,7 +3987,7 @@ public class NTAfflictionsToAdd
         //    (NTHuman C, string ID, LimbType Limb, NTHumanSymptomData AffData) =>
         //    {
         //        if (AffData.Strength <= 0) return;
-        //        C.GetAffData("seizure").Strength = 100;
+        //        C.GetAfflictionStrength("seizure")= 100;
         //    };
         //SymptomsToAdd["triggersym_stroke"] = new("triggersym_stroke", 0, 100, 0, AfflictionPriority.HIGH);
         //SymptomsToAdd["triggersym_stroke"].Real = false;
@@ -3828,7 +3996,7 @@ public class NTAfflictionsToAdd
         //    (NTHuman C, string ID, LimbType Limb, NTHumanSymptomData AffData) =>
         //    {
         //        if (AffData.Strength <= 0) return;
-        //        C.GetAffData("stroke").Strength = 100;
+        //        C.GetAfflictionStrength("stroke")= 100;
         //    };
         //SymptomsToAdd["triggersym_coma"] = new("triggersym_coma", 0, 100, 0, AfflictionPriority.HIGH);
         //SymptomsToAdd["triggersym_coma"].Real = false;
@@ -3837,7 +4005,7 @@ public class NTAfflictionsToAdd
         //    (NTHuman C, string ID, LimbType Limb, NTHumanSymptomData AffData) =>
         //    {
         //        if (AffData.Strength <= 0) return;
-        //        C.GetAffData("seizure").Strength = 100;
+        //        C.GetAfflictionStrength("seizure")= 100;
         //    };
         //SymptomsToAdd["triggersym_cardiacarrest"] = new("triggersym_cardiacarrest", 0, 100, 0, AfflictionPriority.HIGH);
         //SymptomsToAdd["triggersym_cardiacarrest"].Real = false;
@@ -3846,7 +4014,7 @@ public class NTAfflictionsToAdd
         //    (NTHuman C, string ID, LimbType Limb, NTHumanSymptomData AffData) =>
         //    {
         //        if (AffData.Strength <= 0) return;
-        //        C.GetAffData("cardiacarrest").Strength = 100;
+        //        C.GetAfflictionStrength("cardiacarrest")= 100;
         //    };
 
 
