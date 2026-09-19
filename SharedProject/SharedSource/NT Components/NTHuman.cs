@@ -374,15 +374,65 @@ public class NTHuman
         return;
     }
 
-    public Dictionary<LimbType, List<String>> FetchAfflictions(List<AfflictionPriority> priorities)
+    public List<KeyValuePair<string, LimbType>> FetchAfflictions(List<AfflictionPriority> priorities)
     {
         EventService.Call("Neurotrauma.HumanUpdate.FetchAfflictions", this, priorities);
         IReadOnlyCollection<Affliction> afflictions = this.Human.CharacterHealth.GetAllAfflictions();
 
-        var r = new Dictionary<LimbType, List<String>>();
+        var r = new List<KeyValuePair<string, LimbType>>();
 
-        // Remember to add constant afflictions from NTAfflictions.ConstantAfflicitonPrefabs
-        // And ignore those with no Update functions
+        foreach (var aff in this.Human.CharacterHealth.GetAllAfflictions())
+        {
+            if (!NeurotraumaInit.NTAfflLoader.Exists(aff.Identifier.ToString())) continue;
+
+            if (aff.Prefab.LimbSpecific)
+            {
+                r.Add(new KeyValuePair<string,LimbType>(
+                    aff.Prefab.Identifier.ToString(), 
+                    HF.NormalizeLimbType(this.Human.CharacterHealth.GetAfflictionLimb(aff).type)));
+            } else
+            {
+                r.Add(new KeyValuePair<string, LimbType>(
+                    aff.Prefab.Identifier.ToString(),
+                    HF.NormalizeLimbType(aff.Prefab.IndicatorLimb)));
+            }
+        }
+
+        foreach (var affID in NTAfflictions.ConstantAfflicitonPrefabs)
+        {
+            NTAfflictionPrefab? prefab = NeurotraumaInit.NTAfflLoader.Get(affID);
+
+            // technically useless check 
+            if (prefab == null) continue;
+
+            // Limb specific constant affID gets called on every limbs
+            if (prefab.LimbSpecific)
+            {
+                foreach (var limb in HF.LimbsToCheck)
+                {
+                    var kvp = new KeyValuePair<string, LimbType>(affID, limb);
+
+                    if (!r.Contains(kvp)) r.Add(kvp);
+                }
+
+
+            } else
+            {
+                if (!r.Any(x => x.Key == affID))
+                {
+                    AfflictionPrefab? i = AfflictionPrefab.Prefabs.Find(x => x.Identifier == affID);
+
+                    if (i == null) continue;
+
+                    var kvp = new KeyValuePair<string, LimbType>(affID, i.IndicatorLimb);
+
+                    if (!r.Contains(kvp)) r.Add(kvp);
+
+                }
+
+            }
+
+        } 
 
         return r;
         
@@ -392,33 +442,33 @@ public class NTHuman
     /// First calls UpdateSymptoms() then calls every NTAffliction Update function for every NTAffliction in the given list.
     /// </summary>
     /// <param name="AfflictionsList">The list of affliction IDs oredered by LimbType</param>
-    public void UpdateAfflictions(Dictionary<LimbType, List<String>> AfflictionsList)
+    public void UpdateAfflictions(List<KeyValuePair<string, LimbType>> AfflictionsList)
     {
         this.UpdateSymptoms();
 
         EventService.Call("Neurotrauma.HumanUpdate.UpdateAfflictions", this, AfflictionsList);
-        foreach (var limbList in AfflictionsList)
+
+
+        foreach (var kvp in AfflictionsList)
         {
-            var limb = limbList.Key;
+            string affID = kvp.Key;
+            LimbType limb = kvp.Value;
 
-            foreach (var id in limbList.Value)
+            var aff = NeurotraumaInit.NTAfflLoader.Get(affID);
+
+            if (aff == null)
             {
-                
-                var aff = NeurotraumaInit.NTAfflLoader.Get(id);
-
-                if (aff == null)
-                {
-                    HF.PrintError($"Error getting a NTAfflictionPrefab from the ID {id} : The ID does not match any NTAfflictionPrefab!");
-                    continue;
-                }
-
-                float deltaTime = ((float)NTHumanUpdate.GetUpdateInterval(aff.Priority)) / 60f;
-
-                // Should be updated ? Not present ? Set it as default value
-                if (!this.HasAfflictionLimb(id, limb)) this.SetAfflictionLimb(id, limb, aff.DefaultStrength);
-
-                aff.Update(this, id, limb, deltaTime);
+                HF.PrintError($"Error getting a NTAfflictionPrefab from the ID {affID} : The ID does not match any NTAfflictionPrefab!");
+                continue;
             }
+
+            float deltaTime = ((float)NTHumanUpdate.GetUpdateInterval(aff.Priority)) / 60f;
+
+            // Should be updated ? Not present ? Set it as default value
+            if (!this.HasAfflictionLimb(affID, limb)) this.SetAfflictionLimb(affID, limb, aff.DefaultStrength);
+
+            aff.Update(this, affID, limb, deltaTime);
+
         }
 
     }

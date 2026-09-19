@@ -102,7 +102,7 @@ public class NTHumanUpdate
                 {
                     ntHuman.PreHook();
                     ntHuman.UpdateStats(((float)NTHumanUpdate.GetUpdateInterval(AfflictionPriority.HIGH)) / 60f);
-                    Dictionary<LimbType, List<String>> aff = ntHuman.FetchAfflictions(priorities);
+                    List<KeyValuePair<string, LimbType>> aff = ntHuman.FetchAfflictions(priorities);
                     ntHuman.UpdateAfflictions(aff);
                     ntHuman.PostHook();
                 }
