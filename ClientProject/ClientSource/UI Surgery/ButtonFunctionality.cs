@@ -33,8 +33,8 @@ namespace Neurotrauma.ClientSource
             var Setter = AccessTools.PropertySetter(typeof(CharacterHealth), nameof(CharacterHealth.OpenHealthWindow));
             Harmony.Patch(Setter, postfix: new HarmonyMethod(typeof(ButtonsHUI), nameof(OnOpenHealthWindowChanged)));
 
-            var AddToUpdateList = AccessTools.Method(typeof(CharacterHealth), nameof(CharacterHealth.AddToGUIUpdateList));
-            Harmony.Patch(AddToUpdateList, postfix: new HarmonyMethod(typeof(ButtonsHUI), nameof(OnAddToGUIUpdateList)));
+            var HudUpdateMethod = AccessTools.Method(typeof(CharacterHUD), nameof(CharacterHUD.AddToGUIUpdateList));
+            Harmony.Patch(HudUpdateMethod, postfix: new HarmonyMethod(typeof(ButtonsHUI), nameof(OnHudAddToGUIUpdateList)));
 
             foreach (ButtonData Entry in ButtonDefinitions.Entries)
             {
@@ -91,14 +91,14 @@ namespace Neurotrauma.ClientSource
         }
 
         // Ensure the new UI actually exists by tying it to the HealthUI
-        static void OnAddToGUIUpdateList(CharacterHealth __instance)
+        static void OnHudAddToGUIUpdateList()
         {
             if (Frame == null || !Frame.Visible)
             {
                 return;
             }
 
-            if (CharacterHealth.OpenHealthWindow != __instance)
+            if (CharacterHealth.OpenHealthWindow == null)
             {
                 return;
             }
