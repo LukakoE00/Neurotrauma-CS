@@ -30,6 +30,7 @@ public partial class NTStats
             this.MinStrength = MinStrength;
             this.MaxStrength = MaxStrength;
             this.DefaultStrength = DefaultStrength;
+            this.UpdateFunction = Update;
             this.ID = Name;
         }
 
