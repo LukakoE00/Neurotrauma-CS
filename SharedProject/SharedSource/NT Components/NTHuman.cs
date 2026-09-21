@@ -441,7 +441,7 @@ public class NTHuman
     /// <summary>
     /// First calls UpdateSymptoms() then calls every NTAffliction Update function for every NTAffliction in the given list.
     /// </summary>
-    /// <param name="AfflictionsList">The list of affliction IDs oredered by LimbType</param>
+    /// <param name="AfflictionsList">The list of affliction IDs with their target LimbType</param>
     public void UpdateAfflictions(List<KeyValuePair<string, LimbType>> AfflictionsList)
     {
         this.UpdateSymptoms();
@@ -464,9 +464,32 @@ public class NTHuman
 
             float deltaTime = ((float)NTHumanUpdate.GetUpdateInterval(aff.Priority)) / 60f;
 
-            // Should be updated ? Not present ? Set it as default value
-            if (!this.HasAfflictionLimb(affID, limb)) this.SetAfflictionLimb(affID, limb, aff.DefaultStrength);
+            HF.Print(deltaTime.ToString());
 
+            // Should be updated ? Not present ? Set it as default value
+
+            if (aff.DefaultStrength != 0)
+            {
+                if (aff.LimbSpecific)
+                {
+                    if (!this.HasAfflictionLimb(affID, limb))
+                    {
+                        if (NTConfig.Get("NT_DEBUG_MODE", false)) HF.Print($"Affliction limbspecific not present, using default strength : {affID}");
+                        this.SetAfflictionLimb(affID, limb, aff.DefaultStrength);
+                    }
+                }
+                else
+                {
+                    if (!this.HasAffliction(affID))
+                    {
+                        if (NTConfig.Get("NT_DEBUG_MODE", false)) HF.Print($"Affliction not present, using default strength : {affID}");
+                        this.SetAffliction(affID, aff.DefaultStrength);
+                    }
+                }
+            }
+            
+
+            
             aff.Update(this, affID, limb, deltaTime);
 
         }
