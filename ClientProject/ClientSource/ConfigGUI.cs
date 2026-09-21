@@ -747,7 +747,7 @@ namespace Neurotrauma
 
                     if (!entry.Description.IsNullOrWhiteSpace())
                     {
-                        TickBox.ToolTip = entry.Description;
+                        TickBox.ToolTip = RichString.Rich(entry.Description);
                     }
 
                     TickBox.Selected = CurrentValue;
