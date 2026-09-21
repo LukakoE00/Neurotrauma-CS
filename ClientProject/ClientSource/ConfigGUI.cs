@@ -751,7 +751,7 @@ namespace Neurotrauma
                     TickBox.OnSelected += tb =>
                     {
                         NTConfig.Set(Identifier, tb.Selected);
-                        TickBox.TextColor = tb.Selected == DefaultValue ? GUIStyle.TextColorNormal : GUIStyle.Orange;
+                        TickBox.TextBlock.OverrideTextColor(tb.Selected == DefaultValue ? GUIStyle.TextColorNormal : GUIStyle.Orange);
                         return true;
                     };
 
