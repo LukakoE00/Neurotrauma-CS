@@ -459,6 +459,8 @@ namespace Neurotrauma
                     TextColor = (float)entry.Value == DefaultValue ? GUIStyle.TextColorNormal : GUIStyle.Orange
                 };
 
+                GUIComponents.ApplyDescriptionTooltip(LabelBlock, entry, SetHoverColour: true);
+
                 var Scalar = new GUINumberInput(new RectTransform(new Vector2(1f, 0.6f), ScalarCell.RectTransform), NumberType.Float)
                 {
                     MinValueFloat = entry.Range[0],
@@ -526,7 +528,7 @@ namespace Neurotrauma
                     Label += $" ({entry.Range[0]} - {entry.Range[1]})";
                 }
 
-                int DefaultValue = Convert.ToInt32(entry.Default);
+                int DefaultValue = (int)(entry.Default);
 
                 var LabelBlock = new GUITextBlock(new RectTransform(new Vector2(1f, 0.6f), TextCell.RectTransform), Label)
                 {
@@ -536,6 +538,8 @@ namespace Neurotrauma
                     AutoScaleHorizontal = true,
                     TextColor = ((int)(entry.Value) == DefaultValue) ? GUIStyle.TextColorNormal : GUIStyle.Orange
                 };
+
+                GUIComponents.ApplyDescriptionTooltip(LabelBlock, entry, SetHoverColour: true);
 
                 var Scalar = new GUINumberInput(new RectTransform(new Vector2(1f, 0.6f), ScalarCell.RectTransform), NumberType.Int)
                 {
@@ -758,7 +762,6 @@ namespace Neurotrauma
                     break;
                 }
 
-
                 case ConfigEntryType.String:
                 {
                     string StyleSuffix = entry.Style.IsNullOrWhiteSpace() ? string.Empty : $" ({entry.Style})";
@@ -932,13 +935,18 @@ namespace Neurotrauma
             CreateSettingsResetButton(Parent, Container);
         }
 
-        // Attach a tooltip to a label if the entry has a description.
-        public static void ApplyDescriptionTooltip(GUITextBlock label, ConfigEntry entry)
+        // Attach a tooltip to a label if the entry has a description + prevent the bad-looking hover effect on unfocused textboxes.
+        public static void ApplyDescriptionTooltip(GUITextBlock Label, ConfigEntry entry, bool SetHoverColour = false)
         {
             if (!entry.Description.IsNullOrWhiteSpace())
             {
-                label.ToolTip = entry.Description;
-                label.CanBeFocused = true;
+                Label.ToolTip = RichString.Rich(entry.Description);
+                Label.CanBeFocused = true;
+
+                if (SetHoverColour)
+                {
+                    Label.HoverColor = Color.Gray;
+                }
             }
         }
 
