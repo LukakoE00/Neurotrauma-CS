@@ -7,7 +7,7 @@ public class NTHumanUpdate
 
     private static int UpdateIntervalHigh = (int)Math.Round(NTConfig.Get("NT_UpdateInterval_High", (float)NTAfflictions.AfflictionPriority.HIGH));
     private static int UpdateIntervalMedium = UpdateIntervalHigh * 2;
-    private static int UpdateIntervalLow = UpdateIntervalHigh * 4;
+    private static int UpdateIntervalLow = UpdateIntervalHigh * 3;
     private static int UpdateIntervalMonster = (int)Math.Round(NTConfig.Get("NT_UpdateInterval_Monster", 120f));
 
     public static int GetUpdateInterval(NTAfflictions.AfflictionPriority priority)
@@ -25,7 +25,7 @@ public class NTHumanUpdate
     {
         UpdateIntervalHigh = (int)Math.Round(NTConfig.Get("NT_UpdateInterval_High", (float) NTAfflictions.AfflictionPriority.HIGH));
         UpdateIntervalMedium = UpdateIntervalHigh * 2;
-        UpdateIntervalLow = UpdateIntervalHigh * 4;
+        UpdateIntervalLow = UpdateIntervalHigh * 3;
         UpdateIntervalMonster = (int)Math.Round(NTConfig.Get("NT_UpdateInterval_Monster", 120f));
     }
 
@@ -136,24 +136,24 @@ public class NTHumanUpdate
 
             LuaCsSetup.Instance.Timer.Wait((params object[] _) =>
             {
-                if (Monster != null && HF.IsCharacterValid(Monster)) // Verify this character exists.
+            if (Monster != null && HF.IsCharacterValid(Monster)) // Verify this character exists.
+            {
+                double BloodLoss = HF.GetAfflictionStrength(Monster, "bloodloss", 0);
+                double OxygenLow = HF.GetAfflictionStrength(Monster, "oxygenlow", 0);
+
+                if (BloodLoss > 0)
                 {
-                    double BloodLoss = HF.GetAfflictionStrength(Monster, "bloodloss", 0);
-                    double OxygenLow = HF.GetAfflictionStrength(Monster, "oxygenlow", 0);
-
-                    if (BloodLoss > 0)
-                    {
-                        HF.AddAffliction(Monster, "organdamage", (float)BloodLoss * 2, Monster);
-                        HF.SetAffliction(Monster, "bloodloss", 0, Monster, (float)BloodLoss);
-                    }
-                    else if (OxygenLow > 50)
-                    {
-                        HF.AddAffliction(Monster, "organdamage", (float)(OxygenLow - 50) * 2, Monster);
-                        HF.SetAffliction(Monster, "oxygenlow", 50, Monster, (float)OxygenLow);
-
-
-                    }
+                    HF.AddAffliction(Monster, "organdamage", (float)BloodLoss * 2, Monster);
+                    HF.SetAffliction(Monster, "bloodloss", 0, Monster, (float)BloodLoss);
                 }
+                else if (OxygenLow > 50)
+                {
+                    HF.AddAffliction(Monster, "organdamage", (float)(OxygenLow - 50) * 2, Monster);
+                    HF.SetAffliction(Monster, "oxygenlow", 50, Monster, (float)OxygenLow);
+
+
+                }
+            }
             }, (int)Delay);
 
             index++;
