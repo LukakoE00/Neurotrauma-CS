@@ -257,7 +257,7 @@ public class NTAfflictionsToAdd
                 // Does not progress while in Stasis
                 if (C.GetBoolStat("stasis")) return;
 
-                float LungDamage = (float) HF.OrganDamageCalc(C, C.GetAfflictionStrength(ID) + NTC.GetMultiplier(C, "lungdamagegain") * C.GetFloatStat("neworgandamage"));
+                float LungDamage = (float) HF.OrganDamageCalc(C, C.GetAfflictionStrength(ID) + NTC.GetMultiplier(C, "lungdamagegain") * C.GetFloatStat("neworgandamage"), dT);
 
                 // Passive Regeneration / Increase
                 C.SetAffliction(ID, LungDamage);
@@ -653,7 +653,7 @@ public class NTAfflictionsToAdd
 
                 float str = C.GetAfflictionStrength(ID);
 
-                float HeartDamage = (float) HF.OrganDamageCalc(C, str + NTC.GetMultiplier(C, "heartdamagegain") * C.GetFloatStat("neworgandamage"));
+                float HeartDamage = (float) HF.OrganDamageCalc(C, str + NTC.GetMultiplier(C, "heartdamagegain") * C.GetFloatStat("neworgandamage"), dT);
 
                 // Passive Regeneration / Increase
                 C.SetAffliction(ID, HeartDamage);
@@ -737,7 +737,7 @@ public class NTAfflictionsToAdd
 
                 float KidneyDamage = (float) HF.KidneyDamageCalc(C, str
                     + NTC.GetMultiplier(C, "kidneydamagegain") * (C.GetFloatStat("neworgandamage")
-                    + Math.Clamp((C.GetAfflictionStrength("bloodpressure") - 120) / 160, 0, 0.5f) * dT * 0.5f));
+                    + Math.Clamp((C.GetAfflictionStrength("bloodpressure") - 120) / 160, 0, 0.5f) * dT * 0.5f), dT);
 
                 // Passive Regeneration / Increase
                 C.SetAffliction(ID, KidneyDamage);
@@ -815,7 +815,7 @@ public class NTAfflictionsToAdd
 
                 float str = C.GetAfflictionStrength(ID);
 
-                float LiverDamage = (float) HF.OrganDamageCalc(C, str + NTC.GetMultiplier(C, "liverdamagegain") * C.GetFloatStat("neworgandamage"));
+                float LiverDamage = (float) HF.OrganDamageCalc(C, str + NTC.GetMultiplier(C, "liverdamagegain") * C.GetFloatStat("neworgandamage"), dT);
 
                 // Passive Regeneration / Increase
                 C.SetAffliction(ID, LiverDamage);
@@ -1057,7 +1057,7 @@ public class NTAfflictionsToAdd
             .SetStrengths(0, 2, 0)
             .SetUpdateAction((C, ID, Limb, dT) =>
             {
-                C.AddAffliction(ID, 0.5f * dT);
+                C.AddAffliction(ID, -0.5f * dT);
             })
             .Build()
             );
@@ -1073,7 +1073,7 @@ public class NTAfflictionsToAdd
             .SetPriority(AfflictionPriority.LOW)
             .SetUpdateAction((C, ID, Limb, dT) =>
             {
-                C.AddAffliction(ID, 3f * dT);
+                C.AddAffliction(ID, -3f * dT);
             })
             .Build()
             );
@@ -1087,7 +1087,7 @@ public class NTAfflictionsToAdd
             .SetStrengths(0, 2, 0)
             .SetUpdateAction((C, ID, Limb, dT) =>
             {
-                C.AddAffliction(ID, 0.5f * dT);
+                C.AddAffliction(ID, -0.5f * dT);
             })
             .Build()
             );
@@ -2230,7 +2230,7 @@ public class NTAfflictionsToAdd
                 if (!(str > 0)) return;
 
                 // Passive Regeneration
-                C.SetAffliction(ID, (float) HF.OrganDamageCalc(C, str));
+                C.SetAffliction(ID, (float) HF.OrganDamageCalc(C, str, dT));
 
                 // Bone Regeneration
                 if (str < 90)
