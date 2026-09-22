@@ -464,8 +464,6 @@ public class NTHuman
 
             float deltaTime = ((float)NTHumanUpdate.GetUpdateInterval(aff.Priority)) / 60f;
 
-            HF.Print(deltaTime.ToString());
-
             // Should be updated ? Not present ? Set it as default value
 
             if (aff.DefaultStrength != 0)
@@ -675,15 +673,18 @@ public class NTHuman
                 NTSymptomData Symptom = e.Value;
 
                 // If the symptom is already present, we set the duration as the highest between the new duration and the one already set.
-                if (ID == Aff.ID) Symptom.Duration = Symptom.Duration > Duration ? Symptom.Duration : Duration;
-                return;
+                if (ID == Aff.ID)
+                {
+                    Symptom.Duration = Symptom.Duration > Duration ? Symptom.Duration : Duration;
+                    return;
+                }
             }
 
             NTSymptomData d = new NTSymptomData(Aff, Duration, Aff.LimbSpecific ? limb : LimbType.None);
 
             l.Add(Aff.ID, d);
 
-            if (Aff.LimbSpecific)
+            if (Aff.LimbSpecific) 
             {
                 this.Human.SetAfflictionLimb(Aff.ID, limb, (float) Aff.MaxStrength);
             } else
