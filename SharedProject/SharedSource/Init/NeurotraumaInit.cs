@@ -1,8 +1,6 @@
 ﻿using Barotrauma.LuaCs.Events;
-using MonoGame.Utilities;
 using MoonSharp.Interpreter;
-using System.Net.NetworkInformation;
-using static Barotrauma.Networking.MessageFragment;
+
 
 namespace Neurotrauma
 {
@@ -54,7 +52,8 @@ namespace Neurotrauma
             UserData.RegisterType(typeof(NeurotraumaInit));
 
             UserData.RegisterType(typeof(NTAfflictions));
-
+            UserData.RegisterType(typeof(NTHuman));
+            UserData.RegisterType(typeof(NTStats));
             UserData.RegisterType(typeof(NTItems));
 
             UserData.RegisterType(typeof(SpeakAboutIssuesPatch));
@@ -151,8 +150,15 @@ namespace Neurotrauma
         {
             if (character.IsHuman)
             {
-                var h = new NTHuman(character);
-                h.AddAffliction("luabotomy", 100f);
+                
+
+                LuaCsSetup.Instance.Timer.Wait((params object[] _) => {
+                    var h = new NTHuman(character);
+
+                    h.AddAffliction("luabotomy", 100f);
+
+                    if (NTConfig.Get("NT_DEBUG_MODE",false)) HF.Print($"New NTHuman {character.Name} created !");
+                }, 1000);
             }
         }
 
