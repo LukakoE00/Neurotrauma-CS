@@ -1966,17 +1966,17 @@ namespace Neurotrauma
         /// <param name="DamageValue">Current organ damage amount.</param>
         /// <param name="NoMaxStrength">Should the maximum amount of damage be uncapped?</param>
         /// <returns>Amended damage value as a double.</returns>
-        public static double OrganDamageCalc(NTHuman C, double DamageValue, bool NoMaxStrength = false)
+        public static float OrganDamageCalc(NTHuman C, float DamageValue, float deltaTime,bool NoMaxStrength = false)
         {
             if (DamageValue >= 99 && !(NoMaxStrength))
             {
                 return 100;
             }
 
-            return DamageValue - 0.01 
+            return DamageValue - 0.01f 
                 * C.GetFloatStat("healingrate") 
                 * C.GetFloatStat("specificOrganDamageHealMultiplier") 
-                * NTHumanUpdate.GetUpdateInterval(NTAfflictions.AfflictionPriority.HIGH);
+                * deltaTime;
         }
 
         /// <summary>
@@ -1985,7 +1985,7 @@ namespace Neurotrauma
         /// <param name="C">The character whose organs are changed.</param>
         /// <param name="DamageValue">Current organ damage amount.</param>
         /// <returns>Amended damage value as a double.</returns>
-        public static double KidneyDamageCalc(NTHuman C, double DamageValue)
+        public static float KidneyDamageCalc(NTHuman C, float DamageValue, float deltaTime)
         {
             if (DamageValue >= 99)
             {
@@ -1999,9 +1999,9 @@ namespace Neurotrauma
                     return DamageValue; 
                 }
 
-                return DamageValue - 0.01 * C.GetFloatStat("healingrate") * C.GetFloatStat("specificOrganDamageHealMultiplier") * NTHumanUpdate.GetUpdateInterval(NTAfflictions.AfflictionPriority.HIGH);
+                return DamageValue - 0.01f * C.GetFloatStat("healingrate") * C.GetFloatStat("specificOrganDamageHealMultiplier") * deltaTime;
             }
-            return DamageValue - 0.02 * C.GetFloatStat("healingrate") * C.GetFloatStat("specificOrganDamageHealMultiplier") * NTHumanUpdate.GetUpdateInterval(NTAfflictions.AfflictionPriority.HIGH);
+            return DamageValue - 0.02f * C.GetFloatStat("healingrate") * C.GetFloatStat("specificOrganDamageHealMultiplier") * deltaTime;
         }
 
         // ---------------------------------------- Client Related Helper Functions -------------------------------------------------- \\
