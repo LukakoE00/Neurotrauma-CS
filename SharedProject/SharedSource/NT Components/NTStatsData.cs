@@ -144,7 +144,7 @@ public partial class NTStats
             return C.HasAffliction("forceprone");
         }));
 
-        l.Add(new NTStatBool("wheelchired", false, (C, dt) =>
+        l.Add(new NTStatBool("wheelchaired", false, (C, dt) =>
         {
             Item OutWearItem = HF.GetItemInOuterWear(C.Human);
             bool Res = (OutWearItem != null && OutWearItem.Prefab.Identifier.Value == "wheelchair") ? true : false;
