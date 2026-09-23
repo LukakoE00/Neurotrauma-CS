@@ -15,13 +15,13 @@
 
 	<!-- Auto Run files -->
 	<!-- Shared -->
-	<Lua Folder="%ModDir%/Lua/Shared" Target="Any" IsAutorun="true" />
+	<!--<Lua Folder="%ModDir%/Lua/Shared" Target="Any" IsAutorun="true" />
     <Lua File="%ModDir%/Lua/ConsentRequiredExtended/init.lua" Target="Any" IsAutorun="true" />
 
-	<!-- Serverside -->
+	--><!-- Serverside --><!--
 	<Lua Folder="%ModDir%/Lua/Server" Target="Server" IsAutorun="true" />
 
-	<!-- Clientside -->
-	<Lua Folder="%ModDir%/Lua/Client" Target="Client" IsAutorun="true" />
+	--><!-- Clientside --><!--
+	<Lua Folder="%ModDir%/Lua/Client" Target="Client" IsAutorun="true" />-->
 	
 </ModConfig>

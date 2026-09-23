@@ -29,7 +29,7 @@ namespace Neurotrauma;
 
                 SpawnToolbox1(item);
                 SpawnToolbox2(item);
-                SpawnSurgeryToolbox(item);
+                // SpawnSurgeryToolbox(item);
 
                 HF.SpawnItemPlusFunction("bloodanalyzer", item.OwnInventory, InvSlotType.Any, Vector2.Zero, null);
 
@@ -63,8 +63,8 @@ namespace Neurotrauma;
                     HF.SpawnItemPlusFunction("tourniquet", inv, InvSlotType.Any, Vector2.Zero, null);
                     HF.SpawnItemPlusFunction("ringerssolution", inv, InvSlotType.Any, Vector2.Zero, null);
                     HF.SpawnItemPlusFunction("ringerssolution", inv, InvSlotType.Any, Vector2.Zero, null);
-                    HF.SpawnItemPlusFunction("surgicaldrill", inv, InvSlotType.Any, Vector2.Zero, null);
-                    HF.SpawnItemPlusFunction("surgerysaw", inv, InvSlotType.Any, Vector2.Zero, null);
+                    // HF.SpawnItemPlusFunction("surgicaldrill", inv, InvSlotType.Any, Vector2.Zero, null);
+                    // HF.SpawnItemPlusFunction("surgerysaw", inv, InvSlotType.Any, Vector2.Zero, null);
                 }
             );
         }
@@ -85,26 +85,26 @@ namespace Neurotrauma;
             );
         }
 
-        private static void SpawnSurgeryToolbox(Item item)
-        {
-            HF.SpawnItemPlusFunction("surgerytoolbox", item.OwnInventory, InvSlotType.Any, Vector2.Zero, p =>
-                {
-                    var inv = (p[^1] as Item)?.OwnInventory;
-                    if (inv == null) return;
+        //private static void SpawnSurgeryToolbox(Item item)
+        //{
+        //    HF.SpawnItemPlusFunction("surgerytoolbox", item.OwnInventory, InvSlotType.Any, Vector2.Zero, p =>
+        //        {
+        //            var inv = (p[^1] as Item)?.OwnInventory;
+        //            if (inv == null) return;
 
-                    HF.SpawnItemPlusFunction("advscalpel", inv, InvSlotType.Any, Vector2.Zero, null);
-                    HF.SpawnItemPlusFunction("advhemostat", inv, InvSlotType.Any, Vector2.Zero, null);
-                    HF.SpawnItemPlusFunction("advretractors", inv, InvSlotType.Any, Vector2.Zero, null);
+        //            HF.SpawnItemPlusFunction("advscalpel", inv, InvSlotType.Any, Vector2.Zero, null);
+        //            HF.SpawnItemPlusFunction("advhemostat", inv, InvSlotType.Any, Vector2.Zero, null);
+        //            HF.SpawnItemPlusFunction("advretractors", inv, InvSlotType.Any, Vector2.Zero, null);
 
-                    for (int i = 0; i < 16; i++) HF.SpawnItemPlusFunction("suture", inv, InvSlotType.Any, Vector2.Zero, null);
+        //            for (int i = 0; i < 16; i++) HF.SpawnItemPlusFunction("suture", inv, InvSlotType.Any, Vector2.Zero, null);
 
-                    HF.SpawnItemPlusFunction("tweezers", inv, InvSlotType.Any, Vector2.Zero, null);
-                    HF.SpawnItemPlusFunction("traumashears", inv, InvSlotType.Any, Vector2.Zero, null);
-                    HF.SpawnItemPlusFunction("drainage", inv, InvSlotType.Any, Vector2.Zero, null);
-                    HF.SpawnItemPlusFunction("needle", inv, InvSlotType.Any, Vector2.Zero, null);
-                }
-            );
-        }
+        //            HF.SpawnItemPlusFunction("tweezers", inv, InvSlotType.Any, Vector2.Zero, null);
+        //            HF.SpawnItemPlusFunction("traumashears", inv, InvSlotType.Any, Vector2.Zero, null);
+        //            HF.SpawnItemPlusFunction("drainage", inv, InvSlotType.Any, Vector2.Zero, null);
+        //            HF.SpawnItemPlusFunction("needle", inv, InvSlotType.Any, Vector2.Zero, null);
+        //        }
+        //    );
+        //}
 
         private static object ?OnGiveJobItems(object[] args)
         {

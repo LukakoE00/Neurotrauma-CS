@@ -132,13 +132,23 @@ public class NTItemMethods
     public class ItemUpdateFunctionInfos
     {
         public Barotrauma.Item item { get; }
-        public Character user {  get; }
+        public ItemPrefab prefab { get; }
+        public Character user { get; }
         public Character target { get; }
         public Limb targetLimb { get; }
 
         public ItemUpdateFunctionInfos(Barotrauma.Item item, Character user, Character target, Limb targetLimb)
         {
             this.item = item;
+            this.user = user;
+            this.target = target;
+            this.targetLimb = targetLimb;
+        }
+
+        // This one can use a prefab to do things, so we can spoof item usage via the UI
+        public ItemUpdateFunctionInfos(ItemPrefab prefab, Character user, Character target, Limb targetLimb)
+        {
+            this.prefab = prefab;
             this.user = user;
             this.target = target;
             this.targetLimb = targetLimb;
@@ -560,7 +570,7 @@ public class NTItemMethods
             if (BloodLossStrength >= 31f) return;
 
             bool success = HF.GetSkillRequirementMet(infos.user, "medical", 30);
-            int bloodlossinduced = success ? 40 : 30;
+            int bloodlossinduced = success ? 30 : 40;
 
             string bloodtype = NTBloodTypes.GetBloodType(infos.target);
 
@@ -1712,23 +1722,14 @@ public class NTItemMethods
         DrainageAfflictions["pneumothorax"] = new ItemsAfflictionInfos("pneumothorax", 3, infos =>
         {
             return HF.HasAfflictionLimb(infos.target, "retractedskin", LimbType.Torso, 95);
-        }, "pneumothorax", infos =>
-        {
-            NTC.SetSymptomFalse(infos.target, "hyperventilation");
-            NTC.SetSymptomFalse(infos.target, "shortnessofbreath");
-        });
+        }, "pneumothorax");
 
         DrainageAfflictions["tamponade"] = new ItemsAfflictionInfos("tamponade", 3, infos =>
         {
             if (NTConfig.Get("NT_OpenCloseTamponade", false)) return false;
 
             return HF.HasAfflictionLimb(infos.target, "retractedskin", LimbType.Torso, 95); ;
-        }, "tamponade", infos =>
-        {
-            NTC.SetSymptomFalse(infos.target, "shortnessofbreath");
-            NTC.SetSymptomFalse(infos.target, "cough");
-            NTC.SetSymptomFalse(infos.target, "weakness");
-        });
+        }, "tamponade");
 
         // From 48 lines to 12 my point stands, why tf was the lua function so girthy?
         RegisterItemUseFunction("drainage", infos =>

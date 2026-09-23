@@ -680,6 +680,7 @@ public static class OnDamaged
 
     private static void FallOffChair(NTHuman NTCharacter, Character Character, double Strength, double MinimumStrength = 20)
     {
+        return;
         if (NTCharacter != null && HF.IsCharacterValid(Character))
         {
             if (NTCharacter.GetAffliction("onwheelchair").Strength > 0 && Strength > MinimumStrength)

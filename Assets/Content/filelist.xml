@@ -3,6 +3,8 @@
     <!-- Comments within this file get removed on upload to Steam; these are just for the Repo. - Lukako -->
     <!-- Main Menu Neurotrauma -->
     <UIStyle file="%ModDir%/Style/StyleMM.xml" />
+	<!-- UI Buttons -->
+	<UIStyle file="%ModDir%/Style/StyleButtons.xml" />
     <!-- Localization -->
     <Text file="%ModDir%/Localization/English/English.xml" />
     <!-- Afflictions -->

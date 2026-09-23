@@ -32,7 +32,7 @@
             <Sprite texture="Content/Items/Tools/tools.png" sourcerect="161,235,64,20" depth="0.55" origin="0.5,0.5" />
             <Body width="60" height="15" density="30" />
 
-            <!-- <SuitableTreatment identifier="dislocation" suitability="50"/> -->
+            <SuitableTreatment identifier="dislocation" suitability="50"/>
 
             <MeleeWeapon slots="Any,RightHand,LeftHand" aimpos="40,5" handle1="-8,0" holdangle="60" reload="1.0" range="50" combatpriority="8" msg="ItemMsgPickUpSelect">
                 <Attack structuredamage="0" itemdamage="2" targetimpulse="5">
@@ -228,7 +228,7 @@
                 <Item identifier="emptybloodpack" />
             </Deconstruct>
 
-            <!-- <SuitableTreatment identifier="bloodloss" suitability="100"/> -->
+            <SuitableTreatment identifier="bloodloss" suitability="100"/>
 
             <InventoryIcon texture="%ModDir%/Images/InventoryItemIconAtlas.png" sourcerect="326,327,64,64" origin="0.5,0.5"/>
             <Sprite texture="%ModDir%/Images/BloodPacksAtlas.png" sourcerect="128,171,64,85" />
@@ -268,7 +268,7 @@
 
             <Deconstruct time="2"/>
 
-            <!-- <SuitableTreatment type="bleeding" suitability="30" /> -->
+            <SuitableTreatment type="bleeding" suitability="30" />
 
             <InventoryIcon texture="Content/Items/InventoryIconAtlas.png" sourcerect="128,448,64,64" origin="0.5,0.5" />
             <Sprite texture="Content/Items/Medical/Medicines.png" sourcerect="310,33,26,42" depth="0.6" origin="0.5,0.5" />
@@ -302,10 +302,10 @@
             <Sprite texture="Content/Items/Medical/Medicines.png" sourcerect="340,33,26,42" depth="0.6" origin="0.5,0.5" />
             <Body width="25" height="40" density="10.05" />
 
-            <!-- <SuitableTreatment type="bleeding" suitability="32"/>
+            <SuitableTreatment type="bleeding" suitability="32"/>
             <SuitableTreatment type="burn" suitability="35"/>
             <SuitableTreatment identifier="infectedwound" suitability="6"/>
-            <SuitableTreatment identifier="bandageddirty" suitability="100"/> -->
+            <SuitableTreatment identifier="bandageddirty" suitability="100"/>
 
             <MeleeWeapon canBeCombined="true" removeOnCombined="true" slots="Any,RightHand,LeftHand" aimpos="40,5" handle1="0,0" holdangle="10" reload="1.0" msg="ItemMsgPickUpSelect" HitOnlyCharacters="true">
                 <StatusEffect type="OnBroken" target="This">
@@ -550,10 +550,10 @@
 
             <Fabricate suitablefabricators="vendingmachine" requiredtime="1" requiredmoney="60" fabricationlimitmin="5" fabricationlimitmax="10"/>
             
-            <!-- <SuitableTreatment identifier="opiateaddiction" suitability="-25" />
+            <SuitableTreatment identifier="opiateaddiction" suitability="-25" />
             <SuitableTreatment identifier="opiateoverdose" suitability="-25"/>
             <SuitableTreatment identifier="opiatewithdrawal" suitability="2"/>
-            <SuitableTreatment identifier="pain" suitability="20"/> -->
+            <SuitableTreatment identifier="pain" suitability="20"/>
             
             <InventoryIcon texture="Content/Items/InventoryIconAtlas.png" sourcerect="512,768,64,64" origin="0.5,0.5"/>
             <Sprite texture="Content/Items/Medical/Medicines.png" sourcerect="406,452,29,58" depth="0.6" origin="0.5,0.5"/>
@@ -617,10 +617,10 @@
                 <Price storeidentifier="merchantmedical" multiplier="0.9"/>
             </Price>
 
-            <!-- <SuitableTreatment identifier="opiatewithdrawal" suitability="5" />
+            <SuitableTreatment identifier="opiatewithdrawal" suitability="5" />
             <SuitableTreatment identifier="opiateoverdose" suitability="-20"/>
             <SuitableTreatment identifier="opiateaddiction" suitability="-20"/>
-            <SuitableTreatment identifier="pain" suitability="40"/> -->
+            <SuitableTreatment identifier="pain" suitability="40"/>
 
             <Fabricate suitablefabricators="medicalfabricator" requiredtime="30">
                 <RequiredSkill identifier="medical" level="18" />
@@ -698,10 +698,10 @@
                 <Price storeidentifier="merchantmedical" multiplier="0.9" minavailable="12"/>
             </Price>
 
-            <!-- <SuitableTreatment identifier="opiatewithdrawal" suitability="100"/>
+            <SuitableTreatment identifier="opiatewithdrawal" suitability="100"/>
             <SuitableTreatment identifier="opiateoverdose" suitability="-50"/>
             <SuitableTreatment identifier="opiateaddiction" suitability="-20"/>
-            <SuitableTreatment identifier="pain" suitability="50"/> -->
+            <SuitableTreatment identifier="pain" suitability="50"/>
 
             <Fabricate suitablefabricators="medicalfabricator" requiredtime="45">
                 <RequiredSkill identifier="medical" level="50" />
@@ -794,9 +794,9 @@
                 <Item identifier="stabilozine" />
             </Deconstruct>
 
-            <!-- <SuitableTreatment identifier="opiateaddiction" suitability="60" />
+            <SuitableTreatment identifier="opiateaddiction" suitability="60" />
             <SuitableTreatment identifier="opiatewithdrawal" suitability="60" />
-            <SuitableTreatment identifier="opiateoverdose" suitability="60" /> -->
+            <SuitableTreatment identifier="opiateoverdose" suitability="60" />
 
             <InventoryIcon texture="Content/Items/InventoryIconAtlas.png" sourcerect="704,448,64,64" origin="0.5,0.5" />
             <Sprite texture="Content/Items/Medical/Medicines.png" sourcerect="186,0,38,69" depth="0.6" origin="0.5,0.5" />
@@ -862,9 +862,9 @@
             <Sprite texture="Content/Items/Medical/Medicines.png" sourcerect="263,142,36,68" depth="0.6" origin="0.5,0.5"/>
             <Body width="35" height="65" density="10.2" waterdragcoefficient="1"/>
 
-            <!-- <SuitableTreatment identifier="damage" suitability="-33"/>
+            <SuitableTreatment identifier="damage" suitability="-33"/>
             <SuitableTreatment identifier="huskinfection" suitability="30"/>
-            <SuitableTreatment identifier="sepsis" suitability="50"/> -->
+            <SuitableTreatment identifier="sepsis" suitability="50"/>
 
             <MeleeWeapon canBeCombined="true" removeOnCombined="true" slots="Any,RightHand,LeftHand" aimpos="40,5" handle1="0,0" holdangle="220" reload="1.0" msg="ItemMsgPickUpSelect" HitOnlyCharacters="true">
                 <RequiredSkill identifier="medical" level="25"/>
@@ -927,7 +927,7 @@
             <Sprite texture="Content/Items/Medical/Medicines.png" sourcerect="301,209,37,72" depth="0.6" origin="0.5,0.5" />
             <Body width="25" height="55" density="10.2" waterdragcoefficient="1"/>
 
-            <!-- <SuitableTreatment identifier="cardiacarrest" suitability="100"/> -->
+            <SuitableTreatment identifier="cardiacarrest" suitability="100"/>
 
             <MeleeWeapon canBeCombined="true" removeOnCombined="true" slots="Any,RightHand,LeftHand" aimpos="40,5" handle1="0,0" holdangle="220" reload="1.0" msg="ItemMsgPickUpSelect" HitOnlyCharacters="true">
                 <StatusEffect type="OnBroken" target="This">
@@ -1047,8 +1047,8 @@
             <PreferredContainer primary="medcab" secondary="medcontainer"/>
             <PreferredContainer secondary="wreckmedcab,abandonedmedcab" minamount="1" maxamount="2" spawnprobability="0.1" />
             
-            <!-- <SuitableTreatment identifier="hypoxemia" suitability="100" />
-            <SuitableTreatment identifier="organdamage" suitability="-15" /> -->
+            <SuitableTreatment identifier="hypoxemia" suitability="100" />
+            <SuitableTreatment identifier="organdamage" suitability="-15" />
             
             <InventoryIcon texture="Content/Items/InventoryIconAtlas.png" sourcerect="704,640,64,64" origin="0.5,0.5" />
             <Sprite texture="Content/Items/Medical/Medicines.png" sourcerect="187,138,38,71" depth="0.6" origin="0.5,0.5" />
@@ -1131,9 +1131,9 @@
             <Sprite texture="Content/Items/Medical/Medicines.png" sourcerect="226,306,38,72" depth="0.6" origin="0.5,0.5" />
             <Body width="35" height="65" density="10.2" waterdragcoefficient="1"/>
 
-            <!-- <SuitableTreatment identifier="hypoxemia" suitability="45" />
+            <SuitableTreatment identifier="hypoxemia" suitability="45" />
             <SuitableTreatment type="bloodloss" suitability="30" />
-            <SuitableTreatment type="burn" suitability="-25" /> -->
+            <SuitableTreatment type="burn" suitability="-25" />
 
             <MeleeWeapon canBeCombined="true" removeOnCombined="true" slots="Any,RightHand,LeftHand" aimpos="40,5" handle1="0,0" holdangle="220" reload="1.0" msg="ItemMsgPickUpSelect" HitOnlyCharacters="true">
                 <RequiredSkill identifier="medical" level="72" />
@@ -1212,10 +1212,10 @@
             <Sprite texture="Content/Items/Medical/Medicines.png" sourcerect="312,8,63,22" depth="0.6" origin="0.5,0.5" />
             <Body width="60" height="20" density="12" />
 
-            <!-- <SuitableTreatment type="bleeding" suitability="80" />
+            <SuitableTreatment type="bleeding" suitability="80" />
             <SuitableTreatment type="burn" suitability="60" />
             <SuitableTreatment type="infectedwound" suitability="100" />
-            <SuitableTreatment type="damage" suitability="-1" /> -->
+            <SuitableTreatment type="damage" suitability="-1" />
 
             <MeleeWeapon canBeCombined="true" removeOnCombined="true" slots="Any,RightHand,LeftHand" aimpos="40,5" handle1="0,0" holdangle="10" reload="1.0" msg="ItemMsgPickUpSelect" HitOnlyCharacters="true">
                 <RequiredSkill identifier="medical" level="55" />
@@ -1432,12 +1432,12 @@
             <Sprite texture="Content/Items/Weapons/weapons_new.png" sourcerect="183,203,66,16" depth="0.55" origin="0.5,0.5" />
             <Body width="65" height="15" density="25" />
 
-            <!-- <SuitableTreatment identifier="bandageddirty" suitability="50"/>
+            <SuitableTreatment identifier="bandageddirty" suitability="50"/>
             <SuitableTreatment identifier="bandaged" suitability="50"/>
             <SuitableTreatment identifier="triagetag_green" suitability="100"/>
             <SuitableTreatment identifier="triagetag_yellow" suitability="100"/>
             <SuitableTreatment identifier="triagetag_red" suitability="100"/>
-            <SuitableTreatment identifier="triagetag_black" suitability="100"/> -->
+            <SuitableTreatment identifier="triagetag_black" suitability="100"/>
 
             <MeleeWeapon slots="Any,RightHand,LeftHand" aimpos="50,0" handle1="-10,0" holdangle="30" reload="0.75" range="50" combatPriority="25" msg="ItemMsgPickUpSelect">
                 <Attack targetimpulse="2" severlimbsprobability="0.1" itemdamage="3" structuredamage="2" structuresoundtype="StructureSlash">
@@ -1496,7 +1496,7 @@
                 <Item identifier="chlorine" />
             </Deconstruct>
 
-            <!-- <SuitableTreatment identifier="psychosis" suitability="100" /> -->
+            <SuitableTreatment identifier="psychosis" suitability="100" />
 
             <InventoryIcon texture="Content/Items/InventoryIconAtlas.png" sourcerect="512,640,64,64" origin="0.5,0.5" />
             <Sprite texture="Content/Items/Medical/Medicines.png" sourcerect="37,138,38,71" depth="0.6" origin="0.5,0.5" />
@@ -1564,7 +1564,7 @@
                 <Item identifier="stabilozine" />
             </Deconstruct>
 
-            <!-- <SuitableTreatment identifier="paralysis" suitability="100" /> -->
+            <SuitableTreatment identifier="paralysis" suitability="100" />
 
             <InventoryIcon texture="Content/Items/InventoryIconAtlas.png" sourcerect="960,704,64,64" origin="0.5,0.5" />
             <Sprite texture="Content/Items/Medical/Medicines.png" sourcerect="150,210,39,69" depth="0.6" origin="0.5,0.5" />
@@ -1621,11 +1621,11 @@
             <PreferredContainer primary="medfabcab" secondary="medcontainer"/>
             <PreferredContainer secondary="wreckmedcab,abandonedmedcab,piratemedcab" minamount="1" maxamount="2" spawnprobability="0.1" />
             
-            <!-- <SuitableTreatment type="damage" suitability="1" />
+            <SuitableTreatment type="damage" suitability="1" />
             <SuitableTreatment type="burn" suitability="-10" />
             <SuitableTreatment identifier="opiateoverdose" suitability="-10" />
             <SuitableTreatment identifier="oxygenlow" suitability="-10" />
-            <SuitableTreatment identifier="opiatewithdrawal" suitability="-10" /> -->
+            <SuitableTreatment identifier="opiatewithdrawal" suitability="-10" />
 
             <Price baseprice="75" minavailable="3">
                 <Price storeidentifier="merchantoutpost" />
@@ -1733,7 +1733,7 @@
             <Sprite texture="Content/Items/JobGear/TalentGear.png" sourcerect="113,239,57,19" depth="0.55" origin="0.5,0.5" />
             <Body width="60" height="15" density="30" />
 
-            <!-- <SuitableTreatment identifier="dislocation" suitability="50"/> -->
+            <SuitableTreatment identifier="dislocation" suitability="50"/>
 
             <Holdable slots="Any,RightHand,LeftHand" handle1="0,0" holdangle="60" msg="ItemMsgPickUpSelect">
             </Holdable>
