@@ -135,7 +135,7 @@ namespace Neurotrauma
         public void Dispose()
         {
             RemovePatches();
-            
+
             if (HF.IsMain())
             {
                 harmony?.UnpatchSelf();
@@ -155,9 +155,11 @@ namespace Neurotrauma
                 LuaCsSetup.Instance.Timer.Wait((params object[] _) => {
                     var h = new NTHuman(character);
 
-                    h.AddAffliction("luabotomy", 100f);
+                    if (h.Human.teamID == CharacterTeamType.Team1)
+                    {
+                        h.AddAffliction("luabotomy", 100f);
+                    }
 
-                    if (NTConfig.Get("NT_DEBUG_MODE",false)) HF.Print($"New NTHuman {character.Name} created !");
                 }, 1000);
             }
         }

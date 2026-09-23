@@ -273,6 +273,11 @@ public class NTItems
                 return;
             }
 
+            if (!t.HasAffliction("luabotomy"))
+            {
+                t.AddAffliction("luabotomy", 0.1f);
+            }
+
             NTItemsRegistry[itemID].Invoke(new ItemUpdateFunctionInfos(__instance, u, t, targetLimb));
         }
     }

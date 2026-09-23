@@ -29,6 +29,8 @@ public class NTHuman
 
         NTHumans.Add(Human, this);
 
+        if (NTConfig.Get("NT_DEBUG_MODE", false)) HF.Print($"New NTHuman {this.Human.Name} created !");
+
         foreach (var item in NTStats.StatRegistry)
         {
             string name = item.Key;
@@ -485,8 +487,8 @@ public class NTHuman
                     }
                 }
             }
-            
 
+        
             
             aff.Update(this, affID, limb, deltaTime);
 
