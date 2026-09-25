@@ -474,7 +474,6 @@ public class NTHuman
                 {
                     if (!this.HasAfflictionLimb(affID, limb))
                     {
-                        if (NTConfig.Get("NT_DEBUG_MODE", false)) HF.Print($"Affliction limbspecific not present, using default strength : {affID}");
                         this.SetAfflictionLimb(affID, limb, aff.DefaultStrength);
                     }
                 }
@@ -482,7 +481,6 @@ public class NTHuman
                 {
                     if (!this.HasAffliction(affID))
                     {
-                        if (NTConfig.Get("NT_DEBUG_MODE", false)) HF.Print($"Affliction not present, using default strength : {affID}");
                         this.SetAffliction(affID, aff.DefaultStrength);
                     }
                 }

@@ -90,7 +90,7 @@ public partial class NTStats
         public bool Register(NTStat Stat)
         {
             // TODO: set debug mode to false when going public to avoid spamming console like retards
-            if (NTConfig.Get("debug_mode", true))
+            if (NTConfig.Get("NT_DEBUG_MODE", false))
             {
                 HF.PrintUtility($"[{this.ModID}] Registering stat: {Stat.Name}");
             }
@@ -125,7 +125,7 @@ public partial class NTStats
         public bool Override(string StatName, NTStat Stat, bool RegisterInstead = false)
         {
             // TODO: set debug mode to false when going public to avoid spamming console like retards
-            if (NTConfig.Get("debug_mode", true))
+            if (NTConfig.Get("NT_DEBUG_MODE", false))
             {
                 HF.PrintUtility($"[{this.ModID}] Overriding stat: {StatName}");
             }
@@ -154,7 +154,7 @@ public partial class NTStats
         public bool Remove(string StatName)
         {
             // TODO: set debug mode to false when going public to avoid spamming console like retards
-            if (NTConfig.Get("debug_mode", true))
+            if (NTConfig.Get("NT_DEBUG_MODE", false))
             {
                 HF.PrintUtility($"[{this.ModID}] Removing stat: {StatName}");
             }

@@ -42,7 +42,7 @@ public class NTItems
         public bool Register(string ItemID, Action<ItemUpdateFunctionInfos> UpdateFunction)
         {
             // TODO: set debug mode to false when going public to avoid spamming console like retards
-            if (NTConfig.Get("debug_mode", true))
+            if (NTConfig.Get("NT_DEBUG_MODE", false))
             {
                 HF.PrintUtility($"[{this.ModID}] Registering item: {ItemID}");
             }
@@ -68,7 +68,7 @@ public class NTItems
         public bool Override(string ItemID, Action<ItemUpdateFunctionInfos> UpdateFunction, bool RegisterInstead = true)
         {
             // TODO: set debug mode to false when going public to avoid spamming console like retards
-            if (NTConfig.Get("debug_mode", true))
+            if (NTConfig.Get("NT_DEBUG_MODE", false))
             {
                 HF.PrintUtility($"[{this.ModID}] Overriding item: {ItemID}");
             }
@@ -98,7 +98,7 @@ public class NTItems
         public bool Remove(string ItemID)
         {
             // TODO: set debug mode to false when going public to avoid spamming console like retards
-            if (NTConfig.Get("debug_mode", true))
+            if (NTConfig.Get("NT_DEBUG_MODE", false))
             {
                 HF.PrintUtility($"[{this.ModID}] Removing item: {ItemID}");
             }

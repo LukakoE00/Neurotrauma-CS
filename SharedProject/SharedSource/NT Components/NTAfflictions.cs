@@ -4,9 +4,6 @@ namespace Neurotrauma;
 public class NTAfflictions
 {
 
-    // TODO: CHANGE THIS TO FALSE WHEN GOING PUBLIC TO AVOID SPAMMING CONSOLE LIKE RETARDS
-    private static bool IS_DEBUG = true;
-
     /// <summary>
     /// Determines how often an affliction gets updated; Low every 6 seconds, Medium every 4 seconds and High every 2 seconds.
     /// </summary>
@@ -66,7 +63,7 @@ public class NTAfflictions
         /// <returns>true if the function was registered successfully, false otherwise (the affliction already has a function assigned).</returns>s
         public bool Register(NTAfflictionPrefab affliction)
         {
-            if (NTConfig.Get("NT_DEBUG_MODE", IS_DEBUG))
+            if (NTConfig.Get("NT_DEBUG_MODE", false))
             {
                 HF.PrintUtility($"[{this.ModID}] Registering affliction: {affliction.ID}");
             }
@@ -105,7 +102,7 @@ public class NTAfflictions
         /// <returns>true if the function was overridden or registered successfully, false otherwise.</returns>
         public bool Override(NTAfflictionPrefab Affliction, bool RegisterInstead = true)
         {
-            if (NTConfig.Get("NT_DEBUG_MODE", IS_DEBUG))
+            if (NTConfig.Get("NT_DEBUG_MODE", false))
             {
                 HF.PrintUtility($"[{this.ModID}] Overriding affliction: {Affliction.ID}");
             }
@@ -114,7 +111,7 @@ public class NTAfflictions
             {
                 if (RegisterInstead)
                 {
-                    if (NTConfig.Get("NT_DEBUG_MODE", IS_DEBUG))
+                    if (NTConfig.Get("NT_DEBUG_MODE", false))
                     {
                         HF.PrintWarning($"[{this.ModID}] Affliction with ID '{Affliction.ID}' is not registered. Will register instead.");
                     }
@@ -140,7 +137,7 @@ public class NTAfflictions
         public bool Remove(string AfflictionID)
         {
             // TODO: set debug mode to false when going public to avoid spamming console like retards
-            if (NTConfig.Get("NT_DEBUG_MODE", IS_DEBUG))
+            if (NTConfig.Get("NT_DEBUG_MODE", false))
             {
                 HF.PrintUtility($"[{this.ModID}] Removing affliction: {AfflictionID}");
             }
