@@ -21,6 +21,9 @@ namespace Neurotrauma
 
         public static NTItems.NTItemFunctionLoader NTItemsLoader = new NTItems.NTItemFunctionLoader(NTInfo.Name);
 
+        public static ContentPackage NeurotraumaContentPackage;
+        public static string NeurotraumaModDir;
+
         private Harmony ?harmony;
 
         // ---------------------------        Functions        --------------------------- \\
@@ -36,6 +39,9 @@ namespace Neurotrauma
         // No fucking clue what should go here for now tbh. - Lukako
         public void Initialize()
         {
+
+            PluginService.TryGetPackageForPlugin<NeurotraumaInit>(out NeurotraumaContentPackage);
+            NeurotraumaModDir = Path.GetDirectoryName(NeurotraumaContentPackage.Path.ToString());
 
             //TODO: update that idk what it does but it seems to be important for lua scripts to work properly so ill let BEAN (may God strikes him down)s -Cookie
 
