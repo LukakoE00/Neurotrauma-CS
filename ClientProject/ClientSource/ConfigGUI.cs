@@ -13,12 +13,13 @@ namespace Neurotrauma
         private static readonly List<(LocalizedString Name, string Identifier)> BaseConfigPages = new()
         {
             (TextManager.Get("ntconfig_pagename_prices"), "prices"),
-            (TextManager.Get("ntconfig_pagename_availability"), "availability")
+            (TextManager.Get("ntconfig_pagename_availability"), "availability"),
+            (TextManager.Get("ntconfig_pagename_experimental"), "experimental")
         };
 
         private static string? SelectedExpansion = null;
         private static string? SelectedType = null;
-        
+
         private class LayoutChunk
         {
             public string? Type;
@@ -207,7 +208,7 @@ namespace Neurotrauma
 
                 SidebarButton.OnClicked = (Button, _) =>
                 {
-                    var Selection = ((string Name, string Identifier, string Type)) Button.UserData;
+                    var Selection = ((string Name, string Identifier, string Type))Button.UserData;
 
                     SelectedExpansion = Selection.Identifier;
                     SelectedType = Selection.Type;
@@ -551,157 +552,157 @@ namespace Neurotrauma
             switch (entry.Type)
             {
                 case ConfigEntryType.Float:
-                {
-                    float min = entry.Range?.Length > 0 ? entry.Range[0] : 0f;
-                    float max = entry.Range?.Length > 1 ? entry.Range[1] : 100f;
-
-                    float DisplayMin = min == 0.99f ? 1f : min;
-
-                    var Label = new GUITextBlock(new RectTransform(new Vector2(1f, 0.04f), list.Content.RectTransform), $"{entry.Name} ({DisplayMin}-{max})")
                     {
-                        CanBeFocused = false,
-                        TextAlignment = Alignment.Center,
-                        Wrap = true,
-                        AutoScaleHorizontal = true
-                    };
+                        float min = entry.Range?.Length > 0 ? entry.Range[0] : 0f;
+                        float max = entry.Range?.Length > 1 ? entry.Range[1] : 100f;
 
-                    if (!entry.Description.IsNullOrEmpty())
-                    {
-                        Label.ToolTip = entry.Description;
-                        Label.CanBeFocused = true;
-                    }
+                        float DisplayMin = min == 0.99f ? 1f : min;
 
-                    var Scalar = new GUINumberInput(new RectTransform(new Vector2(1f, 0.08f), list.Content.RectTransform), NumberType.Float)
-                    {
-                        ValueStep = 0.1f,
-                        MinValueFloat = min,
-                        MaxValueFloat = max,
-                        FloatValue = NTConfig.Get(id, Convert.ToSingle(entry.Default))
-                    };
-
-                    Scalar.OnValueChanged += input =>
-                    {
-                        NTConfig.Set(id, input.FloatValue);
-                    };
-
-                    if (entry.Resettable)
-                    {
-                        var ResetButton = new GUIButton(new RectTransform(new Vector2(0.1f, 1f), Scalar.RectTransform), style: "GUIButtonRefresh")
+                        var Label = new GUITextBlock(new RectTransform(new Vector2(1f, 0.04f), list.Content.RectTransform), $"{entry.Name} ({DisplayMin}-{max})")
                         {
-                            ToolTip = TextManager.Get("ntgui_resetbutton_tooltip")
+                            CanBeFocused = false,
+                            TextAlignment = Alignment.Center,
+                            Wrap = true,
+                            AutoScaleHorizontal = true
                         };
 
-                        ResetButton.OnClicked += (_, _) =>
+                        if (!entry.Description.IsNullOrEmpty())
                         {
-                            float def = Convert.ToSingle(entry.Default);
-                            Scalar.FloatValue = def;
-                            NTConfig.Set(id, def);
-                            return true;
-                        };
-                    }
+                            Label.ToolTip = entry.Description;
+                            Label.CanBeFocused = true;
+                        }
 
-                    break;
-                }
+                        var Scalar = new GUINumberInput(new RectTransform(new Vector2(1f, 0.08f), list.Content.RectTransform), NumberType.Float)
+                        {
+                            ValueStep = 0.1f,
+                            MinValueFloat = min,
+                            MaxValueFloat = max,
+                            FloatValue = NTConfig.Get(id, Convert.ToSingle(entry.Default))
+                        };
+
+                        Scalar.OnValueChanged += input =>
+                        {
+                            NTConfig.Set(id, input.FloatValue);
+                        };
+
+                        if (entry.Resettable)
+                        {
+                            var ResetButton = new GUIButton(new RectTransform(new Vector2(0.1f, 1f), Scalar.RectTransform), style: "GUIButtonRefresh")
+                            {
+                                ToolTip = TextManager.Get("ntgui_resetbutton_tooltip")
+                            };
+
+                            ResetButton.OnClicked += (_, _) =>
+                            {
+                                float def = Convert.ToSingle(entry.Default);
+                                Scalar.FloatValue = def;
+                                NTConfig.Set(id, def);
+                                return true;
+                            };
+                        }
+
+                        break;
+                    }
 
                 case ConfigEntryType.Bool:
-                {
-                    var TickBox = new GUITickBox(new RectTransform(new Vector2(0.5f, 0.05f), list.Content.RectTransform), entry.Name);
-
-                    if (!entry.Description.IsNullOrWhiteSpace())
                     {
-                        TickBox.ToolTip = entry.Description;
+                        var TickBox = new GUITickBox(new RectTransform(new Vector2(0.5f, 0.05f), list.Content.RectTransform), entry.Name);
+
+                        if (!entry.Description.IsNullOrWhiteSpace())
+                        {
+                            TickBox.ToolTip = entry.Description;
+                        }
+
+                        TickBox.Selected = NTConfig.Get(id, false);
+
+                        TickBox.OnSelected += tb =>
+                        {
+                            NTConfig.Set(id, tb.Selected);
+                            return true;
+                        };
+
+                        break;
                     }
-
-                    TickBox.Selected = NTConfig.Get(id, false);
-
-                    TickBox.OnSelected += tb =>
-                    {
-                        NTConfig.Set(id, tb.Selected);
-                        return true;
-                    };
-
-                    break;
-                }
 
                 case ConfigEntryType.String:
-                {
-                    string styleSuffix = entry.Style.IsNullOrWhiteSpace() ? string.Empty : $" ({entry.Style})";
-
-                    var Label = new GUITextBlock(new RectTransform(new Vector2(1f, 0.05f), list.Content.RectTransform), $"{entry.Name}{styleSuffix}")
                     {
-                        CanBeFocused = false,
-                        TextAlignment = Alignment.Center,
-                        Wrap = true,
-                        AutoScaleHorizontal = true
-                    };
+                        string styleSuffix = entry.Style.IsNullOrWhiteSpace() ? string.Empty : $" ({entry.Style})";
 
-                    if (!entry.Description.IsNullOrWhiteSpace())
-                    {
-                        Label.ToolTip = entry.Description;
-                        Label.CanBeFocused = true;
-                    }
-
-                    float Boxsize = entry.Boxsize > 0f ? entry.Boxsize : 0.08f;
-                    string value = GUIComponents.GetStringValue(id, entry);
-
-                    GUITextBox input;
-
-                    if (entry.NoMLTB)
-                    {
-                        input = new GUITextBox(new RectTransform(new Vector2(1f, Boxsize), list.Content.RectTransform));
-                        input.Text = value;
-                    }
-                    else
-                    {
-                        input = GUIComponents.CreateMultiLineTextBox(list.Content.RectTransform, value, Boxsize);
-                    }
-
-                    input.OnTextChanged += (textBox, text) =>
-                    {
-                        if (entry.Value is List<string> || entry.Default is List<string>)
+                        var Label = new GUITextBlock(new RectTransform(new Vector2(1f, 0.05f), list.Content.RectTransform), $"{entry.Name}{styleSuffix}")
                         {
-                            NTConfig.Set(id, text.Split(',').Select(s => s.Trim()).Where(s => !string.IsNullOrWhiteSpace(s)).ToList());
+                            CanBeFocused = false,
+                            TextAlignment = Alignment.Center,
+                            Wrap = true,
+                            AutoScaleHorizontal = true
+                        };
+
+                        if (!entry.Description.IsNullOrWhiteSpace())
+                        {
+                            Label.ToolTip = entry.Description;
+                            Label.CanBeFocused = true;
+                        }
+
+                        float Boxsize = entry.Boxsize > 0f ? entry.Boxsize : 0.08f;
+                        string value = GUIComponents.GetStringValue(id, entry);
+
+                        GUITextBox input;
+
+                        if (entry.NoMLTB)
+                        {
+                            input = new GUITextBox(new RectTransform(new Vector2(1f, Boxsize), list.Content.RectTransform));
+                            input.Text = value;
                         }
                         else
                         {
-                            NTConfig.Set(id, text);
+                            input = GUIComponents.CreateMultiLineTextBox(list.Content.RectTransform, value, Boxsize);
                         }
-                        return true;
-                    };
 
-                    if (entry.Resettable)
-                    {
-                        var ResetButton = new GUIButton(new RectTransform(new Vector2(0.1f, 1f), input.RectTransform), style: "GUIButtonRefresh")
+                        input.OnTextChanged += (textBox, text) =>
                         {
-                            ToolTip = TextManager.Get("ntgui_resetbutton_tooltip")
-                        };
-
-                        ResetButton.OnClicked += (_, _) =>
-                        {
-                            var defObj = entry.Default;
-
-                            if (defObj is List<string> dl)
+                            if (entry.Value is List<string> || entry.Default is List<string>)
                             {
-                                input.Text = string.Join(",", dl);
-                                NTConfig.Set(id, dl);
-                            }
-                            else if (defObj is string ds)
-                            {
-                                input.Text = ds;
-                                NTConfig.Set(id, ds);
+                                NTConfig.Set(id, text.Split(',').Select(s => s.Trim()).Where(s => !string.IsNullOrWhiteSpace(s)).ToList());
                             }
                             else
                             {
-                                string def = defObj?.ToString() ?? "";
-                                input.Text = def;
-                                NTConfig.Set(id, def);
+                                NTConfig.Set(id, text);
                             }
-
                             return true;
                         };
+
+                        if (entry.Resettable)
+                        {
+                            var ResetButton = new GUIButton(new RectTransform(new Vector2(0.1f, 1f), input.RectTransform), style: "GUIButtonRefresh")
+                            {
+                                ToolTip = TextManager.Get("ntgui_resetbutton_tooltip")
+                            };
+
+                            ResetButton.OnClicked += (_, _) =>
+                            {
+                                var defObj = entry.Default;
+
+                                if (defObj is List<string> dl)
+                                {
+                                    input.Text = string.Join(",", dl);
+                                    NTConfig.Set(id, dl);
+                                }
+                                else if (defObj is string ds)
+                                {
+                                    input.Text = ds;
+                                    NTConfig.Set(id, ds);
+                                }
+                                else
+                                {
+                                    string def = defObj?.ToString() ?? "";
+                                    input.Text = def;
+                                    NTConfig.Set(id, def);
+                                }
+
+                                return true;
+                            };
+                        }
+                        break;
                     }
-                    break;
-                }
             }
         }
     }
