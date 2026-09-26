@@ -45,6 +45,8 @@ namespace Neurotrauma
 
             //TODO: update that idk what it does but it seems to be important for lua scripts to work properly so ill let BEAN (may God strikes him down)s -Cookie
 
+            UserData.RegisterType<NTAfflictions.NTAfflictionsLoader>();
+
             UserData.RegisterType(typeof(HF));
             UserData.RegisterType(typeof(NTInfo));
             UserData.RegisterType(typeof(NTC));
@@ -57,10 +59,25 @@ namespace Neurotrauma
 
             UserData.RegisterType(typeof(NeurotraumaInit));
 
+            
+
             UserData.RegisterType(typeof(NTAfflictions));
+            UserData.RegisterType(typeof(NTAfflictions.AfflictionPriority));
+            UserData.RegisterType(typeof(NTAfflictions.NTAfflictionPrefabBuilder));
+            UserData.RegisterType(typeof(NTAfflictions.NTAfflictionsLoader));
+            UserData.RegisterType(typeof(NTAfflictions.NTAfflictionPrefab));
             UserData.RegisterType(typeof(NTHuman));
+            UserData.RegisterType(typeof(NTHuman.CharacterTags));
             UserData.RegisterType(typeof(NTStats));
+            UserData.RegisterType(typeof(NTStats.NTStat));
+            UserData.RegisterType(typeof(NTStats.NTStatBool));
+            UserData.RegisterType(typeof(NTStats.NTStatFloat));
+            UserData.RegisterType(typeof(NTStats.NTStatLoader));
             UserData.RegisterType(typeof(NTItems));
+            UserData.RegisterType(typeof(NTItems.ItemsAfflictionInfos));
+            UserData.RegisterType(typeof(NTItems.ItemUpdateFunctionInfos));
+            UserData.RegisterType(typeof(NTItems.NTItemFunctionLoader));
+            UserData.RegisterType(typeof(NTHumanUpdate));
 
             UserData.RegisterType(typeof(SpeakAboutIssuesPatch));
 
