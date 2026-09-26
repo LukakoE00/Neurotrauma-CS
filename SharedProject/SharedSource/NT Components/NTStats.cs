@@ -34,6 +34,30 @@ public partial class NTStats
             this.ID = Name;
         }
 
+        public NTStatFloat(string Name, float MinStrength, float MaxStrength, float DefaultStrength, LuaCsFunc? Update) : base(Name)
+        {
+            this.MinStrength = MinStrength;
+            this.MaxStrength = MaxStrength;
+            this.DefaultStrength = DefaultStrength;
+            this.ID = Name;
+
+            this.UpdateFunction = (NTHuman A, float B) =>
+            {
+                try
+                {
+                    if (Update == null) return this.DefaultStrength;
+
+                    return (float)Update(A, B);
+                }
+                catch (Exception e)
+                {
+                    HF.PrintError($"[Lua] Error when updating Stat {Name} : {e.Message}");
+                    return this.DefaultStrength;
+                }
+
+            };
+        }
+
         public float Get(NTHuman C, float deltaTime, float defaultStrength = 0)
         {
             return (UpdateFunction != null) ? UpdateFunction.Invoke(C, deltaTime) : defaultStrength;
@@ -51,6 +75,27 @@ public partial class NTStats
         {
             this.DefaultValue = DefaultValue;
             this.UpdateFunction = Update;
+        }
+
+        public NTStatBool(string Name,bool DefaultValue, LuaCsFunc? Update) : base(Name)
+        {
+            this.DefaultValue = DefaultValue;
+
+            this.UpdateFunction = (NTHuman A, float B) =>
+            {
+                try
+                {
+                    if (Update == null) return this.DefaultValue;
+
+                    return (bool) Update(A, B);
+                }
+                catch (Exception e)
+                {
+                    HF.PrintError($"[Lua] Error when updating Stat {Name} : {e.Message}");
+                    return this.DefaultValue;
+                }
+
+            };
         }
 
         public bool Get(NTHuman C, float deltaTime, bool defaultValue = false)

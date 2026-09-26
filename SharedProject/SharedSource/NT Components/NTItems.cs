@@ -57,6 +57,22 @@ public class NTItems
             return true;
         }
 
+        public bool Register(string ItemID, LuaCsAction UpdateFunction)
+        {
+            return Register(ItemID, (Action<ItemUpdateFunctionInfos>) ((ItemUpdateFunctionInfos) =>
+            {
+                try
+                {
+                    UpdateFunction(UpdateFunction);
+                }
+                catch (Exception e)
+                {
+                    HF.PrintError($"[Lua] Error when updating item {ItemID} : {e.Message}");
+                }
+
+            }));
+        }
+
 
         /// <summary>
         /// Overrides the update function for an existing item. If the item does not have a registered update function, it will register it instead.
