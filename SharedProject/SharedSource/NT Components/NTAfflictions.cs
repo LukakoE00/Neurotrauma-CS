@@ -317,6 +317,22 @@ public class NTAfflictions
             return this;
         }
 
+        public NTAfflictionPrefabBuilder SetUpdateAction(LuaCsAction UpdateAction)
+        {
+            this.Affliction.UpdateAction = (NTHuman C, string ID, LimbType Limb, float DeltaTime) =>
+            {
+                try
+                {
+                    UpdateAction(C, ID, Limb, DeltaTime);
+                } catch(Exception e)
+                {
+                    HF.PrintError($"[Lua] Error when updating {ID} : {e.Message}");
+                }
+                
+            };
+            return this;
+        }
+
         public NTAfflictionPrefab Build()
         {
             return this.Affliction;
