@@ -202,7 +202,8 @@ namespace Neurotrauma
                             Name = TextManager.Get("ntconfig.entryname.DoHUIButtons"),
                             Default = true,
                             Type = ConfigEntryType.Bool,
-                            Description = TextManager.Get("ntconfig.entrydescription.DoHUIButtons")
+                            Description = TextManager.Get("ntconfig.entrydescription.DoHUIButtons"),
+                            IsClientside = true,
                         },
 
                         ["NT_Calculations"] = new ConfigEntry
@@ -211,7 +212,6 @@ namespace Neurotrauma
                             Default = true,
                             Type = ConfigEntryType.Bool,
                             Description = TextManager.Get("ntconfig.entrydescription.calculations"),
-                            IsClientside = true,
                         },
 
                         ["NT_vanillaSkillCheck"] = new ConfigEntry

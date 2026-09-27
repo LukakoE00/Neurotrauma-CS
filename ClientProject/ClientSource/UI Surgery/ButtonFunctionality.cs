@@ -80,13 +80,13 @@ namespace Neurotrauma.ClientSource
                 CloseContextMenu();
             }
 
-            if (NTConfig.Get("NT_cl_DoHUIButtons", true) == true)
+            if (NTConfig.Get("NT_cl_DoHUIButtons", true))
             {
                 Frame.Visible = __0 != null;
             }
             else
             {
-                return;
+                Frame.Visible = false;
             }
         }
 

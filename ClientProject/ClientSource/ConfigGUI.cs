@@ -838,7 +838,12 @@ namespace Neurotrauma
                 string targetPath = (ConfigFileNameBox != null && !ConfigFileNameBox.Text.IsNullOrWhiteSpace()) ? NTConfig.ResolvePathFromName(ConfigFileNameBox.Text) : NTConfig.CurrentConfigPath;
 
                 NTConfig.SetCurrentConfigPath(targetPath);
-                NTConfig.SaveConfig(targetPath);
+                string savedPath = NTConfig.SaveConfig(targetPath);
+
+                if (ConfigFileNameBox != null)
+                {
+                    ConfigFileNameBox.Text = Path.GetFileNameWithoutExtension(savedPath);
+                }
 
                 if (CanCurrentClientEditSettings())
                 {
@@ -1224,6 +1229,15 @@ namespace Neurotrauma
                             return false;
                         }
                     };
+                }
+
+                // Highlight whichever preset is currently selected
+                string NormalizedPresetPath = Path.GetFullPath(PresetPath).Replace('\\', '/');
+                string NormalizedCurrentPath = Path.GetFullPath(NTConfig.CurrentConfigPath).Replace('\\', '/');
+
+                if (string.Equals(NormalizedPresetPath, NormalizedCurrentPath, StringComparison.OrdinalIgnoreCase))
+                {
+                    PresetListBox.Select(PresetPath);
                 }
             }
 
