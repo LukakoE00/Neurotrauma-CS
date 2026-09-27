@@ -202,7 +202,7 @@ namespace Neurotrauma
                             Name = TextManager.Get("ntconfig.entryname.DoHUIButtons"),
                             Default = true,
                             Type = ConfigEntryType.Bool,
-                            Description = TextManager.Get("ntconfigdescription_DoHUIButtons")
+                            Description = TextManager.Get("ntconfig.entrydescription.DoHUIButtons")
                         },
 
                         ["NT_Calculations"] = new ConfigEntry
@@ -210,7 +210,8 @@ namespace Neurotrauma
                             Name = TextManager.Get("ntconfig.entryname.calculations"),
                             Default = true,
                             Type = ConfigEntryType.Bool,
-                            Description = TextManager.Get("ntconfigdescription_calculations"),
+                            Description = TextManager.Get("ntconfig.entrydescription.calculations"),
+                            IsClientside = true,
                         },
 
                         ["NT_vanillaSkillCheck"] = new ConfigEntry
@@ -218,7 +219,7 @@ namespace Neurotrauma
                             Name = TextManager.Get("ntconfig.entryname.vanillaskillcheck"),
                             Default = false,
                             Type = ConfigEntryType.Bool,
-                            Description = TextManager.Get("ntconfigdescription_vanillaskillcheck"),
+                            Description = TextManager.Get("ntconfig.entrydescription.vanillaskillcheck"),
                         },
 
                         ["NT_disableBotAlgorithms"] = new ConfigEntry
@@ -226,7 +227,7 @@ namespace Neurotrauma
                             Name = TextManager.Get("ntconfig.entryname.disablebotalgorithms"),
                             Default = true,
                             Type = ConfigEntryType.Bool,
-                            Description = TextManager.Get("ntconfigdescription_disablebotalgorithms"),
+                            Description = TextManager.Get("ntconfig.entrydescription.disablebotalgorithms"),
                         },
 
                         ["NT_screams"] = new ConfigEntry
@@ -234,7 +235,7 @@ namespace Neurotrauma
                             Name = TextManager.Get("ntconfig.entryname.screams"),
                             Default = true,
                             Type = ConfigEntryType.Bool,
-                            Description = TextManager.Get("ntconfigdescription_screams"),
+                            Description = TextManager.Get("ntconfig.entrydescription.screams"),
                         },
 
                         ["NT_organRejection"] = new ConfigEntry
@@ -242,7 +243,7 @@ namespace Neurotrauma
                             Name = TextManager.Get("ntconfig.entryname.organrejection"),
                             Default = false,
                             Type = ConfigEntryType.Bool,
-                            Description = TextManager.Get("ntconfigdescription_organrejection"),
+                            Description = TextManager.Get("ntconfig.entrydescription.organrejection"),
                         },
 
                         ["NT_fracturesRemoveCasts"] = new ConfigEntry
@@ -250,7 +251,7 @@ namespace Neurotrauma
                             Name = TextManager.Get("ntconfig.entryname.fracturesremovecasts"),
                             Default = true,
                             Type = ConfigEntryType.Bool,
-                            Description = TextManager.Get("ntconfigdescription_fracturesremovecasts"),
+                            Description = TextManager.Get("ntconfig.entrydescription.fracturesremovecasts"),
                         },
 
                         ["NTCRE_ConsentRequiredExtra"] = new ConfigEntry
@@ -258,7 +259,7 @@ namespace Neurotrauma
                             Name = TextManager.Get("ntconfig.entryname.consentrequiredextra"),
                             Default = false,
                             Type = ConfigEntryType.Bool,
-                            Description = TextManager.Get("ntconfigdescription_consentrequiredextra"),
+                            Description = TextManager.Get("ntconfig.entrydescription.consentrequiredextra"),
                         },
 
                         ["NT_creatureNoFallDamage"] = new ConfigEntry
@@ -274,7 +275,7 @@ namespace Neurotrauma
                             Style = TextManager.Get("ntconfigstyle_creaturenofalldamage"),
                             Type = ConfigEntryType.String,
                             Boxsize = 0.1f,
-                            Description = TextManager.Get("ntconfigdescription_creaturenofalldamage"),
+                            Description = TextManager.Get("ntconfig.entrydescription.creaturenofalldamage"),
                         },
 
                         ["NTSCAN_header1"] = new ConfigEntry
@@ -288,7 +289,7 @@ namespace Neurotrauma
                             Name = TextManager.Get("ntconfig.entryname.enablecoloredscanner"),
                             Default = true,
                             Type = ConfigEntryType.Bool,
-                            Description = TextManager.Get("ntconfigdescription_enablecoloredscanner"),
+                            Description = TextManager.Get("ntconfig.entrydescription.enablecoloredscanner"),
                         },
 
                         ["NTSCAN_lowmedThreshold"] = new ConfigEntry
@@ -297,7 +298,7 @@ namespace Neurotrauma
                             Default = 25f,
                             Range = new float[] { 0, 100 },
                             Type = ConfigEntryType.Float,
-                            Description = TextManager.Get("ntconfigdescription_lowmedthreshold"),
+                            Description = TextManager.Get("ntconfig.entrydescription.lowmedthreshold"),
                             Group = true,
                         },
 
@@ -307,7 +308,7 @@ namespace Neurotrauma
                             Default = 65f,
                             Range = new float[] { 0, 100 },
                             Type = ConfigEntryType.Float,
-                            Description = TextManager.Get("ntconfigdescription_medhighthreshold"),
+                            Description = TextManager.Get("ntconfig.entrydescription.medhighthreshold"),
                             Group = true,
                         },
 
@@ -318,7 +319,7 @@ namespace Neurotrauma
                             Style = TextManager.Get("ntconfigstyle_basecolor"),
                             Type = ConfigEntryType.String,
                             Boxsize = 0.05f,
-                            Description = TextManager.Get("ntconfigdescription_basecolor"),
+                            Description = TextManager.Get("ntconfig.entrydescription.basecolor"),
                             NoMLTB = true,
                             Group = true,
                             Resettable = true,
@@ -331,7 +332,7 @@ namespace Neurotrauma
                             Style = TextManager.Get("ntconfigstyle_namecolor"),
                             Type = ConfigEntryType.String,
                             Boxsize = 0.05f,
-                            Description = TextManager.Get("ntconfigdescription_namecolor"),
+                            Description = TextManager.Get("ntconfig.entrydescription.namecolor"),
                             NoMLTB = true,
                             Group = true,
                             Resettable = true,
@@ -344,7 +345,7 @@ namespace Neurotrauma
                             Style = TextManager.Get("ntconfigstyle_lowcolor"),
                             Type = ConfigEntryType.String,
                             Boxsize = 0.05f,
-                            Description = TextManager.Get("ntconfigdescription_lowcolor"),
+                            Description = TextManager.Get("ntconfig.entrydescription.lowcolor"),
                             NoMLTB = true,
                             Group = true,
                             Resettable = true,
@@ -357,7 +358,7 @@ namespace Neurotrauma
                             Style = TextManager.Get("ntconfigstyle_medcolor"),
                             Type = ConfigEntryType.String,
                             Boxsize = 0.05f,
-                            Description = TextManager.Get("ntconfigdescription_medcolor"),
+                            Description = TextManager.Get("ntconfig.entrydescription.medcolor"),
                             NoMLTB = true,
                             Group = true,
                             Resettable = true,
@@ -370,7 +371,7 @@ namespace Neurotrauma
                             Style = TextManager.Get("ntconfigstyle_highcolor"),
                             Type = ConfigEntryType.String,
                             Boxsize = 0.05f,
-                            Description = TextManager.Get("ntconfigdescription_highcolor"),
+                            Description = TextManager.Get("ntconfig.entrydescription.highcolor"),
                             NoMLTB = true,
                             Group = true,
                             Resettable = true,
@@ -383,7 +384,7 @@ namespace Neurotrauma
                             Style = TextManager.Get("ntconfigstyle_vitalcolor"),
                             Type = ConfigEntryType.String,
                             Boxsize = 0.05f,
-                            Description = TextManager.Get("ntconfigdescription_vitalcolor"),
+                            Description = TextManager.Get("ntconfig.entrydescription.vitalcolor"),
                             NoMLTB = true,
                             Group = true,
                             Resettable = true,
@@ -396,7 +397,7 @@ namespace Neurotrauma
                             Style = TextManager.Get("ntconfigstyle_removalcolor"),
                             Type = ConfigEntryType.String,
                             Boxsize = 0.05f,
-                            Description = TextManager.Get("ntconfigdescription_removalcolor"),
+                            Description = TextManager.Get("ntconfig.entrydescription.removalcolor"),
                             NoMLTB = true,
                             Group = true,
                             Resettable = true,
@@ -409,7 +410,7 @@ namespace Neurotrauma
                             Style = TextManager.Get("ntconfigstyle_customcolor"),
                             Type = ConfigEntryType.String,
                             Boxsize = 0.05f,
-                            Description = TextManager.Get("ntconfigdescription_customcolor"),
+                            Description = TextManager.Get("ntconfig.entrydescription.customcolor"),
                             NoMLTB = true,
                             Group = true,
                             Resettable = true,
@@ -433,7 +434,7 @@ namespace Neurotrauma
                             Style = TextManager.Get("ntconfigstyle_vitalcategory"),
                             Type = ConfigEntryType.String,
                             Boxsize = 0.1f,
-                            Description = TextManager.Get("ntconfigdescription_vitalcategory"),
+                            Description = TextManager.Get("ntconfig.entrydescription.vitalcategory"),
                         },
 
                         ["NTSCAN_RemovalCategory"] = new ConfigEntry
@@ -455,7 +456,7 @@ namespace Neurotrauma
                             Style = TextManager.Get("ntconfigstyle_removalcategory"),
                             Type = ConfigEntryType.String,
                             Boxsize = 0.1f,
-                            Description = TextManager.Get("ntconfigdescription_removalcategory"),
+                            Description = TextManager.Get("ntconfig.entrydescription.removalcategory"),
                         },
 
                         ["NTSCAN_CustomCategory"] = new ConfigEntry
@@ -465,7 +466,7 @@ namespace Neurotrauma
                             Style = TextManager.Get("ntconfigstyle_customcategory"),
                             Type = ConfigEntryType.String,
                             Boxsize = 0.1f,
-                            Description = TextManager.Get("ntconfigdescription_customcategory"),
+                            Description = TextManager.Get("ntconfig.entrydescription.customcategory"),
                         },
 
                         ["NTSCAN_IgnoredCategory"] = new ConfigEntry
@@ -475,7 +476,7 @@ namespace Neurotrauma
                             Style = TextManager.Get("ntconfigstyle_ignoredcategory"),
                             Type = ConfigEntryType.String,
                             Boxsize = 0.1f,
-                            Description = TextManager.Get("ntconfigdescription_ignoredcategory"),
+                            Description = TextManager.Get("ntconfig.entrydescription.ignoredcategory"),
                         },
 
                         // ================================= COMMON ITEMS ========================================
@@ -1280,7 +1281,7 @@ namespace Neurotrauma
                             Name = TextManager.Get("ntconfig.entryname.hardmodeaorticrupture"),
                             Default = false,
                             Type = ConfigEntryType.Bool,
-                            Description = TextManager.Get("ntconfigdescription_hardmodeaorticrupture"),
+                            Description = TextManager.Get("ntconfig.entrydescription.hardmodeaorticrupture"),
                         },
 
                         ["NT_OpenCloseTamponade"] = new ConfigEntry
@@ -1289,7 +1290,7 @@ namespace Neurotrauma
                             Name = TextManager.Get("ntconfig.entryname.openclosetamponade"),
                             Default = false,
                             Type = ConfigEntryType.Bool,
-                            Description = TextManager.Get("ntconfigdescription_openclosetamponade"),
+                            Description = TextManager.Get("ntconfig.entrydescription.openclosetamponade"),
                         },
 
                         ["NT_DoNitroprusside"] = new ConfigEntry
@@ -1298,7 +1299,7 @@ namespace Neurotrauma
                             Name = TextManager.Get("ntconfig.entryname.donitroprusside"),
                             Default = false,
                             Type = ConfigEntryType.Bool,
-                            Description = TextManager.Get("ntconfigdescription_donitroprusside"),
+                            Description = TextManager.Get("ntconfig.entrydescription.donitroprusside"),
                         },
 
                         ["NT_DoOrganScalpels"] = new ConfigEntry
@@ -1307,7 +1308,7 @@ namespace Neurotrauma
                             Name = TextManager.Get("ntconfig.entryname.doorganscalpels"),
                             Default = false,
                             Type = ConfigEntryType.Bool,
-                            Description = TextManager.Get("ntconfigdescription_doorganscalpels"),
+                            Description = TextManager.Get("ntconfig.entrydescription.doorganscalpels"),
                         },
                     }
                 }

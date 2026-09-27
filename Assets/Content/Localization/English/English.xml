@@ -1368,115 +1368,115 @@ Can give blood to: AB+</entitydescription.ab_positivecard>
 
 <!-- Clientside: Show HUI Buttons -->
 <ntconfig.entryname.DoHUIButtons>Show Neurotrauma Tool Buttons</ntconfig.entryname.DoHUIButtons>
-<ntconfigdescription_DoHUIButtons>‖color:gui.green‖Clientside option.‖end‖\n\nAdds an extra overlay to the HealthUI that can be clicked to use the depicted item. Disable this if you don't plan on using them and find them annoying.</ntconfigdescription_DoHUIButtons>
+<ntconfig.entrydescription.DoHUIButtons>‖color:gui.green‖Clientside option.‖end‖\n\nAdds an extra overlay to the HealthUI that can be clicked to use the depicted item. Disable this if you don't plan on using them and find them annoying.</ntconfig.entrydescription.DoHUIButtons>
 
 <!-- Character calculations -->
 <ntconfig.entryname.calculations>Neurotrauma Mod Functionality</ntconfig.entryname.calculations>
-<ntconfigdescription_calculations>‖color:gui.red‖Turning this off will make the mod stop working properly.‖end‖\n\nDisable the update calculations for the mod. This shouldn't be done unless you're experiencing terrible amounts of desync or lag - since disabling NT calculations then may make the game playable again.</ntconfigdescription_calculations>
+<ntconfig.entrydescription.calculations>‖color:gui.red‖Turning this off will make the mod stop working properly.‖end‖\n\nDisable the update calculations for the mod. This shouldn't be done unless you're experiencing terrible amounts of desync or lag - since disabling NT calculations then may make the game playable again.</ntconfig.entrydescription.calculations>
 
 <!-- Vanilla skill check formula -->
 <ntconfig.entryname.vanillaskillcheck>Vanilla skill check formula</ntconfig.entryname.vanillaskillcheck>
-<ntconfigdescription_vanillaskillcheck>Use the Vanilla skill check formula instead of the modified Neurotrauma formula. Effective change: Skill / RequiredSkill (NTCS) to 100 - (RequiredSkill - Skill) / 100 (Vanilla).</ntconfigdescription_vanillaskillcheck>
+<ntconfig.entrydescription.vanillaskillcheck>Use the Vanilla skill check formula instead of the modified Neurotrauma formula. Effective change: Skill / RequiredSkill (NTCS) to 100 - (RequiredSkill - Skill) / 100 (Vanilla).</ntconfig.entrydescription.vanillaskillcheck>
 
 <!-- Disable bot treatment algorithms -->
 <ntconfig.entryname.disablebotalgorithms>Disable bot treatment algorithms</ntconfig.entryname.disablebotalgorithms>
-<ntconfigdescription_disablebotalgorithms>Prevents bots from attempting to treat afflictions.\nThis is desireable, because bots suck at treating things for the current moment.</ntconfigdescription_disablebotalgorithms>
+<ntconfig.entrydescription.disablebotalgorithms>Prevents bots from attempting to treat afflictions.\nThis is desireable, because bots suck at treating things for the current moment.</ntconfig.entrydescription.disablebotalgorithms>
 
 <!-- Screams -->
 <ntconfig.entryname.screams>Screams</ntconfig.entryname.screams>
-<ntconfigdescription_screams>If enabled, characters may scream when in severe pain.</ntconfigdescription_screams>
+<ntconfig.entrydescription.screams>If enabled, characters may scream when in severe pain.</ntconfig.entrydescription.screams>
 
 <!-- Organ rejection -->
 <ntconfig.entryname.organrejection>Organ rejection</ntconfig.entryname.organrejection>
-<ntconfigdescription_organrejection>If enabled, there is a chance that a transplanted organ gets rejected.\n\nThe higher the patients immunity at the time of the transplant, the higher the chance of rejection.</ntconfigdescription_organrejection>
+<ntconfig.entrydescription.organrejection>If enabled, there is a chance that a transplanted organ gets rejected.\n\nThe higher the patients immunity at the time of the transplant, the higher the chance of rejection.</ntconfig.entrydescription.organrejection>
 
 <!-- Fractures remove casts -->
 <ntconfig.entryname.fracturesremovecasts>Fractures remove casts</ntconfig.entryname.fracturesremovecasts>
-<ntconfigdescription_fracturesremovecasts>If enabled, damage that would fracture an already cast limb will instead remove the cast and re-fracture the limb.</ntconfigdescription_fracturesremovecasts>
+<ntconfig.entrydescription.fracturesremovecasts>If enabled, damage that would fracture an already cast limb will instead remove the cast and re-fracture the limb.</ntconfig.entrydescription.fracturesremovecasts>
 
 <!-- NPC Consent Required -->
 <ntconfig.entryname.consentrequiredextra>NPCs consent requirement to medical interactions</ntconfig.entryname.consentrequiredextra>
-<ntconfigdescription_consentrequiredextra>Integrated consent required mod.\nIf enabled, NPCs outside of your team or submarine mission will get aggravated by medical interactions.</ntconfigdescription_consentrequiredextra>
+<ntconfig.entrydescription.consentrequiredextra>Integrated consent required mod.\nIf enabled, NPCs outside of your team or submarine mission will get aggravated by medical interactions.</ntconfig.entrydescription.consentrequiredextra>
 
 <!-- Excluded creatures that abuse the fall damage mechanic -->
 <ntconfig.entryname.creaturenofalldamage>Excluded creatures that abuse the fall damage mechanic</ntconfig.entryname.creaturenofalldamage>
 <ntconfigstyle_creaturenofalldamage>SpeciesName,SpeciesName</ntconfigstyle_creaturenofalldamage>
-<ntconfigdescription_creaturenofalldamage>Certain creatures abuse the falldamage calculations in a way that causes way too much damage; damage by creatures in this list is decreased to counteract this.\n\nYou can add or remove creatures to customize this list to your liking. Use debug command `nt_listcreatures` to list the SpeciesName of the creature you are patching in your game.\n\nReport other creatures that abuse fall damage to the discord server to improve this default list.</ntconfigdescription_creaturenofalldamage>
+<ntconfig.entrydescription.creaturenofalldamage>Certain creatures abuse the falldamage calculations in a way that causes way too much damage; damage by creatures in this list is decreased to counteract this.\n\nYou can add or remove creatures to customize this list to your liking. Use debug command `nt_listcreatures` to list the SpeciesName of the creature you are patching in your game.\n\nReport other creatures that abuse fall damage to the discord server to improve this default list.</ntconfig.entrydescription.creaturenofalldamage>
 
 <!-- =================== Scanner Settings =================== -->
 <ntconfig.entryname.header2>Scanner Settings</ntconfig.entryname.header2>
 
 <!-- Colored Scanner -->
 <ntconfig.entryname.enablecoloredscanner>Colored Scanner</ntconfig.entryname.enablecoloredscanner>
-<ntconfigdescription_enablecoloredscanner>Enable colored health scanner text messages.</ntconfigdescription_enablecoloredscanner>
+<ntconfig.entrydescription.enablecoloredscanner>Enable colored health scanner text messages.</ntconfig.entrydescription.enablecoloredscanner>
 
 <!-- Low-Medium Text Threshold -->
 <ntconfig.entryname.lowmedthreshold>Low-Medium Text Threshold</ntconfig.entryname.lowmedthreshold>
-<ntconfigdescription_lowmedthreshold>Where the Low progress color ends and Medium progress color begins.</ntconfigdescription_lowmedthreshold>
+<ntconfig.entrydescription.lowmedthreshold>Where the Low progress color ends and Medium progress color begins.</ntconfig.entrydescription.lowmedthreshold>
 
 <!-- Medium-High Text Threshold -->
 <ntconfig.entryname.medhighthreshold>Medium-High Text Threshold</ntconfig.entryname.medhighthreshold>
-<ntconfigdescription_medhighthreshold>Where the Medium progress color ends and High progress color begins.</ntconfigdescription_medhighthreshold>
+<ntconfig.entrydescription.medhighthreshold>Where the Medium progress color ends and High progress color begins.</ntconfig.entrydescription.medhighthreshold>
 
 <!-- Base Text Color -->
 <ntconfig.entryname.basecolor>Base Text Color</ntconfig.entryname.basecolor>
 <ntconfigstyle_basecolor>R,G,B</ntconfigstyle_basecolor>
-<ntconfigdescription_basecolor>Scanner text color.</ntconfigdescription_basecolor>
+<ntconfig.entrydescription.basecolor>Scanner text color.</ntconfig.entrydescription.basecolor>
 
 <!-- Name Text Color -->
 <ntconfig.entryname.namecolor>Name Text Color</ntconfig.entryname.namecolor>
 <ntconfigstyle_namecolor>R,G,B</ntconfigstyle_namecolor>
-<ntconfigdescription_namecolor>Scanner text color for player names.</ntconfigdescription_namecolor>
+<ntconfig.entrydescription.namecolor>Scanner text color for player names.</ntconfig.entrydescription.namecolor>
 
 <!-- Low Priority Color -->
 <ntconfig.entryname.lowcolor>Low Priority Color</ntconfig.entryname.lowcolor>
 <ntconfigstyle_lowcolor>R,G,B</ntconfigstyle_lowcolor>
-<ntconfigdescription_lowcolor>Scanner text color for afflictions that have low progress.</ntconfigdescription_lowcolor>
+<ntconfig.entrydescription.lowcolor>Scanner text color for afflictions that have low progress.</ntconfig.entrydescription.lowcolor>
 
 <!-- Medium Priority Color -->
 <ntconfig.entryname.medcolor>Medium Priority Color</ntconfig.entryname.medcolor>
 <ntconfigstyle_medcolor>R,G,B</ntconfigstyle_medcolor>
-<ntconfigdescription_medcolor>Scanner text color for afflictions that have medium progress.</ntconfigdescription_medcolor>
+<ntconfig.entrydescription.medcolor>Scanner text color for afflictions that have medium progress.</ntconfig.entrydescription.medcolor>
 
 <!-- High Priority Color -->
 <ntconfig.entryname.highcolor>High Priority Color</ntconfig.entryname.highcolor>
 <ntconfigstyle_highcolor>R,G,B</ntconfigstyle_highcolor>
-<ntconfigdescription_highcolor>Scanner text color for afflictions that have high progress.</ntconfigdescription_highcolor>
+<ntconfig.entrydescription.highcolor>Scanner text color for afflictions that have high progress.</ntconfig.entrydescription.highcolor>
 
 <!-- Vital Priority Color -->
 <ntconfig.entryname.vitalcolor>Vital Priority Color</ntconfig.entryname.vitalcolor>
 <ntconfigstyle_vitalcolor>R,G,B</ntconfigstyle_vitalcolor>
-<ntconfigdescription_vitalcolor>Scanner text color for vital afflictions (Arterial bleed, Traumatic amputation).</ntconfigdescription_vitalcolor>
+<ntconfig.entrydescription.vitalcolor>Scanner text color for vital afflictions (Arterial bleed, Traumatic amputation).</ntconfig.entrydescription.vitalcolor>
 
 <!-- Removed Organ Color -->
 <ntconfig.entryname.removalcolor>Removed Organ Color</ntconfig.entryname.removalcolor>
 <ntconfigstyle_removalcolor>R,G,B</ntconfigstyle_removalcolor>
-<ntconfigdescription_removalcolor>Scanner text color for removed organs (Heart removed, leg amputation).</ntconfigdescription_removalcolor>
+<ntconfig.entrydescription.removalcolor>Scanner text color for removed organs (Heart removed, leg amputation).</ntconfig.entrydescription.removalcolor>
 
 <!-- Custom Category Color -->
 <ntconfig.entryname.customcolor>Custom Category Color</ntconfig.entryname.customcolor>
 <ntconfigstyle_customcolor>R,G,B</ntconfigstyle_customcolor>
-<ntconfigdescription_customcolor>Scanner text color for the custom category.</ntconfigdescription_customcolor>
+<ntconfig.entrydescription.customcolor>Scanner text color for the custom category.</ntconfig.entrydescription.customcolor>
 
 <!-- Included Vital Afflictions -->
 <ntconfig.entryname.vitalcategory>Included Vital Afflictions</ntconfig.entryname.vitalcategory>
 <ntconfigstyle_vitalcategory>identifier,identifier</ntconfigstyle_vitalcategory>
-<ntconfigdescription_vitalcategory>You can add or remove afflictions to customize this list to your liking.</ntconfigdescription_vitalcategory>
+<ntconfig.entrydescription.vitalcategory>You can add or remove afflictions to customize this list to your liking.</ntconfig.entrydescription.vitalcategory>
 
 <!-- Included Removal Affictions -->
 <ntconfig.entryname.removalcategory>Included Removal Affictions</ntconfig.entryname.removalcategory>
 <ntconfigstyle_removalcategory>identifier, identifier</ntconfigstyle_removalcategory>
-<ntconfigdescription_removalcategory>You can add or remove afflictions to customize this list to your liking.</ntconfigdescription_removalcategory>
+<ntconfig.entrydescription.removalcategory>You can add or remove afflictions to customize this list to your liking.</ntconfig.entrydescription.removalcategory>
 
 <!-- Custom Affliction Category -->
 <ntconfig.entryname.customcategory>Custom Affliction Category</ntconfig.entryname.customcategory>
 <ntconfigstyle_customcategory>identifier,identifier</ntconfigstyle_customcategory>
-<ntconfigdescription_customcategory>You can add or remove afflictions to customize this list to your liking.</ntconfigdescription_customcategory>
+<ntconfig.entrydescription.customcategory>You can add or remove afflictions to customize this list to your liking.</ntconfig.entrydescription.customcategory>
 
 <!-- Ignored Afflictions -->
 <ntconfig.entryname.ignoredcategory>Ignored Afflictions</ntconfig.entryname.ignoredcategory>
 <ntconfigstyle_ignoredcategory>identifier,identifier</ntconfigstyle_ignoredcategory>
-<ntconfigdescription_ignoredcategory>Afflictions added to this category will be ignored by the health scanner.</ntconfigdescription_ignoredcategory>
+<ntconfig.entrydescription.ignoredcategory>Afflictions added to this category will be ignored by the health scanner.</ntconfig.entrydescription.ignoredcategory>
 
 <!-- =================== Common Item Price Multipliers =================== -->
 <ntconfig.entryname.header3>Common Item Price Multipliers</ntconfig.entryname.header3>
@@ -1701,19 +1701,19 @@ Can give blood to: AB+</entitydescription.ab_positivecard>
 
 <!-- Hardmode Aortic Rupture -->
 <ntconfig.entryname.hardmodeaorticrupture>Hardmode Aortic Rupture</ntconfig.entryname.hardmodeaorticrupture>
-<ntconfigdescription_hardmodeaorticrupture>Enable the Medical Stent and Aortic Balloon as the only method to fix Aortic Rupture.</ntconfigdescription_hardmodeaorticrupture>
+<ntconfig.entrydescription.hardmodeaorticrupture>Enable the Medical Stent and Aortic Balloon as the only method to fix Aortic Rupture.</ntconfig.entrydescription.hardmodeaorticrupture>
 
 <!-- Open Close Tamponade -->
 <ntconfig.entryname.openclosetamponade>Open Close Tamponade</ntconfig.entryname.openclosetamponade>
-<ntconfigdescription_openclosetamponade>Enable the closing with sutures as the only method to fix Cardiac Tamponade.</ntconfigdescription_openclosetamponade>
+<ntconfig.entrydescription.openclosetamponade>Enable the closing with sutures as the only method to fix Cardiac Tamponade.</ntconfig.entrydescription.openclosetamponade>
 
 <!-- Enable Sodium Nitroprusside -->
 <ntconfig.entryname.donitroprusside>Enable Sodium Nitroprusside</ntconfig.entryname.donitroprusside>
-<ntconfigdescription_donitroprusside>Allow Sodium Nitroprusside to be fabricated, bought and found.</ntconfigdescription_donitroprusside>
+<ntconfig.entrydescription.donitroprusside>Allow Sodium Nitroprusside to be fabricated, bought and found.</ntconfig.entrydescription.donitroprusside>
 
 <!-- Enable Organ Scalpels -->
 <ntconfig.entryname.doorganscalpels>Enable Organ Scalpels</ntconfig.entryname.doorganscalpels>
-<ntconfigdescription_doorganscalpels>Allow Organ scalpels and Surgery Box Scalpel set to be fabricated, bought and found.</ntconfigdescription_doorganscalpels>
+<ntconfig.entrydescription.doorganscalpels>Allow Organ scalpels and Surgery Box Scalpel set to be fabricated, bought and found.</ntconfig.entrydescription.doorganscalpels>
 
 
 </infotexts>
