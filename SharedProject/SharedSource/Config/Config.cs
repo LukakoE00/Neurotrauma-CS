@@ -48,12 +48,13 @@ namespace Neurotrauma
         public static List<ConfigExpansion> Expansions = new List<ConfigExpansion>();
 
         private static readonly string PresetDirectoryPath = Path.Combine(SaveUtil.DefaultSaveFolder, "ModConfigs", "Neurotrauma Configs").Replace('\\', '/');
-        private static readonly string DefaultConfigFilePath = Path.Combine(PresetDirectoryPath, "Default Config.json").Replace('\\', '/');
-        public static string CurrentConfigPath { get; private set; } = DefaultConfigFilePath;
-        public static string DefaultConfigName => Path.GetFileNameWithoutExtension(DefaultConfigFilePath);
 
         private static readonly string DefaultPresetDirectory = Path.Combine(NeurotraumaInit.NeurotraumaModDir, "DefaultPresets").Replace('\\', '/');
         private static readonly string DefaultPresetDirectoryFull = Path.GetFullPath(DefaultPresetDirectory).Replace('\\', '/');
+
+        private static readonly string DefaultConfigFilePath = Path.Combine(DefaultPresetDirectory, "Intended Config Preset.json").Replace('\\', '/');
+        public static string CurrentConfigPath { get; private set; } = DefaultConfigFilePath;
+        public static string DefaultConfigName => Path.GetFileNameWithoutExtension(DefaultConfigFilePath);
 
         public static IEnumerable<string> GetDefaultPresetFiles() => Directory.GetFiles(DefaultPresetDirectory, "*.json");
 
@@ -67,7 +68,7 @@ namespace Neurotrauma
         {
             if (string.IsNullOrWhiteSpace(name) || name.Equals(DefaultConfigName))
             {
-                return DefaultPresetDirectory;
+                return DefaultConfigFilePath;
             }
 
             return GetPresetFilePath(name);
@@ -236,20 +237,21 @@ namespace Neurotrauma
 
         public static IEnumerable<string> GetPresetFiles() => Directory.Exists(PresetDirectoryPath) ? Directory.GetFiles(PresetDirectoryPath, "*.json") : Array.Empty<string>();
 
-        public static void SaveConfig(string? TargetPath = null)
+        public static string SaveConfig(string? TargetPath = null)
         {
             TargetPath = TargetPath ?? CurrentConfigPath;
 
             if (IsDefaultPreset(TargetPath))
             {
-                HF.PrintError("Error: Can't overwrite a default Preset!");
-                return;
+                string OriginalName = Path.GetFileNameWithoutExtension(TargetPath);
+                TargetPath = GetPresetFilePath(OriginalName + " - Local Copy");
+                CurrentConfigPath = TargetPath;
             }
 
 #if CLIENT
-                if (TargetPath == DefaultPresetDirectory && HF.GameIsMultiplayer() && GameMain.Client.IsServerOwner)
+                if (IsDefaultPreset(TargetPath) && HF.GameIsMultiplayer() && GameMain.Client.IsServerOwner)
                 {
-                    return;
+                    return TargetPath;
                 }
 #endif
 
@@ -275,8 +277,10 @@ namespace Neurotrauma
             }
             catch (Exception ex)
             {
-                LuaCsLogger.LogError("Error saving config: " + ex.Message);
+                HF.PrintError("Error saving config: " + ex.Message);
             }
+
+            return TargetPath;
         }
 
         public static void SendConfig()
@@ -285,22 +289,20 @@ namespace Neurotrauma
 
             foreach (var kvp in Entries)
             {
-                if (kvp.Value.Type != ConfigEntryType.Category || kvp.Value.IsClientside == true)
+                if (kvp.Value.Type != ConfigEntryType.Category && kvp.Value.IsClientside != true)
                 {
                     tableToSend[kvp.Key] = kvp.Value.Value;
                 }
             }
 
             IWriteMessage msg = LuaCsSetup.Instance.Networking.Start("NT.ConfigUpdate");
-
             msg.WriteString(JsonSerializer.Serialize(tableToSend));
-
             LuaCsSetup.Instance.Networking.Send(msg);
         }
 
         public static void LoadConfig(string? path = null)
         {
-            string TargetPath = path ?? DefaultPresetDirectory;
+            string TargetPath = path ?? DefaultConfigFilePath;
 
             if (!File.Exists(TargetPath))
             {
@@ -328,6 +330,10 @@ namespace Neurotrauma
 
                             case ConfigEntryType.Float:
                                 entry.Value = (float)kvp.Value.GetDouble();
+                                break;
+
+                            case ConfigEntryType.Integer:
+                                entry.Value = kvp.Value.GetInt32();
                                 break;
 
                             case ConfigEntryType.String:
@@ -362,10 +368,11 @@ namespace Neurotrauma
 
                 foreach (KeyValuePair<string, JsonElement> kvp in receivedTable)
                 {
-                    if (Entries.TryGetValue(kvp.Key, out ConfigEntry? entry))
+                    if (Entries.TryGetValue(kvp.Key, out ConfigEntry? entry) && entry.IsClientside != true)
                     {
                         if (entry.Type == ConfigEntryType.Bool) entry.Value = kvp.Value.GetBoolean();
                         else if (entry.Type == ConfigEntryType.Float) entry.Value = (float)kvp.Value.GetDouble();
+                        else if (entry.Type == ConfigEntryType.Integer) entry.Value = kvp.Value.GetInt32();
                         else if (entry.Type == ConfigEntryType.String)
                         {
                             if (entry.Default is List<string> || kvp.Value.ValueKind == JsonValueKind.Array)
@@ -388,13 +395,18 @@ namespace Neurotrauma
             }
         }
 
-        public static void ResetConfig()
+        public static void ResetConfig(bool ClientsideOnly = false)
         {
             foreach (var kvp in Entries)
             {
                 ConfigEntry entry = kvp.Value;
 
                 if (entry.Type == ConfigEntryType.Category)
+                {
+                    continue;
+                }
+
+                if (ClientsideOnly && entry.IsClientside != true)
                 {
                     continue;
                 }
@@ -420,6 +432,17 @@ namespace Neurotrauma
             {
                 if (entry.Value == null) return defaultValue;
                 if (entry.Value is float) return (float)entry.Value;
+            }
+            return defaultValue;
+        }
+
+        public static int Get(string key, int defaultValue)
+        {
+            if (Entries.TryGetValue(key, out ConfigEntry? entry))
+            {
+                if (entry.Value == null) return defaultValue;
+                if (entry.Value is int i) return i;
+                if (entry.Value is float f) return (int)f;
             }
             return defaultValue;
         }

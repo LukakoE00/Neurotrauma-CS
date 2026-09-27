@@ -19,7 +19,6 @@ namespace Neurotrauma
                 }
 
                 NTConfig.ReceiveConfig(msg);
-                NTConfig.SaveConfig();
             });
 
             LuaCsSetup.Instance.Networking.Receive("NT.ConfigRequest", (object[] args) =>
