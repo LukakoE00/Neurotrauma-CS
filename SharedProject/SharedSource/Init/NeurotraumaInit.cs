@@ -58,8 +58,6 @@ namespace Neurotrauma
 
             UserData.RegisterType(typeof(NeurotraumaInit));
 
-            
-
             UserData.RegisterType(typeof(NTAfflictions));
             UserData.RegisterType(typeof(NTAfflictions.AfflictionPriority));
             UserData.RegisterType(typeof(NTAfflictions.NTAfflictionPrefabBuilder));
@@ -79,10 +77,6 @@ namespace Neurotrauma
             UserData.RegisterType(typeof(NTHumanUpdate));
 
             UserData.RegisterType(typeof(SpeakAboutIssuesPatch));
-
-
-            UserData.RegisterType(typeof(NTAfflictions.AfflictionPriority));
-            UserData.RegisterType(typeof(List<NTAfflictions.AfflictionPriority>));
 
             UserData.RegisterType(typeof(OnDamaged));
 
