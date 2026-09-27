@@ -896,7 +896,6 @@ Can give blood to: AB+</entitydescription.ab_positivecard>
 <itemmsgmodifytable>[[attack]] Interact</itemmsgmodifytable>
 <operatingtabellabel>Surgery Table Upgrades</operatingtabellabel>  
 
-
 <!-- Multipurpose scalpel -->
 <entityname.multiscalpel>Multipurpose Scalpel</entityname.multiscalpel>
 <entitydescription.multiscalpel>Novelty scalpel. Disabled and needs activation. In the practitioner's hands, a button pad can be utilised to activate the scalpel and switch between between operations: making incisions, extracting organs, removing bandages, or doing malpractice.</entitydescription.multiscalpel>
@@ -923,7 +922,11 @@ Can give blood to: AB+</entitydescription.ab_positivecard>
 <multiscalpel.btn.bandage>Bandages, casts, malpractice</multiscalpel.btn.bandage>
 <multiscalpel.btn.speedflex>Adaptive organ extraction</multiscalpel.btn.speedflex>
 
-<!-- ================================================= Toggleable ================================================= -->
+<!-- Surgery Kit -->
+<entityname.surgerykit>Surgery Kit</entityname.surgerykit>
+<entitydescription.surgerykit>A kit that contains all the basic surgical equipment a medic could need. \n\nEnables usage of all basic Neurotrauma tools in the Health Menu.</entitydescription.surgerykit>
+
+	<!-- ================================================= Toggleable ================================================= -->
 
 <!-- Sodium nitroprusside -->
 <entityname.pressuremeds>Sodium Nitroprusside</entityname.pressuremeds>
@@ -1229,6 +1232,34 @@ Can give blood to: AB+</entitydescription.ab_positivecard>
 <npcdialogsym.palpitations_2>My heart is beating faster than usual!</npcdialogsym.palpitations_2>
 <npcdialogsym.palpitations_3>My heart is pounding!</npcdialogsym.palpitations_3>
 
+<!-- ================================================= HUI Button Translations ================================================= -->
+<!-- Scalpel Button -->
+<nt_huibutton_enabled_scalpel>Use a Scalpel on the currently selected limb. \nRequired Medical Skill: ‖color:gui.green‖30‖end‖</nt_huibutton_enabled_scalpel>
+
+<!-- Hemostat Button -->
+<nt_huibutton_enabled_hemostat>Use a Hemostat on the currently selected limb. \nRequired Medical Skill: ‖color:gui.green‖None‖end‖</nt_huibutton_enabled_hemostat>
+
+<!-- Skin Retractors Button -->
+<nt_huibutton_enabled_skinretractors>Use Skin Retractors on the currently selected limb. \nRequired Medical Skill: ‖color:gui.green‖30‖end‖</nt_huibutton_enabled_skinretractors>
+
+<!-- Surgical Drill Button -->
+<nt_huibutton_enabled_surgicaldrill>Use a Surgical Drill on the currently selected limb. \nRequired Medical Skill: ‖color:gui.green‖45‖end‖</nt_huibutton_enabled_surgicaldrill>
+
+<!-- Surgery Saw Button -->
+<nt_huibutton_enabled_surgerysaw>Use a Surgery Saw on the currently selected limb. \nRequired Medical Skill: ‖color:gui.green‖50‖end‖</nt_huibutton_enabled_surgerysaw>
+
+<!-- Tweezers Button -->
+<nt_huibutton_enabled_tweezers>Use Tweezers on the currently selected limb. \nRequired Medical Skill: ‖color:gui.green‖30‖end‖</nt_huibutton_enabled_tweezers>
+
+<!-- Trauma Shears Button -->
+<nt_huibutton_enabled_traumashears>Use Trauma Shears on the currently selected limb. \nRequired Medical Skill: ‖color:gui.green‖10‖end‖</nt_huibutton_enabled_traumashears>
+
+<!-- Organ Scalpel Button -->
+<nt_huibutton_enabled_organscalpel>Swap or remove a specific organ in either the Torso or the Head, depending on the currently selected limb.</nt_huibutton_enabled_organscalpel>
+
+<!-- Disabled Tooltip for Surgery Kit Dependencies -->
+<nt_huibutton_disabled_surgerykit>Requires Surgery Kit in inventory!</nt_huibutton_disabled_surgerykit>
+
 <!-- ================================================= Config Options ================================================= -->
 <!-- Pause Menu Button -->
 <ntgui_pausemenubutton_name>Neurotrauma Config</ntgui_pausemenubutton_name>
@@ -1247,8 +1278,9 @@ Can give blood to: AB+</entitydescription.ab_positivecard>
 <ntgui_config_title>Neurotrauma Config Settings</ntgui_config_title>
 
 <!-- Default Pages -->
-<ntconfig_pagename_prices>Item Prices</ntconfig_pagename_prices>
-<ntconfig_pagename_availability>Item Availability</ntconfig_pagename_availability>
+<ntconfig_pagename_prices>Item Price Multipliers</ntconfig_pagename_prices>
+<ntconfig_pagename_availability>Item Availability Options</ntconfig_pagename_availability>
+<ntconfig_pagename_experimental>Experimental</ntconfig_pagename_experimental>
 
 <!-- Default Warning -->
 <ntgui_defaultmessage_config>Server config can only be changed by host or authorized clients.</ntgui_defaultmessage_config>
@@ -1418,6 +1450,9 @@ Can give blood to: AB+</entitydescription.ab_positivecard>
 <ntconfigstyle_ignoredcategory>identifier,identifier</ntconfigstyle_ignoredcategory>
 <ntconfigdescription_ignoredcategory>Afflictions added to this category will be ignored by the health scanner.</ntconfigdescription_ignoredcategory>
 
+<ntconfigname_debugmode>Debug Mode</ntconfigname_debugmode>
+<ntconfigdescription_debugmode>MORE LOGS! Useful if you're debugging or developping an addon.</ntconfigdescription_debugmode>
+	
 <!-- =================== Common Item Price Multipliers =================== -->
 <ntconfigname_header3>Common Item Price Multipliers</ntconfigname_header3>
 <!-- Morphine -->
@@ -1655,5 +1690,21 @@ Can give blood to: AB+</entitydescription.ab_positivecard>
 <ntconfigname_doorganscalpels>Enable Organ Scalpels</ntconfigname_doorganscalpels>
 <ntconfigdescription_doorganscalpels>Allow Organ scalpels and Surgery Box Scalpel set to be fabricated, bought and found.</ntconfigdescription_doorganscalpels>
 
+<!-- =================== EXPERIMENTAL ===================-->
+
+<ntconfigname_header9>Experimental Settings</ntconfigname_header9>
+
+<ntconfigname_description1>The settings below define the time (in ticks, 60 ticks per second) between every update cycles. Afflictions are separated into different priority levels depending on their "importance". Changing these values can cause unintended behaviors, only change these if you know what you are doing!</ntconfigname_description1>
+<ntconfigname_description2></ntconfigname_description2>
+
+<ntconfigname_updateinterval_high>Update Interval (High Priority Afflictions)</ntconfigname_updateinterval_high>
+<ntconfigname_updateinterval_medium>Update Interval (Medium Priority Afflictions)</ntconfigname_updateinterval_medium>
+<ntconfigname_updateinterval_low>Update Interval (Low Priority Afflictions)</ntconfigname_updateinterval_low>
+<ntconfigname_updateinterval_monster>Update Interval (Monsters)</ntconfigname_updateinterval_monster>
+
+<ntconfigdescription_updateinterval_high></ntconfigdescription_updateinterval_high>
+<ntconfigdescription_updateinterval_medium></ntconfigdescription_updateinterval_medium>
+<ntconfigdescription_updateinterval_low></ntconfigdescription_updateinterval_low>
+<ntconfigdescription_updateinterval_monster></ntconfigdescription_updateinterval_monster>
 
 </infotexts>

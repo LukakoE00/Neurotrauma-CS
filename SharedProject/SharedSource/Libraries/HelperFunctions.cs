@@ -1167,62 +1167,7 @@ namespace Neurotrauma
         /// <param name="Value">Given Value to clamp.</param>
         /// <param name="Aff">The affliction that determines the values to clamp to.</param>
         /// <returns>A double with the clamped value.</returns>
-        public static double AffClamp(double Value, NTAffliction Aff)
-        {
-            return Math.Clamp(Value, Aff.MinStrength, Aff.MaxStrength);
-        }
-
-        /// <summary>
-        /// Clamps NTCS AffData between the Min and Max Strength set in the relevant Affliction.
-        /// </summary>
-        /// <param name="Value">Given Value to clamp.</param>
-        /// <param name="Aff">The affliction that determines the values to clamp to.</param>
-        /// <returns>A double with the clamped value.</returns>
-        public static double AffClamp(double Value, NTNonLimbAffliction Aff)
-        {
-            return Math.Clamp(Value,Aff.MinStrength,Aff.MaxStrength);
-        }
-
-        /// <summary>
-        /// Clamps NTCS AffData between the Min and Max Strength set in the relevant Affliction.
-        /// </summary>
-        /// <param name="Value">Given Value to clamp.</param>
-        /// <param name="Aff">The affliction that determines the values to clamp to.</param>
-        /// <returns>A double with the clamped value.</returns>
-        public static double AffClamp(double Value, NTLimbAffliction Aff)
-        {
-            return Math.Clamp(Value, Aff.MinStrength, Aff.MaxStrength);
-        }
-
-        /// <summary>
-        /// Clamps NTCS AffData between the Min and Max Strength set in the relevant Affliction.
-        /// </summary>
-        /// <param name="Value">Given Value to clamp.</param>
-        /// <param name="Aff">The affliction that determines the values to clamp to.</param>
-        /// <returns>A double with the clamped value.</returns>
-        public static double AffClamp(double Value, NTBloodAffliction Aff)
-        {
-            return Math.Clamp(Value, Aff.MinStrength, Aff.MaxStrength);
-        }
-
-        /// <summary>
-        /// Clamps NTCS AffData between the Min and Max Strength set in the relevant Affliction.
-        /// </summary>
-        /// <param name="Value">Given Value to clamp.</param>
-        /// <param name="Aff">The affliction that determines the values to clamp to.</param>
-        /// <returns>A double with the clamped value.</returns>
-        public static double AffClamp(double Value, NTSymptom Aff)
-        {
-            return Math.Clamp(Value, Aff.MinStrength, Aff.MaxStrength);
-        }
-
-        /// <summary>
-        /// Clamps NTCS AffData between the Min and Max Strength set in the relevant Affliction.
-        /// </summary>
-        /// <param name="Value">Given Value to clamp.</param>
-        /// <param name="Aff">The affliction that determines the values to clamp to.</param>
-        /// <returns>A double with the clamped value.</returns>
-        public static double AffClamp(double Value, NTLimbSymptom Aff)
+        public static double AffClamp(double Value, NTAfflictions.NTAfflictionPrefab Aff)
         {
             return Math.Clamp(Value, Aff.MinStrength, Aff.MaxStrength);
         }
@@ -1324,7 +1269,7 @@ namespace Neurotrauma
             }
 
             // Is the affliction null?
-            Affliction Aff = GetAfflictionLimb(Character, Identifier, GivenLimbType);
+            Affliction? Aff = GetAfflictionLimb(Character, Identifier, GivenLimbType);
             if (Aff == null) 
             {
                 return false;
@@ -1433,7 +1378,7 @@ namespace Neurotrauma
         /// <returns>Actual strength of the given affliction if present, else the defaultvalue.</returns>
         public static float GetAfflictionStrengthLimb(Character Character, LimbType GivenLimbType = LimbType.Torso, string Identifier = "", float DefaultValue = 0)
         {
-            Affliction aff = GetAfflictionLimb(Character, Identifier, GivenLimbType);
+            Affliction? aff = GetAfflictionLimb(Character, Identifier, GivenLimbType);
 
             if (aff == null)
             {
@@ -1995,21 +1940,21 @@ namespace Neurotrauma
         /// <param name="Limb">The limb to check.</param>
         /// <param name="Key">The stat relevant for this limb.</param>
         /// <returns>True if it should, else False.</returns>
-        public static bool LimbLockedInitial(HumanUpdate.NTHuman C, LimbType Limb, string Key)
+        public static bool LimbLockedInitial(NTHuman C, LimbType Limb, string Key)
         {
-            return (!NTC.HasSymptomFalse(C, Key))
-                   && (
-                       NTC.HasSymptom(C, Key)
-                        || LimbIsAmputated(C.Human, Limb)
+            
+            return (
+                    C.HasSymptom(Key)
+                    || LimbIsAmputated(C.Human, Limb)
 
-                        || (GetAfflictionStrengthLimb(C.Human, Limb, "bandaged") <= 0 
-                            && GetAfflictionStrengthLimb(C.Human, Limb, "bandageddirty") <= 0 && GetAfflictionStrength(C.Human, "afadrenaline") <= 0 
-                            && LimbIsDislocated(C.Human, Limb, Limb == LimbType.LeftArm || Limb == LimbType.RightArm))
+                    || (GetAfflictionStrengthLimb(C.Human, Limb, "bandaged") <= 0 
+                        && GetAfflictionStrengthLimb(C.Human, Limb, "bandageddirty") <= 0 && GetAfflictionStrength(C.Human, "afadrenaline") <= 0 
+                        && LimbIsDislocated(C.Human, Limb, Limb == LimbType.LeftArm || Limb == LimbType.RightArm))
 
-                        || (GetAfflictionStrengthLimb(C.Human, Limb, "gypsumcast") <= 0
-                            && GetAfflictionStrength(C.Human, "afadrenaline") <= 0
-                            && LimbIsBroken(C.Human, Limb, Limb == LimbType.LeftArm || Limb == LimbType.RightArm)) 
-           );
+                    || (GetAfflictionStrengthLimb(C.Human, Limb, "gypsumcast") <= 0
+                        && GetAfflictionStrength(C.Human, "afadrenaline") <= 0
+                        && LimbIsBroken(C.Human, Limb, Limb == LimbType.LeftArm || Limb == LimbType.RightArm)
+           ));
         }
 
         /// <summary>
@@ -2019,14 +1964,17 @@ namespace Neurotrauma
         /// <param name="DamageValue">Current organ damage amount.</param>
         /// <param name="NoMaxStrength">Should the maximum amount of damage be uncapped?</param>
         /// <returns>Amended damage value as a double.</returns>
-        public static double OrganDamageCalc(HumanUpdate.NTHuman C, double DamageValue, bool NoMaxStrength = false)
+        public static float OrganDamageCalc(NTHuman C, float DamageValue, float deltaTime,bool NoMaxStrength = false)
         {
             if (DamageValue >= 99 && !(NoMaxStrength))
             {
                 return 100;
             }
 
-            return DamageValue - 0.01 * C.GetDoubleStatStrength("healingrate") * C.GetDoubleStatStrength("specificOrganDamageHealMultiplier") * NT.DeltaTime;
+            return DamageValue - 0.01f 
+                * C.GetFloatStat("healingrate") 
+                * C.GetFloatStat("specificOrganDamageHealMultiplier") 
+                * deltaTime;
         }
 
         /// <summary>
@@ -2035,7 +1983,7 @@ namespace Neurotrauma
         /// <param name="C">The character whose organs are changed.</param>
         /// <param name="DamageValue">Current organ damage amount.</param>
         /// <returns>Amended damage value as a double.</returns>
-        public static double KidneyDamageCalc(HumanUpdate.NTHuman C, double DamageValue)
+        public static float KidneyDamageCalc(NTHuman C, float DamageValue, float deltaTime)
         {
             if (DamageValue >= 99)
             {
@@ -2049,12 +1997,29 @@ namespace Neurotrauma
                     return DamageValue; 
                 }
 
-                return DamageValue - 0.01 * C.GetDoubleStatStrength("healingrate") * C.GetDoubleStatStrength("specificOrganDamageHealMultiplier") * NT.DeltaTime;
+                return DamageValue - 0.01f * C.GetFloatStat("healingrate") * C.GetFloatStat("specificOrganDamageHealMultiplier") * deltaTime;
             }
-            return DamageValue - 0.02 * C.GetDoubleStatStrength("healingrate") * C.GetDoubleStatStrength("specificOrganDamageHealMultiplier") * NT.DeltaTime;
+            return DamageValue - 0.02f * C.GetFloatStat("healingrate") * C.GetFloatStat("specificOrganDamageHealMultiplier") * deltaTime;
         }
 
         // ---------------------------------------- Client Related Helper Functions -------------------------------------------------- \\
+
+        public static bool IsWorkshopPackageEnabledByID(ContentPackage Package, string DesiredPackageIdentifier)
+        {
+            if (Package == null)
+            {
+                return false;
+            }
+
+            string CurrentPackageID = Package.UgcId.ToString();
+
+            if (CurrentPackageID == DesiredPackageIdentifier)
+            {
+                return true;
+            }
+
+            return false;
+        }
 
         /// <summary>
         /// Converts a character to a client.

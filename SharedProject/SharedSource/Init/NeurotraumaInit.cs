@@ -1,7 +1,6 @@
 ﻿using Barotrauma.LuaCs.Events;
-using MonoGame.Utilities;
 using MoonSharp.Interpreter;
-using static Barotrauma.Networking.MessageFragment;
+
 
 namespace Neurotrauma
 {
@@ -15,6 +14,16 @@ namespace Neurotrauma
         public IPluginManagementService PluginService { get; set; }
         public ILoggerService LoggerService { get; set; }
         public ILuaScriptManagementService luaScriptManagementService = LuaCsSetup.Instance.LuaScriptManagementService;
+
+        public static NTAfflictions.NTAfflictionsLoader NTAfflLoader = new NTAfflictions.NTAfflictionsLoader(NTInfo.Name);
+
+        public static NTStats.NTStatLoader NTStatsLoader = new NTStats.NTStatLoader(NTInfo.Name);
+
+        public static NTItems.NTItemFunctionLoader NTItemsLoader = new NTItems.NTItemFunctionLoader(NTInfo.Name);
+
+        public static ContentPackage NeurotraumaContentPackage;
+        public static string NeurotraumaModDir;
+
         private Harmony ?harmony;
 
         // ---------------------------        Functions        --------------------------- \\
@@ -30,10 +39,15 @@ namespace Neurotrauma
         // No fucking clue what should go here for now tbh. - Lukako
         public void Initialize()
         {
+
+            PluginService.TryGetPackageForPlugin<NeurotraumaInit>(out NeurotraumaContentPackage);
+            NeurotraumaModDir = Path.GetDirectoryName(NeurotraumaContentPackage.Path.ToString());
+
+            //TODO: update that idk what it does but it seems to be important for lua scripts to work properly so ill let BEAN (may God strikes him down)s -Cookie
+
             UserData.RegisterType(typeof(HF));
-            UserData.RegisterType(typeof(NT));
-            UserData.RegisterType(typeof(NTLua));
             UserData.RegisterType(typeof(NTInfo));
+            UserData.RegisterType(typeof(NTAddon));
             UserData.RegisterType(typeof(NTC));
 
             UserData.RegisterType(typeof(NTConfig));
@@ -44,31 +58,31 @@ namespace Neurotrauma
 
             UserData.RegisterType(typeof(NeurotraumaInit));
 
-            UserData.RegisterType(typeof(NTAfflictions));
-            UserData.RegisterType(typeof(NTAffliction));
+            
 
-            UserData.RegisterType(typeof(NTItemMethods));
-            UserData.RegisterType(typeof(NTItemMethodsLuaCompat));
+            UserData.RegisterType(typeof(NTAfflictions));
+            UserData.RegisterType(typeof(NTAfflictions.AfflictionPriority));
+            UserData.RegisterType(typeof(NTAfflictions.NTAfflictionPrefabBuilder));
+            UserData.RegisterType(typeof(NTAfflictions.NTAfflictionsLoader));
+            UserData.RegisterType(typeof(NTAfflictions.NTAfflictionPrefab));
+            UserData.RegisterType(typeof(NTHuman));
+            UserData.RegisterType(typeof(NTHuman.CharacterTags));
+            UserData.RegisterType(typeof(NTStats));
+            UserData.RegisterType(typeof(NTStats.NTStat));
+            UserData.RegisterType(typeof(NTStats.NTStatBool));
+            UserData.RegisterType(typeof(NTStats.NTStatFloat));
+            UserData.RegisterType(typeof(NTStats.NTStatLoader));
+            UserData.RegisterType(typeof(NTItems));
+            UserData.RegisterType(typeof(NTItems.ItemsAfflictionInfos));
+            UserData.RegisterType(typeof(NTItems.ItemUpdateFunctionInfos));
+            UserData.RegisterType(typeof(NTItems.NTItemFunctionLoader));
+            UserData.RegisterType(typeof(NTHumanUpdate));
 
             UserData.RegisterType(typeof(SpeakAboutIssuesPatch));
 
-            UserData.RegisterType(typeof(HumanUpdate));
-            UserData.RegisterType(typeof(HumanUpdate.NTHuman));
-            UserData.RegisterType(typeof(HumanUpdate.CharacterAfflictions));
-            UserData.RegisterType(typeof(HumanUpdate.CharacterStats));
-            UserData.RegisterType(typeof(HumanUpdate.CharacterTags));
-            UserData.RegisterType(typeof(HumanUpdate.NTHumanAffData));
-            UserData.RegisterType(typeof(HumanUpdate.NTHumanNonLimbAffData));
-            UserData.RegisterType(typeof(HumanUpdate.NTHumanLimbAffData));
-            UserData.RegisterType(typeof(HumanUpdate.NTHumanBloodAffData));
-            UserData.RegisterType(typeof(HumanUpdate.NTHumanSymptomData));
-            UserData.RegisterType(typeof(HumanUpdate.NTHumanLimbSymptomData));
 
-            UserData.RegisterType(typeof(HumanUpdate.CharacterStats.NTHumanStatBoolData));
-            UserData.RegisterType(typeof(HumanUpdate.CharacterStats.NTHumanStatDoubleData));
-
-            UserData.RegisterType(typeof(AfflictionPriority));
-            UserData.RegisterType(typeof(List<AfflictionPriority>));
+            UserData.RegisterType(typeof(NTAfflictions.AfflictionPriority));
+            UserData.RegisterType(typeof(List<NTAfflictions.AfflictionPriority>));
 
             UserData.RegisterType(typeof(OnDamaged));
 
@@ -143,31 +157,49 @@ namespace Neurotrauma
         public void Dispose()
         {
             RemovePatches();
-            
+
             if (HF.IsMain())
             {
                 harmony?.UnpatchSelf();
                 LoveBots.Dispose();
                 CharacterPatches.Dispose();
             }
+
+            DisposeClient();
         }
+
+        partial void DisposeClient();
 
         // -------------------------------------- Our IEvent Plugins -------------------------------------- \\
 
         public void OnCharacterCreated(Character character)
         {
-            HumanUpdate.AddCharacterToUpdate(character);
+            if (character.IsHuman)
+            {
+                
+
+                LuaCsSetup.Instance.Timer.Wait((params object[] _) => {
+                    var h = new NTHuman(character);
+
+                    if (h.Human.teamID == CharacterTeamType.Team1)
+                    {
+                        h.AddAffliction("luabotomy", 100f);
+                    }
+
+                }, 1000);
+            }
         }
 
         public void OnCharacterDeath(Character character, Affliction causeOfDeathAffliction, CauseOfDeathType causeOfDeathType)
         {
-            HumanUpdate.RemoveCharacterFromUpdate(character);
-        }
-    }
+            if (character.IsHuman)
+            {
+                NTHuman? human = NTHuman.getNTHumanFromCharacter(character);
 
-    // Stores our random shit.
-    public static class NT
-    {
-        public static double DeltaTime = 2;
+                if (human == null) return;
+
+                NTHuman.RemoveNTHuman(human);
+            }
+        }
     }
 }

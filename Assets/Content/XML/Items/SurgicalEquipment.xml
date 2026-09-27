@@ -181,6 +181,41 @@
 
 
     <!-- ============================================== Surgery Tools ============================================== -->
+    <!-- Surgery Kit -->
+    <Item name="" description="" identifier="surgerykit" category="Equipment" tags="smallitem, nt_huibutton_enabler" cargocontaineridentifier="" showcontentsintooltip="true" Scale="0.5" fireproof="true" impactsoundtag="impact_metal_heavy" RequireAimToUse="True">
+        <PreferredContainer primary="medcab" minamount="2" maxamount="2" spawnprobability="1"/>
+       
+        <Fabricate suitablefabricators="fabricator" requiredtime="20">
+            <RequiredSkill identifier="mechanical" level="20" />
+            <RequiredSkill identifier="medical" level="20" />
+            <Item identifier="steel" amount="2"/>
+            <Item identifier="zinc" amount="2"/>
+        </Fabricate>
+
+        <Deconstruct time="10">
+            <Item identifier="steel" />
+        </Deconstruct>
+
+        <Price baseprice="80">
+            <Price storeidentifier="merchantmedical" sold="true" multiplier="0.9" minavailable="2"/>
+        </Price>
+        
+        <Sprite texture="%ModDir%/Images/InGameItemIconAtlas.png" sourcerect="259,403,84,67" origin="0.5,0.5" depth="0.6" />
+        <Body width="45" height="30" density="20" />
+
+        <MeleeWeapon slots="RightHand,LeftHand,Any" controlpose="true" aimpos="45,10" handle1="0,14" holdangle="90" reload="1" range="50" combatpriority="6" msg="ItemMsgPickUpSelect">
+            <Attack structuredamage="0" itemdamage="1" targetimpulse="2">
+                <Affliction identifier="blunttrauma" strength="1" />
+                <Affliction identifier="stun" strength="0.6" />
+                <StatusEffect type="OnUse" target="UseTarget">
+                    <Conditional entitytype="eq Character"/>
+                    <Sound file="Content/Items/Weapons/Smack1.ogg" selectionmode="random" range="500"/>
+                    <Sound file="Content/Items/Weapons/Smack2.ogg" range="500" />
+                </StatusEffect>
+            </Attack>
+        </MeleeWeapon>
+    </Item>
+
     <!-- Hemostat -->
     <Item name="" identifier="advhemostat" category="Equipment" cargocontaineridentifier="mediccrate" Tags="smallitem,medical,surgery,surgerytool" description="" useinhealthinterface="True" scale="0.250">
         <PreferredContainer primary="locker"/>
@@ -304,6 +339,7 @@
             <RequiredSkill identifier="medical" level="25"/>
             <RequiredItem identifier="steel" />
         </Fabricate>
+
         <InventoryIcon texture="%ModDir%/Images/InventoryItemIconAtlas.png" sourcerect="0,192,64,64" origin="0.5,0.5"/>
         <Sprite texture="%ModDir%/Images/InventoryItemIconAtlas.png" sourcerect="0,192,64,64" depth="0.55" origin="0.5,0.5"/>
         <Body width="60" height="55" density="50"/>

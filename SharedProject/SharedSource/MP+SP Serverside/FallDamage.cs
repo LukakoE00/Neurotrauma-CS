@@ -212,7 +212,7 @@ namespace Neurotrauma
 
             double InjuryChanceMultiplier = NTConfig.Get("NT_falldamageSeriousInjuryChance", 1);
 
-            HumanUpdate.NTHuman ?NTCharacter = HumanUpdate.CharacterToNTHuman(character);
+            NTHuman? NTCharacter = NTHuman.getNTHumanFromCharacter(character);
 
             // torso
             if ((!FractureImmune) && strength >= 1 && limbtype == LimbType.Torso)

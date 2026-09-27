@@ -14,9 +14,9 @@ namespace Neurotrauma
         // Server-specific code
         public void InitializeServer()
         {
-            NTAfflictions.DefineAllAfflictions();
+            NTAfflictionsToAdd.AddAfflictions();
             NTStats.DefineAllStats();
-            NTItemMethods.DefineAllItems();
+            NTItemsData.DefineAllItems();
         }
 
         public void OnLoadCompletedServerside()
@@ -32,10 +32,9 @@ namespace Neurotrauma
             NTMultiscalpel.RegisterMultiscalpel(); // Add the Multiscalpel hooks
             DynamicItems.InitDynamicItems(); // Add the DynamicItems hooks
             OnDamaged.InitializeOnDamagedMethods(); // Add OnDamaged patches
-            NTItemMethods.EnsureWorkingItems(); // Runs the FixItems hooks
+            NTItemsData.EnsureWorkingItems(); // Runs the FixItems hooks
             NTSurgeryTable.InitializeSurgeryTableHooks(); // Adds hook for surgery table
             InitLuaHooks(); // Initializes the Lua hooks at the bottom of this file
-            AddApplyHooks();
 
             // What a mess. - Lukako (holy old status)
             harmony = new Harmony("neurotrauma.server");
@@ -49,8 +48,8 @@ namespace Neurotrauma
 
             harmony.Patch(originalApplyDamage, prefix: new HarmonyMethod(typeof(OnDamaged), nameof(OnDamaged.Override_ApplyDamage)));
             harmony.Patch(originalDamageLimb, prefix: new HarmonyMethod(typeof(OnDamaged), nameof(OnDamaged.Override_DamageLimb)));
-            harmony.Patch(originalUse, prefix: new HarmonyMethod(typeof(NTItemMethods), nameof(NTItemMethods.Override_Use)));
-            harmony.Patch(originalApplyTreatment, prefix: new HarmonyMethod(typeof(NTItemMethods), nameof(NTItemMethods.Override_ApplyTreatment)));
+            harmony.Patch(originalUse, prefix: new HarmonyMethod(typeof(NTItems), nameof(NTItems.Override_Use)));
+            harmony.Patch(originalApplyTreatment, prefix: new HarmonyMethod(typeof(NTItems), nameof(NTItems.Override_ApplyTreatment)));
             harmony.Patch(originalRoundStart, postfix: new HarmonyMethod(typeof(NTInfo), nameof(NTInfo.PrintNTInitInfo)));
 
             // Character Patches ----------------------------------------------------------------------------------------------------------------------------------------- \\
@@ -76,7 +75,7 @@ namespace Neurotrauma
             LuaCsSetup.Instance.Hook.Add("think", "NTCS.ThinkUpdate", (params object[] _) => // The Hook details (TODO, make this in C#)
             { // Start of our Function
 
-                HumanUpdate.ThinkUpdate();
+                NTHumanUpdate.ThinkUpdate();
                 return null;
             }); // End of our Function
 
@@ -100,26 +99,6 @@ namespace Neurotrauma
 #pragma warning restore CS0618 // Type or member is obsolete
         }
 
-        public static void AddApplyHooks()
-        {
-            NTC.AddPostHumanUpdateHook((HumanUpdate.NTHuman C) =>
-            {
-                if (C != null && C.Human != null && C.Human.IdFreed == false)
-                {
-                    C.Human.Stun = HF.GetAfflictionStrength(C.Human, "stun");
-                    HF.SetAffliction(C.Human, "stun", 0);
-                    C.GetAffData("stun").Strength = 0;
-                }
-            });
-
-            NTC.AddPostHumanUpdateHook((HumanUpdate.NTHuman C) =>
-            {
-                if (C != null && C.Human != null && C.Human.IdFreed == false && C.Human.Health < 0)
-                {
-                    NTC.SetSymptomTrue(C.Human, "unconsciousness", 2);
-                    HF.SetAffliction(C.Human, "unconsciousness", 100);
-                }
-            });
-        }
+        
     }
-    }
+}
