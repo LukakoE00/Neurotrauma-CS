@@ -108,7 +108,7 @@ public static class NTInfo
             // Checking for incompatible mods
 
             List<String> incompatibleMods = [NTLegacy, NTDev, NTOld, NTLite, NTAi, NTOptimized, NTRussianFix];
-            List<string> WorkingAddons = ["Eyes","Thermal","Cybernetics","Nanite Integration","Grafting","Lobotomy","Pharmacy","NT Surgery Plus"]; // Addons we can be sure that work. (Presuming you use the patches)
+            // List<string> WorkingAddons = ["Eyes","Thermal","Cybernetics","Nanite Integration","Grafting","Lobotomy","Pharmacy","NT Surgery Plus"]; // Addons we can be sure that work. (Presuming you use the patches)
             string detectedMods = "";
             string warnedMods = "";
 
@@ -129,14 +129,14 @@ public static class NTInfo
                 }
             }
 
-            foreach (KeyValuePair<string, Table> kvp in LuaRegisteredAddons)
-            {
-                Table addon = kvp.Value;
-                if (!WorkingAddons.Contains(addon.Get("Name").String))
-                {
-                    warnedMods += " - NT " + addon.Get("Name").String + "\n";
-                }
-            }
+            //foreach (KeyValuePair<string, Table> kvp in LuaRegisteredAddons)
+            //{
+            //    Table addon = kvp.Value;
+            //    if (!WorkingAddons.Contains(addon.Get("Name").String))
+            //    {
+            //        warnedMods += " - NT " + addon.Get("Name").String + "\n";
+            //    }
+            //}
 
             if (NTSPEnabled) consolePrint += "\nNT Surgery Plus Enabled!\n";
 
