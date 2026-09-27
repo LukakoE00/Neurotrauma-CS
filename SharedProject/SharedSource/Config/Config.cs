@@ -330,6 +330,10 @@ namespace Neurotrauma
                                 entry.Value = (float)kvp.Value.GetDouble();
                                 break;
 
+                            case ConfigEntryType.Integer:
+                                entry.Value = kvp.Value.GetInt32();
+                                break;
+
                             case ConfigEntryType.String:
                                 if (entry.Default is List<string> || kvp.Value.ValueKind == JsonValueKind.Array)
                                 {
@@ -366,6 +370,7 @@ namespace Neurotrauma
                     {
                         if (entry.Type == ConfigEntryType.Bool) entry.Value = kvp.Value.GetBoolean();
                         else if (entry.Type == ConfigEntryType.Float) entry.Value = (float)kvp.Value.GetDouble();
+                        else if (entry.Type == ConfigEntryType.Integer) entry.Value = kvp.Value.GetInt32();
                         else if (entry.Type == ConfigEntryType.String)
                         {
                             if (entry.Default is List<string> || kvp.Value.ValueKind == JsonValueKind.Array)
@@ -420,6 +425,17 @@ namespace Neurotrauma
             {
                 if (entry.Value == null) return defaultValue;
                 if (entry.Value is float) return (float)entry.Value;
+            }
+            return defaultValue;
+        }
+
+        public static int Get(string key, int defaultValue)
+        {
+            if (Entries.TryGetValue(key, out ConfigEntry? entry))
+            {
+                if (entry.Value == null) return defaultValue;
+                if (entry.Value is int i) return i;
+                if (entry.Value is float f) return (int)f;
             }
             return defaultValue;
         }
