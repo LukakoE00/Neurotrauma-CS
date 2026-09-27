@@ -20,26 +20,26 @@ namespace Neurotrauma
 
     public class ConfigEntry
     {
-        public LocalizedString ?Name;
+        public LocalizedString? Name;
         public ConfigEntryType Type;
-        public object ?Default;
-        public object ?Value;
-        public float[] ?Range;
+        public object? Default;
+        public object? Value;
+        public float[]? Range;
         public bool Group;
         public bool Resettable;
-        public LocalizedString ?Description;
-        public LocalizedString ?Style;
+        public LocalizedString? Description;
+        public LocalizedString? Style;
         public float Boxsize;
         public bool NoMLTB;
-        public string ?Page;
-        public string ?Expansion;
-        public bool ?IsClientside = false;
+        public string? Page;
+        public string? Expansion;
+        public bool? IsClientside = false;
     }
 
     public class ConfigExpansion
     {
-        public string ?Name;
-        public Dictionary<string, ConfigEntry> ?ConfigData;
+        public string? Name;
+        public Dictionary<string, ConfigEntry>? ConfigData;
     }
 
     public static class NTConfig
@@ -122,7 +122,7 @@ namespace Neurotrauma
 
                     if (Key.Equals("type", StringComparison.OrdinalIgnoreCase) || Key.Equals("page", StringComparison.OrdinalIgnoreCase)) continue;
 
-                    FieldInfo ?Field = typeof(ConfigEntry).GetFields().FirstOrDefault(F => string.Equals(F.Name, Key, StringComparison.OrdinalIgnoreCase));
+                    FieldInfo? Field = typeof(ConfigEntry).GetFields().FirstOrDefault(F => string.Equals(F.Name, Key, StringComparison.OrdinalIgnoreCase));
                     if (Field == null) continue;
 
                     DynValue Dyn = Pair.Value;
@@ -187,7 +187,7 @@ namespace Neurotrauma
                 {
                     Entry.Expansion = Expansion.Get("Name").String;
                 }
-                
+
                 LuaExpansion.ConfigData.Add(Kvp.Key.String, Entry);
                 Entries[Kvp.Key.String] = Entry;
             }
