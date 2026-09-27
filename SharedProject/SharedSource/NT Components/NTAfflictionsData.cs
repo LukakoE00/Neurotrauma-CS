@@ -2980,6 +2980,22 @@ public class NTAfflictionsToAdd
             .Build()
             );
 
+        AfflictionsToAdd.Add(
+            builder.New("acidburn")
+            .IsLimbSpecific(true)
+            .SetStrengths(0, 200, 0)
+            .SetUpdateAction((C, ID, Limb, dT) =>
+            {
+                float str = C.GetAfflictionStrengthLimb(ID, Limb);
+
+                if (!(str > 0)) return;
+
+                C.AddAfflictionLimb("burn", Limb, str);
+                C.SetAfflictionLimb(ID, Limb, 0f);
+            })
+            .Build()
+            );
+
         // Lacerations
         // Not constant; gets applied by other sources.
         // Type: Limb Specific
