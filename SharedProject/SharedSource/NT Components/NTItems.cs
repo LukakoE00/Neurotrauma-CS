@@ -63,7 +63,7 @@ public class NTItems
             {
                 try
                 {
-                    UpdateFunction(UpdateFunction);
+                    UpdateFunction(ItemUpdateFunctionInfos);
                 }
                 catch (Exception e)
                 {

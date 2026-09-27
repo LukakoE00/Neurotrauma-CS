@@ -49,6 +49,7 @@ namespace Neurotrauma
 
             UserData.RegisterType(typeof(HF));
             UserData.RegisterType(typeof(NTInfo));
+            UserData.RegisterType(typeof(NTAddon));
             UserData.RegisterType(typeof(NTC));
 
             UserData.RegisterType(typeof(NTConfig));
