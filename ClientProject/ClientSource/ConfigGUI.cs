@@ -369,6 +369,7 @@ namespace Neurotrauma
             };
 
             var layout = PrebuildConfigLayout(NTConfig.Entries, SelectedExpansion, SelectedType);
+            bool Locked = HF.GameIsMultiplayer() && !GUIComponents.CanCurrentClientEditSettings();
 
             foreach (var chunk in layout)
             {
@@ -387,35 +388,26 @@ namespace Neurotrauma
                         break;
 
                     case "float_group":
-                        CreateFloatGroup(PageListBox, chunk.Items);
+                        CreateFloatGroup(PageListBox, chunk.Items, Locked);
                         break;
 
                     case "integer_group":
-                        CreateIntegerGroup(PageListBox, chunk.Items);
+                        CreateIntegerGroup(PageListBox, chunk.Items, Locked);
                         break;
 
                     case "string_group":
-                        CreateStringGroup(PageListBox, chunk.Items);
+                        CreateStringGroup(PageListBox, chunk.Items, Locked);
                         break;
 
                     case "standalone":
-                        CreateEntry(PageListBox, chunk.Key, chunk.Entry);
+                        CreateEntry(PageListBox, chunk.Key, chunk.Entry, Locked);
                         break;
-                }
-            }
-
-            // Lock the page for multiplayer clients who aren't allowed to change settings.
-            if (HF.GameIsMultiplayer() && !GUIComponents.CanCurrentClientEditSettings())
-            {
-                foreach (GUIComponent c in PageListBox.GetAllChildren())
-                {
-                    c.Enabled = false;
                 }
             }
         }
 
         // Create grouped Floats.
-        private static void CreateFloatGroup(GUIListBox PageListBox, List<(string key, ConfigEntry entry)> Entries)
+        private static void CreateFloatGroup(GUIListBox PageListBox, List<(string key, ConfigEntry entry)> Entries, bool Locked)
         {
             const int MaxPerRow = 2;
             GUILayoutGroup? Row = null;
@@ -430,6 +422,8 @@ namespace Neurotrauma
                         RelativeSpacing = 0.01f
                     };
                 }
+
+                bool EntryLocked = Locked && entry.IsClientside != true;
 
                 float BaseWidth = 1f / MaxPerRow;
                 float TextWidth = BaseWidth * 0.53f;
@@ -466,7 +460,8 @@ namespace Neurotrauma
                     MinValueFloat = entry.Range[0],
                     MaxValueFloat = entry.Range[1],
                     FloatValue = (float)entry.Value,
-                    ValueStep = 0.1f
+                    ValueStep = 0.1f,
+                    Enabled = !EntryLocked
                 };
 
                 Scalar.OnValueChanged += input =>
@@ -479,19 +474,21 @@ namespace Neurotrauma
 
                 if (entry.Resettable)
                 {
-                    GUIComponents.CreateResetButton(ResetCell.RectTransform, () =>
+                    var ResetButton = GUIComponents.CreateResetButton(ResetCell.RectTransform, () =>
                     {
                         Scalar.FloatValue = DefaultValue;
                         NTConfig.Set(key, DefaultValue);
 
                         LabelBlock.TextColor = GUIStyle.TextColorNormal;
                     });
+
+                    ResetButton.Enabled = !EntryLocked;
                 }
             }
         }
 
         // Create grouped Integers
-        private static void CreateIntegerGroup(GUIListBox PageListBox, List<(string key, ConfigEntry entry)> Entries)
+        private static void CreateIntegerGroup(GUIListBox PageListBox, List<(string key, ConfigEntry entry)> Entries, bool Locked)
         {
             const int MaxPerRow = 2;
             GUILayoutGroup? Row = null;
@@ -510,6 +507,8 @@ namespace Neurotrauma
                         RelativeSpacing = 0.01f
                     };
                 }
+
+                bool EntryLocked = Locked && entry.IsClientside != true;
 
                 float BaseWidth = 1f / MaxPerRow;
                 float TextWidth = BaseWidth * 0.53f;
@@ -546,13 +545,13 @@ namespace Neurotrauma
                     MinValueInt = (int)entry.Range[0],
                     MaxValueInt = (int)entry.Range[1],
                     IntValue = (int)entry.Value,
-                    ValueStep = 1f
+                    ValueStep = 1f,
+                    Enabled = !EntryLocked
                 };
 
                 Scalar.OnValueChanged += input =>
                 {
                     NTConfig.Set(key, input.IntValue);
-
                     LabelBlock.TextColor = input.IntValue == DefaultValue ? GUIStyle.TextColorNormal : GUIStyle.Orange;
                 };
 
@@ -560,19 +559,21 @@ namespace Neurotrauma
 
                 if (entry.Resettable)
                 {
-                    GUIComponents.CreateResetButton(ResetCell.RectTransform, () =>
+                    var ResetButton = GUIComponents.CreateResetButton(ResetCell.RectTransform, () =>
                     {
                         Scalar.IntValue = DefaultValue;
                         NTConfig.Set(key, DefaultValue);
 
                         LabelBlock.TextColor = GUIStyle.TextColorNormal;
                     });
+
+                    ResetButton.Enabled = !EntryLocked;
                 }
             }
         }
 
         // Create grouped strings.
-        private static void CreateStringGroup(GUIListBox PageListBox, List<(string key, ConfigEntry entry)> Entries)
+        private static void CreateStringGroup(GUIListBox PageListBox, List<(string key, ConfigEntry entry)> Entries, bool Locked)
         {
             const int MaxPerRow = 2;
             GUILayoutGroup? Row = null;
@@ -580,6 +581,7 @@ namespace Neurotrauma
             for (int i = 0; i < Entries.Count; i++)
             {
                 var (key, entry) = Entries[i];
+                bool EntryLocked = Locked && entry.IsClientside != true;
 
                 if (Row == null || i % MaxPerRow == 0)
                 {
@@ -610,6 +612,7 @@ namespace Neurotrauma
                 };
 
                 var Input = GUIComponents.CreateStringInput(inputCell.RectTransform, entry, Value);
+                Input.Enabled = !EntryLocked;
 
                 Input.OnTextChanged += (_, text) =>
                 {
@@ -619,16 +622,18 @@ namespace Neurotrauma
 
                 if (entry.Resettable)
                 {
-                    GUIComponents.CreateResetButton(resetCell.RectTransform, () =>
+                    var ResetButton = GUIComponents.CreateResetButton(resetCell.RectTransform, () =>
                     {
                         GUIComponents.ResetStringValue(key, entry, Input);
                     });
+
+                    ResetButton.Enabled = !EntryLocked;
                 }
             }
         }
 
         // Create Standalone settings.
-        private static void CreateEntry(GUIListBox PageListBox, string Identifier, ConfigEntry entry)
+        private static void CreateEntry(GUIListBox PageListBox, string Identifier, ConfigEntry entry, bool Locked)
         {
             if (entry.Type == ConfigEntryType.Category)
             {
@@ -641,6 +646,8 @@ namespace Neurotrauma
 
                 return;
             }
+
+            bool EntryLocked = Locked && entry.IsClientside != true;
 
             switch (entry.Type)
             {
@@ -667,7 +674,8 @@ namespace Neurotrauma
                         ValueStep = 0.1f,
                         MinValueFloat = min,
                         MaxValueFloat = max,
-                        FloatValue = NTConfig.Get(Identifier, DefaultValue)
+                        FloatValue = NTConfig.Get(Identifier, DefaultValue),
+                        Enabled = !EntryLocked
                     };
 
                     Scalar.OnValueChanged += input =>
@@ -678,13 +686,15 @@ namespace Neurotrauma
 
                     if (entry.Resettable)
                     {
-                        GUIComponents.CreateResetButton(Scalar.RectTransform, () =>
+                        var ResetButton = GUIComponents.CreateResetButton(Scalar.RectTransform, () =>
                         {
                             Scalar.FloatValue = DefaultValue;
                             NTConfig.Set(Identifier, DefaultValue);
 
                             Label.TextColor = GUIStyle.TextColorNormal;
                         });
+
+                        ResetButton.Enabled = !EntryLocked;
                     }
 
                     break;
@@ -712,7 +722,8 @@ namespace Neurotrauma
                         ValueStep = 1f,
                         MinValueInt = min,
                         MaxValueInt = max,
-                        IntValue = (int)NTConfig.Get(Identifier, DefaultValue)
+                        IntValue = (int)NTConfig.Get(Identifier, DefaultValue),
+                        Enabled = !EntryLocked
                     };
 
                     Scalar.OnValueChanged += input =>
@@ -723,13 +734,15 @@ namespace Neurotrauma
 
                     if (entry.Resettable)
                     {
-                        GUIComponents.CreateResetButton(Scalar.RectTransform, () =>
+                        var ResetButton = GUIComponents.CreateResetButton(Scalar.RectTransform, () =>
                         {
                             Scalar.IntValue = DefaultValue;
                             NTConfig.Set(Identifier, DefaultValue);
 
                             Label.TextColor = GUIStyle.TextColorNormal;
                         });
+
+                        ResetButton.Enabled = !EntryLocked;
                     }
 
                     break;
@@ -742,7 +755,8 @@ namespace Neurotrauma
 
                     var TickBox = new GUITickBox(new RectTransform(new Vector2(0.5f, 0.05f), PageListBox.Content.RectTransform), entry.Name)
                     {
-                        TextColor = CurrentValue == DefaultValue ? GUIStyle.TextColorNormal : GUIStyle.Orange
+                        TextColor = CurrentValue == DefaultValue ? GUIStyle.TextColorNormal : GUIStyle.Orange,
+                        Enabled = !EntryLocked
                     };
 
                     if (!entry.Description.IsNullOrWhiteSpace())
@@ -791,6 +805,8 @@ namespace Neurotrauma
                         Input = GUIComponents.CreateMultiLineTextBox(PageListBox.Content.RectTransform, Value, Boxsize);
                     }
 
+                    Input.Enabled = !EntryLocked;
+
                     Input.OnTextChanged += (_, text) =>
                     {
                         GUIComponents.SetStringValue(Identifier, entry, text);
@@ -799,7 +815,8 @@ namespace Neurotrauma
 
                     if (entry.Resettable)
                     {
-                        GUIComponents.CreateResetButton(Input.RectTransform, () => GUIComponents.ResetStringValue(Identifier, entry, Input));
+                        var ResetButton = GUIComponents.CreateResetButton(Input.RectTransform, () => GUIComponents.ResetStringValue(Identifier, entry, Input));
+                        ResetButton.Enabled = !EntryLocked;
                     }
 
                     break;
@@ -808,7 +825,7 @@ namespace Neurotrauma
         }
     }
 
-    public static class GUIComponents
+        public static class GUIComponents
     {
 
         // Is this client the server host?
@@ -878,15 +895,7 @@ namespace Neurotrauma
 
             Button.OnClicked = (_, _) =>
             {
-                bool AllowedToReset = CanCurrentClientEditSettings();
-
-                if (!AllowedToReset)
-                {
-                    return true;
-                }
-
                 ShowResetMessage(Container);
-
                 return true;
             };
 
@@ -898,8 +907,8 @@ namespace Neurotrauma
         {
             var resetMessage = new GUIMessageBox(TextManager.Get("ntgui_resetconfirm_title"), TextManager.Get("ntgui_resetconfirm_body"), new LocalizedString[]
             {
-                TextManager.Get("ntgui_resetconfirm_yes"),
-                TextManager.Get("ntgui_resetconfirm_no")
+        TextManager.Get("ntgui_resetconfirm_yes"),
+        TextManager.Get("ntgui_resetconfirm_no")
             })
             {
                 DrawOnTop = true
@@ -909,15 +918,27 @@ namespace Neurotrauma
 
             resetMessage.Buttons[0].OnClicked = (_, _) =>
             {
-                NTConfig.ResetConfig();
+                bool CanEditAll = CanCurrentClientEditSettings();
+
+                NTConfig.ResetConfig(ClientsideOnly: !CanEditAll);
 
                 if (IsServerHost())
                 {
                     NTConfig.SaveConfig();
                 }
-                else if (CanCurrentClientEditSettings())
+                else
                 {
-                    NTConfig.SendConfig();
+                    NTConfig.SaveConfig();
+
+                    if (CanEditAll)
+                    {
+                        NTConfig.SendConfig();
+                    }
+                }
+
+                if (ConfigurationMenu.PageListBox != null)
+                {
+                    ConfigurationMenu.PopulateSettings(ConfigurationMenu.PageListBox, ConfigurationMenu.SelectedExpansion);
                 }
 
                 Container.Parent.RemoveChild(Container);

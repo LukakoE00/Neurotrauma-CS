@@ -395,13 +395,18 @@ namespace Neurotrauma
             }
         }
 
-        public static void ResetConfig()
+        public static void ResetConfig(bool ClientsideOnly = false)
         {
             foreach (var kvp in Entries)
             {
                 ConfigEntry entry = kvp.Value;
 
                 if (entry.Type == ConfigEntryType.Category)
+                {
+                    continue;
+                }
+
+                if (ClientsideOnly && entry.IsClientside != true)
                 {
                     continue;
                 }
