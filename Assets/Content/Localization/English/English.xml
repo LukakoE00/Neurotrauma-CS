@@ -1262,40 +1262,35 @@ Can give blood to: AB+</entitydescription.ab_positivecard>
 
 <!-- ================================================= Config Options ================================================= -->
 <!-- Pause Menu Button -->
-<ntgui_pausemenubutton_name>Neurotrauma Config</ntgui_pausemenubutton_name>
+<ntconfig.header.pausemenu>Neurotrauma Config</ntconfig.header.pausemenu>
 
 <!-- Save Preset -->
-<ntgui_config_tooltip_savepresetbutton>Create a new Preset with the currently selected settings.</ntgui_config_tooltip_savepresetbutton>
-
-<ntgui_save_preset_header>Create new Preset</ntgui_save_preset_header>
+<ntconfig.tooltip.savepresetbutton>Create a new Preset with the currently selected settings.</ntconfig.tooltip.savepresetbutton>
+<ntconfig.header.savepreset>Create new Preset</ntconfig.header.savepreset>
 
 <!-- Load Preset -->
-<ntgui_config_tooltip_loadpresetbutton>Load an existing Preset and change the settings accordingly.</ntgui_config_tooltip_loadpresetbutton>
-
-<ntgui_load_preset_header>Load existing Preset</ntgui_load_preset_header>
+<ntconfig.tooltip.loadpresetbutton>Load an existing Preset and change the settings accordingly.</ntconfig.tooltip.loadpresetbutton>
+<ntconfig.header.loadpreset>Load existing Preset</ntconfig.header.loadpreset>
 
 <!-- Button Row-->
-<ntgui_configmenubutton_saveexit>Save Settings to Preset and Exit</ntgui_configmenubutton_saveexit>
-<ntgui_configmenubutton_discardexit>Discard Changes and Exit</ntgui_configmenubutton_discardexit>
-<ntgui_configmenubutton_resetvalues>Reset Settings to Default and Exit</ntgui_configmenubutton_resetvalues>
+<ntconfig.button.saveexit>Save Settings to Preset and Exit</ntconfig.button.saveexit>
+<ntconfig.button.discardexit>Discard Changes and Exit</ntconfig.button.discardexit>
+<ntconfig.button.resetexit>Reset Settings to Default and Exit</ntconfig.button.resetexit>
 
-<ntgui_resetconfirm_title>Reset Neurotrauma Settings</ntgui_resetconfirm_title>
-<ntgui_resetconfirm_body>Are you sure you want to reset the Neurotrauma settings to their default values?</ntgui_resetconfirm_body>
-<ntgui_resetconfirm_yes>Yes</ntgui_resetconfirm_yes>
-<ntgui_resetconfirm_no>No</ntgui_resetconfirm_no>
-
-<!-- Default Title -->
-<ntgui_config_title>Neurotrauma Config Settings</ntgui_config_title>
+<ntconfig.resetconfirm.header>Reset Neurotrauma Settings</ntconfig.resetconfirm.header>
+<ntconfig.resetconfirm.body>Are you sure you want to reset the Neurotrauma settings to their default values?</ntconfig.resetconfirm.body>
+<ntconfig.resetconfirm.yes>Yes</ntconfig.resetconfirm.yes>
+<ntconfig.resetconfirm.no>No</ntconfig.resetconfirm.no>
 
 <!-- Default Pages -->
-<ntconfig_pagename_prices>Item Price Multipliers</ntconfig_pagename_prices>
-<ntconfig_pagename_availability>Item Availability Options</ntconfig_pagename_availability>
+<ntconfig.defaultpage.prices>Item Price Multipliers</ntconfig.defaultpage.prices>
+<ntconfig.defaultpage.availability>Item Availability Options</ntconfig.defaultpage.availability>
 
 <!-- Default Warning -->
-<ntgui_defaultmessage_config>Server config can only be changed by host or authorized clients.</ntgui_defaultmessage_config>
+<ntconfig.body.defaultwarning>Server config can only be changed by host or authorized clients.</ntconfig.body.defaultwarning>
 
 <!-- Reset Button-->
-<ntgui_resetbutton_tooltip>Reset to Default</ntgui_resetbutton_tooltip>
+<ntconfig.tooltip.resetbutton>Reset to Default</ntconfig.tooltip.resetbutton>
 
 <!-- =================== Default Config Content =================== -->
 <!-- Dislocation chance multiplier -->
@@ -1400,7 +1395,7 @@ Can give blood to: AB+</entitydescription.ab_positivecard>
 
 <!-- Excluded creatures that abuse the fall damage mechanic -->
 <ntconfig.entryname.creaturenofalldamage>Excluded creatures that abuse the fall damage mechanic</ntconfig.entryname.creaturenofalldamage>
-<ntconfigstyle_creaturenofalldamage>SpeciesName,SpeciesName</ntconfigstyle_creaturenofalldamage>
+<ntconfig.style.creaturenofalldamage>SpeciesName,SpeciesName</ntconfig.style.creaturenofalldamage>
 <ntconfig.entrydescription.creaturenofalldamage>Certain creatures abuse the falldamage calculations in a way that causes way too much damage; damage by creatures in this list is decreased to counteract this.\n\nYou can add or remove creatures to customize this list to your liking. Use debug command `nt_listcreatures` to list the SpeciesName of the creature you are patching in your game.\n\nReport other creatures that abuse fall damage to the discord server to improve this default list.</ntconfig.entrydescription.creaturenofalldamage>
 
 <!-- =================== Scanner Settings =================== -->
@@ -1420,62 +1415,62 @@ Can give blood to: AB+</entitydescription.ab_positivecard>
 
 <!-- Base Text Color -->
 <ntconfig.entryname.basecolor>Base Text Color</ntconfig.entryname.basecolor>
-<ntconfigstyle_basecolor>R,G,B</ntconfigstyle_basecolor>
+<ntconfig.style.basecolor>R,G,B</ntconfig.style.basecolor>
 <ntconfig.entrydescription.basecolor>Scanner text color.</ntconfig.entrydescription.basecolor>
 
 <!-- Name Text Color -->
 <ntconfig.entryname.namecolor>Name Text Color</ntconfig.entryname.namecolor>
-<ntconfigstyle_namecolor>R,G,B</ntconfigstyle_namecolor>
+<ntconfig.style.namecolor>R,G,B</ntconfig.style.namecolor>
 <ntconfig.entrydescription.namecolor>Scanner text color for player names.</ntconfig.entrydescription.namecolor>
 
 <!-- Low Priority Color -->
 <ntconfig.entryname.lowcolor>Low Priority Color</ntconfig.entryname.lowcolor>
-<ntconfigstyle_lowcolor>R,G,B</ntconfigstyle_lowcolor>
+<ntconfig.style.lowcolor>R,G,B</ntconfig.style.lowcolor>
 <ntconfig.entrydescription.lowcolor>Scanner text color for afflictions that have low progress.</ntconfig.entrydescription.lowcolor>
 
 <!-- Medium Priority Color -->
 <ntconfig.entryname.medcolor>Medium Priority Color</ntconfig.entryname.medcolor>
-<ntconfigstyle_medcolor>R,G,B</ntconfigstyle_medcolor>
+<ntconfig.style.medcolor>R,G,B</ntconfig.style.medcolor>
 <ntconfig.entrydescription.medcolor>Scanner text color for afflictions that have medium progress.</ntconfig.entrydescription.medcolor>
 
 <!-- High Priority Color -->
 <ntconfig.entryname.highcolor>High Priority Color</ntconfig.entryname.highcolor>
-<ntconfigstyle_highcolor>R,G,B</ntconfigstyle_highcolor>
+<ntconfig.style.highcolor>R,G,B</ntconfig.style.highcolor>
 <ntconfig.entrydescription.highcolor>Scanner text color for afflictions that have high progress.</ntconfig.entrydescription.highcolor>
 
 <!-- Vital Priority Color -->
 <ntconfig.entryname.vitalcolor>Vital Priority Color</ntconfig.entryname.vitalcolor>
-<ntconfigstyle_vitalcolor>R,G,B</ntconfigstyle_vitalcolor>
+<ntconfig.style.vitalcolor>R,G,B</ntconfig.style.vitalcolor>
 <ntconfig.entrydescription.vitalcolor>Scanner text color for vital afflictions (Arterial bleed, Traumatic amputation).</ntconfig.entrydescription.vitalcolor>
 
 <!-- Removed Organ Color -->
 <ntconfig.entryname.removalcolor>Removed Organ Color</ntconfig.entryname.removalcolor>
-<ntconfigstyle_removalcolor>R,G,B</ntconfigstyle_removalcolor>
+<ntconfig.style.removalcolor>R,G,B</ntconfig.style.removalcolor>
 <ntconfig.entrydescription.removalcolor>Scanner text color for removed organs (Heart removed, leg amputation).</ntconfig.entrydescription.removalcolor>
 
 <!-- Custom Category Color -->
 <ntconfig.entryname.customcolor>Custom Category Color</ntconfig.entryname.customcolor>
-<ntconfigstyle_customcolor>R,G,B</ntconfigstyle_customcolor>
+<ntconfig.style.customcolor>R,G,B</ntconfig.style.customcolor>
 <ntconfig.entrydescription.customcolor>Scanner text color for the custom category.</ntconfig.entrydescription.customcolor>
 
 <!-- Included Vital Afflictions -->
 <ntconfig.entryname.vitalcategory>Included Vital Afflictions</ntconfig.entryname.vitalcategory>
-<ntconfigstyle_vitalcategory>identifier,identifier</ntconfigstyle_vitalcategory>
+<ntconfig.style.vitalcategory>identifier,identifier</ntconfig.style.vitalcategory>
 <ntconfig.entrydescription.vitalcategory>You can add or remove afflictions to customize this list to your liking.</ntconfig.entrydescription.vitalcategory>
 
 <!-- Included Removal Affictions -->
 <ntconfig.entryname.removalcategory>Included Removal Affictions</ntconfig.entryname.removalcategory>
-<ntconfigstyle_removalcategory>identifier, identifier</ntconfigstyle_removalcategory>
+<ntconfig.style.removalcategory>identifier, identifier</ntconfig.style.removalcategory>
 <ntconfig.entrydescription.removalcategory>You can add or remove afflictions to customize this list to your liking.</ntconfig.entrydescription.removalcategory>
 
 <!-- Custom Affliction Category -->
 <ntconfig.entryname.customcategory>Custom Affliction Category</ntconfig.entryname.customcategory>
-<ntconfigstyle_customcategory>identifier,identifier</ntconfigstyle_customcategory>
+<ntconfig.style.customcategory>identifier,identifier</ntconfig.style.customcategory>
 <ntconfig.entrydescription.customcategory>You can add or remove afflictions to customize this list to your liking.</ntconfig.entrydescription.customcategory>
 
 <!-- Ignored Afflictions -->
 <ntconfig.entryname.ignoredcategory>Ignored Afflictions</ntconfig.entryname.ignoredcategory>
-<ntconfigstyle_ignoredcategory>identifier,identifier</ntconfigstyle_ignoredcategory>
+<ntconfig.style.ignoredcategory>identifier,identifier</ntconfig.style.ignoredcategory>
 <ntconfig.entrydescription.ignoredcategory>Afflictions added to this category will be ignored by the health scanner.</ntconfig.entrydescription.ignoredcategory>
 
 <!-- =================== Common Item Price Multipliers =================== -->

@@ -272,7 +272,7 @@ namespace Neurotrauma
                                 "Mudraptor_veteran",
                                 "Spineling_giant",
                             },
-                            Style = TextManager.Get("ntconfigstyle_creaturenofalldamage"),
+                            Style = TextManager.Get("ntconfig.style.creaturenofalldamage"),
                             Type = ConfigEntryType.String,
                             Boxsize = 0.1f,
                             Description = TextManager.Get("ntconfig.entrydescription.creaturenofalldamage"),
@@ -316,7 +316,7 @@ namespace Neurotrauma
                         {
                             Name = TextManager.Get("ntconfig.entryname.basecolor"),
                             Default = new List<string> { "100,100,200" },
-                            Style = TextManager.Get("ntconfigstyle_basecolor"),
+                            Style = TextManager.Get("ntconfig.style.basecolor"),
                             Type = ConfigEntryType.String,
                             Boxsize = 0.05f,
                             Description = TextManager.Get("ntconfig.entrydescription.basecolor"),
@@ -329,7 +329,7 @@ namespace Neurotrauma
                         {
                             Name = TextManager.Get("ntconfig.entryname.namecolor"),
                             Default = new List<string> { "125,125,225" },
-                            Style = TextManager.Get("ntconfigstyle_namecolor"),
+                            Style = TextManager.Get("ntconfig.style.namecolor"),
                             Type = ConfigEntryType.String,
                             Boxsize = 0.05f,
                             Description = TextManager.Get("ntconfig.entrydescription.namecolor"),
@@ -342,7 +342,7 @@ namespace Neurotrauma
                         {
                             Name = TextManager.Get("ntconfig.entryname.lowcolor"),
                             Default = new List<string> { "100,200,100" },
-                            Style = TextManager.Get("ntconfigstyle_lowcolor"),
+                            Style = TextManager.Get("ntconfig.style.lowcolor"),
                             Type = ConfigEntryType.String,
                             Boxsize = 0.05f,
                             Description = TextManager.Get("ntconfig.entrydescription.lowcolor"),
@@ -355,7 +355,7 @@ namespace Neurotrauma
                         {
                             Name = TextManager.Get("ntconfig.entryname.medcolor"),
                             Default = new List<string> { "200,200,100" },
-                            Style = TextManager.Get("ntconfigstyle_medcolor"),
+                            Style = TextManager.Get("ntconfig.style.medcolor"),
                             Type = ConfigEntryType.String,
                             Boxsize = 0.05f,
                             Description = TextManager.Get("ntconfig.entrydescription.medcolor"),
@@ -368,7 +368,7 @@ namespace Neurotrauma
                         {
                             Name = TextManager.Get("ntconfig.entryname.highcolor"),
                             Default = new List<string> { "250,100,100" },
-                            Style = TextManager.Get("ntconfigstyle_highcolor"),
+                            Style = TextManager.Get("ntconfig.style.highcolor"),
                             Type = ConfigEntryType.String,
                             Boxsize = 0.05f,
                             Description = TextManager.Get("ntconfig.entrydescription.highcolor"),
@@ -381,7 +381,7 @@ namespace Neurotrauma
                         {
                             Name = TextManager.Get("ntconfig.entryname.vitalcolor"),
                             Default = new List<string> { "255,0,0" },
-                            Style = TextManager.Get("ntconfigstyle_vitalcolor"),
+                            Style = TextManager.Get("ntconfig.style.vitalcolor"),
                             Type = ConfigEntryType.String,
                             Boxsize = 0.05f,
                             Description = TextManager.Get("ntconfig.entrydescription.vitalcolor"),
@@ -394,7 +394,7 @@ namespace Neurotrauma
                         {
                             Name = TextManager.Get("ntconfig.entryname.removalcolor"),
                             Default = new List<string> { "0,255,255" },
-                            Style = TextManager.Get("ntconfigstyle_removalcolor"),
+                            Style = TextManager.Get("ntconfig.style.removalcolor"),
                             Type = ConfigEntryType.String,
                             Boxsize = 0.05f,
                             Description = TextManager.Get("ntconfig.entrydescription.removalcolor"),
@@ -407,7 +407,7 @@ namespace Neurotrauma
                         {
                             Name = TextManager.Get("ntconfig.entryname.customcolor"),
                             Default = new List<string> { "180,50,200" },
-                            Style = TextManager.Get("ntconfigstyle_customcolor"),
+                            Style = TextManager.Get("ntconfig.style.customcolor"),
                             Type = ConfigEntryType.String,
                             Boxsize = 0.05f,
                             Description = TextManager.Get("ntconfig.entrydescription.customcolor"),
@@ -431,7 +431,7 @@ namespace Neurotrauma
                                 "tll_amputation",
                                 "th_amputation",
                             },
-                            Style = TextManager.Get("ntconfigstyle_vitalcategory"),
+                            Style = TextManager.Get("ntconfig.style.vitalcategory"),
                             Type = ConfigEntryType.String,
                             Boxsize = 0.1f,
                             Description = TextManager.Get("ntconfig.entrydescription.vitalcategory"),
@@ -453,7 +453,7 @@ namespace Neurotrauma
                                 "sll_amputation",
                                 "sh_amputation",
                             },
-                            Style = TextManager.Get("ntconfigstyle_removalcategory"),
+                            Style = TextManager.Get("ntconfig.style.removalcategory"),
                             Type = ConfigEntryType.String,
                             Boxsize = 0.1f,
                             Description = TextManager.Get("ntconfig.entrydescription.removalcategory"),
@@ -463,7 +463,7 @@ namespace Neurotrauma
                         {
                             Name = TextManager.Get("ntconfig.entryname.customcategory"),
                             Default = new List<string> { "" },
-                            Style = TextManager.Get("ntconfigstyle_customcategory"),
+                            Style = TextManager.Get("ntconfig.style.customcategory"),
                             Type = ConfigEntryType.String,
                             Boxsize = 0.1f,
                             Description = TextManager.Get("ntconfig.entrydescription.customcategory"),
@@ -473,7 +473,7 @@ namespace Neurotrauma
                         {
                             Name = TextManager.Get("ntconfig.entryname.ignoredcategory"),
                             Default = new List<string> { "" },
-                            Style = TextManager.Get("ntconfigstyle_ignoredcategory"),
+                            Style = TextManager.Get("ntconfig.style.ignoredcategory"),
                             Type = ConfigEntryType.String,
                             Boxsize = 0.1f,
                             Description = TextManager.Get("ntconfig.entrydescription.ignoredcategory"),

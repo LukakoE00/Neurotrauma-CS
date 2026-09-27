@@ -18,8 +18,8 @@ namespace Neurotrauma
         public static readonly List<(string UIName, string Identifier, string Type)> Pages = new();
         public static readonly List<(LocalizedString Name, string Identifier)> BaseConfigPages = new()
         {
-            (TextManager.Get("ntconfig_pagename_prices"), "prices"),
-            (TextManager.Get("ntconfig_pagename_availability"), "availability")
+            (TextManager.Get("ntconfig.defaultpage.prices"), "prices"),
+            (TextManager.Get("ntconfig.defaultpage.availability"), "availability")
         };
 
         public class LayoutChunk
@@ -51,7 +51,7 @@ namespace Neurotrauma
             GUIComponent PauseMenuPanel = PauseMenu.Children.Skip(1).First(); // The panel containing the elements
             GUIComponent PauseMenuButtons = PauseMenuPanel.Children.First(); // The buttons!
 
-            NTPauseMenuButton = new GUIButton(new RectTransform(new Vector2(1f, 0.1f), PauseMenuButtons.RectTransform), TextManager.Get("ntgui_pausemenubutton_name"), textAlignment: Alignment.Center, style: "GUIButtonSmall");
+            NTPauseMenuButton = new GUIButton(new RectTransform(new Vector2(1f, 0.1f), PauseMenuButtons.RectTransform), TextManager.Get("ntconfig.header.pausemenu"), textAlignment: Alignment.Center, style: "GUIButtonSmall");
 
             NTPauseMenuButton.OnClicked = (_, _) =>
             {
@@ -105,7 +105,7 @@ namespace Neurotrauma
 
             // Textblock 70% / 100% the size of the TopsideLayoutGroup.
             // Holds the Neurotrauma title text centered at the top left-ish.
-            var TitleTextBlock = new GUITextBlock(new RectTransform(new Vector2(0.7f, 1f), parent: TopsideLayoutGroup.RectTransform), text: TextManager.Get("ntgui_config_title"), font: GUIStyle.LargeFont, textAlignment: Alignment.TopCenter);
+            var TitleTextBlock = new GUITextBlock(new RectTransform(new Vector2(0.7f, 1f), parent: TopsideLayoutGroup.RectTransform), text: TextManager.Get("ntconfig.header.pausemenu"), font: GUIStyle.LargeFont, textAlignment: Alignment.TopCenter);
 
             // LayoutGroup 30% / 100% the size of the TopsideLayoutGroup.
             // This holds the following three elements needed to get the Config Presets to work.
@@ -123,7 +123,7 @@ namespace Neurotrauma
                     ConfigPresets.OpenSaveConfigPreset();
                     return false;
                 },
-                ToolTip = TextManager.Get("ntgui_config_tooltip_savepresetbutton")
+                ToolTip = TextManager.Get("ntconfig.tooltip.savepresetbutton")
             };
 
             // Button 10% / 45% the size of the ConfigPresetLayoutGroup.
@@ -135,7 +135,7 @@ namespace Neurotrauma
                     ConfigPresets.OpenLoadConfigPreset();
                     return false;
                 },
-                ToolTip = TextManager.Get("ntgui_config_tooltip_loadpresetbutton")
+                ToolTip = TextManager.Get("ntconfig.tooltip.loadpresetbutton")
             };
 
             // TextBox 80% / 50% the size of the ConfigPresetLayoutGroup.
@@ -362,7 +362,7 @@ namespace Neurotrauma
         {
             PageListBox.Content.ClearChildren();
 
-            new GUITextBlock(new RectTransform(new Vector2(1, 0.05f), PageListBox.Content.RectTransform), TextManager.Get("ntgui_defaultmessage_config"), font: GUIStyle.SmallFont)
+            new GUITextBlock(new RectTransform(new Vector2(1, 0.05f), PageListBox.Content.RectTransform), TextManager.Get("ntconfig.body.defaultwarning"), font: GUIStyle.SmallFont)
             {
                 CanBeFocused = false,
                 TextAlignment = Alignment.Center
@@ -848,7 +848,7 @@ namespace Neurotrauma
         // Save & Exit Button.
         public static GUIButton CreateSettingsSaveExitButton(GUILayoutGroup Parent, GUIFrame Container, GUITextBox? ConfigFileNameBox)
         {
-            var Button = new GUIButton(new RectTransform(new Vector2(0.32f, 1f), parent: Parent.RectTransform), text: TextManager.Get("ntgui_configmenubutton_saveexit"));
+            var Button = new GUIButton(new RectTransform(new Vector2(0.32f, 1f), parent: Parent.RectTransform), text: TextManager.Get("ntconfig.button.saveexit"));
 
             Button.OnClicked = (_, _) =>
             {
@@ -877,7 +877,7 @@ namespace Neurotrauma
         // Discard & Exit Button.
         public static GUIButton CreateSettingsDiscardExitButton(GUILayoutGroup Parent, GUIFrame Container)
         {
-            var Button = new GUIButton(new RectTransform(new Vector2(0.32f, 1f), parent: Parent.RectTransform), text: TextManager.Get("ntgui_configmenubutton_discardexit"));
+            var Button = new GUIButton(new RectTransform(new Vector2(0.32f, 1f), parent: Parent.RectTransform), text: TextManager.Get("ntconfig.button.discardexit"));
 
             Button.OnClicked = (_, _) =>
             {
@@ -891,7 +891,7 @@ namespace Neurotrauma
         // Reset Button.
         public static GUIButton CreateSettingsResetButton(GUILayoutGroup Parent, GUIFrame Container)
         {
-            var Button = new GUIButton(new RectTransform(new Vector2(0.32f, 1f), parent: Parent.RectTransform), text: TextManager.Get("ntgui_configmenubutton_resetvalues"));
+            var Button = new GUIButton(new RectTransform(new Vector2(0.32f, 1f), parent: Parent.RectTransform), text: TextManager.Get("ntconfig.button.resetexit"));
 
             Button.OnClicked = (_, _) =>
             {
@@ -905,10 +905,10 @@ namespace Neurotrauma
         // Show a warning message after clicking the Reset Button.
         public static void ShowResetMessage(GUIFrame Container)
         {
-            var resetMessage = new GUIMessageBox(TextManager.Get("ntgui_resetconfirm_title"), TextManager.Get("ntgui_resetconfirm_body"), new LocalizedString[]
+            var resetMessage = new GUIMessageBox(TextManager.Get("ntconfig.resetconfirm.header"), TextManager.Get("ntconfig.resetconfirm.body"), new LocalizedString[]
             {
-        TextManager.Get("ntgui_resetconfirm_yes"),
-        TextManager.Get("ntgui_resetconfirm_no")
+        TextManager.Get("ntconfig.resetconfirm.yes"),
+        TextManager.Get("ntconfig.resetconfirm.no")
             })
             {
                 DrawOnTop = true
@@ -1028,7 +1028,7 @@ namespace Neurotrauma
         {
             var ResetButton = new GUIButton(new RectTransform(new Vector2(1f, 1f), parent: Parent), style: "GUIButtonRefresh")
             {
-                ToolTip = TextManager.Get("ntgui_resetbutton_tooltip")
+                ToolTip = TextManager.Get("ntconfig.tooltip.resetbutton")
             };
 
             ResetButton.OnClicked += (_, _) =>
@@ -1178,7 +1178,7 @@ namespace Neurotrauma
         {
             HideMenus();
 
-            var MessageBox = new GUIMessageBox(TextManager.Get("ntgui_save_preset_header"), "", buttons: new[] 
+            var MessageBox = new GUIMessageBox(TextManager.Get("ntconfig.header.savepreset"), "", buttons: new[] 
             { 
                 TextManager.Get("Save"), 
                 TextManager.Get("Cancel") 
@@ -1217,7 +1217,7 @@ namespace Neurotrauma
         {
             HideMenus();
 
-            var MessageBox = new GUIMessageBox(TextManager.Get("ntgui_load_preset_header"), "", buttons: new[]
+            var MessageBox = new GUIMessageBox(TextManager.Get("ntconfig.header.loadpreset"), "", buttons: new[]
             {
                 TextManager.Get("Load"),
                 TextManager.Get("Cancel")
