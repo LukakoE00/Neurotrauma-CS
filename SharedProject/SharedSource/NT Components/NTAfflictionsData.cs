@@ -1118,9 +1118,9 @@ public class NTAfflictionsToAdd
                 // Reduce Oxygen Low
                 C.AddAffliction("oxygenlow", Math.Max(0, C.GetAfflictionStrength("oxygenlow") - 3 * dT)); // ?
 
-                // If Cardiac Arrest is above 0 and below or equal to 0.5, clear it and apply Fibrillation
+                // If Cardiac Arrest is above 0 and below or equal to 5, clear it and apply Fibrillation
                 float CardiacArrest = C.GetAfflictionStrength("cardiacarrest");
-                if (CardiacArrest > 0 && CardiacArrest <= 0.5)
+                if (CardiacArrest > 0 && CardiacArrest <= 5f)
                 {
                     C.SetAffliction("cardiacarrest", 0);
                     C.AddAffliction("fibrillation", 20);
@@ -1144,20 +1144,22 @@ public class NTAfflictionsToAdd
 
                 // Effects:
                 // Reduce Cardiac Arrest
-                C.SetAffliction("cardiacarrest", Math.Max(0, C.GetAfflictionStrength("cardiacarrest") - 1.5f * dT));
+                C.AddAffliction("cardiacarrest", -1.5f * dT);
+                //C.SetAffliction("cardiacarrest", Math.Max(0, C.GetAfflictionStrength("cardiacarrest") - 1.5f * dT));
 
                 // Reduce Fibrillation
-                C.SetAffliction("fibrillation", Math.Max(0, C.GetAfflictionStrength("fibrillation") - 1 * dT));
+                
+                C.AddAffliction("fibrillation", -1f * dT);
 
                 // Increase Blood Pressure
                 C.AddAffliction("bloodpressure", 5f * dT);
 
                 // Reduce Oxygen Low
-                C.AddAffliction("oxygenlow", Math.Max(0, C.GetAfflictionStrength("oxygenlow") - 3 * dT)); // ?
+                C.AddAffliction("oxygenlow",  -3f * dT);
 
                 // If Cardiac Arrest is above 0 and below or equal to 0.5, clear it and apply Fibrillation
                 float CardiacArrest = C.GetAfflictionStrength("cardiacarrest");
-                if (CardiacArrest > 0 && CardiacArrest <= 0.5)
+                if (CardiacArrest > 0 && CardiacArrest <= 0.5f)
                 {
                     C.SetAffliction("cardiacarrest", 0);
                     C.AddAffliction("fibrillation", 20);
