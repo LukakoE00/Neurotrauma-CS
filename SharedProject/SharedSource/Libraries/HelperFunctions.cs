@@ -2095,5 +2095,26 @@ namespace Neurotrauma
 
             return blockedItems;
         }
+
+        // ---------------------------------------- Lua Helper Functions -------------------------------------------------- \\
+
+        // larp
+        public static float Lerp(float A, float B, float T)
+        {
+            return A + (B - A) * T;
+        }
+
+        public static float Clamp(float Value, float Minimum, float Maximum)
+        {
+            if (Value < Minimum) return Minimum;
+            if (Value > Maximum) return Maximum;
+            return Value;
+        }
+
+        public static float Round(float Value, int NumberOfDecimalPlaces = 0)
+        {
+            float Multiplier = MathF.Pow(10f, NumberOfDecimalPlaces);
+            return MathF.Floor(Value * Multiplier + 0.5f) / Multiplier;
+        }
     }
 }
