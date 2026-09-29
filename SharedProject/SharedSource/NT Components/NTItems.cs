@@ -15,7 +15,7 @@ public class NTItems
     
     /// <summary>
     /// Stores which mod defined an item last. 
-    /// Key is Mod Name and Value is Item ID.
+    /// Key is Item ID and Value is Mod Name.
     /// </summary>
     public static Dictionary<string, string> NTItemsModDefinerRegistry { get; } = new Dictionary<string, string>(); // Stores the mod that defined the affliction
 
@@ -71,7 +71,7 @@ public class NTItems
                 return false;
             }
 
-            NTItemsModDefinerRegistry.Add(this.ModID, ItemID);
+            NTItemsModDefinerRegistry.Add(ItemID, this.ModID);
             NTItemsRegistry.Add(ItemID, UpdateFunction);
             return true;
         }
