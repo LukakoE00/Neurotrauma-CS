@@ -123,7 +123,7 @@ public class NTAfflictions
 
             }
 
-            NTOldAfflictionsPrefabRegistry.Add((this.ModID, Affliction.ID), NTAfflictionsPrefabRegistry[Affliction.ID]);
+            NTOldAfflictionsPrefabRegistry.Add((NTAfflictionsPrefabModDefinerRegistry[Affliction.ID], Affliction.ID), NTAfflictionsPrefabRegistry[Affliction.ID]);
             NTAfflictionsPrefabRegistry[Affliction.ID] = Affliction;
             NTAfflictionsPrefabModDefinerRegistry[Affliction.ID] = this.ModID;
             return true;

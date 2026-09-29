@@ -1,3 +1,5 @@
+using static Neurotrauma.NTAfflictions;
+
 namespace Neurotrauma;
 
 public class NTItems
@@ -6,6 +8,22 @@ public class NTItems
 
 
     private static Dictionary<string, Action<ItemUpdateFunctionInfos>> NTItemsRegistry { get; } = new Dictionary<string, Action<ItemUpdateFunctionInfos>> { };
+
+
+    
+   
+    
+    /// <summary>
+    /// Stores which mod defined an item last. 
+    /// Key is Mod Name and Value is Item ID.
+    /// </summary>
+    public static Dictionary<string, string> NTItemsModDefinerRegistry { get; } = new Dictionary<string, string>(); // Stores the mod that defined the affliction
+
+    /// <summary>
+    /// When an Item action is overriden, the old Item action is stored here in case a mod needs to access the original action. 
+    /// The Key is a tuple of (ModName, AfflictionID) and the Value is the old action.
+    /// </summary>
+    public static Dictionary<(string, string), Action<ItemUpdateFunctionInfos>> NTOldItemsRegistry { get; } = new Dictionary<(string, string), Action<ItemUpdateFunctionInfos>>();
 
     /// <summary>
     /// Contains everything required to defined and change the behavior of items in Neurotrauma.
@@ -53,6 +71,7 @@ public class NTItems
                 return false;
             }
 
+            NTItemsModDefinerRegistry.Add(this.ModID, ItemID);
             NTItemsRegistry.Add(ItemID, UpdateFunction);
             return true;
         }
@@ -83,17 +102,15 @@ public class NTItems
         /// <returns>true if the function was overridden or registered successfully, false otherwise.</returns>
         public bool Override(string ItemID, Action<ItemUpdateFunctionInfos> UpdateFunction, bool RegisterInstead = true)
         {
-            // TODO: set debug mode to false when going public to avoid spamming console like retards
-            if (NTConfig.Get("NT_DEBUG_MODE", false))
-            {
-                HF.PrintUtility($"[{this.ModID}] Overriding item: {ItemID}");
-            }
+
+            if (NTConfig.Get("NT_DEBUG_MODE", false)) HF.PrintUtility($"[{this.ModID}] Overriding item: {ItemID}");
+
 
             if (!NTItemsRegistry.ContainsKey(ItemID))
             {
                 if (RegisterInstead)
                 {
-                    HF.PrintWarning($"[{this.ModID}] Item with ID '{ItemID}' does not have a registered use function to override. Will Register instead.");
+                    if (NTConfig.Get("NT_DEBUG_MODE", false)) HF.PrintUtility($"[{this.ModID}] Item with ID '{ItemID}' does not have a registered use function to override. Will Register instead.");
                     return Register(ItemID, UpdateFunction);
                 }
 
@@ -102,8 +119,23 @@ public class NTItems
 
             }
 
+            NTOldItemsRegistry.Add((NTItemsModDefinerRegistry[ItemID], ItemID), NTItemsRegistry[ItemID]);
             NTItemsRegistry[ItemID] = UpdateFunction;
+            NTItemsModDefinerRegistry[ItemID] = this.ModID;
             return true;
+        }
+
+        public bool Override(string ItemID, LuaCsAction action, bool RegisterInstead = true)
+        {
+            return Override(ItemID, (Action<ItemUpdateFunctionInfos>) ((ItemUpdateFunctionInfos) => {
+                try
+                {
+                    action(ItemUpdateFunctionInfos);
+                } catch (Exception e)
+                {
+                    HF.PrintError($"[Lua] Error when updating item {ItemID} : {e.Message}");
+                }
+            }));
         }
 
         /// <summary>
@@ -126,6 +158,7 @@ public class NTItems
                 return false;
             }
 
+            NTOldItemsRegistry.Add((NTItemsModDefinerRegistry[ItemID], ItemID), NTItemsRegistry[ItemID]);
             NTItemsRegistry.Remove(ItemID);
             return true;
         }
@@ -153,6 +186,22 @@ public class NTItems
                 return NTItemsRegistry[ItemID];
             }
             return null;
+        }
+
+        public void Call(string ItemID, ItemUpdateFunctionInfos infos)
+        {
+            if (NTItemsRegistry.ContainsKey(ItemID))
+            {
+                NTItemsRegistry[ItemID].Invoke(infos);
+            }
+        }
+
+        public void CallOld(string ItemID, string ModName, ItemUpdateFunctionInfos infos)
+        {
+            if (NTOldItemsRegistry.ContainsKey((ModName, ItemID)))
+            {
+                NTOldItemsRegistry[(ModName, ItemID)].Invoke(infos);
+            }
         }
     }
 
