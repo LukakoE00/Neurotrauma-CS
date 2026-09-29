@@ -58,6 +58,7 @@ namespace Neurotrauma
 
             UserData.RegisterType(typeof(NeurotraumaInit));
 
+            UserData.RegisterType(typeof(NTBloodTypes));
             UserData.RegisterType(typeof(NTAfflictions));
             UserData.RegisterType(typeof(NTAfflictions.AfflictionPriority));
             UserData.RegisterType(typeof(NTAfflictions.NTAfflictionPrefabBuilder));

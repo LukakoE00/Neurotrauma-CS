@@ -4,7 +4,7 @@ namespace Neurotrauma
 {
     public static class NTBloodTypes
     {
-        public static readonly (string Identifier, int Chance)[] BloodTypes =
+        public static List<(string Identifier, int Chance)> BloodTypes = new()
         {
             // Affliction ID (they got changed!), Application Weight
             ("o_negative",  7), ("o_positive",  37),
@@ -17,7 +17,9 @@ namespace Neurotrauma
         private static readonly Random random = new Random();
         public static string ?RandomizeBloodType(Character character)
         {
-            int roll = random.Next(0, 100); // 0–99 (dont forgor)
+            // Ensure the weights work if new blood types would be added with their own weights (pushing it above 100)
+            int totalChance = BloodTypes.Sum(x => x.Chance);
+            int roll = random.Next(0, totalChance);
             int cumulative = 0;
 
             foreach (var (BloodType, Chance) in BloodTypes)
@@ -64,6 +66,12 @@ namespace Neurotrauma
             }
 
             return false;
+        }
+
+        // Add a new blood type + chance for it to appear
+        public static void AddBloodType(string identifier, int chance)
+        {
+            BloodTypes.Add((identifier, chance));
         }
 
         // Initialize the Lua Hooks.

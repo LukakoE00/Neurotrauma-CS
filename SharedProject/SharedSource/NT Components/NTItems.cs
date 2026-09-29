@@ -125,17 +125,19 @@ public class NTItems
             return true;
         }
 
-        public bool Override(string ItemID, LuaCsAction action, bool RegisterInstead = true)
+        public bool Override(string ItemID, LuaCsAction UpdateFunction, bool RegisterInstead = true)
         {
-            return Override(ItemID, (Action<ItemUpdateFunctionInfos>) ((ItemUpdateFunctionInfos) => {
+            return Override(ItemID, (Action<ItemUpdateFunctionInfos>)((ItemUpdateFunctionInfos) =>
+            {
                 try
                 {
-                    action(ItemUpdateFunctionInfos);
-                } catch (Exception e)
-                {
-                    HF.PrintError($"[Lua] Error when updating item {ItemID} : {e.Message}");
+                    UpdateFunction(ItemUpdateFunctionInfos);
                 }
-            }));
+                catch (Exception e)
+                {
+                    HF.PrintError($"[Lua] Error when updating item {ItemID}: {e.Message}");
+                }
+            }), RegisterInstead);
         }
 
         /// <summary>

@@ -1584,6 +1584,40 @@ namespace Neurotrauma
             ApplyAfflictionAgain(Applications);
         }
 
+        /// <summary>
+        /// Applies a limb-specific affliction only when the clamped strength differs from the clamped previous strength.
+        /// </summary>
+        /// <param name="Character">The character to apply the affliction to.</param>
+        /// <param name="LimbType">The limb type to apply the affliction to.</param>
+        /// <param name="Identifier">The affliction's identifier.</param>
+        /// <param name="Strength">The new strength of the affliction.</param>
+        /// <param name="PreviousStrength">The previous strength of the affliction.</param>
+        /// <param name="MinStrength">The minimum allowed strength.</param>
+        /// <param name="MaxStrength">The maximum allowed strength.</param>
+        public static void ApplyAfflictionChangeLimb(
+            Character Character,
+            LimbType LimbType,
+            string Identifier,
+            float Strength,
+            float PreviousStrength,
+            float MinStrength,
+            float MaxStrength)
+        {
+            Strength = HF.Clamp(Strength, MinStrength, MaxStrength);
+            PreviousStrength = HF.Clamp(PreviousStrength, MinStrength, MaxStrength);
+
+            if (PreviousStrength != Strength)
+            {
+                SetAfflictionLimb(
+                    Character,
+                    Identifier,
+                    LimbType,
+                    Strength
+                );
+            }
+        }
+
+
         // ---------------------------------------- Specific Affliction Helper Functions -------------------------------------------------- \\
 
         /// <summary>
