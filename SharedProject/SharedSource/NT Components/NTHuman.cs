@@ -1,3 +1,5 @@
+using Barotrauma.LuaCs.Compatibility;
+using MonoMod.RuntimeDetour;
 using static Neurotrauma.NTAfflictions;
 using static Neurotrauma.NTAfflictions.NTSymptoms;
 
@@ -370,9 +372,9 @@ public class NTHuman
     #region Update
     // ==== UPDATE ====
 
-    public void PreHook()
+    public void PreHook(float deltaTime)
     {
-        EventService.Call("Neurotrauma.HumanUpdate.PreHook", this);
+        EventService.Call("Neurotrauma.HumanUpdate.PreHook", this, deltaTime);
         return;
     }
 
@@ -444,7 +446,7 @@ public class NTHuman
     /// First calls UpdateSymptoms() then calls every NTAffliction Update function for every NTAffliction in the given list.
     /// </summary>
     /// <param name="AfflictionsList">The list of affliction IDs with their target LimbType</param>
-    public void UpdateAfflictions(List<KeyValuePair<string, LimbType>> AfflictionsList)
+    public void UpdateAfflictions(List<KeyValuePair<string, LimbType>> AfflictionsList,float deltaTime)
     {
         this.UpdateSymptoms();
 
@@ -463,8 +465,6 @@ public class NTHuman
                 HF.PrintError($"Error getting a NTAfflictionPrefab from the ID {affID} : The ID does not match any NTAfflictionPrefab!");
                 continue;
             }
-
-            float deltaTime = ((float)NTHumanUpdate.GetUpdateInterval(aff.Priority)) / 60f;
 
             // Should be updated ? Not present ? Set it as default value
 
@@ -494,9 +494,9 @@ public class NTHuman
 
     }
 
-    public void PostHook()
+    public void PostHook(float deltaTime)
     {
-        EventService.Call("Neurotrauma.HumanUpdate.PostHook", this);
+        EventService.Call("Neurotrauma.HumanUpdate.PostHook", this, deltaTime);
 
         if (this.Human != null && this.Human.IdFreed == false)
         {

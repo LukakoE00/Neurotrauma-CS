@@ -121,11 +121,15 @@ public class NTHumanUpdate
         LuaCsSetup.Instance.Timer.Wait((params object[] _) => {
             if (ntHuman != null && HF.IsCharacterValid(ntHuman.Human)) // Verify this character exists.
             {
-                ntHuman.PreHook();
-                ntHuman.UpdateStats(((float)NTHumanUpdate.GetUpdateInterval(AfflictionPriority.HIGH)) / 60f);
+
+                float timePassed = (float)NTHumanUpdate.GetUpdateInterval(AfflictionPriority.HIGH);
+                float deltaTime = timePassed / 60f;
+
+                ntHuman.PreHook(deltaTime);
+                ntHuman.UpdateStats(deltaTime);
                 List<KeyValuePair<string, LimbType>> aff = ntHuman.FetchAfflictions(priorities);
-                ntHuman.UpdateAfflictions(aff);
-                ntHuman.PostHook();
+                ntHuman.UpdateAfflictions(aff, deltaTime);
+                ntHuman.PostHook(deltaTime);
             }
         }, (int)delay);
     }
