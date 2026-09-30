@@ -14,6 +14,9 @@ public class NTHuman
 
     public Dictionary<String, bool> BoolStats { get; private set; }
     public Dictionary<String, float> FloatStats { get; private set; }
+
+    public Dictionary<String, int> AffDelay {  get; private set; }
+
     private NTSymptomsStorage Symptoms;
     public Character Human {  get; private set; }
 
@@ -23,6 +26,8 @@ public class NTHuman
     {
         this.Human = Human;
         this.Symptoms = new NTSymptomsStorage(this);
+
+        this.AffDelay = new Dictionary<String, int>();
 
         this.BoolStats = new Dictionary<String, bool>();
         this.FloatStats = new Dictionary<String, float>();
@@ -464,6 +469,21 @@ public class NTHuman
             {
                 HF.PrintError($"Error getting a NTAfflictionPrefab from the ID {affID} : The ID does not match any NTAfflictionPrefab!");
                 continue;
+            }
+
+            if (aff.Delay != 0)
+            {
+                if (this.AffDelay.TryGetValue(affID, out var delay))
+                {
+                    if (delay != aff.Delay)
+                    {
+                        this.AffDelay[affID] = delay + 1;
+                    } 
+                } else
+                {
+                    this.AffDelay.Add(affID, 1);
+                    continue;
+                }
             }
 
             // Should be updated ? Not present ? Set it as default value
