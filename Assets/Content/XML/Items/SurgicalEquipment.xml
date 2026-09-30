@@ -182,6 +182,7 @@
 
     <!-- ============================================== Surgery Tools ============================================== -->
     <!-- Surgery Kit -->
+	<!-- Contains 4 physical items and all basegame surgery tools via the UI -->
     <Item name="" description="" identifier="surgerykit" category="Equipment" tags="smallitem, nt_huibutton_enabler" cargocontaineridentifier="" showcontentsintooltip="true" Scale="0.5" fireproof="true" impactsoundtag="impact_metal_heavy" RequireAimToUse="True">
         <PreferredContainer primary="medcab" minamount="2" maxamount="2" spawnprobability="1"/>
        
@@ -214,6 +215,10 @@
                 </StatusEffect>
             </Attack>
         </MeleeWeapon>
+
+		<ItemContainer capacity="4" keepopenwhenequipped="true" movableframe="true">
+			<Containable items="surgerytool" excludeditems="toolbelt,toolbox" />
+		</ItemContainer>
     </Item>
 
     <!-- Hemostat -->

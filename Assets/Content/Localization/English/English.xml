@@ -924,7 +924,7 @@ Can give blood to: AB+</entitydescription.ab_positivecard>
 
 <!-- Surgery Kit -->
 <entityname.surgerykit>Surgery Kit</entityname.surgerykit>
-<entitydescription.surgerykit>A kit that contains all the basic surgical equipment a medic could need. \n\nEnables usage of all basic Neurotrauma tools in the Health Menu.</entitydescription.surgerykit>
+<entitydescription.surgerykit>A kit that contains all the basic surgical equipment a medic could need, with some extra space leftover for other items. \n\n‖color:gui.blue‖Enables usage of all basic Neurotrauma tools in the Health Menu.‖end‖</entitydescription.surgerykit>
 
 	<!-- ================================================= Toggleable ================================================= -->
 
