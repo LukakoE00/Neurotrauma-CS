@@ -33,8 +33,8 @@ namespace Neurotrauma.ClientSource
             var Setter = AccessTools.PropertySetter(typeof(CharacterHealth), nameof(CharacterHealth.OpenHealthWindow));
             Harmony.Patch(Setter, postfix: new HarmonyMethod(typeof(ButtonsHUI), nameof(OnOpenHealthWindowChanged)));
 
-            var HudUpdateMethod = AccessTools.Method(typeof(CharacterHUD), nameof(CharacterHUD.AddToGUIUpdateList));
-            Harmony.Patch(HudUpdateMethod, postfix: new HarmonyMethod(typeof(ButtonsHUI), nameof(OnHudAddToGUIUpdateList)));
+            var HealthUIUpdateMethod = AccessTools.Method(typeof(CharacterHealth), nameof(CharacterHealth.AddToGUIUpdateList));
+            Harmony.Patch(HealthUIUpdateMethod, postfix: new HarmonyMethod(typeof(ButtonsHUI), nameof(OnHealthAddToGUIUpdateList)));
 
             foreach (ButtonData Entry in ButtonDefinitions.Entries)
             {
@@ -91,7 +91,7 @@ namespace Neurotrauma.ClientSource
         }
 
         // Ensure the new UI actually exists by tying it to the HealthUI
-        static void OnHudAddToGUIUpdateList()
+        static void OnHealthAddToGUIUpdateList()
         {
             if (Frame == null || !Frame.Visible)
             {
@@ -350,9 +350,9 @@ namespace Neurotrauma.ClientSource
         }
 
         // HF to see if the item we're looking for is present in a player inventory
-        private static bool HasRequiredItem(Identifier? RequiredItemIdentifier)
+        private static bool HasRequiredItem(Identifier RequiredItemIdentifier)
         {
-            return RequiredItemIdentifier == null || Character.Controlled.Inventory.AllItems.Any(Item => Item.Prefab.Identifier == RequiredItemIdentifier);
+            return RequiredItemIdentifier == null || (Character.Controlled?.Inventory?.FindItemByIdentifier(RequiredItemIdentifier, recursive: true) != null);
         }
 
         // HF to check if our buttons should be usable; for instance, you should only be able to use Surgery Tools if you have a Surgery Kit on you.
