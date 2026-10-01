@@ -85,7 +85,7 @@ public class NTHumanUpdate
         {
             if (character == null || character.isDead || character.IdFreed) continue;
 
-            double Delay = (((index + 1) / NTHuman.NTHumans.Count) * UpdateIntervalHigh * 1000);
+            double Delay = (((index + 1) / Character.CharacterList.Count) * UpdateIntervalHigh * 1000);
 
             if (character.IsHuman)
             { 

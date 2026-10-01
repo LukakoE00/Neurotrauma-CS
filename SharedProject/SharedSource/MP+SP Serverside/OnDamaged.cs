@@ -155,19 +155,13 @@ public static class OnDamaged
     // Causes Foreign Bodies, Rib Fractures, Pneumothorax, Tamponade, Internal Bleeding, Fractures, Neurotrauma
     public static void GunshotWound(Character Character, float Strength, LimbType LimbType)
     {
-
-        NTHuman? NTCharacter = NTHuman.getNTHumanFromCharacter(Character);
-
-        if (NTCharacter == null)
-        {
-            HF.PrintError($"OnDamaged GunshotWound, NTCharacter is null! Target character: {Character.Name}");
-            return;
-        }
-
         // Normalize just in case
         LimbType = HF.NormalizeLimbType(LimbType);
 
         bool CauseFullForeignBody = false;
+
+        // Deal with Multipliers
+        NTHuman? NTCharacter = NTHuman.getNTHumanFromCharacter(Character);
 
         // Torso-specific injuries
         if (Strength >= 1 && LimbType == LimbType.Torso)
@@ -688,6 +682,7 @@ public static class OnDamaged
 
     private static void FallOffChair(NTHuman NTCharacter, Character Character, double Strength, double MinimumStrength = 20)
     {
+        // TODO: make it work
         return;
         if (NTCharacter != null && HF.IsCharacterValid(Character))
         {
