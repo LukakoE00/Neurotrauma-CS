@@ -114,6 +114,19 @@ public static class OnDamaged
             HF.SetAffliction(__instance.Character, "luabotomy", 1f);
         }
 
+        foreach (var hook in NTC.OnDamagedHooks)
+        {
+            try
+            {
+                hook(__instance, attackResult, hitLimb);
+            } catch (Exception e)
+            {
+                HF.PrintError("[Lua] Error in OnDamaged Hook: " + e.Message);
+                continue;
+            }
+            
+        }
+
         List<Affliction> Afflictions = attackResult.Afflictions;
 
         // NT Compatibility Modifying OnDamaged Hooks
