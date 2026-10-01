@@ -194,6 +194,65 @@ public class NTAfflictions
             NTAfflictionPrefab OldAff = NTOldAfflictionsPrefabRegistry[(ModName, AfflictionID)];
             OldAff.Update(C, ID, Limb, DeltaTime);
         }
+
+        public void Extend(string AfflictionID, LuaCsFunc UpdateFunction)
+        {
+
+            this.Extend(AfflictionID, (NTHuman C, string ID, LimbType Limb, float DeltaTime) =>
+            {
+                try
+                {
+                    return (bool) UpdateFunction(C, ID, Limb, DeltaTime);
+                }
+                catch (Exception e)
+                {
+                    HF.PrintError($"[Lua] Error when updating {ID} : {e.Message}");
+                    return false;
+                }
+
+            });
+
+        }
+
+        /// <summary>
+        /// Extend an affliction update function by overriding the original function, running the given UpdateFunction and then calling the original one.
+        /// <br></br>
+        /// The return value of the given UpdateFunction determines if the original update should run or not.
+        /// <br></br>
+        /// If the Affliction was already Extended, both extensions will run, the order is determined by first extended -> last called.
+        /// </summary>
+        public void Extend(string AfflictionID, Func<NTHuman, string, LimbType, float, bool> UpdateFunction)
+        {
+            if (NTConfig.Get("NT_DEBUG_MODE", false)) HF.PrintUtility($"[{this.ModID}] Extending affliction: {AfflictionID}");
+
+            if (!NTAfflictionsPrefabRegistry.ContainsKey(AfflictionID))
+            {
+                HF.PrintError($"[{this.ModID}] Trying to extend affliction with ID '{AfflictionID}' : affliction is not already registered or it was removed, cannot extend it.");
+                return;
+            }
+
+            NTOldAfflictionsPrefabRegistry.Add((NTAfflictionsPrefabModDefinerRegistry[AfflictionID], AfflictionID), NTAfflictionsPrefabRegistry[AfflictionID]);
+
+
+#pragma warning disable CS8602 // Cannot be null we check earlier for its existence.
+            NTAfflictionPrefab aff = (NTAfflictionPrefab) this.Get(AfflictionID).Clone();
+#pragma warning restore CS8602 
+
+            aff.UpdateAction = (C, ID, Limb, dT) =>
+            {
+                bool r = UpdateFunction(C, ID, Limb, dT);
+
+                string oldModName = NTAfflictionsPrefabModDefinerRegistry[AfflictionID];
+
+                if (r) CallOldUpdate(oldModName, AfflictionID, C, ID, Limb, dT);
+            };
+
+            NTAfflictionsPrefabRegistry[AfflictionID] = aff;
+
+
+            NTAfflictionsPrefabModDefinerRegistry[AfflictionID] = this.ModID;
+        }
+
     }
 
     /// <summary>
@@ -203,9 +262,9 @@ public class NTAfflictions
     public class NTAfflictionPrefabBuilder
     {
 
-#pragma warning disable CS8618 // Un champ non-nullable doit contenir une valeur autre que Null lors de la fermeture du constructeur. Envisagez d’ajouter le modificateur « required » ou de déclarer le champ comme pouvant accepter la valeur Null.
+#pragma warning disable CS8618 
         private NTAfflictionPrefab Affliction;
-#pragma warning restore CS8618 // Un champ non-nullable doit contenir une valeur autre que Null lors de la fermeture du constructeur. Envisagez d’ajouter le modificateur « required » ou de déclarer le champ comme pouvant accepter la valeur Null.
+#pragma warning restore CS8618
 
         public NTAfflictionPrefabBuilder New(string AfflictionID)
         {
@@ -301,6 +360,7 @@ public class NTAfflictions
         /// <summary>
         /// Default is true
         /// </summary>
+        [Obsolete("IgnoreStasis is no longer used, instead add a check in your Affliction's update function")]
         public NTAfflictionPrefabBuilder SetIgnoreStasis(bool IgnoreStasis)
         {
             this.Affliction.IgnoreStasis = IgnoreStasis;
@@ -340,7 +400,7 @@ public class NTAfflictions
 
     }
 
-    public class NTAfflictionPrefab
+    public class NTAfflictionPrefab : ICloneable
     {
         /// <summary>
         /// Should this affliction always be running? If on, regardless of current affliction strength, this will update.
@@ -387,6 +447,7 @@ public class NTAfflictions
         /// <summary>
         /// If false, doesnt update on stasis.
         /// </summary>
+        [Obsolete("IgnoreStasis is no longer used, instead add a check in your Affliction's update function", true)]
         public bool IgnoreStasis { get; set; } = true;
 
         /// <summary>
@@ -411,6 +472,25 @@ public class NTAfflictions
         public NTAfflictionPrefab(string id)
         {
             this.ID = id;
+        }
+
+        public object Clone()
+        {
+            NTAfflictionPrefab aff = new NTAfflictionPrefab(this.ID)
+            {
+                Const = this.Const,
+                Real = this.Real,
+                LimbSpecific = this.LimbSpecific,
+                Symptom = this.Symptom,
+                Delay = this.Delay,
+                MinStrength = this.MinStrength,
+                MaxStrength = this.MaxStrength,
+                DefaultStrength = this.DefaultStrength,
+                Priority = this.Priority,
+                //IgnoreStasis = this.IgnoreStasis,
+                UpdateAction = this.UpdateAction
+            };
+            return aff;
         }
 
     }
