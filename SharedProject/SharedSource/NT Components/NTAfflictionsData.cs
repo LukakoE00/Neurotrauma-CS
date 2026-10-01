@@ -303,7 +303,7 @@ public class NTAfflictionsToAdd
                 if (str <= 0) return;
 
                 // State check; strength is 1 if Retracted Skin is present, else 100.
-                C.SetAffliction(ID, 1 + HF.BoolToNum(C.HasAfflictionLimb("retractedskin", LimbType.Head, 99), 99));
+                C.SetAffliction(ID, 1 + HF.BoolToNum(C.HasAfflictionLimb("retractedskin", LimbType.Torso, 99), 99));
 
                 // Effects:
                 // Respiratory Arrest
