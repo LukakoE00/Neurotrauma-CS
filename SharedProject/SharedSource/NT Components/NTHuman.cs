@@ -518,6 +518,8 @@ public class NTHuman
     {
         EventService.Call("Neurotrauma.HumanUpdate.PostHook", this, deltaTime);
 
+        SetAffliction("slowdown", Math.Clamp(100*(1f - GetFloatStat("speedmultiplier")), 0, 100));
+
         if (this.Human != null && this.Human.IdFreed == false)
         {
             this.Human.SetStun((float)GetAfflictionStrength("stun"));
@@ -527,6 +529,10 @@ public class NTHuman
                 SetSymptomTrue("unconsciousness", 2);
                 SetAffliction("unconsciousness", 100);
             }
+
+            SetFloatStat("speedmultiplier", 1f);
+            NTC.CharacterSpeedMultipliers.Remove(this);
+
         }
 
         return;
