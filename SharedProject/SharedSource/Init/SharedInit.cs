@@ -45,17 +45,19 @@ namespace Neurotrauma
             var originalUse = AccessTools.Method(typeof(Item), "Use", [typeof(float), typeof(Character), typeof(Limb), typeof(Entity), typeof(Character)]);
             var originalApplyTreatment = AccessTools.Method(typeof(Item), "ApplyTreatment", [typeof(Character), typeof(Character), typeof(Limb)]);
             var originalRoundStart = AccessTools.Method(typeof(LuaScriptManagementService), "ExecuteLoadedScripts", [typeof(ImmutableArray < ILuaScriptResourceInfo >), typeof(bool)]);
+            var originalBleedingUpdate = AccessTools.Method(typeof(AfflictionBleeding), "Update", [typeof(CharacterHealth), typeof(Limb), typeof(float)]);
 
             harmony.Patch(originalApplyDamage, prefix: new HarmonyMethod(typeof(OnDamaged), nameof(OnDamaged.Override_ApplyDamage)));
             harmony.Patch(originalDamageLimb, prefix: new HarmonyMethod(typeof(OnDamaged), nameof(OnDamaged.Override_DamageLimb)));
             harmony.Patch(originalUse, prefix: new HarmonyMethod(typeof(NTItems), nameof(NTItems.Override_Use)));
             harmony.Patch(originalApplyTreatment, prefix: new HarmonyMethod(typeof(NTItems), nameof(NTItems.Override_ApplyTreatment)));
             harmony.Patch(originalRoundStart, postfix: new HarmonyMethod(typeof(NTInfo), nameof(NTInfo.PrintNTInitInfo)));
+            harmony.Patch(originalBleedingUpdate, prefix: new HarmonyMethod(typeof(CharacterPatches), nameof(CharacterPatches.Override_BleedingUpdate)));
 
             // Character Patches ----------------------------------------------------------------------------------------------------------------------------------------- \\
 
             //var characterCreation = AccessTools.Constructor(typeof(CharacterHealth), 
-                //[typeof(ContentXElement), typeof(Character), typeof(ContentXElement)]);
+            //[typeof(ContentXElement), typeof(Character), typeof(ContentXElement)]);
             //harmony.Patch(characterCreation, postfix: new HarmonyMethod(typeof(HumanUpdate), nameof(HumanUpdate.AddCharacterToUpdate))); // The Character Created hook.
             //var characterDeath = AccessTools.Method(typeof(Character), "RecordKill",
             //[typeof(Character)]);

@@ -2413,11 +2413,20 @@ public class NTAfflictionsToAdd
 
                 if (!(str > 0)) return;
 
+                if (!C.HasAfflictionLimb("tourniqueted", Limb))
+                {
+                    // Vanilla formula
+                    C.AddAffliction("bloodloss", str * (1 - HF.GetResistance(C.Human, "bloodloss", Limb)) / 60f * dT);
+                }
+
+
                 // Passive Regeneration
                 C.AddAfflictionLimb(ID, Limb, -(C.GetFloatStat("clottingrate") * 0.1f
                     + Math.Clamp(C.GetAfflictionStrengthLimb("bandaged", Limb), 0, 1) * 0.5f
                     + Math.Clamp(C.GetAfflictionStrengthLimb("bandageddirty", Limb), 0, 1) * 0.25f
                 ) * dT);
+
+                
 
             })
             .Build()

@@ -29,6 +29,11 @@
 
             harmony.Patch(Method_ApplyStatusEffects, postfix: new HarmonyMethod(typeof(BurningPatch), nameof(BurningPatch.Postfix_ApplyStatusEffects)));
         }
+
+        public static bool Override_BleedingUpdate(CharacterHealth characterHealth, Limb targetLimb, float deltaTime)
+        {
+            return false;
+        }
     }
 
     // Formerly CharacterPatches.lua
