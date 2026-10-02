@@ -60,6 +60,11 @@ public static class NTInfo
         LuaRegisteredAddons[addon.Get("Name").String] = addon;
     }
 
+    public static bool isAddonRegistered(string addonName)
+    {
+        return RegisteredAddons.ContainsKey(addonName) || LuaRegisteredAddons.ContainsKey(addonName);
+    }
+
     public static void PrintNTInitInfo(ImmutableArray<ILuaScriptResourceInfo> executionOrder, bool enableSandbox)
     {
         LuaCsSetup.Instance.Timer.Wait((params object[] _) => {
