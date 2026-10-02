@@ -2144,5 +2144,10 @@ namespace Neurotrauma
             float Multiplier = MathF.Pow(10f, NumberOfDecimalPlaces);
             return MathF.Floor(Value * Multiplier + 0.5f) / Multiplier;
         }
+
+        public static bool StartsWith(string String, string Start)
+        {
+            return String.StartsWith(Start);
+        }
     }
 }
