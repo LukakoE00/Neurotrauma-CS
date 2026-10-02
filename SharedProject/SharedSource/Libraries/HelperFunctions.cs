@@ -1263,25 +1263,19 @@ namespace Neurotrauma
         /// <returns>True if the Affliction is present, else False.</returns>
         public static bool HasAfflictionLimb(Character Character, string Identifier = "", LimbType GivenLimbType = LimbType.Torso, float MinAmount = 0)
         {
-            if (Identifier == "" || Character.CharacterHealth == null) 
+            if (Character?.CharacterHealth == null || string.IsNullOrEmpty(Identifier))
             {
                 return false;
             }
 
-            // Is the affliction null?
-            Affliction? Aff = GetAfflictionLimb(Character, Identifier, GivenLimbType);
-            if (Aff == null) 
-            {
-                return false;
-            } 
-
-            float AffStrength = Aff.Strength;
-            if (AffStrength >= MinAmount)
-            {
-                return true;
+            Limb limb = Character.AnimController?.GetLimb(GivenLimbType);
+            if (limb == null) 
+            { 
+                return false; 
             }
 
-            return false;
+            Affliction Affliction = Character.CharacterHealth.GetAffliction(Identifier, limb);
+            return Affliction != null && Affliction.Strength >= MinAmount;
         }
 
         /// <summary>
