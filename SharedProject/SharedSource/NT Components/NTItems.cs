@@ -35,7 +35,7 @@ public class NTItems
         /// <summary>
         /// Create a new instance of the NTItemFunctionLoader class for a specific mod. This allows you to register update functions for items associated with that mod.
         /// </summary>
-        /// <param name="ModID">The name of your mod, helps with debugging and organization</param>
+        /// <param name="ModID">The name of your mod, should be the same as defined in your addon's infos.</param>
         public NTItemFunctionLoader(string ModID)
         {
             this.ModID = ModID;
@@ -168,8 +168,6 @@ public class NTItems
         /// <summary>
         /// Check if the given item ID has a corresponding function registered.
         /// </summary>
-        /// <param name="ItemID">The ID of the item defined in the XML.</param>
-        /// <returns>true if the item has a registered use function, false otherwise.</returns>
         public bool Has(string ItemID)
         {
             return NTItemsRegistry.ContainsKey(ItemID);
@@ -198,12 +196,49 @@ public class NTItems
             }
         }
 
+        /// <summary>
+        /// Calls the old function associated with the given item ID and mod name after an override.
+        /// 
+        /// /// <example>
+        /// <code>
+        /// NTItemFunctionLoader loader = new NTItems.NTItemFunctionLoader("MyMod");
+        /// 
+        /// loader.Override("MyItemID", (infos) => {
+        ///     // Your item update logic here
+        ///     
+        ///     loader.CallOld("MyItemID", "OtherMod", infos); // Call the old function defined by OtherMod
+        /// });
+        /// </code>
+        /// </example>
+        /// 
+        /// ```lua
+        /// local loader = NTCS.ItemFunctionLoader("MyMod")
+        /// 
+        /// loader:Override("MyItemID", function (infos) 
+        ///     -- do your things
+        ///     
+        ///     loader:CallOld("MyItemID", "OtherMod", infos) -- Call the old function defined by OtherMod
+        /// end)
+        /// ```
+        /// </summary>
+        /// <param name="ItemID">The ID of the item defined in the XML.</param>
+        /// <param name="ModName">The name of the mod that originally defined the item. Should be the same as defined in the addon's infos.</param>
         public void CallOld(string ItemID, string ModName, ItemUpdateFunctionInfos infos)
         {
             if (NTOldItemsRegistry.ContainsKey((ModName, ItemID)))
             {
                 NTOldItemsRegistry[(ModName, ItemID)].Invoke(infos);
             }
+        }
+
+        /// <summary>
+        /// Check if there is an old function associated with the given item ID and mod name after an override.
+        /// </summary>
+        /// <param name="ItemID">The ID of the item defined in the XML.</param>
+        /// <param name="ModName">The name of the mod that originally defined the item. Should be the same as defined in the addon's infos.</param>
+        public bool HasOld(string ItemID, string ModName)
+        {
+            return NTOldItemsRegistry.ContainsKey((ModName, ItemID));
         }
     }
 

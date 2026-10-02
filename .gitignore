@@ -16,6 +16,8 @@ Build.props
 *.sln.docstates
 *.DotSettings
 
+docs
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 

@@ -10,6 +10,9 @@ public class NTHumanUpdate
     private static int UpdateIntervalLow = UpdateIntervalHigh * 3;
     private static int UpdateIntervalMonster = UpdateIntervalHigh * 3;                                 //(int)Math.Round(NTConfig.Get("NT_UpdateInterval_Monster", 120f));
 
+    /// <summary>
+    /// Returns the update interval (in ticks) for a given affliction priority.
+    /// </summary>
     public static int GetUpdateInterval(NTAfflictions.AfflictionPriority priority)
     {
         return priority switch

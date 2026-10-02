@@ -5,13 +5,16 @@ public class NTAfflictions
 {
 
     /// <summary>
-    /// Determines how often an affliction gets updated; Low every 6 seconds, Medium every 4 seconds and High every 2 seconds.
+    /// Determines how often an affliction gets updated; By default : Low every 6 seconds, Medium every 4 seconds and High every 2 seconds.
+    /// <br />
+    /// Actual values are defined in the Neurotrauma Config.
     /// </summary>
-    public enum AfflictionPriority : int
+    /// <
+    public enum AfflictionPriority
     {
-        LOW = 6 * 60,  // Every 6s
-        MEDIUM = 4 * 60, // Every 4s
-        HIGH = 2 * 60 // Every 2s
+        LOW, 
+        MEDIUM, 
+        HIGH 
     }
 
     /// <summary>
@@ -358,6 +361,7 @@ public class NTAfflictions
 
 
         /// <summary>
+        /// DEPRECATED
         /// Default is true
         /// </summary>
         [Obsolete("IgnoreStasis is no longer used, instead add a check in your Affliction's update function")]

@@ -54,6 +54,10 @@ public class NTHuman
         }
     }
 
+
+    /// <summary>
+    /// Returns the NTHuman instance associated with the given Character. If no NTHuman exists for that Character, returns null.
+    /// </summary>
     public static NTHuman? getNTHumanFromCharacter(Character Human)
     {
         if (NTHumans.ContainsKey(Human))
@@ -377,12 +381,21 @@ public class NTHuman
     #region Update
     // ==== UPDATE ====
 
+    /// <summary>
+    /// Gets called at the beginning of the Human Update cycle. Calls "Neurotrauma.HumanUpdate.PreHook" event.
+    /// </summary>
+    /// <param name="deltaTime"></param>
     public void PreHook(float deltaTime)
     {
         EventService.Call("Neurotrauma.HumanUpdate.PreHook", this, deltaTime);
         return;
     }
 
+    /// <summary>
+    /// First calls "Neurotrauma.HumanUpdate.FetchAfflictions" event, then returns a list of every afflictions present on the character that have are defined by Neurotrauma or its addon combined with the Limb they are on. Non limb specific afflictions are associated with thei indicator limb. Constant afflictions are added at the end.
+    /// </summary>
+    /// <param name="priorities"></param>
+    /// <returns></returns>
     public List<KeyValuePair<string, LimbType>> FetchAfflictions(List<AfflictionPriority> priorities)
     {
         EventService.Call("Neurotrauma.HumanUpdate.FetchAfflictions", this, priorities);
@@ -576,7 +589,7 @@ public class NTHuman
     }
 
     /// <summary>
-    /// Remove a the given symptom from the given Character. The LimbType is only relevant if the affliction is limbspecific.
+    /// Instantly removes a symptom. The LimbType is only relevant if the affliction is limbspecific.
     /// </summary>
     public void SetSymptomFalse(string AfflictionID, LimbType Limb = LimbType.None)
     {
@@ -592,7 +605,7 @@ public class NTHuman
     }
 
     /// <summary>
-    /// Remove the given symptom from the given Character. The LimbType is only relevant if the affliction is limbspecific.
+    /// Instantly removes a symptom. The LimbType is only relevant if the affliction is limbspecific.
     /// </summary>
     public void SetSymptomFalse(NTAfflictionPrefab Affliction, LimbType Limb = LimbType.None)
     {
@@ -606,6 +619,9 @@ public class NTHuman
 
     }
 
+    /// <summary>
+    /// Checks if a symptom is present. The LimbType is only relevant if the affliction is limbspecific.
+    /// </summary>
     public bool HasSymptom(String AfflictionID, LimbType Limb = LimbType.None)
     {
 
@@ -620,6 +636,9 @@ public class NTHuman
         return this.HasSymptom(aff, Limb);
     }
 
+    /// <summary>
+    /// Checks if a symptom is present. The LimbType is only relevant if the affliction is limbspecific.
+    /// </summary>
     public bool HasSymptom(NTAfflictionPrefab Affliction, LimbType Limb = LimbType.None)
     {
         if (!Affliction.Symptom)
