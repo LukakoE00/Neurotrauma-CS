@@ -131,7 +131,14 @@ namespace Neurotrauma
                     // Localized String!
                     if (Field.FieldType == typeof(LocalizedString))
                     {
-                        Field.SetValue(Entry, TextManager.ContainsTag(Dyn.String) ? TextManager.Get(Dyn.String) : (LocalizedString)Dyn.String);
+                        if (Dyn.Type == DataType.String)
+                        {
+                            Field.SetValue(Entry, TextManager.Get(Dyn.String));
+                        }
+                        else if (Dyn.Type == DataType.UserData && Dyn.UserData.Object is LocalizedString Localized)
+                        {
+                            Field.SetValue(Entry, Localized);
+                        }
                     }
                     // String!
                     else if (Field.FieldType == typeof(string))
