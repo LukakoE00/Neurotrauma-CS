@@ -133,7 +133,7 @@ namespace Neurotrauma
                     {
                         if (Dyn.Type == DataType.String)
                         {
-                            Field.SetValue(Entry, TextManager.Get(Dyn.String));
+                            Field.SetValue(Entry, TextManager.Get(Dyn.String).Fallback(Dyn.String));
                         }
                         else if (Dyn.Type == DataType.UserData && Dyn.UserData.Object is LocalizedString Localized)
                         {
