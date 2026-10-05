@@ -143,7 +143,7 @@ public static class NTInfo
             //    }
             //}
 
-            if (NTSPEnabled) consolePrint += "\nNT Surgery Plus Enabled!\n";
+            //if (NTSPEnabled) consolePrint += "\nNT Surgery Plus Enabled!\n";
 
             HF.Print(consolePrint);
 

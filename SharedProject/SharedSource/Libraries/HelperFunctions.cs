@@ -2129,25 +2129,37 @@ namespace Neurotrauma
         // larp
         public static float Lerp(float A, float B, float T)
         {
-            return A + (B - A) * T;
+            return float.Lerp(A, B, T);
         }
 
         public static float Clamp(float Value, float Minimum, float Maximum)
         {
-            if (Value < Minimum) return Minimum;
-            if (Value > Maximum) return Maximum;
-            return Value;
+            return Math.Clamp(Value, Minimum, Maximum);
         }
 
         public static float Round(float Value, int NumberOfDecimalPlaces = 0)
         {
-            float Multiplier = MathF.Pow(10f, NumberOfDecimalPlaces);
-            return MathF.Floor(Value * Multiplier + 0.5f) / Multiplier;
+            return MathF.Round(Value, NumberOfDecimalPlaces);
         }
 
         public static bool StartsWith(string String, string Start)
         {
             return String.StartsWith(Start);
+        }
+
+        public static string[] SplitString(string StringToSplit, string Separator)
+        {
+            return StringToSplit.Split(new[] { Separator }, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        public static string ReplaceString(string StringToReplace, string ValueToReplace, string ValueToReplaceWith)
+        {
+            return StringToReplace.Replace(ValueToReplace, ValueToReplaceWith);
+        }
+
+        public static float Distance(Vector2 Pos1, Vector2 Pos2)
+        {
+            return Vector2.Distance(Pos1, Pos2);
         }
     }
 }
