@@ -734,10 +734,11 @@ public class NTHuman
                 return;
             }
 
-            if (Aff.LimbSpecific) 
+            if (Aff.LimbSpecific)
             {
-                this.Human.SetAfflictionLimb(Aff.ID, limb, (float) Aff.MaxStrength);
-            } else
+                this.Human.SetAfflictionLimb(Aff.ID, limb, (float)Aff.MaxStrength);
+            }
+            else
             {
                 this.Human.SetAffliction(Aff.ID, (float) Aff.MaxStrength);
             }
@@ -749,7 +750,13 @@ public class NTHuman
             if (this.HasSymptom(Aff, limb))
             {
                 Dictionary<String, NTSymptomData> l = this.getDictFromLimb(limb);
+
                 l.Remove(Aff.ID);
+
+                if (Aff.Real == false)
+                {
+                    return;
+                }
 
                 if (Aff.LimbSpecific)
                 {
@@ -770,114 +777,49 @@ public class NTHuman
             return l.ContainsKey(Aff.ID);
         }
 
-        
         /// <summary>
         /// This counts down the duration of every symptoms and remove the ones where duration reaches 0.
         /// </summary>
-        public void UpdateSymptoms()
+        private void TickAfflictions(Dictionary<String, NTSymptomData> Afflictions, LimbType? Limb)
         {
-/* ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⡴⠞⠛⠉⠀⠊⡐⠳⣣⡀⠀⣠⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠶⠁⠄⠀⠀⠀⠀⠀⠈⢶⠰⠞⠃⣐⣞⠛⠲⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡠⣪⣋⠀⠤⠀⠀⠀⠀⠀⠀⠀⠀⠠⠒⠩⢥⠒⢝⠬⣪⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⣰⠁⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⠘⠭⣳⣺⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣱⠃⠀⠀⠀⠀⠀⠀⠀⠀⠠⡀⠀⠀⠀⠀⢀⣀⣛⡋⢉⣉⡓⢺⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡿⡆⠀⠀⠀⠀⠀⠀⡠⢈⠀⡀⠂⠈⣁⣀⡉⠭⠠⡶⣶⣷⣿⣿⣅⠄⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢳⠀⡀⠀⠀⣀⢤⣠⣉⣨⡙⠒⣶⠚⢿⣉⣂⣡⣄⡀⠿⣿⣿⣿⣝⢏⢆⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⡠⢐⣩⠕⢊⢽⣭⢽⣿⣷⣿⠈⢛⣫⢭⣥⢈⠉⠢⣫⣹⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢈⣥⣾⣿⠏⠠⣿⡌⠉⠀⢩⢿⠊⠀⣮⡀⠀⠉⠀⢳⣤⣻⠛⣻⣿⣿⠏⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡞⣿⠉⣿⠀⠀⠈⠀⣠⠒⣍⣼⠀⠀⡢⠙⠢⡀⠀⠁⠀⡻⣍⢡⢿⡛⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⢸⣿⡄⢠⢄⠢⢀⠊⠑⠐⢻⠞⠒⠒⣇⠁⠢⢀⠀⢠⢜⠧⣌⠃⢸⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢣⢻⢷⡌⡉⢺⣦⠀⠀⠀⢄⣮⣦⣴⢫⠆⠀⠐⠑⣵⣒⠩⠀⠀⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠑⠢⠿⠬⢴⡿⠀⢀⣴⡿⠏⠄⠜⠷⣎⠢⡀⠈⣻⠿⠋⠀⠀⠀⡃⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣵⡂⢳⣀⠴⠶⠷⠾⠦⣌⠃⠘⢊⠿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢹⠃⢙⡷⢸⣶⢶⣞⠉⠈⡣⠀⣸⡇⠀⠀⠀⠀⠀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⢧⡘⠈⠀⠀⠀⠀⠈⠙⠄⣀⠝⢧⠄⠀⠀⠀⢠⠆⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡴⢣⢎⠳⢦⣀⣠⣦⣀⣔⡤⠞⠁⠀⣹⡨⣄⡂⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠹⡝⣹⠁⠀⠀⠐⠫⠿⠛⠋⠀⠀⠀⢠⢿⣏⠿⣮⡆⡤⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡆⢀⠞⣸⡇⠋⠀⠀⠀⠐⢄⠀⠀⠀⠀⠀⠀⠎⣾⠸⣄⣪⡽⢧⡁⢀⡀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢂⣠⡞⡀⠊⡐⢹⡰⡀⠀⠀⢀⠀⠀⠀⠀⠀⠀⠀⣎⢲⢸⢆⠫⡁⠫⡢⣳⡄⢢⣴⠄⣀⡀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⣴⣼⣿⡏⣠⡥⡸⢆⣚⣧⠡⡀⠀⢀⡀⠀⠀⠀⡀⠀⢔⠿⠇⣼⠒⢾⡮⣾⠋⠹⢷⠀⠱⣍⢸⠽⢷⣄⠀
-⠀⠀⠀⠀⠀⢀⣠⣄⢄⠲⣿⣄⣱⣾⣒⠇⡹⢳⣰⢚⠉⠡⠉⠚⠃⠈⠢⠦⠊⠀⠀⠀⠀⠉⢈⡄⠀⢠⠈⠲⣄⣷⣇⢀⢛⡃⠀⣤⢜⣵
-⠀⠀⠀⣀⣤⢳⢾⣦⣰⠀⡿⣝⠣⢳⡀⠀⣷⠈⠂⢸⠀⠀⠡⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠀⢹⠀⠀⢸⡆⠀⡟⢻⣗⣾⢦⢀⡄⢸⣷⣜
-⠀⠀⠴⣿⣻⢯⡎⡇⢪⡦⠿⣿⣿⠿⣯⡇⠈⡇⠘⠀⡀⠀⠀⠠⡀⠀⠀⠀⠀⠀⠀⠀⡀⠀⣸⠄⠀⡏⣿⠀⣿⣿⡿⢫⣼⡟⢻⣾⣿⣿
-⠀⡮⡸⠯⣿⣫⠿⡈⡌⣿⡅⢹⣿⣆⠘⣇⢠⠘⡄⡄⡇⠀⠀⠀⠐⡄⠀⠀⠀⠀⠀⠔⠀⠀⣿⠀⣼⣷⢿⠆⢻⡿⡇⠘⣟⣷⠬⣯⣿⣿
-⠈⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠈⠉⠈⠁⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠁⠉⠉⠉⠉⠉⠉⠁⠀⠉⠉⠉⠉⠉⠉
-probably the most disgusting code i've ever written
-*/
-
-
-            foreach (var item in HeadAfflictions)
+            foreach (var Item in Afflictions.ToList())
             {
-                item.Value.Duration--;
-                if (item.Value.Duration <= 0) 
-                { 
-                    this.Human.SetAfflictionLimb(item.Value.Affliction.ID, LimbType.Head, 0);
-                    HeadAfflictions.Remove(item.Key);
-                }
-            }
+                Item.Value.Duration--;
 
-            foreach (var item in TorsoAfflictions)
-            {
-                item.Value.Duration--;
-                if (item.Value.Duration <= 0) 
-                { 
-                    this.Human.SetAfflictionLimb(item.Value.Affliction.ID, LimbType.Torso, 0);
-                    TorsoAfflictions.Remove(item.Key);
-                }
-            }
+                if (Item.Value.Duration <= 0)
+                {
+                    var Affliction = Item.Value.Affliction;
 
-            foreach (var item in RightArmAfflictions)
-            {
-                item.Value.Duration--;
-                if (item.Value.Duration <= 0) 
-                { 
-                    this.Human.SetAfflictionLimb(item.Value.Affliction.ID, LimbType.RightArm, 0);
-                    RightArmAfflictions.Remove(item.Key);
-                }
-            }
+                    if (Affliction.Real)
+                    {
+                        if (Limb.HasValue)
+                        {
+                            this.Human.SetAfflictionLimb(Affliction.ID, Limb.Value, 0);
+                        }
+                        else
+                        {
+                            this.Human.SetAffliction(Affliction.ID, 0);
+                        }   
+                    }
 
-            foreach (var item in LeftArmAfflictions)
-            {
-                item.Value.Duration--;
-                if (item.Value.Duration <= 0) 
-                { 
-                    this.Human.SetAfflictionLimb(item.Value.Affliction.ID, LimbType.LeftArm, 0);
-                    LeftArmAfflictions.Remove(item.Key);
-                }
-            }
-
-            foreach (var item in RightLegAfflictions)
-            {
-                item.Value.Duration--;
-                if (item.Value.Duration <= 0) 
-                { 
-                    this.Human.SetAfflictionLimb(item.Value.Affliction.ID, LimbType.RightLeg, 0); 
-                    RightLegAfflictions.Remove(item.Key);
-                }
-            }
-
-            foreach (var item in LeftLegAfflictions)
-            {
-                item.Value.Duration--;
-                if (item.Value.Duration <= 0) 
-                { 
-                    this.Human.SetAfflictionLimb(item.Value.Affliction.ID, LimbType.LeftLeg, 0);
-                    LeftLegAfflictions.Remove(item.Key);
-                }
-            }
-
-            foreach (var item in NonLimbSpecificAfflictions)
-            {
-                item.Value.Duration--;
-                if (item.Value.Duration <= 0) { 
-                    this.Human.SetAffliction(item.Value.Affliction.ID, 0);
-                    NonLimbSpecificAfflictions.Remove(item.Key);
+                    // because bread removes better than key
+                    Afflictions.Remove(Item.Key);
                 }
             }
         }
- 
+
+        public void UpdateSymptoms()
+        {
+            TickAfflictions(HeadAfflictions, LimbType.Head);
+            TickAfflictions(TorsoAfflictions, LimbType.Torso);
+            TickAfflictions(RightArmAfflictions, LimbType.RightArm);
+            TickAfflictions(LeftArmAfflictions, LimbType.LeftArm);
+            TickAfflictions(RightLegAfflictions, LimbType.RightLeg);
+            TickAfflictions(LeftLegAfflictions, LimbType.LeftLeg);
+            TickAfflictions(NonLimbSpecificAfflictions, null);
+        }
     }
+
     #endregion
 
     #region Tags
