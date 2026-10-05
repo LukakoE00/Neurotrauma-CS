@@ -15,11 +15,36 @@ namespace Neurotrauma
 
         // Randomize BloodType and set it
         private static readonly Random random = new Random();
+
+        // FALLOUT NEW VEGAS 1 A!!!
+        // Turn a character's name into a specific string of numbers to use in blood type calculations.
+        private static uint StableHash(string Value)
+        {
+            uint Hash = 2166136261;
+            foreach (char Character in Value)
+            {
+                Hash ^= Character;
+                Hash *= 16777619;
+            }
+            return Hash;
+        }
+
         public static string ?RandomizeBloodType(Character character)
         {
             // Ensure the weights work if new blood types would be added with their own weights (pushing it above 100)
             int totalChance = BloodTypes.Sum(x => x.Chance);
-            int roll = random.Next(0, totalChance);
+            int roll;
+
+            if (NTConfig.Get("NT_DoDeterministicBloodTypes", false))
+            {
+                // Same name always gives the same roll, so the same blood type
+                roll = (int)(StableHash(character.Name) % (uint)totalChance);
+            }
+            else
+            {
+                roll = random.Next(0, totalChance);
+            }
+
             int cumulative = 0;
 
             foreach (var (BloodType, Chance) in BloodTypes)
@@ -33,6 +58,7 @@ namespace Neurotrauma
                     return BloodType;
                 }
             }
+
             return null;
         }
 

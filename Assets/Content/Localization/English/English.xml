@@ -1366,6 +1366,10 @@ Can give blood to: AB+</entitydescription.ab_positivecard>
 <ntconfig.entryname.DoHUIButtons>Show Neurotrauma Tool Buttons</ntconfig.entryname.DoHUIButtons>
 <ntconfig.entrydescription.DoHUIButtons>‖color:gui.green‖Clientside option.‖end‖\n\nAdds an extra overlay to the HealthUI that can be clicked to use the depicted item. Disable this if you don't plan on using them and find them annoying.</ntconfig.entrydescription.DoHUIButtons>
 
+<!-- Deterministic Blood Types -->
+<ntconfig.entryname.DoDeterministicBloodTypes>Deterministic Blood Types</ntconfig.entryname.DoDeterministicBloodTypes>
+<ntconfig.entrydescription.DoDeterministicBloodTypes>If enabled, your blood type is calculated based on your character's name instead of randomized. This means you'll keep the same blood type between lives and cannot re-roll them.</ntconfig.entrydescription.DoDeterministicBloodTypes>
+
 <!-- Character calculations -->
 <ntconfig.entryname.calculations>Neurotrauma Mod Functionality</ntconfig.entryname.calculations>
 <ntconfig.entrydescription.calculations>‖color:gui.red‖Turning this off will make the mod stop working properly.‖end‖\n\nDisable the update calculations for the mod. This shouldn't be done unless you're experiencing terrible amounts of desync or lag - since disabling NT calculations then may make the game playable again.</ntconfig.entrydescription.calculations>

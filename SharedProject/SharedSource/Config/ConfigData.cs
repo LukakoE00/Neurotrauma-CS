@@ -206,6 +206,14 @@ namespace Neurotrauma
                             IsClientside = true,
                         },
 
+                        ["NT_DoDeterministicBloodTypes"] = new ConfigEntry
+                        {
+                            Name = TextManager.Get("ntconfig.entryname.DoDeterministicBloodTypes"),
+                            Default = false,
+                            Type = ConfigEntryType.Bool,
+                            Description = TextManager.Get("ntconfig.entrydescription.DoDeterministicBloodTypes"),
+                        },
+
                         ["NT_Calculations"] = new ConfigEntry
                         {
                             Name = TextManager.Get("ntconfig.entryname.calculations"),
