@@ -729,6 +729,11 @@ public class NTHuman
 
             l.Add(Aff.ID, d);
 
+            if (Aff.Real == false)
+            {
+                return;
+            }
+
             if (Aff.LimbSpecific) 
             {
                 this.Human.SetAfflictionLimb(Aff.ID, limb, (float) Aff.MaxStrength);
