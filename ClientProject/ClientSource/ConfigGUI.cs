@@ -450,8 +450,7 @@ namespace Neurotrauma
                     CanBeFocused = false,
                     TextAlignment = Alignment.Center,
                     Wrap = true,
-                    AutoScaleHorizontal = true,
-                    TextColor = (float)entry.Value == DefaultValue ? GUIStyle.TextColorNormal : GUIStyle.Orange
+                    AutoScaleHorizontal = true
                 };
 
                 GUIComponents.ApplyDescriptionTooltip(LabelBlock, entry, SetHoverColour: true);
@@ -465,10 +464,12 @@ namespace Neurotrauma
                     Enabled = !EntryLocked
                 };
 
+                GUIComponents.ApplyDefaultColour(LabelBlock, (float)entry.Value == DefaultValue);
+
                 Scalar.OnValueChanged += input =>
                 {
                     NTConfig.Set(key, input.FloatValue);
-                    LabelBlock.TextColor = input.FloatValue == DefaultValue ? GUIStyle.TextColorNormal : GUIStyle.Orange;
+                    GUIComponents.ApplyDefaultColour(LabelBlock, input.FloatValue == DefaultValue);
                 };
 
                 EntriesInRow++;
@@ -480,7 +481,7 @@ namespace Neurotrauma
                         Scalar.FloatValue = DefaultValue;
                         NTConfig.Set(key, DefaultValue);
 
-                        LabelBlock.TextColor = GUIStyle.TextColorNormal;
+                        GUIComponents.ApplyDefaultColour(LabelBlock, true);
                     });
 
                     ResetButton.Enabled = !EntryLocked;
@@ -535,8 +536,7 @@ namespace Neurotrauma
                     CanBeFocused = false,
                     TextAlignment = Alignment.Center,
                     Wrap = true,
-                    AutoScaleHorizontal = true,
-                    TextColor = ((int)(entry.Value) == DefaultValue) ? GUIStyle.TextColorNormal : GUIStyle.Orange
+                    AutoScaleHorizontal = true
                 };
 
                 GUIComponents.ApplyDescriptionTooltip(LabelBlock, entry, SetHoverColour: true);
@@ -550,10 +550,12 @@ namespace Neurotrauma
                     Enabled = !EntryLocked
                 };
 
+                GUIComponents.ApplyDefaultColour(LabelBlock, (int)entry.Value == DefaultValue);
+
                 Scalar.OnValueChanged += input =>
                 {
                     NTConfig.Set(key, input.IntValue);
-                    LabelBlock.TextColor = input.IntValue == DefaultValue ? GUIStyle.TextColorNormal : GUIStyle.Orange;
+                    GUIComponents.ApplyDefaultColour(LabelBlock, input.IntValue == DefaultValue);
                 };
 
                 EntriesInRow++;
@@ -565,7 +567,7 @@ namespace Neurotrauma
                         Scalar.IntValue = DefaultValue;
                         NTConfig.Set(key, DefaultValue);
 
-                        LabelBlock.TextColor = GUIStyle.TextColorNormal;
+                        GUIComponents.ApplyDefaultColour(LabelBlock, true);
                     });
 
                     ResetButton.Enabled = !EntryLocked;
@@ -615,9 +617,12 @@ namespace Neurotrauma
                 var Input = GUIComponents.CreateStringInput(inputCell.RectTransform, entry, Value);
                 Input.Enabled = !EntryLocked;
 
+                GUIComponents.ApplyDefaultColour(LabelBlock, GUIComponents.IsStringDefault(entry, Value));
+
                 Input.OnTextChanged += (_, text) =>
                 {
                     GUIComponents.SetStringValue(key, entry, text);
+                    GUIComponents.ApplyDefaultColour(LabelBlock, GUIComponents.IsStringDefault(entry, text));
                     return true;
                 };
 
@@ -626,6 +631,7 @@ namespace Neurotrauma
                     var ResetButton = GUIComponents.CreateResetButton(resetCell.RectTransform, () =>
                     {
                         GUIComponents.ResetStringValue(key, entry, Input);
+                        GUIComponents.ApplyDefaultColour(LabelBlock, true);
                     });
 
                     ResetButton.Enabled = !EntryLocked;
@@ -664,8 +670,7 @@ namespace Neurotrauma
                         CanBeFocused = false,
                         TextAlignment = Alignment.Center,
                         Wrap = true,
-                        AutoScaleHorizontal = true,
-                        TextColor = NTConfig.Get(Identifier, DefaultValue) == DefaultValue ? GUIStyle.TextColorNormal : GUIStyle.Orange
+                        AutoScaleHorizontal = true
                     };
 
                     GUIComponents.ApplyDescriptionTooltip(Label, entry);
@@ -679,10 +684,12 @@ namespace Neurotrauma
                         Enabled = !EntryLocked
                     };
 
+                    GUIComponents.ApplyDefaultColour(Label, NTConfig.Get(Identifier, DefaultValue) == DefaultValue);
+
                     Scalar.OnValueChanged += input =>
                     {
                         NTConfig.Set(Identifier, input.FloatValue);
-                        Label.TextColor = NTConfig.Get(Identifier, DefaultValue) == DefaultValue ? GUIStyle.TextColorNormal : GUIStyle.Orange;
+                        GUIComponents.ApplyDefaultColour(Label, input.FloatValue == DefaultValue);
                     };
 
                     if (entry.Resettable)
@@ -692,7 +699,7 @@ namespace Neurotrauma
                             Scalar.FloatValue = DefaultValue;
                             NTConfig.Set(Identifier, DefaultValue);
 
-                            Label.TextColor = GUIStyle.TextColorNormal;
+                            GUIComponents.ApplyDefaultColour(Label, true);
                         });
 
                         ResetButton.Enabled = !EntryLocked;
@@ -712,8 +719,7 @@ namespace Neurotrauma
                         CanBeFocused = false,
                         TextAlignment = Alignment.Center,
                         Wrap = true,
-                        AutoScaleHorizontal = true,
-                        TextColor = NTConfig.Get(Identifier, DefaultValue) == DefaultValue ? GUIStyle.TextColorNormal : GUIStyle.Orange
+                        AutoScaleHorizontal = true
                     };
 
                     GUIComponents.ApplyDescriptionTooltip(Label, entry);
@@ -727,10 +733,12 @@ namespace Neurotrauma
                         Enabled = !EntryLocked
                     };
 
+                    GUIComponents.ApplyDefaultColour(Label, NTConfig.Get(Identifier, DefaultValue) == DefaultValue);
+
                     Scalar.OnValueChanged += input =>
                     {
                         NTConfig.Set(Identifier, input.IntValue);
-                        Label.TextColor = input.IntValue == DefaultValue ? GUIStyle.TextColorNormal : GUIStyle.Orange;
+                        GUIComponents.ApplyDefaultColour(Label, input.IntValue == DefaultValue);
                     };
 
                     if (entry.Resettable)
@@ -740,14 +748,14 @@ namespace Neurotrauma
                             Scalar.IntValue = DefaultValue;
                             NTConfig.Set(Identifier, DefaultValue);
 
-                            Label.TextColor = GUIStyle.TextColorNormal;
+                            GUIComponents.ApplyDefaultColour(Label, true);
                         });
 
                         ResetButton.Enabled = !EntryLocked;
                     }
 
-                        break;
-                    }
+                    break;
+                }
 
                 case ConfigEntryType.Bool:
                 {
@@ -756,7 +764,6 @@ namespace Neurotrauma
 
                     var TickBox = new GUITickBox(new RectTransform(new Vector2(0.5f, 0.05f), PageListBox.Content.RectTransform), entry.Name)
                     {
-                        TextColor = CurrentValue == DefaultValue ? GUIStyle.TextColorNormal : GUIStyle.Orange,
                         Enabled = !EntryLocked
                     };
 
@@ -766,16 +773,17 @@ namespace Neurotrauma
                     }
 
                     TickBox.Selected = CurrentValue;
+                    GUIComponents.ApplyDefaultColour(TickBox.TextBlock, CurrentValue == DefaultValue);
 
                     TickBox.OnSelected += tb =>
                     {
                         NTConfig.Set(Identifier, tb.Selected);
-                        TickBox.TextBlock.OverrideTextColor(tb.Selected == DefaultValue ? GUIStyle.TextColorNormal : GUIStyle.Orange);
+                        GUIComponents.ApplyDefaultColour(TickBox.TextBlock, tb.Selected == DefaultValue);
                         return true;
                     };
 
-                        break;
-                    }
+                    break;
+                }
 
                 case ConfigEntryType.String:
                 {
@@ -808,15 +816,23 @@ namespace Neurotrauma
 
                     Input.Enabled = !EntryLocked;
 
+                    GUIComponents.ApplyDefaultColour(Label, GUIComponents.IsStringDefault(entry, Value));
+
                     Input.OnTextChanged += (_, text) =>
                     {
                         GUIComponents.SetStringValue(Identifier, entry, text);
+                        GUIComponents.ApplyDefaultColour(Label, GUIComponents.IsStringDefault(entry, text));
                         return true;
                     };
 
                     if (entry.Resettable)
                     {
-                        var ResetButton = GUIComponents.CreateResetButton(Input.RectTransform, () => GUIComponents.ResetStringValue(Identifier, entry, Input));
+                        var ResetButton = GUIComponents.CreateResetButton(Input.RectTransform, () =>
+                        {
+                            GUIComponents.ResetStringValue(Identifier, entry, Input);
+                            GUIComponents.ApplyDefaultColour(Label, true);
+                        });
+
                         ResetButton.Enabled = !EntryLocked;
                     }
 
@@ -826,7 +842,7 @@ namespace Neurotrauma
         }
     }
 
-        public static class GUIComponents
+    public static class GUIComponents
     {
 
         // Is this client the server host?
@@ -1054,20 +1070,7 @@ namespace Neurotrauma
         // Reset a string config option to its default value.
         public static void ResetStringValue(string key, ConfigEntry entry, GUITextBox input)
         {
-            string defaultText;
-
-            if (entry.Default is List<string> defaultList)
-            {
-                defaultText = string.Join(", ", defaultList);
-            }
-            else if (entry.Default is string defaultString)
-            {
-                defaultText = FormatList(defaultString);
-            }
-            else
-            {
-                defaultText = entry.Default?.ToString() ?? "";
-            }
+            string defaultText = GetDefaultStringText(entry);
 
             input.Text = defaultText;
 
@@ -1098,6 +1101,33 @@ namespace Neurotrauma
             }
         }
 
+        // Colour a label according to whether its value differs from default.
+        public static void ApplyDefaultColour(GUITextBlock block, bool isDefault)
+        {
+            block.OverrideTextColor(isDefault ? GUIStyle.TextColorNormal : GUIStyle.Orange);
+        }
+
+        // Get the default value of a string entry as display text.
+        public static string GetDefaultStringText(ConfigEntry entry)
+        {
+            if (entry.Default is List<string> list)
+            {
+                return string.Join(", ", list);
+            }
+
+            if (entry.Default is string s)
+            {
+                return FormatList(s);
+            }
+
+            return entry.Default?.ToString() ?? "";
+        }
+
+        // Does the given string match the entry's default?
+        public static bool IsStringDefault(ConfigEntry entry, string current)
+        {
+            return FormatList(current) == FormatList(GetDefaultStringText(entry));
+        }
 
         // Format a string of text.
         public static string FormatList(string TextToFormat)
@@ -1148,14 +1178,14 @@ namespace Neurotrauma
         // Hide the config UI + pause menu while a preset popup is open.
         private static void HideMenus()
         {
-            if (ConfigurationMenu.BaseFrame != null) 
-            { 
-                ConfigurationMenu.BaseFrame.Visible = false; 
+            if (ConfigurationMenu.BaseFrame != null)
+            {
+                ConfigurationMenu.BaseFrame.Visible = false;
             }
 
-            if (GUI.PauseMenu != null) 
-            { 
-                GUI.PauseMenu.Visible = false; 
+            if (GUI.PauseMenu != null)
+            {
+                GUI.PauseMenu.Visible = false;
             }
         }
 
@@ -1164,13 +1194,13 @@ namespace Neurotrauma
         {
             MessageBox.Close();
 
-            if (ConfigurationMenu.BaseFrame != null) 
-            { 
-                ConfigurationMenu.BaseFrame.Visible = true; 
+            if (ConfigurationMenu.BaseFrame != null)
+            {
+                ConfigurationMenu.BaseFrame.Visible = true;
             }
 
-            if (GUI.PauseMenu != null) 
-            { 
+            if (GUI.PauseMenu != null)
+            {
                 GUI.PauseMenu.Visible = true;
             }
         }
@@ -1179,11 +1209,11 @@ namespace Neurotrauma
         {
             HideMenus();
 
-            var MessageBox = new GUIMessageBox(TextManager.Get("ntconfig.header.savepreset"), "", buttons: new[] 
-            { 
-                TextManager.Get("Save"), 
-                TextManager.Get("Cancel") 
-            }, 
+            var MessageBox = new GUIMessageBox(TextManager.Get("ntconfig.header.savepreset"), "", buttons: new[]
+            {
+                TextManager.Get("Save"),
+                TextManager.Get("Cancel")
+            },
             relativeSize: (0.4f, 0.2f));
 
             var NameBox = new GUITextBox(new RectTransform((1.0f, 0.3f), parent: MessageBox.Content.RectTransform), text: "");
