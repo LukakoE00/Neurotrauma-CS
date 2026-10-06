@@ -219,6 +219,25 @@ namespace Neurotrauma
             }
         }
 
+        public static void AddSuturableAffliction(string Identifier, int SurgerySkillGain, string RequiredAfflictionID, LuaCsFunc Func)
+        {
+            if (NTItems.SutureAfflictions.ContainsKey(Identifier)) return;
+
+            AddSuturableAffliction(Identifier, SurgerySkillGain, RequiredAfflictionID, (ItemUpdateFunctionInfos) =>
+            {
+                try
+                {
+                    return Func.Invoke(ItemUpdateFunctionInfos);
+                }
+                catch (Exception e)
+                {
+                    HF.PrintError($"[Lua] Error with the Suturable Affliction {Identifier}: {e.Message}");
+                    return false;
+                }
+            });
+
+        }
+
         public static void AddSuturableAffliction(string Identifier, int SurgerySkillGain, string RequiredAfflictionID)
         {
             if (!NTItems.SutureAfflictions.ContainsKey(Identifier))
@@ -229,6 +248,24 @@ namespace Neurotrauma
                 };
                 NTItems.SutureAfflictions[Identifier] = new(Identifier, SurgerySkillGain, TranslatedFunc, RequiredAfflictionID);
             }
+        }
+
+        public static void AddDrainageAffliction(string Identifier, int SurgerySkillGain, string RequiredAfflictionID, LuaCsFunc Func)
+        {
+            if (NTItems.DrainageAfflictions.ContainsKey(Identifier)) return;
+
+            AddDrainageAffliction(Identifier, SurgerySkillGain, RequiredAfflictionID, (ItemUpdateFunctionInfos) =>
+            {
+                try
+                {
+                    return Func.Invoke(ItemUpdateFunctionInfos);
+                }
+                catch (Exception e)
+                {
+                    HF.PrintError($"[Lua] Error with the Drainage Affliction {Identifier}: {e.Message}");
+                    return false;
+                }
+            });
         }
 
         public static void AddDrainageAffliction(string Identifier, int SurgerySkillGain, string RequiredAfflictionID, Func<NTItems.ItemUpdateFunctionInfos, bool> Func)
