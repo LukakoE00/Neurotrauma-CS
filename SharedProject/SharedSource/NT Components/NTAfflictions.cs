@@ -1,3 +1,5 @@
+using MoonSharp.Interpreter;
+
 namespace Neurotrauma;
 
 
@@ -205,7 +207,14 @@ public class NTAfflictions
             {
                 try
                 {
-                    return (bool) UpdateFunction(C, ID, Limb, DeltaTime);
+                    object ret = UpdateFunction(C, ID, Limb, DeltaTime);
+
+                    return ret switch
+                    {
+                        DynValue dv => dv.CastToBool(),
+                        bool b => b,
+                        _ => ret != null
+                    };
                 }
                 catch (Exception e)
                 {
@@ -226,6 +235,9 @@ public class NTAfflictions
         /// </summary>
         public void Extend(string AfflictionID, Func<NTHuman, string, LimbType, float, bool> UpdateFunction)
         {
+
+            throw new NotImplementedException("This function doesn't work yet, please use CallOldUpdate instead.");
+
             if (NTConfig.Get("NT_DEBUG_MODE", false)) HF.PrintUtility($"[{this.ModID}] Extending affliction: {AfflictionID}");
 
             if (!NTAfflictionsPrefabRegistry.ContainsKey(AfflictionID))
