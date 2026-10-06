@@ -320,27 +320,15 @@ public class NTHuman
         return false;
     }
 
-    public bool HasAfflictionLimb(string AfflictionID = "", LimbType Limb = LimbType.Torso, float MinAmount = 0)
+    public bool HasAfflictionLimb(string AfflictionID = "", LimbType TargetLimb = LimbType.Torso, float MinAmount = 0)
     {
-        if (AfflictionID == "" || this.Human.CharacterHealth == null)
-        {
-            return false;
-        }
+        if (string.IsNullOrEmpty(AfflictionID) || this.Human.CharacterHealth == null) return false;
 
-        // Is the affliction null?
-        Affliction Aff = GetAfflictionLimb(AfflictionID, Limb);
-        if (Aff == null)
-        {
-            return false;
-        }
+        Limb? limb = this.Human.AnimController.GetLimb(TargetLimb);
+        if (limb == null) return false;
 
-        float AffStrength = Aff.Strength;
-        if (AffStrength >= MinAmount)
-        {
-            return true;
-        }
-
-        return false;
+        Affliction aff = this.Human.CharacterHealth.GetAffliction(AfflictionID, limb);
+        return aff != null && aff.Strength >= MinAmount;
     }
 
     private static readonly List<List<LimbType>> LocalLimbsToCheck = [[LimbType.LeftArm, LimbType.LeftForearm, LimbType.LeftHand],[LimbType.RightArm, LimbType.RightForearm, LimbType.RightHand],

@@ -1544,7 +1544,8 @@ public class NTItemsData
 
             HF.AddAffliction(infos.target.Human, "tshocktimeout", -100, infos.user.Human);
 
-            // rewritten
+            List<NTItems.ItemsAfflictionInfos> affToheal = new();
+
             foreach (KeyValuePair<string, NTItems.ItemsAfflictionInfos> Pair in SutureAfflictions)
             {
                 NTItems.ItemsAfflictionInfos affInfos = Pair.Value;
@@ -1553,7 +1554,7 @@ public class NTItemsData
                 AfflictionPrefab prefab = AfflictionPrefab.Prefabs[affInfos.AfflictionID];
                 if (prefab == null)
                 {
-                    LuaCsLogger.LogError($"Error trying to heal {affInfos.AfflictionID} with sutures. The provided ID is probably incorrect.");
+                    HF.PrintError($"Error trying to heal {affInfos.AfflictionID} with sutures. The provided ID is probably incorrect.");
                     continue;
                 }
 
@@ -1562,6 +1563,19 @@ public class NTItemsData
 
                 // If the affliction's conditions are not met, we skip it
                 if (!affInfos.Conditions.Invoke(infos)) continue;
+
+                affToheal.Add(affInfos);
+            }
+
+            foreach (NTItems.ItemsAfflictionInfos affInfos in affToheal)
+            {
+                if (!AfflictionPrefab.Prefabs.ContainsKey(affInfos.AfflictionID)) continue;
+                AfflictionPrefab prefab = AfflictionPrefab.Prefabs[affInfos.AfflictionID];
+                if (prefab == null)
+                {
+                    HF.PrintError($"Error trying to heal {affInfos.AfflictionID} with sutures. The provided ID is probably incorrect.");
+                    continue;
+                }
 
                 if (prefab.LimbSpecific)
                 {
@@ -1574,6 +1588,8 @@ public class NTItemsData
 
                 HF.GiveSurgerySkill(infos.user.Human, affInfos.XPGain);
             }
+
+            
         });
 
         // Drainage
