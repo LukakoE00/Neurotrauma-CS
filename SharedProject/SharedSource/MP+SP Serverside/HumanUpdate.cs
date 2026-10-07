@@ -122,7 +122,7 @@ public class NTHumanUpdate
         // Delay our update to prevent sutters.
 
         LuaCsSetup.Instance.Timer.Wait((params object[] _) => {
-            if (ntHuman != null && HF.IsCharacterValid(ntHuman.Human)) // Verify this character exists.
+            if (ntHuman != null && HF.IsCharacterValid(ntHuman.Human) && (!ntHuman.Human.IsDead)) // Verify this character exists.
             {
 
                 float timePassed = (float)NTHumanUpdate.GetUpdateInterval(AfflictionPriority.HIGH);

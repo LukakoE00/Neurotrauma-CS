@@ -174,7 +174,10 @@ namespace Neurotrauma
                 
 
                 LuaCsSetup.Instance.Timer.Wait((params object[] _) => {
-                    var h = new NTHuman(character);
+
+                    var h = NTHuman.getNTHumanFromCharacter(character);
+
+                    if (h == null) h = new NTHuman(character);
 
                     if (h.Human.teamID == CharacterTeamType.Team1)
                     {
