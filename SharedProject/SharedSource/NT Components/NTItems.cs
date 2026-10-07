@@ -4,9 +4,6 @@ namespace Neurotrauma;
 
 public class NTItems
 {
-    // TODO: add and old item registry to call old item update
-
-
     private static Dictionary<string, Action<ItemUpdateFunctionInfos>> NTItemsRegistry { get; } = new Dictionary<string, Action<ItemUpdateFunctionInfos>> { };
 
 
@@ -24,6 +21,12 @@ public class NTItems
     /// The Key is a tuple of (ModName, AfflictionID) and the Value is the old action.
     /// </summary>
     public static Dictionary<(string, string), Action<ItemUpdateFunctionInfos>> NTOldItemsRegistry { get; } = new Dictionary<(string, string), Action<ItemUpdateFunctionInfos>>();
+
+    /// <summary>
+    /// When an Item action is overriden, the replaced action is stored here so the overriding mod can call it with CallPrevious.
+    /// The Key is a tuple of (OverridingModName, ItemID) and the Value is the replaced action.
+    /// </summary>
+    public static Dictionary<(string, string), Action<ItemUpdateFunctionInfos>> NTPreviousItemsRegistry { get; } = new Dictionary<(string, string), Action<ItemUpdateFunctionInfos>>();
 
     /// <summary>
     /// Contains everything required to defined and change the behavior of items in Neurotrauma.
@@ -71,7 +74,7 @@ public class NTItems
                 return false;
             }
 
-            NTItemsModDefinerRegistry.Add(ItemID, this.ModID);
+            NTItemsModDefinerRegistry[ItemID] = this.ModID;
             NTItemsRegistry.Add(ItemID, UpdateFunction);
             return true;
         }
@@ -86,7 +89,7 @@ public class NTItems
                 }
                 catch (Exception e)
                 {
-                    HF.PrintError($"[Lua] Error when updating item {ItemID} : {e.Message}");
+                    HF.PrintError($"[Lua] Error when updating item {ItemID} : {e}");
                 }
 
             }));
@@ -119,7 +122,14 @@ public class NTItems
 
             }
 
-            NTOldItemsRegistry.Add((NTItemsModDefinerRegistry[ItemID], ItemID), NTItemsRegistry[ItemID]);
+            NTOldItemsRegistry[(NTItemsModDefinerRegistry[ItemID], ItemID)] = NTItemsRegistry[ItemID];
+
+            // Same mod overriding twice keeps the function it originally replaced, otherwise CallPrevious would call itself forever.
+            if (NTItemsModDefinerRegistry[ItemID] != this.ModID)
+            {
+                NTPreviousItemsRegistry[(this.ModID, ItemID)] = NTItemsRegistry[ItemID];
+            }
+
             NTItemsRegistry[ItemID] = UpdateFunction;
             NTItemsModDefinerRegistry[ItemID] = this.ModID;
             return true;
@@ -135,7 +145,7 @@ public class NTItems
                 }
                 catch (Exception e)
                 {
-                    HF.PrintError($"[Lua] Error when updating item {ItemID}: {e.Message}");
+                    HF.PrintError($"[Lua] Error when updating item {ItemID}: {e}");
                 }
             }), RegisterInstead);
         }
@@ -160,7 +170,7 @@ public class NTItems
                 return false;
             }
 
-            NTOldItemsRegistry.Add((NTItemsModDefinerRegistry[ItemID], ItemID), NTItemsRegistry[ItemID]);
+            NTOldItemsRegistry[(NTItemsModDefinerRegistry[ItemID], ItemID)] = NTItemsRegistry[ItemID];
             NTItemsRegistry.Remove(ItemID);
             return true;
         }
@@ -181,18 +191,14 @@ public class NTItems
         /// <returns>The function associated with the item ID, or null if not found.</returns>
         public Action<ItemUpdateFunctionInfos>? Get(string ItemID)
         {
-            if (NTItemsRegistry.ContainsKey(ItemID))
-            {
-                return NTItemsRegistry[ItemID];
-            }
-            return null;
+            return NTItemsRegistry.GetValueOrDefault(ItemID);
         }
 
         public void Call(string ItemID, ItemUpdateFunctionInfos infos)
         {
-            if (NTItemsRegistry.ContainsKey(ItemID))
+            if (NTItemsRegistry.TryGetValue(ItemID, out var function))
             {
-                NTItemsRegistry[ItemID].Invoke(infos);
+                function.Invoke(infos);
             }
         }
 
@@ -225,9 +231,9 @@ public class NTItems
         /// <param name="ModName">The name of the mod that originally defined the item. Should be the same as defined in the addon's infos.</param>
         public void CallOld(string ItemID, string ModName, ItemUpdateFunctionInfos infos)
         {
-            if (NTOldItemsRegistry.ContainsKey((ModName, ItemID)))
+            if (NTOldItemsRegistry.TryGetValue((ModName, ItemID), out var old))
             {
-                NTOldItemsRegistry[(ModName, ItemID)].Invoke(infos);
+                old.Invoke(infos);
             }
         }
 
@@ -239,6 +245,46 @@ public class NTItems
         public bool HasOld(string ItemID, string ModName)
         {
             return NTOldItemsRegistry.ContainsKey((ModName, ItemID));
+        }
+
+        /// <summary>
+        /// Calls the function this mod replaced when it overrode the given item. Works through any number of overriding mods,
+        /// without needing to know which mod defined the item before.
+        ///
+        /// <example>
+        /// <code>
+        /// loader.Override("MyItemID", (infos) => {
+        ///     // Your item update logic here
+        ///
+        ///     loader.CallPrevious("MyItemID", infos);
+        /// });
+        /// </code>
+        /// </example>
+        ///
+        /// ```lua
+        /// loader:Override("MyItemID", function (infos)
+        ///     -- do your things
+        ///
+        ///     loader:CallPrevious("MyItemID", infos)
+        /// end)
+        /// ```
+        /// </summary>
+        /// <param name="ItemID">The ID of the item defined in the XML.</param>
+        public void CallPrevious(string ItemID, ItemUpdateFunctionInfos infos)
+        {
+            if (NTPreviousItemsRegistry.TryGetValue((this.ModID, ItemID), out var previous))
+            {
+                previous.Invoke(infos);
+            }
+        }
+
+        /// <summary>
+        /// Check if this mod replaced a function when it overrode the given item.
+        /// </summary>
+        /// <param name="ItemID">The ID of the item defined in the XML.</param>
+        public bool HasPrevious(string ItemID)
+        {
+            return NTPreviousItemsRegistry.ContainsKey((this.ModID, ItemID));
         }
     }
 
@@ -259,7 +305,7 @@ public class NTItems
     }
 
     /// <summary>
-    /// Contains all the data necessary to add an Affliction to DrainageAfflictions.
+    /// Contains all the data necessary to add an Affliction to DrainageAfflictions or SutureAfflictions.
     /// </summary>
     public class ItemsAfflictionInfos
     {
@@ -274,7 +320,12 @@ public class NTItems
         /// </summary>
         public int XPGain { get; }
 
-        ///<summary>This function will be run to know if the affliction can be cured by the drainage.</summary>
+        /// <summary>
+        /// The affliction ID the target must have (strength 1 or more) for the item to treat it.
+        /// </summary>
+        public string Case { get; } = "";
+
+        ///<summary>This function will be run to know if the affliction can be cured by the item.</summary>
         /// <example>
         /// <code>
         /// bool conditionFunction(ItemUpdateFunctionInfos infos)
@@ -283,14 +334,12 @@ public class NTItems
         /// }
         /// </code>
         /// </example>
-        public string Case { get; } = "";
         public Func<ItemUpdateFunctionInfos, bool> Conditions { get; }
 
         /// <summary>
         /// This function will be called when the item is used successfully. Useful for removing symptoms.
         /// </summary>
         public Action<ItemUpdateFunctionInfos>? Used { get; }
-        public LuaCsAction? LuaConditions { get; }
 
         public ItemsAfflictionInfos(string affID, int xpGain, Func<ItemUpdateFunctionInfos, bool> conditions, string newCase = "", Action<ItemUpdateFunctionInfos>? used = null)
         {
@@ -345,7 +394,7 @@ public class NTItems
     {
 
         string itemID = __instance.Prefab.Identifier.ToString();
-        if (NTItemsRegistry.ContainsKey(itemID))
+        if (NTItemsRegistry.TryGetValue(itemID, out var function))
         {
 
             if (user == null)
@@ -380,7 +429,14 @@ public class NTItems
                 t.AddAffliction("luabotomy", 0.1f);
             }
 
-            NTItemsRegistry[itemID].Invoke(new ItemUpdateFunctionInfos(__instance, u, t, targetLimb));
+            try
+            {
+                function.Invoke(new ItemUpdateFunctionInfos(__instance, u, t, targetLimb));
+            }
+            catch (Exception e)
+            {
+                HF.PrintError($"[{NTItemsModDefinerRegistry.GetValueOrDefault(itemID)}] Error when updating item {itemID} : {e}");
+            }
         }
     }
 

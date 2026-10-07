@@ -128,7 +128,7 @@ public class NTAfflictions
 
             }
 
-            NTOldAfflictionsPrefabRegistry.Add((NTAfflictionsPrefabModDefinerRegistry[Affliction.ID], Affliction.ID), NTAfflictionsPrefabRegistry[Affliction.ID]);
+            NTOldAfflictionsPrefabRegistry[(NTAfflictionsPrefabModDefinerRegistry[Affliction.ID], Affliction.ID)] = NTAfflictionsPrefabRegistry[Affliction.ID];
             NTAfflictionsPrefabRegistry[Affliction.ID] = Affliction;
             NTAfflictionsPrefabModDefinerRegistry[Affliction.ID] = this.ModID;
             return true;
@@ -154,7 +154,7 @@ public class NTAfflictions
                 return false;
             }
 
-            NTOldAfflictionsPrefabRegistry.Add((this.ModID, AfflictionID), NTAfflictionsPrefabRegistry[AfflictionID]);
+            NTOldAfflictionsPrefabRegistry[(NTAfflictionsPrefabModDefinerRegistry[AfflictionID], AfflictionID)] = NTAfflictionsPrefabRegistry[AfflictionID];
             NTAfflictionsPrefabRegistry.Remove(AfflictionID);
             return true;
         }
@@ -246,7 +246,7 @@ public class NTAfflictions
                 return;
             }
 
-            NTOldAfflictionsPrefabRegistry.Add((NTAfflictionsPrefabModDefinerRegistry[AfflictionID], AfflictionID), NTAfflictionsPrefabRegistry[AfflictionID]);
+            NTOldAfflictionsPrefabRegistry[(NTAfflictionsPrefabModDefinerRegistry[AfflictionID], AfflictionID)] = NTAfflictionsPrefabRegistry[AfflictionID];
 
 
 #pragma warning disable CS8602 // Cannot be null we check earlier for its existence.
