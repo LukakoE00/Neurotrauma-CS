@@ -1102,21 +1102,21 @@ public class NTAfflictionsToAdd
             .SetStrengths(0, 2, 0)
             .SetUpdateAction((C, ID, Limb, dT) =>
             {
+
+                float multiplier = 1f;
+
                 // Passive Decrease
                 C.AddAffliction(ID, -0.5f * dT);
 
                 // Effects:
                 // Reduce Cardiac Arrest
-                C.SetAffliction("cardiacarrest", Math.Max(0, C.GetAfflictionStrength("cardiacarrest") - 2 * dT));
+                C.AddAffliction("cardiacarrest", -2f * dT * multiplier);
 
                 // Reduce Fibrillation
-                C.SetAffliction("fibrillation", Math.Max(0, C.GetAfflictionStrength("fibrillation") - 1 * dT));
+                C.AddAffliction("fibrillation", -1f * dT * multiplier);
 
                 // Increase Blood Pressure
-                C.AddAffliction("bloodpressure", 5f * dT);
-
-                // Reduce Oxygen Low
-                C.AddAffliction("oxygenlow", Math.Max(0, C.GetAfflictionStrength("oxygenlow") - 3 * dT)); // ?
+                C.AddAffliction("bloodpressure", 5f * dT * multiplier);
 
                 // If Cardiac Arrest is above 0 and below or equal to 5, clear it and apply Fibrillation
                 float CardiacArrest = C.GetAfflictionStrength("cardiacarrest");
