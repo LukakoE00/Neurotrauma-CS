@@ -2497,6 +2497,7 @@ public class NTAfflictionsToAdd
                // Internal Damage if no cast
                if (!HasCast && !C.GetBoolStat("sedated") && (HF.LimbIsExtremity(Limb) || !HasBandage))
                {
+                   C.SetSymptomTrue("intensepain", 2);
                    C.AddAfflictionLimb("internaldamage", Limb, 0.1f * dT);
                }
            })
@@ -2527,6 +2528,8 @@ public class NTAfflictionsToAdd
                    {
                        C.SetFloatStat("speedmultiplier", C.GetFloatStat("speedmultiplier") * 0.8f); // slow the character down.
                    }
+
+                   C.SetSymptomTrue("intensepain", 2);
                }
            })
            .Build()
