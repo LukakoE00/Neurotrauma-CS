@@ -6,8 +6,6 @@ public class NTItemsData
 {
 
 
-
-
     /// <summary>
     /// Used by Diagnostic Tools to format the output to be printed in the chatbox.
     /// </summary>
@@ -228,6 +226,28 @@ public class NTItemsData
     /// </summary>
     public static void DefineAllItems()
     {
+
+#pragma warning disable CS0618
+        LuaCsSetup.Instance.Hook.Add("NT.RotOrgan", "Neurotrauma.Items.RotOrgan", (params object[] args) =>
+        {
+            var organ = args[2] as Item;
+            if (organ == null) return null;
+
+            // TODO : ReplaceItemIdentifier
+            /*string id = organ.Prefab.Identifier.Value;
+            List<string> variants = [ "liver", "kidney", "heart", "lung", "brain" ];
+
+            if(variants.Any(variant => id == variant + "transplant" || id == variant+"transplant_q1"))
+            {
+                
+            }*/
+
+            HF.RemoveItem(organ);
+
+            return null;
+        });
+#pragma warning restore CS0618
+
         NTItemFunctionLoader loader = NeurotraumaInit.NTItemsLoader;
 
 
