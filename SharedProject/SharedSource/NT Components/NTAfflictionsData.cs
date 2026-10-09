@@ -2292,11 +2292,15 @@ public class NTAfflictionsToAdd
                    || C.GetAfflictionStrength("anesthesia") > 15
                    || C.HasSymptom("unconsciousness"))
                 {
-                    C.SetAffliction(ID, Math.Max(5, C.GetAfflictionStrength(ID)));
+                    float val = Math.Max(5, C.GetAfflictionStrength(ID));
+
+                    C.SetAffliction(ID, val);
+                    C.Human.Stun = val;
                 }
                 else
                 {
-                    C.SetAffliction(ID, 0);
+                    // C.AddAffliction(ID, -2.5f * dT);
+                    // C.SetAffliction(ID, 0);
                 }
             })
             .Build()
