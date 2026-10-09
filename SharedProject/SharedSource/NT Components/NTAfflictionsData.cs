@@ -1273,7 +1273,7 @@ public class NTAfflictionsToAdd
                     Item LeftHandItem = HF.GetItemInLeftHand(C.Human);
                     Item RightHandItem = HF.GetItemInRightHand(C.Human);
 
-                    if (RightHandItem != null && LeftHandItem != Handcuffs && LeftLockItem == null)
+                    if (LeftHandItem != null && LeftHandItem != Handcuffs && LeftLockItem == null)
                     {
                         LeftHandItem.Drop(C.Human);
                     }
