@@ -1650,7 +1650,7 @@ public class NTAfflictionsToAdd
                }
                else if (case_ < 5 / casecount)
                {
-                   C.SetSymptomTrue("triggersym_seizure", (int)(1 + Random.Shared.NextDouble() * 2));
+                   C.SetSymptomTrue("seizure", (int)(1 + Random.Shared.NextDouble() * 2));
                }
                else if (case_ < 6 / casecount)
                {
