@@ -1674,7 +1674,7 @@ namespace Neurotrauma
         /// <param name="GivenLimbType">Limb to check.</param>
         /// <param name="IsArm">Manual toggle for arm-locking functionality.</param>
         /// <returns>True if the limb is dislocated, else False. Additionally, returns a MinAmount of 100 if IsArm is True; else MinAmount is 0.</returns>
-        public static bool LimbIsDislocated(Character Character, LimbType GivenLimbType, bool IsArm)
+        public static bool LimbIsDislocated(Character Character, LimbType GivenLimbType, bool IsArm = false)
         {
             GivenLimbType = NormalizeLimbType(GivenLimbType);
 
@@ -1693,7 +1693,7 @@ namespace Neurotrauma
         /// <param name="GivenLimbType">Limb to check.</param>
         /// <param name="IsArm">Manual toggle for arm-locking functionality.</param>
         /// <returns>True if the limb is fractured, else False. Additionally, returns a MinAmount of 100 if IsArm is True; else MinAmount is 0.</returns>
-        public static bool LimbIsBroken(Character Character, LimbType GivenLimbType, bool IsArm)
+        public static bool LimbIsBroken(Character Character, LimbType GivenLimbType, bool IsArm = false)
         {
             GivenLimbType = NormalizeLimbType(GivenLimbType);
             if (IsArm) 
