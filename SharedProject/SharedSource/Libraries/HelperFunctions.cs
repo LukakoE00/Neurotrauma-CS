@@ -739,7 +739,7 @@ namespace Neurotrauma
         /// <returns></returns>
         public static bool ItemHasTag(Item Item, string Tag)
         {
-            return Item.HasTag(Tag);
+            return Item != null && Item.HasTag(Tag);
         }
 
         /// <summary>
