@@ -2054,7 +2054,7 @@ public class NTAfflictionsToAdd
                 // Sepsis
                 if (C.GetAfflictionStrength("sepsis") > 0)
                 {
-                    C.AddAffliction("sepsis", 1 * dT);
+                    C.AddAffliction("sepsis", -1 * dT);
                 }
             })
             .Build()
