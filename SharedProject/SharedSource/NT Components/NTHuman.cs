@@ -77,7 +77,7 @@ public class NTHuman
 
     public void UpdateStats(float deltaTime)
     {
-        EventService.Call("Neurotrauma.HumanUpdate.UpdateStats", this);
+        EventService.Call("Neurotrauma.HumanUpdate.UpdateStats", this, deltaTime);
 
         foreach (var i in BoolStats)
         {
@@ -456,7 +456,7 @@ public class NTHuman
     {
         this.UpdateSymptoms();
 
-        EventService.Call("Neurotrauma.HumanUpdate.UpdateAfflictions", this, AfflictionsList);
+        EventService.Call("Neurotrauma.HumanUpdate.UpdateAfflictions", this, AfflictionsList, deltaTime);
 
 
         foreach (var kvp in AfflictionsList)
