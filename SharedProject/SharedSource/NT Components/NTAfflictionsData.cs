@@ -3958,6 +3958,7 @@ public class NTAfflictionsToAdd
         AfflictionsToAdd.Add(
             builder.New("intensepain")
             .IsSymptom(true)
+            .IsLimbSpecific(true)
             .Build()
             );
 
