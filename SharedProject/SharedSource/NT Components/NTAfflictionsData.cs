@@ -3134,7 +3134,7 @@ public class NTAfflictionsToAdd
                         C.GetAfflictionStrength("immunity") / 3000
                         + Math.Clamp(C.GetAfflictionStrengthLimb("bandaged", Limb), 0, 1) * 0.1f
                         + Math.Clamp(C.GetAfflictionStrengthLimb("ointmented", Limb), 0, 1) * 0.12f
-                    ) * C.GetAfflictionStrength("healingrate") * dT));
+                    ) * C.GetFloatStat("healingrate") * dT));
                     
                 }
 
