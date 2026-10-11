@@ -1937,7 +1937,7 @@ public class NTAfflictionsToAdd
 
                 // Effects:
                 // Alkalosis
-                C.AddAffliction("acidosis", 0.2f);
+                C.AddAffliction("alkalosis", 0.1f * dT);
 
                 // Blood Pressure (in BloodPressure constant)
             })
