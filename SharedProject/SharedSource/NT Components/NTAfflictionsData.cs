@@ -103,7 +103,7 @@ public class NTAfflictionsToAdd
                 // Nausea
                 if (strength > 80)
                 {
-                    C.SetSymptomTrue("nausea", 2);
+                    C.SetSymptomTrue("nausea_nt", 2);
                 }
             })
             .Build()); 
@@ -608,7 +608,7 @@ public class NTAfflictionsToAdd
                     // Nausea & Fever & Abdominal Pain
                     if (str > 5)
                     {
-                        C.SetSymptomTrue("nausea", 2);
+                        C.SetSymptomTrue("nausea_nt", 2);
                         C.SetSymptomTrue("fever", 2);
 
                         if (C.GetAfflictionStrength("unconsciousness") <= 0 && (!C.GetBoolStat("sedated")))
@@ -796,7 +796,7 @@ public class NTAfflictionsToAdd
                 // Nausea & Leg Swelling
                 if (str > 60)
                 {
-                    C.SetSymptomTrue("nausea", 2);
+                    C.SetSymptomTrue("nausea_nt", 2);
 
                     if (HF.GetAfflictionStrength(C.Human, "rl_cyber", 0) < 0.1)
                     {
@@ -1561,7 +1561,7 @@ public class NTAfflictionsToAdd
                         // Nausea
                         if (str > 40)
                         {
-                            C.SetSymptomTrue("nausea", 2);
+                            C.SetSymptomTrue("nausea_nt", 2);
 
                             if (str > 50)
                             {
@@ -3979,7 +3979,7 @@ public class NTAfflictionsToAdd
         // Removes itself when conditions are NOT met. Applied by other afflictions.
         // Effects: Alkalosis
         AfflictionsToAdd.Add(
-            builder.New("nausea")
+            builder.New("nausea_nt")
             .IsSymptom(true)
             .SetUpdateAction((C, ID, Limb, dT) =>
             {
@@ -4190,7 +4190,7 @@ public class NTAfflictionsToAdd
                     if (case_ < 0.25)
                     {
                         // Nausea
-                        C.SetSymptomTrue("nausea", (int)(5 + Random.Shared.NextDouble() * 10));
+                        C.SetSymptomTrue("nausea_nt", (int)(5 + Random.Shared.NextDouble() * 10));
                     }
                     else if (case_ < 0.5)
                     {
