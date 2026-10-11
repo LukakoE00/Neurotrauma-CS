@@ -3856,6 +3856,12 @@ public class NTAfflictionsToAdd
         AfflictionsToAdd.Add(
             builder.New("vomiting")
             .IsSymptom(true)
+            .SetUpdateAction((C, ID, Limb, dT) =>
+            {
+                // Effects:
+                // Alkalosis
+                C.AddAffliction("alkalosis", Math.Clamp(C.GetAfflictionStrength(ID), 0f, 1f) * 0.1f * dT);
+            })
             .Build()
             );
 
