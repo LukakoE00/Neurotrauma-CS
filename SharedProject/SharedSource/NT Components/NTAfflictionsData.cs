@@ -3726,21 +3726,18 @@ public class NTAfflictionsToAdd
                     C.SetSymptomTrue("fever", 2);
 
                     // Gangrene
-                    if (HF.Chance(0.04f))
+                    foreach (LimbType limb in HF.LimbsToCheck)
                     {
-                        foreach (LimbType AllLimbs in HF.LimbsToCheck)
+                        if (HF.LimbIsExtremity(limb) && HF.Chance(0.04f))
                         {
-                            if (HF.LimbIsExtremity(Limb))
-                            {
-                                C.AddAfflictionLimb("gangrene", Limb, (0.5f + str / 150f) * NTConfig.Get("NT_gangrenespeed", 1f) * dT);
-                            }
+                            C.AddAfflictionLimb("gangrene", limb, (0.5f + str / 150f) * NTConfig.Get("NT_gangrenespeed", 1f) * dT);
                         }
                     }
 
                     // Hyperventilation
                     if (str > 15)
                     {
-                        C.SetSymptomTrue("confusion", 2);
+                        C.SetSymptomTrue("hyperventilation", 2);
 
                         // Confusion
                         if (str > 40 && C.GetAfflictionStrength("unconsciousness") <= 0)
@@ -3748,7 +3745,6 @@ public class NTAfflictionsToAdd
                             C.SetSymptomTrue("confusion", 2);
                         }
                     }
-                    
                 }
             })
             .Build()
