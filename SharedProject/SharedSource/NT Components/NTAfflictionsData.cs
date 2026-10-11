@@ -224,18 +224,24 @@ public class NTAfflictionsToAdd
                 float str = C.GetAfflictionStrength(ID);
 
                 // Effects:
-                if (str > 60)
+                if (str > 30)
                 {
-                    // Respiratory Arrest
-                    C.AddAffliction("respiratoryarrest", 200);
+                    // Hypoventilation
+                    C.SetSymptomTrue("hypoventilation", 2);
 
-                    // Unconsciousness
-                    C.SetSymptomTrue("unconsciousness", 2);
-
-                    // Seizures
-                    if (HF.Chance(str / 500f))
+                    if (str > 60)
                     {
-                        C.AddAffliction("seizure", 10);
+                        // Respiratory Arrest
+                        C.AddAffliction("respiratoryarrest", 200);
+
+                        // Unconsciousness
+                        C.SetSymptomTrue("unconsciousness", 2);
+
+                        // Seizures
+                        if (HF.Chance(str / 500f))
+                        {
+                            C.AddAffliction("seizure", 10);
+                        }
                     }
                 }
             })
