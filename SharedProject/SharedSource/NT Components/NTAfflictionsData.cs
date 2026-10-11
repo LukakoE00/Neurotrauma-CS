@@ -3972,7 +3972,7 @@ public class NTAfflictionsToAdd
 
                 if (str > 0)
                 {
-                    C.SetAffliction("alkalosis", Math.Clamp(str, 0, 1) * 0.1f * dT);
+                    C.AddAffliction("alkalosis", Math.Clamp(str, 0, 1) * 0.1f * dT);
                 }
             })
             .Build()
