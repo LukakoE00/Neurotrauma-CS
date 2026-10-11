@@ -2819,14 +2819,7 @@ public class NTAfflictionsToAdd
                 if (!(str > 0)) return;
 
                 // Passive Decrease
-                C.AddAfflictionLimb(ID, Limb, -1.2f * dT);
-
-                // Effects:
-                // Reduce Infected Wounds
-                if (C.GetAfflictionStrengthLimb("infectedwound", Limb) <= 60)
-                {
-                    C.AddAfflictionLimb("infectedwound", Limb, -3f * dT);
-                }
+                C.AddAfflictionLimb(ID, Limb, -0.6f * dT);
             })
             .Build()
             );
