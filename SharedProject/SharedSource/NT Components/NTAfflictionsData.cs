@@ -4160,6 +4160,63 @@ public class NTAfflictionsToAdd
             })
             .Build());
 
+        // Concussion
+        // Not constant; gets applied by other sources.
+        // Type: Non-Limb Specific
+        // Caused By: Head trauma.
+        // Effects: Nausea, Blurred Vision, Headache, Confusion (random).
+        AfflictionsToAdd.Add(
+            builder.New("concussion")
+            .SetUpdateAction((C, ID, Limb, dT) =>
+            {
+                // Passive Regeneration
+                C.AddAffliction(ID, -0.01f * dT);
+
+                float str = C.GetAfflictionStrength(ID);
+
+                if (str <= 0) return;
+
+                // Effects:
+                // Random Symptom
+                if (HF.Chance(Math.Clamp(str / 10f * 0.08f, 0.02f, 0.08f)))
+                {
+                    double case_ = Random.Shared.NextDouble();
+                    bool IsConscious = C.GetAfflictionStrength("unconsciousness") <= 0;
+
+                    if (case_ < 0.25)
+                    {
+                        // Nausea
+                        C.SetSymptomTrue("nausea", (int)(5 + Random.Shared.NextDouble() * 10));
+                    }
+                    else if (case_ < 0.5)
+                    {
+                        // Blurred Vision
+                        if (IsConscious)
+                        {
+                            C.SetSymptomTrue("blurredvision", (int)(5 + Random.Shared.NextDouble() * 9));
+                        }
+                    }
+                    else if (case_ < 0.75)
+                    {
+                        // Headache
+                        if (IsConscious && !C.GetBoolStat("sedated"))
+                        {
+                            C.SetSymptomTrue("headache", (int)(6 + Random.Shared.NextDouble() * 8));
+                        }
+                    }
+                    else
+                    {
+                        // Confusion
+                        if (IsConscious)
+                        {
+                            C.SetSymptomTrue("confusion", (int)(6 + Random.Shared.NextDouble() * 8));
+                        }
+                    }
+                }
+            })
+            .Build()
+            );
+
         //TODO: make non real afflictions a thing
 
         //SymptomsToAdd["lockleftarm"] = new("lockleftarm", 0, 100, 0, AfflictionPriority.HIGH);
