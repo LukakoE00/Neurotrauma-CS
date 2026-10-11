@@ -573,7 +573,7 @@ public class NTAfflictionsToAdd
         // Type: Non-Limb Specific, Lethal
         // Not constant; gets applied by other sources.
         // Caused By: Damage.
-        // Effects: Sepsis.
+        // Effects: Sepsis, Nausea, Fever, Abdominal Pain.
         AfflictionsToAdd.Add(
             builder.New("infectedcavity")
             .SetPriority(AfflictionPriority.MEDIUM)
@@ -586,7 +586,26 @@ public class NTAfflictionsToAdd
 
                 if (str > 0)
                 {
-                    C.AddAffliction("immunity", dT * (Math.Min(1.4f, Math.Max(1, .8f + str / 100)))); // Lose Immunity
+                    C.AddAffliction("immunity", -dT * (Math.Min(1.4f, Math.Max(1, .8f + str / 100)))); // Lose Immunity
+
+                    // Effects:
+                    // Nausea & Fever & Abdominal Pain
+                    if (str > 5)
+                    {
+                        C.SetSymptomTrue("nausea", 2);
+                        C.SetSymptomTrue("fever", 2);
+
+                        if (C.GetAfflictionStrength("unconsciousness") <= 0 && (!C.GetBoolStat("sedated")))
+                        {
+                            C.SetSymptomTrue("abdominalpain", 2);
+                        }
+
+                        // Abdominal Discomfort
+                        if (str > 40 && C.GetAfflictionStrength("unconsciousness") <= 0)
+                        {
+                            C.SetSymptomTrue("abdominaldiscomfort", 2);
+                        }
+                    }
 
                     if (C.GetAfflictionStrength("afantibiotics") < 0.1f || str > 20)
                     {
