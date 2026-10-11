@@ -2014,7 +2014,7 @@ public class NTAfflictionsToAdd
                 // Passive Decrease
                 // Originally had a maxstrength of 100, and reduced by 0.25 per second in XML.
                 // Adjusted, that became 0.5 per 2 seconds.
-                C.AddAffliction(ID, 0.25f * dT);
+                C.AddAffliction(ID, -0.25f * dT);
 
                 // Effects:
                 // Cures Heart Attack / HemoTransShock in ItemFunctions
