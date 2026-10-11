@@ -1772,7 +1772,10 @@ public class NTAfflictionsToAdd
 
                     foreach (LimbType l in HF.LimbsToCheck)
                     {
-                        C.AddAfflictionLimb("spasm", l, 10);
+                        if (HF.Chance(0.5f))
+                        {
+                            C.AddAfflictionLimb("spasm", l, 10);
+                        }
                     }
                 }
             })
