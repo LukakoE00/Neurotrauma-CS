@@ -39,8 +39,18 @@ public class NTAfflictionsToAdd
         AfflictionsToAdd.Add(
             builder.New("drunk")
             .SetStrengths(0, 200, 0)
-            .Build()
-            );
+            .SetUpdateAction((NTHuman C, string ID, LimbType Limb, float DeltaTime) =>
+            {
+                float strength = C.GetAfflictionStrength(ID);
+
+                // Effects:
+                // Vomiting
+                if (strength > 100)
+                {
+                    C.SetSymptomTrue("vomiting", 2);
+                }
+            })
+            .Build());
 
         // Psychosis
         // Not constant; gets applied by other sources.
