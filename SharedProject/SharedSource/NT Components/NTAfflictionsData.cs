@@ -2299,7 +2299,7 @@ public class NTAfflictionsToAdd
                 {
                     if (HF.Chance(0.01f))
                     {
-                        HF.BreakLimb(C.Human, Limb);
+                        HF.BreakLimb(C.Human, limb);
                     }
                 }
             })
