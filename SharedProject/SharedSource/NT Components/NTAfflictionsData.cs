@@ -3570,7 +3570,6 @@ public class NTAfflictionsToAdd
                         C.GetAfflictionStrength("hypoventilation") > 0f
                         && C.GetAfflictionStrength("artificialventilation") <= 0.1f
                     ) * 0.09f * dT
-                    + Math.Max(0f, C.GetAfflictionStrength("kidneydamage") - 80f) / 2f * 0.1f * dT
                     - dT * 0.03f);
 
                 // Effects:
