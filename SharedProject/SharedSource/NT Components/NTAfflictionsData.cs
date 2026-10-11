@@ -3201,7 +3201,7 @@ public class NTAfflictionsToAdd
                 if (C.GetAfflictionStrengthLimb("bandageddirty", Limb) > 10)
                 {
                     float BitesDirtyIndex = str / 40 * dT;
-                    C.AddAfflictionLimb("infectedwounds", Limb, BitesInfectIndex / 5);
+                    C.AddAfflictionLimb("infectedwound", Limb, BitesInfectIndex / 5);
 
                     // Decrease Immunity
                     C.AddAffliction("immunity", -(Math.Clamp(BitesDirtyIndex / 3, 0, 10)));
