@@ -4048,7 +4048,7 @@ public class NTAfflictionsToAdd
 
                     foreach (LimbType Arm in Arms)
                     {
-                        if (HF.LimbIsBroken(C.Human, Arm, true) || HF.LimbIsDislocated(C.Human, Limb, true) || HF.LimbIsAmputated(C.Human, Limb)) SpeedMult -= .2f;
+                        if (HF.LimbIsBroken(C.Human, Arm, true) || HF.LimbIsDislocated(C.Human, Arm, true) || HF.LimbIsAmputated(C.Human, Arm)) SpeedMult -= .2f;
                     }
 
                     C.SetFloatStat("speedmultiplier", C.GetFloatStat("speedmultiplier") * SpeedMult); // slow the character down.
