@@ -2080,7 +2080,7 @@ public class NTAfflictionsToAdd
                 // Reduce Husk Infection
                 if (HF.HasAffliction(C.Human, "huskinfection") && C.GetAfflictionStrength("huskinfection") < 75)
                 {
-                    C.AddAffliction("huskinfection", 0.5f * dT);
+                    C.AddAffliction("huskinfection", -0.5f * dT);
                 }
 
                 // Sepsis
