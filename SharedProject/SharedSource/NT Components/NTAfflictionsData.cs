@@ -1820,11 +1820,11 @@ public class NTAfflictionsToAdd
                     && C.GetAfflictionStrength("lungdamage") < 40
                     && C.GetFloatStat("availableoxygen") > 60)
                 {
-                    C.AddAffliction(ID, -1f * dT);
+                    C.AddAffliction(ID, -0.5f * dT);
                 }
                 else
                 {
-                    C.AddAffliction(ID, -0.4f * dT);
+                    C.AddAffliction(ID, -0.2f * dT);
                 }
 
                 // Effects:
