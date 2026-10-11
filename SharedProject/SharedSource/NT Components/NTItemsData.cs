@@ -2478,8 +2478,8 @@ public class NTItemsData
             {
                 containedItem.Condition -= 10f;
 
-                HF.AddAffliction(infos.target.Human, "infectedwound", -100f, infos.user.Human);
-                HF.AddAffliction(infos.target.Human, "ointmented", 20f, infos.user.Human);
+                HF.AddAfflictionLimb(infos.target.Human, "infectedwound", infos.targetLimb.type, -100f, infos.user.Human);
+                HF.AddAfflictionLimb(infos.target.Human, "ointmented", infos.targetLimb.type, 20f, infos.user.Human);
                 HF.GiveItem(infos.target.Human, "ntsfx_spray");
             }
         });
