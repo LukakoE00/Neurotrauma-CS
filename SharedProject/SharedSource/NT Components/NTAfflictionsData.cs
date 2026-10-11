@@ -1858,7 +1858,17 @@ public class NTAfflictionsToAdd
             builder.New("afadrenaline")
             .SetUpdateAction((C, ID, Limb, dT) =>
             {
+                // Passive decrease
                 C.AddAffliction(ID, -1f * dT);
+
+                float str = C.GetAfflictionStrength(ID);
+
+                // Effects:
+                // Hyperventilation
+                if (str > 1)
+                {
+                    C.SetSymptomTrue("hyperventilation", 2);
+                }
             })
             .Build()
             );
@@ -3331,34 +3341,38 @@ public class NTAfflictionsToAdd
                 C.SetAffliction(ID, (float)Math.Clamp(Double.Lerp(str, desiredBloodPressure, bloodPressureLerp), 5, 200));
 
                 // Effects:
-                // Confusion
-                if (str < 60)
+                // Hyperventilation
+                if (str < 80)
                 {
-                    if (C.GetAfflictionStrength("unconsciousness") <= 0)
-                    {
-                        C.SetSymptomTrue("lightheadedness", 2);
-                        C.SetSymptomTrue("headache", 2);
-                    }
-
-                    // Blurred Vision
-                    if (str < 55)
+                    // Confusion
+                    if (str < 60)
                     {
                         if (C.GetAfflictionStrength("unconsciousness") <= 0)
                         {
-                            C.SetSymptomTrue("blurredvision", 2);
+                            C.SetSymptomTrue("lightheadedness", 2);
+                            C.SetSymptomTrue("headache", 2);
                         }
 
-                        // Pale Skin
-                        if (str < 50)
+                        // Blurred Vision
+                        if (str < 55)
                         {
-                            C.SetSymptomTrue("paleskin", 2);
-
-                            // Confusion
-                            if (str < 30)
+                            if (C.GetAfflictionStrength("unconsciousness") <= 0)
                             {
-                                if (C.GetAfflictionStrength("unconsciousness") <= 0)
+                                C.SetSymptomTrue("blurredvision", 2);
+                            }
+
+                            // Pale Skin
+                            if (str < 50)
+                            {
+                                C.SetSymptomTrue("paleskin", 2);
+
+                                // Confusion
+                                if (str < 30)
                                 {
-                                    C.SetSymptomTrue("confusion", 2);
+                                    if (C.GetAfflictionStrength("unconsciousness") <= 0)
+                                    {
+                                        C.SetSymptomTrue("confusion", 2);
+                                    }
                                 }
                             }
                         }
@@ -3433,43 +3447,48 @@ public class NTAfflictionsToAdd
                 C.AddAffliction("bonedamage", str / 1000 * NTC.GetMultiplier(C, "bonedamagegain") * dT);
 
                 // Shortness of Breath
-                if (str > 20)
+                if (str > 10)
                 {
-                    if (C.GetAfflictionStrength("respiratoryarrest") <= 0)
-                    {
-                        C.SetSymptomTrue("shortnessofbreath", 2);
-                    }
+                    C.SetAffliction("hyperventilation", 2f);
 
-                    // Headache
-                    if (str > 40)
+                    if (str > 20)
                     {
-                        if (C.GetAfflictionStrength("unconsciousness") <= 0)
+                        if (C.GetAfflictionStrength("respiratoryarrest") <= 0)
                         {
-                            C.SetSymptomTrue("headache", 2);
+                            C.SetSymptomTrue("shortnessofbreath", 2);
                         }
 
-                        // Confusion
-                        if (str > 50)
+                        // Headache
+                        if (str > 40)
                         {
                             if (C.GetAfflictionStrength("unconsciousness") <= 0)
                             {
-                                C.SetSymptomTrue("confusion", 2);
+                                C.SetSymptomTrue("headache", 2);
                             }
 
-                            // Respiratory Arrest
-                            if (str > 70 && HF.Chance(0.05f))
+                            // Confusion
+                            if (str > 50)
                             {
-                                C.AddAffliction("respiratoryarrest", 200);
-                            }
-
-                            // Unconsciousness & Cardiac Arrest
-                            if (str > 80)
-                            {
-                                C.SetSymptomTrue("unconsciousness", 2);
-
-                                if (HF.Chance(0.01f))
+                                if (C.GetAfflictionStrength("unconsciousness") <= 0)
                                 {
-                                    C.AddAffliction("cardiacarrest", 200);
+                                    C.SetSymptomTrue("confusion", 2);
+                                }
+
+                                // Respiratory Arrest
+                                if (str > 70 && HF.Chance(0.05f))
+                                {
+                                    C.AddAffliction("respiratoryarrest", 200);
+                                }
+
+                                // Unconsciousness & Cardiac Arrest
+                                if (str > 80)
+                                {
+                                    C.SetSymptomTrue("unconsciousness", 2);
+
+                                    if (HF.Chance(0.01f))
+                                    {
+                                        C.AddAffliction("cardiacarrest", 200);
+                                    }
                                 }
                             }
                         }
@@ -3699,11 +3718,18 @@ public class NTAfflictionsToAdd
                         }
                     }
 
-                    // Confusion
-                    if (str > 40 && C.GetAfflictionStrength("unconsciousness") <= 0)
+                    // Hyperventilation
+                    if (str > 15)
                     {
                         C.SetSymptomTrue("confusion", 2);
+
+                        // Confusion
+                        if (str > 40 && C.GetAfflictionStrength("unconsciousness") <= 0)
+                        {
+                            C.SetSymptomTrue("confusion", 2);
+                        }
                     }
+                    
                 }
             })
             .Build()
