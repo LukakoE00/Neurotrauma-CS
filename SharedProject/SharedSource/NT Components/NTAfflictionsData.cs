@@ -2862,7 +2862,7 @@ public class NTAfflictionsToAdd
                 // Passive Decrease
                 if (str < 15)
                 {
-                    C.AddAfflictionLimb(ID, Limb, 0.05f * C.GetFloatStat("healingrate") * dT);
+                    C.AddAfflictionLimb(ID, Limb, -0.05f * C.GetFloatStat("healingrate") * dT);
                 }
 
                 // Arterial Cut chance
