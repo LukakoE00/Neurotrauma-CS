@@ -1,5 +1,7 @@
 ﻿// Disable the Hook warning
 #pragma warning disable CS0618
+using System.ComponentModel;
+
 namespace Neurotrauma
 {
     public static class NTMultiscalpel
@@ -217,23 +219,23 @@ namespace Neurotrauma
             switch (UsedOnLimb)
             {
                 case LimbType.Head:
-                    loader.Get("organscalpel_brain")?.Invoke(infos);
+                    loader.Get("organscalpel_brain")?.Invoke(new NTItems.ItemUpdateFunctionInfos(infos.item, infos.user, infos.target, torsoLimb));
                     break;
 
                 case LimbType.LeftArm:
-                    loader.Get("organscalpel_kidneys")?.Invoke(infos);
+                    loader.Get("organscalpel_kidneys")?.Invoke(new NTItems.ItemUpdateFunctionInfos(infos.item, infos.user, infos.target, torsoLimb));
                     break;
 
                 case LimbType.Torso:
-                    loader.Get("organscalpel_liver")?.Invoke(infos);
+                    loader.Get("organscalpel_liver")?.Invoke(new NTItems.ItemUpdateFunctionInfos(infos.item, infos.user, infos.target, torsoLimb));
                     break;
 
                 case LimbType.RightArm:
-                    loader.Get("organscalpel_heart")?.Invoke(infos);
+                    loader.Get("organscalpel_heart")?.Invoke(new NTItems.ItemUpdateFunctionInfos(infos.item, infos.user, infos.target, torsoLimb));
                     break;
 
                 case LimbType.LeftLeg:
-                    loader.Get("organscalpel_lungs")?.Invoke(infos);
+                    loader.Get("organscalpel_lungs")?.Invoke(new NTItems.ItemUpdateFunctionInfos(infos.item, infos.user, infos.target, torsoLimb));
                     break;
             }
         }
