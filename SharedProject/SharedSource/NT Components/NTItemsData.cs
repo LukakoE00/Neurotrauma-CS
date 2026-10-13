@@ -1618,6 +1618,11 @@ public class NTItemsData
             return HF.HasAfflictionLimb(infos.target.Human, "retractedskin", LimbType.Torso, 95);
         }, "pneumothorax");
 
+        DrainageAfflictions["needlec"] = new ItemsAfflictionInfos("needlec", 3, infos =>
+        {
+            return HF.HasAfflictionLimb(infos.target.Human, "retractedskin", LimbType.Torso, 95);
+        }, "needlec");
+
         DrainageAfflictions["tamponade"] = new ItemsAfflictionInfos("tamponade", 3, infos =>
         {
             if (NTConfig.Get("NT_OpenCloseTamponade", false)) return false;
