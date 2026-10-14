@@ -1484,7 +1484,7 @@ public class NTItemsData
 
         // Misc
 
-        SutureAfflictions["arteriesclamp"] = new ItemsAfflictionInfos("arteriesclamp", 0, infos => {
+        SutureAfflictions["tourniqueted"] = new ItemsAfflictionInfos("tourniqueted", 0, infos => {
             return HF.HasAfflictionLimb(infos.target.Human, "retractedskin", infos.targetLimb.type, 95);
         });
 
