@@ -1,3 +1,4 @@
+using MoonSharp.Interpreter;
 using static Neurotrauma.NTItems;
 
 namespace Neurotrauma;
@@ -47,7 +48,14 @@ public partial class NTStats
                 {
                     if (Update == null) return this.DefaultStrength;
 
-                    return (float)Update(A, B);
+                    object ret = Update(A, B);
+
+                    return ret switch
+                    {
+                        DynValue dv => (float) dv.CastToNumber(),
+                        float f => f,
+                        _ => this.DefaultStrength
+                    };
                 }
                 catch (Exception e)
                 {
@@ -87,7 +95,14 @@ public partial class NTStats
                 {
                     if (Update == null) return this.DefaultValue;
 
-                    return (bool) Update(A, B);
+                    object ret = Update(A, B);
+
+                    return ret switch
+                    {
+                        DynValue dv => dv.CastToBool(),
+                        bool b => b,
+                        _ => ret != null
+                    };
                 }
                 catch (Exception e)
                 {
