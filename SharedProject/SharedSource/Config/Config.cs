@@ -423,6 +423,19 @@ namespace Neurotrauma
         }
 
         // GO MY GETS!!!!!!!!
+        // Lua get!
+        public static object? Get(string key, object? defaultValue = null)
+        {
+            if (Entries.TryGetValue(key, out ConfigEntry? entry) && entry.Value != null)
+            {
+                return entry.Value;
+            }
+
+            return defaultValue;
+        }
+
+        // Be sneaky and hide the functions from Lua so it stops trying to use an Overload and break
+        [MoonSharpHidden]
         public static bool Get(string key, bool defaultValue)
         {
             if (Entries.TryGetValue(key, out ConfigEntry? entry))
@@ -430,9 +443,11 @@ namespace Neurotrauma
                 if (entry.Value == null) return defaultValue;
                 if (entry.Value is bool) return (bool)entry.Value;
             }
+
             return defaultValue;
         }
 
+        [MoonSharpHidden]
         public static float Get(string key, float defaultValue)
         {
             if (Entries.TryGetValue(key, out ConfigEntry? entry))
@@ -443,6 +458,7 @@ namespace Neurotrauma
             return defaultValue;
         }
 
+        [MoonSharpHidden]
         public static int Get(string key, int defaultValue)
         {
             if (Entries.TryGetValue(key, out ConfigEntry? entry))
@@ -454,6 +470,7 @@ namespace Neurotrauma
             return defaultValue;
         }
 
+        [MoonSharpHidden]
         public static string Get(string key, string defaultValue)
         {
             if (Entries.TryGetValue(key, out ConfigEntry? entry))
@@ -464,6 +481,7 @@ namespace Neurotrauma
             return defaultValue;
         }
 
+        [MoonSharpHidden]
         public static double Get(string key, double defaultValue)
         {
             if (Entries.TryGetValue(key, out ConfigEntry? entry))
@@ -474,6 +492,7 @@ namespace Neurotrauma
             return defaultValue;
         }
 
+        [MoonSharpHidden]
         public static List<string> Get(string key, List<string> defaultValue)
         {
             if (Entries.TryGetValue(key, out ConfigEntry? entry))
@@ -484,6 +503,7 @@ namespace Neurotrauma
             return defaultValue;
         }
 
+        [MoonSharpHidden]
         public static IEnumerable<string> Get(string key, IEnumerable<string> defaultValue)
         {
             if (Entries.TryGetValue(key, out ConfigEntry? entry))
@@ -494,6 +514,7 @@ namespace Neurotrauma
             return defaultValue;
         }
 
+        [MoonSharpHidden]
         public static object? Get(string key)
         {
             if (Entries.TryGetValue(key, out ConfigEntry? entry))
