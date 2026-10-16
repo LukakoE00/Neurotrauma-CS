@@ -2161,5 +2161,7 @@ namespace Neurotrauma
         {
             return Vector2.Distance(Pos1, Pos2);
         }
+
+        public static bool TableContains<T>(IEnumerable<T> Table, T Value) => Table?.Contains(Value) ?? false;
     }
 }
