@@ -34,8 +34,8 @@ public struct NTLuaAddonIDs
 public static class NTInfo
 {
     public const string Name = "Neurotrauma C#";
-    public const string Version = "2.0.2";
-    public const int VersionNum = 02000002;
+    public const string Version = "2.0.5";
+    public const int VersionNum = 02000005;
 
     public static bool NTSPEnabled = false;
 
