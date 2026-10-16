@@ -4317,6 +4317,7 @@ public class NTAfflictionsToAdd
             builder.New("inflammation")
             .IsLimbSpecific(true)
             .IsSymptom(true)
+            .SetStrengths(0,2,0)
             .SetUpdateAction((C, ID, Limb, dT) =>
             {
                 float str = C.GetAfflictionStrengthLimb(ID, Limb);
