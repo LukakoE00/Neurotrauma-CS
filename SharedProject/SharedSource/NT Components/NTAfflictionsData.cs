@@ -3477,7 +3477,7 @@ public class NTAfflictionsToAdd
                 // Shortness of Breath
                 if (str > 10)
                 {
-                    C.SetAffliction("hyperventilation", 2f);
+                    C.SetSymptomTrue("hyperventilation", 2);
 
                     if (str > 20)
                     {
