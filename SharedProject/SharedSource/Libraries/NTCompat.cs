@@ -1,4 +1,5 @@
 ﻿using System;
+using MoonSharp.Interpreter;
 
 namespace Neurotrauma
 {
@@ -223,18 +224,26 @@ namespace Neurotrauma
         {
             if (NTItems.SutureAfflictions.ContainsKey(Identifier)) return;
 
-            AddSuturableAffliction(Identifier, SurgerySkillGain, RequiredAfflictionID, (ItemUpdateFunctionInfos) =>
+
+            AddSuturableAffliction(Identifier, SurgerySkillGain, RequiredAfflictionID, (Func<NTItems.ItemUpdateFunctionInfos, bool>)(ItemUpdateFunctionInfos =>
             {
                 try
                 {
-                    return Func.Invoke(ItemUpdateFunctionInfos);
+                    object ret = Func.Invoke(ItemUpdateFunctionInfos);
+
+                    return ret switch
+                    {
+                        DynValue dv => dv.CastToBool(),
+                        bool b => b,
+                        _ => ret != null
+                    };
                 }
                 catch (Exception e)
                 {
                     HF.PrintError($"[Lua] Error with the Suturable Affliction {Identifier}: {e.Message}");
                     return false;
                 }
-            });
+            }));
 
         }
 
@@ -244,7 +253,13 @@ namespace Neurotrauma
             {
                 Func<NTItems.ItemUpdateFunctionInfos, bool> TranslatedFunc = (info) =>
                 {
-                    return info.target.HasAfflictionLimb(RequiredAfflictionID, LimbType.Torso, 1);
+
+                    if (string.IsNullOrEmpty(RequiredAfflictionID) || RequiredAfflictionID == Identifier) return true;
+                    if (!AfflictionPrefab.Prefabs.ContainsKey(RequiredAfflictionID)) return false;
+
+                    return AfflictionPrefab.Prefabs[RequiredAfflictionID].LimbSpecific
+                        ? info.target.HasAfflictionLimb(RequiredAfflictionID, info.targetLimb.type, 1)
+                        : info.target.HasAffliction(RequiredAfflictionID, 1);
                 };
                 NTItems.SutureAfflictions[Identifier] = new(Identifier, SurgerySkillGain, TranslatedFunc, RequiredAfflictionID);
             }
@@ -254,18 +269,25 @@ namespace Neurotrauma
         {
             if (NTItems.DrainageAfflictions.ContainsKey(Identifier)) return;
 
-            AddDrainageAffliction(Identifier, SurgerySkillGain, RequiredAfflictionID, (ItemUpdateFunctionInfos) =>
+            AddDrainageAffliction(Identifier, SurgerySkillGain, RequiredAfflictionID, (Func<NTItems.ItemUpdateFunctionInfos, bool>)(ItemUpdateFunctionInfos =>
             {
                 try
                 {
-                    return Func.Invoke(ItemUpdateFunctionInfos);
+                    object ret = Func.Invoke(ItemUpdateFunctionInfos);
+
+                    return ret switch
+                    {
+                        DynValue dv => dv.CastToBool(),
+                        bool b => b,
+                        _ => ret != null
+                    };
                 }
                 catch (Exception e)
                 {
                     HF.PrintError($"[Lua] Error with the Drainage Affliction {Identifier}: {e.Message}");
                     return false;
                 }
-            });
+            }));
         }
 
         public static void AddDrainageAffliction(string Identifier, int SurgerySkillGain, string RequiredAfflictionID, Func<NTItems.ItemUpdateFunctionInfos, bool> Func)

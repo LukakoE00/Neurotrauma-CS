@@ -1640,8 +1640,8 @@ public class NTItemsData
             foreach (KeyValuePair<string, ItemsAfflictionInfos> Pair in DrainageAfflictions)
             {
                 ItemsAfflictionInfos affInfos = Pair.Value;
-                if (!affInfos.Conditions.Invoke(infos)) continue;
                 if (!HF.HasAffliction(infos.target.Human, affInfos.Case, 1)) continue;
+                if (!affInfos.Conditions.Invoke(infos)) continue;
 
                 if (affInfos.Used != null)
                 {
