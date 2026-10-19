@@ -1,4 +1,5 @@
 ﻿using Barotrauma.Networking;
+using MoonSharp.Interpreter;
 using System.Xml.Linq;
 
 namespace Neurotrauma
@@ -412,7 +413,11 @@ namespace Neurotrauma
             LuaGame.SendDirectChatMessage(chatMessage, Client);
 
 #else
-            if (GameMain.GameSession?.CrewManager != null)
+            if (GameMain.IsMultiplayer)
+            {
+                GameMain.Client?.AddChatMessage(chatMessage);
+            }
+            else if (GameMain.GameSession?.CrewManager != null)
             {
                 GameMain.GameSession.CrewManager.AddSinglePlayerChatMessage("", chatMessage.Text, ChatMessageType.Server, Character.Controlled);
             }
@@ -2162,6 +2167,21 @@ namespace Neurotrauma
             return Vector2.Distance(Pos1, Pos2);
         }
 
-        public static bool TableContains<T>(IEnumerable<T> Table, T Value) => Table?.Contains(Value) ?? false;
+        public static bool TableContains(Table Table, DynValue Value)
+        {
+            if (Table == null) return false;
+
+            string Target = Value.ToObject()?.ToString();
+
+            foreach (var Pair in Table.Pairs)
+            {
+                if (Pair.Value.ToObject()?.ToString() == Target)
+                {
+                    return true; 
+                }
+            }
+
+            return false;
+        }
     }
 }
