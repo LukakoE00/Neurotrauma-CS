@@ -64,7 +64,7 @@ namespace Neurotrauma
                     0.2f /
                     HF.GetSkillLevel(animController.Character, "medical");
 
-                if (HF.Chance(fractureChance)) target.AddAffliction("t_fracture", 1f);
+                if (HF.Chance(fractureChance)) target.AddAffliction("fracturedribs", 1f);
                     
 
                 return null;
