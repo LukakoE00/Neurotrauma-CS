@@ -14,6 +14,7 @@ namespace Neurotrauma
             ConfigurationMenu.InitNTConfig();
             DynamicItems.InitDynamicItemsClient();
             ButtonsHUI.InitClient();
+            NTSurgeryTable.SurgeryTableControllerOverride.Init();
 
             if (ENABLE_SYMPTOM_EFFECTS_CLIENT)
             {

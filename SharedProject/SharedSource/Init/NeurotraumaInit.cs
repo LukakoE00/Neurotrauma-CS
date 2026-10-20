@@ -160,6 +160,9 @@ namespace Neurotrauma
                 CharacterPatches.Dispose();
             }
 
+            // This is initialized both on Client (to fix the UI tweaking) and Server (to interrupt the drag being removed on opening the HUI), dispose both
+            NTSurgeryTable.SurgeryTableControllerOverride.Dispose();
+
             DisposeClient();
         }
 

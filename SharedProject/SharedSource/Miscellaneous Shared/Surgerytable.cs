@@ -1,3 +1,4 @@
+using Barotrauma.Items.Components;
 using Neurotrauma;
 
 public static class NTSurgeryTable
@@ -59,6 +60,8 @@ public static class NTSurgeryTable
 #pragma warning disable CS0618 // Type or member is obsolete
     public static void InitializeSurgeryTableHooks()
     {
+        NTSurgeryTable.SurgeryTableControllerOverride.Init();
+
         LuaCsSetup.Instance.Hook.Add("surgerytable.update", "surgerytable.update", (params object[] args) =>
         {
             var Effect = args[0];
@@ -187,5 +190,51 @@ public static class NTSurgeryTable
 
             return null;
         });
+    }
+
+    public static class SurgeryTableControllerOverride
+    {
+        private static Harmony harmony;
+        private static bool IsSurgeryTable;
+
+        public static void Init()
+        {
+            harmony = new Harmony("NTSurgeryTablePatches");
+
+            var Update = AccessTools.Method(typeof(Controller), "Update");
+            var SelectedCharacter = AccessTools.PropertySetter(typeof(Character), "SelectedCharacter");
+
+            // In Update, if a character is put into a controller the character is force-deselected. Patch it so that we can prevent that.
+            harmony.Patch(Update, prefix: new HarmonyMethod(typeof(SurgeryTableControllerOverride), nameof(Prefix_Update)), postfix: new HarmonyMethod(typeof(SurgeryTableControllerOverride), nameof(Postfix_Update)));
+
+            // If anything tries to fuck with the currently selected character and we dont like it, nuke it.
+            harmony.Patch(SelectedCharacter, prefix: new HarmonyMethod(typeof(SurgeryTableControllerOverride), nameof(Prefix_SetSelectedCharacter)));
+        }
+
+        // For any controller, an update loop runs (so also for Deconstructors and whatnot). Check if in this specific update we're looking at a Surgery Table.
+        public static void Prefix_Update(Controller __instance) => IsSurgeryTable = __instance.Item.Prefab.Identifier == "operatingtable";
+
+        // Reset post-update so we dont fuck things up long term.
+        public static void Postfix_Update() => IsSurgeryTable = false;
+
+        // Is the character in question on a Surgery Table?
+        private static bool IsOnSurgeryTable(Character Character) => Character != null && Item.ItemList.Any(Item => Item.Prefab.Identifier == "operatingtable" && Item.GetComponent<Controller>()?.User == Character);
+
+        public static bool Prefix_SetSelectedCharacter(Character __instance, Character value)
+        {
+            // Who we grabbing?
+            var SelectedCharacter = __instance.SelectedCharacter;
+
+            // Prevent deselection if a surgery table is updating and the current target is on a surgery table (returning false prevents the original SelectedCharacter setter from fucking it up).
+            return !(IsSurgeryTable && value == null && IsOnSurgeryTable(SelectedCharacter));
+        }
+
+        public static void Dispose()
+        {
+            if (harmony != null)
+            { 
+                harmony.UnpatchSelf(); 
+            }
+        }
     }
 }
