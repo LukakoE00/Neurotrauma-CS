@@ -10,8 +10,6 @@ namespace Neurotrauma
         public static void InitBotPatches()
         {
             harmony = new Harmony("NPCPatches");
-
-            DisableBotRescueLogic();
             SpeakAboutNeurotraumaIssues();
         }
 
@@ -20,32 +18,11 @@ namespace Neurotrauma
             if ( harmony != null ) harmony.UnpatchSelf();
         }
 
-        public static void DisableBotRescueLogic()
-        {
-            var method_IsValidTarget = AccessTools.Method(typeof(AIObjectiveRescueAll), "IsValidTarget", new[] { typeof(Character), typeof(Character), typeof(bool).MakeByRefType() });
-
-            harmony.Patch(method_IsValidTarget, prefix: new HarmonyMethod(typeof(AIObjectiveRescueAllPatch), nameof(AIObjectiveRescueAllPatch.Prefix_IsValidTarget)));
-        }
-
         public static void SpeakAboutNeurotraumaIssues()
         {
             var method_SpeakAboutIssues = AccessTools.Method(typeof(HumanAIController), "SpeakAboutIssues");
 
             harmony.Patch(method_SpeakAboutIssues, postfix: new HarmonyMethod(typeof(SpeakAboutIssuesPatch), nameof(SpeakAboutIssuesPatch.Postfix_SpeakAboutIssues)));
-        }
-    }
-
-    public static class AIObjectiveRescueAllPatch
-    {
-        public static bool Prefix_IsValidTarget(Character target, Character character, ref bool ignoredAsMinorWounds, ref bool __result)
-        {
-            if (!NTConfig.Get("NT_disableBotAlgorithms", true))
-            {
-                return true; // Prevent original method from executing
-            }
-
-            __result = false;
-            return false;        // Don't prevent original method from executing.. very important to know!
         }
     }
 

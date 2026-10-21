@@ -35,6 +35,7 @@ namespace Neurotrauma
             NTItemsData.EnsureWorkingItems(); // Runs the FixItems hooks
             NTSurgeryTable.InitializeSurgeryTableHooks(); // Adds hook for surgery table
             RevivePatch.Init(); // Adjust Revive command
+            BotTreatment.InitBotTreatment(); // Bot Treatment code
             InitLuaHooks(); // Initializes the Lua hooks at the bottom of this file
 
 

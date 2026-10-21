@@ -16,3 +16,37 @@
 // 4. Figure out a way to decouple all this from vitality; since Vitality is hardly impacted by most NT afflictions bots will ignore them.
 // 5. Add Triage somehow, so they wont be popping Thiamine into someone practically fine while someone else is missing an arm. Priority affliction healing, perhaps?
 // 6. Skip non-humans / hostiles for healing
+
+using Neurotrauma;
+
+public class BotTreatment
+{
+    private static Harmony? harmony;
+
+    public static void InitBotTreatment()
+    {
+        harmony = new Harmony("NTBotTreatment");
+
+        var IsValidTarget = AccessTools.Method(typeof(AIObjectiveRescueAll), "IsValidTarget", new[] { typeof(Character), typeof(Character), typeof(bool).MakeByRefType() });
+        harmony.Patch(IsValidTarget, prefix: new HarmonyMethod(typeof(AIObjectiveRescueAllPatch), nameof(AIObjectiveRescueAllPatch.Prefix_IsValidTarget)));
+    }
+
+    public static void Dispose()
+    {
+        if (harmony != null) harmony.UnpatchSelf();
+    }
+}
+
+public static class AIObjectiveRescueAllPatch
+{
+    public static bool Prefix_IsValidTarget(Character target, Character character, ref bool ignoredAsMinorWounds, ref bool __result)
+    {
+        if (!NTConfig.Get("NT_disableBotAlgorithms", true))
+        {
+            return true; 
+        }
+
+        __result = false;
+        return false; 
+    }
+}

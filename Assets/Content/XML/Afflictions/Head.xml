@@ -48,7 +48,7 @@
       <PeriodicEffect mininterval="1" maxinterval="3">
         <StatusEffect target="Character" disabledeltatime="true" stackable="false" delay="1" checkconditionalalways="false">
           <Conditional ishuman="false" />
-          <ReduceAffliction identifier="arterialcut" amount="1000"/> <!--- Changed this to be arterialcut from t_arterialcut  -->
+          <ReduceAffliction identifier="carotidarterialcut" amount="1000"/>
         </StatusEffect>
         
         <StatusEffect target="Character" multiplyafflictionsbymaxvitality="true" disabledeltatime="true" stackable="false" delay="1" checkconditionalalways="false">
