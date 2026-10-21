@@ -1465,7 +1465,7 @@ Can give blood to: AB+</entitydescription.ab_positivecard>
 
 <!-- Included Removal Affictions -->
 <ntconfig.entryname.removalcategory>Included Removal Affictions</ntconfig.entryname.removalcategory>
-<ntconfig.style.removalcategory>identifier, identifier</ntconfig.style.removalcategory>
+<ntconfig.style.removalcategory>identifier,identifier</ntconfig.style.removalcategory>
 <ntconfig.entrydescription.removalcategory>You can add or remove afflictions to customize this list to your liking.</ntconfig.entrydescription.removalcategory>
 
 <!-- Custom Affliction Category -->
@@ -1734,5 +1734,9 @@ Can give blood to: AB+</entitydescription.ab_positivecard>
 <ntconfigdescription_updateinterval_medium></ntconfigdescription_updateinterval_medium>
 <ntconfigdescription_updateinterval_low></ntconfigdescription_updateinterval_low>
 <ntconfigdescription_updateinterval_monster></ntconfigdescription_updateinterval_monster>
+
+<ntconfig.entryname.reviveexcluded>Excluded Revive Afflictions</ntconfig.entryname.reviveexcluded>
+<ntconfig.style.reviveexcluded>identifier,identifier</ntconfig.style.reviveexcluded>
+<ntconfig.entrydescription.reviveexcluded>Afflictions in this list will ‖color:gui.red‖not‖end‖ be removed when using the Revive command.</ntconfig.entrydescription.reviveexcluded>
 
 </infotexts>

@@ -1369,7 +1369,18 @@ namespace Neurotrauma
                             Description = TextManager.Get("ntconfigdescription_debugmode"),
                         },
 
-
+                        ["NT_ReviveExcluded"] = new ConfigEntry
+                        {
+                            Page = "experimental",
+                            Name = TextManager.Get("ntconfig.entryname.reviveexcluded"),
+                            Style = TextManager.Get("ntconfig.style.reviveexcluded"),
+                            Description = TextManager.Get("ntconfig.entrydescription.reviveexcluded"),
+                            Default = new List<string>
+                            {
+                            },
+                            Type = ConfigEntryType.String,
+                            Boxsize = 0.1f,
+                        },
                     }
                 }
             );

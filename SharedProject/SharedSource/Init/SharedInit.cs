@@ -34,7 +34,9 @@ namespace Neurotrauma
             OnDamaged.InitializeOnDamagedMethods(); // Add OnDamaged patches
             NTItemsData.EnsureWorkingItems(); // Runs the FixItems hooks
             NTSurgeryTable.InitializeSurgeryTableHooks(); // Adds hook for surgery table
+            RevivePatch.Init(); // Adjust Revive command
             InitLuaHooks(); // Initializes the Lua hooks at the bottom of this file
+
 
             // What a mess. - Lukako (holy old status)
             harmony = new Harmony("neurotrauma.server");
