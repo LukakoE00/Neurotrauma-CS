@@ -170,7 +170,6 @@ public class NTAfflictions
         }
 
 
-
         /// <param name="AfflictionID">The ID of the affliction defined in the XML.</param>
         /// <returns>Returns the NTAfflictionPrefab associated with the given ID, or null if no NTAfflictionPrefab is associated.</returns>
         public NTAfflictionPrefab? Get(string AfflictionID)
@@ -181,7 +180,6 @@ public class NTAfflictions
             }
             return null;
         }
-
 
         /// <summary>
         /// Calls the old function of an affliction, useful if you want to add functionalities on top of another afflictions.
@@ -200,43 +198,25 @@ public class NTAfflictions
             OldAff.Update(C, ID, Limb, DeltaTime);
         }
 
-        public void Extend(string AfflictionID, LuaCsFunc UpdateFunction)
+        // FUCK YOU COOKIE I CAN DO WHATEVER I WANT
+        /// <summary>
+        /// Pre-Extend an affliction's update function.
+        /// Useful for partial overrides.
+        /// </summary>
+        public void PreExtend(string AfflictionID, LuaCsFunc UpdateFunction, string ExtensionName = "Vanilla")
         {
-
-            this.Extend(AfflictionID, (NTHuman C, string ID, LimbType Limb, float DeltaTime) =>
+            Action<NTHuman, String, LimbType, float> LuaUpdate = (C, ID, Limb, DeltaTime) => 
             {
                 try
                 {
-                    object ret = UpdateFunction(C, ID, Limb, DeltaTime);
-
-                    return ret switch
-                    {
-                        DynValue dv => dv.CastToBool(),
-                        bool b => b,
-                        _ => ret != null
-                    };
+                    UpdateFunction.Invoke(C, ID, Limb, DeltaTime);
                 }
-                catch (Exception e)
+                catch
                 {
-                    HF.PrintError($"[Lua] Error when updating {ID} : {e.Message}");
-                    return false;
+                    HF.PrintError($"[{this.ModID}] Attempted to update extended ID '{AfflictionID}' : failed on extension '{ExtensionName}'.");
+                    return;
                 }
-
-            });
-
-        }
-
-        /// <summary>
-        /// Extend an affliction update function by overriding the original function, running the given UpdateFunction and then calling the original one.
-        /// <br></br>
-        /// The return value of the given UpdateFunction determines if the original update should run or not.
-        /// <br></br>
-        /// If the Affliction was already Extended, both extensions will run, the order is determined by first extended -> last called.
-        /// </summary>
-        public void Extend(string AfflictionID, Func<NTHuman, string, LimbType, float, bool> UpdateFunction)
-        {
-
-            throw new NotImplementedException("This function doesn't work yet, please use CallOldUpdate instead.");
+            };
 
             if (NTConfig.Get("NT_DEBUG_MODE", false)) HF.PrintUtility($"[{this.ModID}] Extending affliction: {AfflictionID}");
 
@@ -246,28 +226,48 @@ public class NTAfflictions
                 return;
             }
 
-            NTOldAfflictionsPrefabRegistry[(NTAfflictionsPrefabModDefinerRegistry[AfflictionID], AfflictionID)] = NTAfflictionsPrefabRegistry[AfflictionID];
-
-
 #pragma warning disable CS8602 // Cannot be null we check earlier for its existence.
-            NTAfflictionPrefab aff = (NTAfflictionPrefab) this.Get(AfflictionID).Clone();
-#pragma warning restore CS8602 
+            NTAfflictionPrefab ?aff = Get(AfflictionID);
+#pragma warning restore CS8602
 
-            aff.UpdateAction = (C, ID, Limb, dT) =>
-            {
-                bool r = UpdateFunction(C, ID, Limb, dT);
+            aff.UpdateAction = LuaUpdate + aff.UpdateAction;
 
-                string oldModName = NTAfflictionsPrefabModDefinerRegistry[AfflictionID];
-
-                if (r) CallOldUpdate(oldModName, AfflictionID, C, ID, Limb, dT);
-            };
-
-            NTAfflictionsPrefabRegistry[AfflictionID] = aff;
-
-
-            NTAfflictionsPrefabModDefinerRegistry[AfflictionID] = this.ModID;
         }
 
+        /// <summary>
+        /// Extend an affliction's update function.
+        /// Useful for partial overrides.
+        /// </summary>
+        public void Extend(string AfflictionID, LuaCsFunc UpdateFunction, string ExtensionName = "Vanilla")
+        {
+            Action<NTHuman, String, LimbType, float> LuaUpdate = (C, ID, Limb, DeltaTime) => 
+            {
+                try
+                {
+                    UpdateFunction.Invoke(C, ID, Limb, DeltaTime);
+                }
+                catch
+                {
+                    HF.PrintError($"[{this.ModID}] Attempted to update extended ID '{AfflictionID}' : failed on extension '{ExtensionName}'.");
+                    return;
+                }
+            };
+
+            if (NTConfig.Get("NT_DEBUG_MODE", false)) HF.PrintUtility($"[{this.ModID}] Extending affliction: {AfflictionID}");
+
+            if (!NTAfflictionsPrefabRegistry.ContainsKey(AfflictionID))
+            {
+                HF.PrintError($"[{this.ModID}] Trying to extend affliction with ID '{AfflictionID}' : affliction is not already registered or it was removed, cannot extend it.");
+                return;
+            }
+
+#pragma warning disable CS8602 // Cannot be null we check earlier for its existence.
+            NTAfflictionPrefab ?aff = Get(AfflictionID);
+#pragma warning restore CS8602
+
+            aff.UpdateAction = aff.UpdateAction + LuaUpdate;
+
+        }
     }
 
     /// <summary>

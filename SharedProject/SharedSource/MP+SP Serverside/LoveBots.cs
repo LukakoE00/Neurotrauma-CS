@@ -22,7 +22,7 @@ namespace Neurotrauma
         {
             var method_SpeakAboutIssues = AccessTools.Method(typeof(HumanAIController), "SpeakAboutIssues");
 
-            harmony.Patch(method_SpeakAboutIssues, postfix: new HarmonyMethod(typeof(SpeakAboutIssuesPatch), nameof(SpeakAboutIssuesPatch.Postfix_SpeakAboutIssues)));
+            harmony?.Patch(method_SpeakAboutIssues, postfix: new HarmonyMethod(typeof(SpeakAboutIssuesPatch), nameof(SpeakAboutIssuesPatch.Postfix_SpeakAboutIssues)));
         }
     }
 

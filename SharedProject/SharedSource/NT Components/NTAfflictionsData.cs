@@ -4260,54 +4260,61 @@ public class NTAfflictionsToAdd
             .Build()
             );
 
+        // Trigger Symptoms
+        AfflictionsToAdd.Add(
+            builder.New("triggersym_respiratoryarrest")
+            .IsSymptom(true)
+            .SetUpdateAction((C, ID, Limb, dT) =>
+            {
+                if (C.GetAfflictionStrength(ID) <= 0) return;
+                C.SetAffliction("respiratoryarrest", 100f);
+            })
+            .Build()
+            );
 
-        //SymptomsToAdd["triggersym_respiratoryarrest"] = new("triggersym_respiratoryarrest", 0, 100, 0, AfflictionPriority.HIGH);
-        //SymptomsToAdd["triggersym_respiratoryarrest"].Real = false;
-        //SymptomsToAdd["triggersym_respiratoryarrest"].Const = true;
-        //SymptomsToAdd["triggersym_respiratoryarrest"].UpdateAction =
-        //    (NTHuman C, string ID, LimbType Limb, NTHumanSymptomData AffData) =>
-        //    {
-        //        if (AffData.Strength <= 0) return;
-        //        C.GetAfflictionStrength("respiratoryarrest")= 100;
-        //    };
-        //SymptomsToAdd["triggersym_seizure"] = new("triggersym_seizure", 0, 100, 0, AfflictionPriority.HIGH);
-        //SymptomsToAdd["triggersym_seizure"].Real = false;
-        //SymptomsToAdd["triggersym_seizure"].Const = true;
-        //SymptomsToAdd["triggersym_seizure"].UpdateAction =
-        //    (NTHuman C, string ID, LimbType Limb, NTHumanSymptomData AffData) =>
-        //    {
-        //        if (AffData.Strength <= 0) return;
-        //        C.GetAfflictionStrength("seizure")= 100;
-        //    };
-        //SymptomsToAdd["triggersym_stroke"] = new("triggersym_stroke", 0, 100, 0, AfflictionPriority.HIGH);
-        //SymptomsToAdd["triggersym_stroke"].Real = false;
-        //SymptomsToAdd["triggersym_stroke"].Const = true;
-        //SymptomsToAdd["triggersym_stroke"].UpdateAction =
-        //    (NTHuman C, string ID, LimbType Limb, NTHumanSymptomData AffData) =>
-        //    {
-        //        if (AffData.Strength <= 0) return;
-        //        C.GetAfflictionStrength("stroke")= 100;
-        //    };
-        //SymptomsToAdd["triggersym_coma"] = new("triggersym_coma", 0, 100, 0, AfflictionPriority.HIGH);
-        //SymptomsToAdd["triggersym_coma"].Real = false;
-        //SymptomsToAdd["triggersym_coma"].Const = true;
-        //SymptomsToAdd["triggersym_coma"].UpdateAction =
-        //    (NTHuman C, string ID, LimbType Limb, NTHumanSymptomData AffData) =>
-        //    {
-        //        if (AffData.Strength <= 0) return;
-        //        C.GetAfflictionStrength("seizure")= 100;
-        //    };
-        //SymptomsToAdd["triggersym_cardiacarrest"] = new("triggersym_cardiacarrest", 0, 100, 0, AfflictionPriority.HIGH);
-        //SymptomsToAdd["triggersym_cardiacarrest"].Real = false;
-        //SymptomsToAdd["triggersym_cardiacarrest"].Const = true;
-        //SymptomsToAdd["triggersym_cardiacarrest"].UpdateAction =
-        //    (NTHuman C, string ID, LimbType Limb, NTHumanSymptomData AffData) =>
-        //    {
-        //        if (AffData.Strength <= 0) return;
-        //        C.GetAfflictionStrength("cardiacarrest")= 100;
-        //    };
+        AfflictionsToAdd.Add(
+            builder.New("triggersym_seizure")
+            .IsSymptom(true)
+            .SetUpdateAction((C, ID, Limb, dT) =>
+            {
+                if (C.GetAfflictionStrength(ID) <= 0) return;
+                C.SetAffliction("seizure", 100f);
+            })
+            .Build()
+            );
 
+        AfflictionsToAdd.Add(
+            builder.New("triggersym_stroke")
+            .IsSymptom(true)
+            .SetUpdateAction((C, ID, Limb, dT) =>
+            {
+                if (C.GetAfflictionStrength(ID) <= 0) return;
+                C.SetAffliction("stroke", 100f);
+            })
+            .Build()
+            );
 
+        AfflictionsToAdd.Add(
+            builder.New("triggersym_coma")
+            .IsSymptom(true)
+            .SetUpdateAction((C, ID, Limb, dT) =>
+            {
+                if (C.GetAfflictionStrength(ID) <= 0) return;
+                C.SetAffliction("coma", 100f);
+            })
+            .Build()
+            );
+
+        AfflictionsToAdd.Add(
+            builder.New("triggersym_cardiacarrest")
+            .IsSymptom(true)
+            .SetUpdateAction((C, ID, Limb, dT) =>
+            {
+                if (C.GetAfflictionStrength(ID) <= 0) return;
+                C.SetAffliction("cardiacarrest", 100f);
+            })
+            .Build()
+            );
 
         // Inflammation
         // Type: Limb-specific
