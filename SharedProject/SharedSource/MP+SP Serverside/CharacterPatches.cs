@@ -20,14 +20,14 @@
         {
             var Method_GetAimWobble = AccessTools.Method(typeof(AnimController), "GetAimWobble", new[] { typeof(Limb), typeof(Limb), typeof(Item) });
 
-            harmony.Patch(Method_GetAimWobble, prefix: new HarmonyMethod(typeof(AimWobblePatch), nameof(AimWobblePatch.Prefix_GetAimWobble)));
+            harmony?.Patch(Method_GetAimWobble, prefix: new HarmonyMethod(typeof(AimWobblePatch), nameof(AimWobblePatch.Prefix_GetAimWobble)));
         }
 
         public static void ApplyBurningOnFire()
         {
             var Method_ApplyStatusEffects = AccessTools.Method(typeof(Character), "ApplyStatusEffects", new[] { typeof(ActionType), typeof(float) });
 
-            harmony.Patch(Method_ApplyStatusEffects, postfix: new HarmonyMethod(typeof(BurningPatch), nameof(BurningPatch.Postfix_ApplyStatusEffects)));
+            harmony?.Patch(Method_ApplyStatusEffects, postfix: new HarmonyMethod(typeof(BurningPatch), nameof(BurningPatch.Postfix_ApplyStatusEffects)));
         }
 
         public static bool Override_BleedingUpdate(CharacterHealth characterHealth, Limb targetLimb, float deltaTime)

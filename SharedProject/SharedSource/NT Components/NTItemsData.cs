@@ -80,7 +80,7 @@ public class NTItemsData
         bool packhasantibodyC = false;
         bool packhasantibodyRh = id is "bloodpacko_positive" or "bloodpacka_positive" or "bloodpackb_positive" or "bloodpackab_positive";
 
-        string targettype = NTBloodTypes.GetBloodType(infos.target.Human);
+        string ?targettype = NTBloodTypes.GetBloodType(infos.target.Human);
         bool targethasantibodyA = targettype.Contains("a");
         bool targethasantibodyB = targettype.Contains("b");
         bool targethasantibodyC = targettype.Contains("c");

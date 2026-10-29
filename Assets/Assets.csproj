@@ -11,15 +11,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Compile Remove="Content\Lua\Scripts\Client\**" />
-      <Compile Remove="Content\Lua\Scripts\Server\**" />
-      <EmbeddedResource Remove="Content\Lua\Scripts\Client\**" />
-      <EmbeddedResource Remove="Content\Lua\Scripts\Server\**" />
-      <None Remove="Content\Lua\Scripts\Client\**" />
-      <None Remove="Content\Lua\Scripts\Server\**" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Folder Include="Content\DefaultConfigs\" />
     </ItemGroup>
 

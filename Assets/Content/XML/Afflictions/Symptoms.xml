@@ -552,5 +552,98 @@
 
       <icon texture="%ModDir%/Images/AfflictionIcons.png" sheetindex="7,2" sheetelementsize="128,128" origin="0,0"/>
     </Affliction>
+
+	<!-- ///// Trigger Symptoms \\\\\ -->
+
+	<!-- Trigger Symptom for Respiratory Arrest. -->
+	<Affliction
+	name=""
+	identifier="triggersym_respiratoryarrest"
+
+	healableinmedicalclinic="false"
+	type="triggersym"
+	targets="human"
+	limbspecific="false"
+	iconcolors="255,90,0,255;255,90,0,255"
+      
+	showinhealthscannerthreshold="999"
+	showiconthreshold="999"
+	maxstrength="100">
+
+		<icon texture="%ModDir%/Images/AfflictionIcons.png" sheetindex="7,2" sheetelementsize="128,128" origin="0,0"/>
+	</Affliction>
+
+	<!-- Trigger Symptom for Seizure. -->
+	<Affliction
+	name=""
+	identifier="triggersym_seizure"
+
+	healableinmedicalclinic="false"
+	type="triggersym"
+	targets="human"
+	limbspecific="false"
+	iconcolors="255,90,0,255;255,90,0,255"
+      
+	showinhealthscannerthreshold="999"
+	showiconthreshold="999"
+	maxstrength="100">
+
+		<icon texture="%ModDir%/Images/AfflictionIcons.png" sheetindex="7,2" sheetelementsize="128,128" origin="0,0"/>
+	</Affliction>
+
+	<!-- Trigger Symptom for Stroke. -->
+	<Affliction
+	name=""
+	identifier="triggersym_stroke"
+
+	healableinmedicalclinic="false"
+	type="triggersym"
+	targets="human"
+	limbspecific="false"
+	iconcolors="255,90,0,255;255,90,0,255"
+      
+	showinhealthscannerthreshold="999"
+	showiconthreshold="999"
+	maxstrength="100">
+
+		<icon texture="%ModDir%/Images/AfflictionIcons.png" sheetindex="7,2" sheetelementsize="128,128" origin="0,0"/>
+	</Affliction>
+
+	<!-- Trigger Symptom for Coma. -->
+	<Affliction
+	name=""
+	identifier="triggersym_coma"
+
+	healableinmedicalclinic="false"
+	type="triggersym"
+	targets="human"
+	limbspecific="false"
+	iconcolors="255,90,0,255;255,90,0,255"
+      
+	showinhealthscannerthreshold="999"
+	showiconthreshold="999"
+	maxstrength="100">
+
+		<icon texture="%ModDir%/Images/AfflictionIcons.png" sheetindex="7,2" sheetelementsize="128,128" origin="0,0"/>
+	</Affliction>
+
+	<!-- Trigger Symptom for Cardiac Arrest. -->
+	<Affliction
+	name=""
+	identifier="triggersym_cardiacarrest"
+
+	healableinmedicalclinic="false"
+	type="triggersym"
+	targets="human"
+	limbspecific="false"
+	iconcolors="255,90,0,255;255,90,0,255"
+      
+	showinhealthscannerthreshold="999"
+	showiconthreshold="999"
+	maxstrength="100">
+
+		<icon texture="%ModDir%/Images/AfflictionIcons.png" sheetindex="7,2" sheetelementsize="128,128" origin="0,0"/>
+	</Affliction>
+	  
   </Afflictions>
 </Override>

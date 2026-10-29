@@ -7,7 +7,7 @@ using System.Linq;
 
 public static class RevivePatch
 {
-    private static Harmony harmony;
+    private static Harmony ?harmony;
 
     public static void Init()
     {

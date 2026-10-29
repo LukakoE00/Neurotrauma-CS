@@ -402,7 +402,7 @@ namespace Neurotrauma
         /// <param name="Client">The client to whom the message should be sent.</param>
         /// <param name="Message">The actual message to send.</param>
         /// <param name="Color">Color that the message should be.</param>
-        public static void DMClient(Client Client, string Message, Color? Color)
+        public static void DMClient(Client ?Client, string Message, Color? Color)
         {
             var chatMessage = ChatMessage.Create("", Message, ChatMessageType.Server, null);
             if (Color.HasValue) chatMessage.Color = Color.Value;
@@ -1767,7 +1767,7 @@ namespace Neurotrauma
         /// <param name="Character">Character whose limb will get traumatically amputated.</param>
         /// <param name="GivenLimbType">The limb to traumatically amputate.</param>
         /// <param name="Attacker">A possible attacker that caused the traumatic amputation.</param>
-        public static void TraumamputateLimbAndGenerateItem(Character Character, LimbType GivenLimbType, Character Attacker)
+        public static void TraumamputateLimbAndGenerateItem(Character Character, LimbType GivenLimbType, Character ?Attacker)
         {
             GivenLimbType = NormalizeLimbType(GivenLimbType);
             if (!LimbsToCheck.Contains(GivenLimbType)) 
@@ -2171,7 +2171,7 @@ namespace Neurotrauma
         {
             if (Table == null) return false;
 
-            string Target = Value.ToObject()?.ToString();
+            string ?Target = Value.ToObject()?.ToString();
 
             foreach (var Pair in Table.Pairs)
             {
