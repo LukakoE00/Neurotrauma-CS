@@ -184,7 +184,7 @@ namespace Neurotrauma
 
                     if (h.Human.teamID == CharacterTeamType.Team1)
                     {
-                        h.AddAffliction("luabotomy", 100f);
+                        h.AddAffliction("luabotomy", 0.1f);
                     }
 
                 }, 1000);
