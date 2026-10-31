@@ -77,7 +77,7 @@ public class NTItemsData
 
         bool packhasantibodyA = id is "bloodpacka_positive" or "bloodpacka_negative" or "bloodpackab_positive" or "bloodpackab_negative";
         bool packhasantibodyB = id is "bloodpackb_positive" or "bloodpackb_negative" or "bloodpackab_positive" or "bloodpackab_negative";
-        bool packhasantibodyC = false;
+        bool packhasantibodyC = id is "bloodpackabc_positive";
         bool packhasantibodyRh = id is "bloodpacko_positive" or "bloodpacka_positive" or "bloodpackb_positive" or "bloodpackab_positive";
 
         string ?targettype = NTBloodTypes.GetBloodType(infos.target.Human);
