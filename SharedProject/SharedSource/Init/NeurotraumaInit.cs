@@ -72,6 +72,7 @@ namespace Neurotrauma
             UserData.RegisterType(typeof(NTStats.NTStatFloat));
             UserData.RegisterType(typeof(NTStats.NTStatLoader));
             UserData.RegisterType(typeof(NTItems));
+            UserData.RegisterType(typeof(NTItemsData));
             UserData.RegisterType(typeof(NTItems.ItemsAfflictionInfos));
             UserData.RegisterType(typeof(NTItems.ItemUpdateFunctionInfos));
             UserData.RegisterType(typeof(NTItems.NTItemFunctionLoader));
