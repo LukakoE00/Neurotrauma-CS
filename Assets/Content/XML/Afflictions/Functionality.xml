@@ -895,7 +895,7 @@
     <Effect minstrength="0" maxstrength="2" strengthchange="-1000">
         <StatusEffect target="Character" comparison="and" disabledeltatime="true" stackable="false" duration="3" checkconditionalalways="false">
           <Conditional analgesia="lte 0" anesthesia="lte 0" unconsciousness="lte 0"/>
-          <LuaHook name="NT.causeScreams" />
+          <LuaHook name="NTCS.CauseScreams" />
         </StatusEffect>
 
         <StatusEffect target="Character" multiplyafflictionsbymaxvitality="true" comparison="and" disabledeltatime="true" stackable="false" checkconditionalalways="true">

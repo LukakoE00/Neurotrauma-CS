@@ -1,15 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <ItemGroup>
-    <Reference Include="DedicatedServer">
-      <HintPath>..\Refs\OSX\DedicatedServer.dll</HintPath>
-    </Reference>
-    <Reference Include="BarotraumaCore">
-      <HintPath>..\Refs\OSX\BarotraumaCore.dll</HintPath>
-    </Reference>
-    <Reference Include="MonoGame.Framework.MacOS.NetStandard">
-      <HintPath>..\Refs\MonoGame.Framework.MacOS.NetStandard.dll</HintPath>
-    </Reference>
-  </ItemGroup>
+  <PropertyGroup>
+    <PlatformName>Mac</PlatformName>
+    <BuildTarget>Server</BuildTarget>
+  </PropertyGroup>
 
   <Import Project="..\SharedProject\SharedProject.projitems" Label="Shared" />
   <Import Project="../Build.props"/>

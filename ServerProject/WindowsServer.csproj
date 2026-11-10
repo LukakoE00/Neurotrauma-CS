@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="..\SharedProject\SharedProject.projitems" Label="Shared" />
-  <Import Project="../Build.props"/>
+  <Import Project="../Build.props" />
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <DefineConstants>TRACETRACE;SERVER;WINDOWS</DefineConstants>
@@ -10,17 +10,12 @@
     <DefineConstants>TRACETRACE;SERVER;WINDOWS</DefineConstants>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Reference Include="DedicatedServer">
-      <HintPath>..\Refs\Windows\DedicatedServer.dll</HintPath>
-    </Reference>
-    <Reference Include="BarotraumaCore">
-      <HintPath>..\Refs\Windows\BarotraumaCore.dll</HintPath>
-    </Reference>
-    <Reference Include="MonoGame.Framework.Windows.NetStandard">
-      <HintPath>..\Refs\MonoGame.Framework.Windows.NetStandard.dll</HintPath>
-    </Reference>
-  </ItemGroup>
+  <!-- Selects which Barotrauma/LuaCs reference assemblies are pulled from NuGet (see Build.props). -->
+  <PropertyGroup>
+    <PlatformName>Windows</PlatformName>
+    <BuildTarget>Server</BuildTarget>
+    <AssemblyName>Neurotrauma</AssemblyName>
+  </PropertyGroup>
 
   <Target Name="CopyFiles" AfterTargets="Build">
     <ItemGroup>

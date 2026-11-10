@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<infotexts language="English" nowhitespace="false" translatedname="English">
+    <!-- Sample Client Setting -->
+    <Neurotrauma.SampleSettingClient.DisplayName>Sample Client Setting</Neurotrauma.SampleSettingClient.DisplayName>
+    <Neurotrauma.SampleSettingClient.DisplayCategory>Sample</Neurotrauma.SampleSettingClient.DisplayCategory>
+    <Neurotrauma.SampleSettingClient.Tooltip>Sample tooltip!</Neurotrauma.SampleSettingClient.Tooltip>
+
+    <!-- Sample Server Setting -->
+    <Neurotrauma.SampleSettingServer.DisplayName>Sample Server Setting</Neurotrauma.SampleSettingServer.DisplayName>
+    <Neurotrauma.SampleSettingServer.DisplayCategory>Sample</Neurotrauma.SampleSettingServer.DisplayCategory>
+    <Neurotrauma.SampleSettingServer.Tooltip>Sample tooltip!</Neurotrauma.SampleSettingServer.Tooltip>
+
+    <!-- Sample Shared Setting -->
+    <Neurotrauma.SampleSettingShared.DisplayName>Sample Shared Setting</Neurotrauma.SampleSettingShared.DisplayName>
+    <Neurotrauma.SampleSettingShared.DisplayCategory>Sample</Neurotrauma.SampleSettingShared.DisplayCategory>
+    <Neurotrauma.SampleSettingShared.Tooltip>Sample tooltip!</Neurotrauma.SampleSettingShared.Tooltip>
+</infotexts>

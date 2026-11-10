@@ -1,34 +1,17 @@
 <Project>
-    <ItemGroup>
-        <!-- /Refs Path References-->
-        <Reference Include="Farseer.NetStandard">
-            <HintPath>..\Refs\Farseer.NetStandard.dll</HintPath>
-        </Reference>
-        <Reference Include="Lidgren.NetStandard">
-            <HintPath>..\Refs\Lidgren.NetStandard.dll</HintPath>
-        </Reference>
-        <Reference Include="Mono.Cecil">
-            <HintPath>..\Refs\Mono.Cecil.dll</HintPath>
-        </Reference>
-        <Reference Include="MoonSharp.Interpreter">
-            <HintPath>..\Refs\MoonSharp.Interpreter.dll</HintPath>
-        </Reference>
-        <Reference Include="XNATypes">
-            <HintPath>..\Refs\XNATypes.dll</HintPath>
-        </Reference>
+    <ItemGroup Condition="'$(BuildTarget)' != ''">
+      <PackageReference Include="Barotrauma.ReferenceAssemblies.Vanilla.Publicized" Version="*-*" PrivateAssets="all" />
+      <PackageReference Include="Barotrauma.ReferenceAssemblies.Libraries" Version="*-*" PrivateAssets="all" />
 
-        <!-- Luatrauuma NuGet Package References -->
-        <PackageReference Include="HarmonyX" Version="2.16.0" />
-        <PackageReference Include="LightInject" Version="6.6.4" />
-        <PackageReference Include="OneOf" Version="3.0.271" />
-        <PackageReference Include="FluentResults" Version="3.16.0" />
+      <PackageReference Include="LuaCsForBarotraumaPlugin.$(BuildTarget)" Version="*-*" />
+      <PackageReference Include="HarmonyX" Version="2.16.0" />
     </ItemGroup>
     
     <!-- User/Mod Settings -->
     <PropertyGroup>
-        <!-- IMPORTANT: Should point to <Barotrauma_Install>\LocalMods\<MyModName>\ -->
+        <!-- IMPORTANT: Should point to <Barotrauma_Install>\LocalMods\<Neurotrauma>\ -->
         <!-- IMPORTANT: ModDeplyDir Path must end with '\' -->
-		<ModDeployDir>D:\SteamLibrary\steamapps\common\Barotrauma\LocalMods\Neurotrauma CS\</ModDeployDir>
+        <ModDeployDir>D:\SteamLibrary\steamapps\common\Barotrauma\LocalMods\Neurotrauma CS\</ModDeployDir>
         <!-- IMPORTANT: Avoid the use of special (IE: / : ; , \ < > ?) (periods "." are good) and non-english characters in the AssemblyName and RootNamespace.-->
         <!-- You must also change the assembly.dll name in ModConfig.xml to match the AssemblyName. -->
         <AssemblyName>Neurotrauma</AssemblyName>

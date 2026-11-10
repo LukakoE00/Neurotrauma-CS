@@ -11,7 +11,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Content\DefaultConfigs\" />
+      <Compile Remove="Content\DefaultConfigs\**" />
+      <EmbeddedResource Remove="Content\DefaultConfigs\**" />
+      <None Remove="Content\DefaultConfigs\**" />
     </ItemGroup>
 
     <Import Project="../Build.props" />

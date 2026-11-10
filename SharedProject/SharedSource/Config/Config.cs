@@ -49,7 +49,7 @@ namespace Neurotrauma
 
         private static readonly string PresetDirectoryPath = Path.Combine(SaveUtil.DefaultSaveFolder, "ModConfigs", "Neurotrauma Configs").Replace('\\', '/');
 
-        private static readonly string DefaultPresetDirectory = Path.Combine(NeurotraumaInit.NeurotraumaModDir, "DefaultPresets").Replace('\\', '/');
+        private static readonly string DefaultPresetDirectory = Path.Combine(Initialization.NeurotraumaModDir, "DefaultPresets").Replace('\\', '/');
         private static readonly string DefaultPresetDirectoryFull = Path.GetFullPath(DefaultPresetDirectory).Replace('\\', '/');
 
         private static readonly string DefaultConfigFilePath = Path.Combine(DefaultPresetDirectory, "Intended Config Preset.json").Replace('\\', '/');

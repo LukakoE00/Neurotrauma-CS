@@ -1,0 +1,714 @@
+﻿using Barotrauma.Items.Components;
+using FarseerPhysics.Dynamics;
+
+namespace Neurotrauma;
+
+public static class OnDamaged
+{
+    public static readonly Dictionary<string, Action<Character, float, LimbType>> OnDamagedMethods = new();
+
+    public static readonly List<Func<CharacterHealth, List<Affliction>, Limb, List<Affliction>>> ModifyingOnDamagedHooks = new();
+
+    public static readonly List<Action<CharacterHealth, AttackResult, Limb>> OnDamagedHooks = new();
+
+    private static bool HasLungs(Character C) => !(HF.HasAffliction(C, "lungremoved"));
+
+    private static bool HasHeart(Character C) => !(HF.HasAffliction(C, "heartremoved"));
+
+    /// <summary>
+    /// Reduces Concussion amount based on worn armor.
+    /// </summary>
+    /// <param name="Armor">Item ID of worn armor.</param>
+    /// <param name="Strength">Amount of Strength of the Concussion Affliction.</param>
+    /// <returns></returns>
+    public static float GetCalculatedConcussionReduction(Item Armor, float Strength)
+    {
+        if (Armor == null)
+        {
+            return 0f;
+        }
+
+        if (!Armor.HasTag("deepdiving".ToIdentifier()) &&
+            !Armor.HasTag("deepdivinglarge".ToIdentifier()) &&
+            !Armor.HasTag("smallitem".ToIdentifier()))
+        {
+            return 0f;
+        }
+
+        var wearable = Armor.GetComponent<Wearable>();
+        if (wearable == null)
+        {
+            return 0f;
+        }
+
+        foreach (var modifier in wearable.DamageModifiers)
+        {
+            if (modifier.AfflictionIdentifiers.Contains("concussion"))
+            {
+                return Strength - (Strength * modifier.DamageMultiplier);
+            }
+        }
+
+        return 0f;
+    }
+
+    public static void Override_DamageLimb(
+    Character __instance,
+    Vector2 worldPosition,
+    Limb hitLimb,
+    IEnumerable<Affliction> afflictions,
+    float stun,
+    bool playSound,
+    Vector2 attackImpulse,
+    Character ?attacker = null,
+    float damageMultiplier = 1f,
+    bool allowStacking = true,
+    float penetration = 0f,
+    bool shouldImplode = false,
+    bool ignoreDamageOverlay = false,
+    bool recalculateVitality = true)
+    {
+        // Confirm the attack data is valid.
+        if (__instance == null || __instance.IsDead || !(__instance.IsHuman) ||
+            afflictions == null ||
+            hitLimb == null || hitLimb.IsSevered ||
+            attacker == null ||
+            !(NTConfig.Get("NT_Calculations", true)))
+        {
+            return;
+        }
+
+        // Pull the Evil Falldamage abusing creatures from config.
+        var CreatureCategory = NTConfig.Get("NT_creatureNoFallDamage", Enumerable.Empty<string>());
+
+        // If one of these critters caused the attack, counteract the additional damage.
+        foreach (string Species in CreatureCategory)
+        {
+            if (attacker.SpeciesName == Species)
+            {
+                HF.AddAffliction(__instance, "stopcreatureabuse", 2f);
+                break;
+            }
+        }
+    }
+
+    public static void Override_ApplyDamage(
+        CharacterHealth __instance,
+        Limb hitLimb,
+        AttackResult attackResult,
+        bool allowStacking = true,
+        bool recalculateVitality = true)
+    {
+        // Confirm the attack data is valid.
+        if (__instance == null || __instance.Character == null || __instance.Character.IsDead || !(__instance.Character.IsHuman) ||
+            attackResult.Afflictions == null || !(attackResult.Afflictions.Any()) ||
+            hitLimb == null || hitLimb.IsSevered ||
+            !NTConfig.Get("NT_Calculations", true))
+        {
+            return;
+        }
+
+        // Check for Luabotomy.
+        if (!HF.HasAffliction(__instance.Character, "luabotomy"))
+        {
+            HF.SetAffliction(__instance.Character, "luabotomy", 1f);
+        }
+
+        foreach (var hook in NTC.OnDamagedHooks)
+        {
+            try
+            {
+                hook(__instance, attackResult, hitLimb);
+            } catch (Exception e)
+            {
+                HF.PrintError("[Lua] Error in OnDamaged Hook: " + e.Message);
+                continue;
+            }
+            
+        }
+
+        List<Affliction> Afflictions = attackResult.Afflictions;
+
+        // NT Compatibility Modifying OnDamaged Hooks
+        foreach (var hook in OnDamaged.ModifyingOnDamagedHooks)
+        {
+            Afflictions = hook(__instance, Afflictions, hitLimb);
+        }
+
+        // Run the method corresponding to the identifier (if it exists)
+        foreach (Affliction affliction in Afflictions)
+        {
+            string Identifier = affliction.Prefab.Identifier.Value;
+
+            if (OnDamaged.OnDamagedMethods.TryGetValue(Identifier, out var method))
+            {
+                float Resistance = HF.GetResistance(__instance.Character, Identifier, hitLimb.type);
+                float Strength = ((float)HF.NormalizeDouble((double)affliction.Strength * (1f - Resistance)));
+                method(__instance.Character, Strength, hitLimb.type);
+            }
+        }
+
+        // NT Compatibility OnDamaged Hooks
+        foreach (var hook in OnDamaged.OnDamagedHooks)
+        {
+            hook(__instance, attackResult, hitLimb);
+        }
+    }
+
+    public static void InitializeOnDamagedMethods()
+    {
+        OnDamagedMethods["gunshotwound"] = GunshotWound;
+        OnDamagedMethods["explosiondamage"] = ExplosionDamage;
+        OnDamagedMethods["bitewounds"] = BiteWounds;
+        OnDamagedMethods["lacerations"] = Lacerations;
+        OnDamagedMethods["blunttrauma"] = BluntTrauma;
+        OnDamagedMethods["internaldamage"] = InternalDamage;
+    }
+
+    // Causes Foreign Bodies, Rib Fractures, Pneumothorax, Tamponade, Internal Bleeding, Fractures, Neurotrauma
+    public static void GunshotWound(Character Character, float Strength, LimbType LimbType)
+    {
+        // Normalize just in case
+        LimbType = HF.NormalizeLimbType(LimbType);
+
+        bool CauseFullForeignBody = false;
+
+        // Deal with Multipliers
+        NTHuman? NTCharacter = NTHuman.getNTHumanFromCharacter(Character);
+
+        // Torso-specific injuries
+        if (Strength >= 1 && LimbType == LimbType.Torso)
+        {
+            bool hitOrgan = false;
+
+            // Rib Injuries
+            if (HF.Chance(Math.Clamp(Strength * 0.02f, 0f, 0.3f)))
+            {
+                HF.BreakLimb(Character, LimbType);
+                CauseFullForeignBody = true;
+            }
+
+            // Lung Injuries
+            if (HasLungs(Character) && HF.Chance(0.3f))
+            {
+                HF.AddAffliction(Character, "pneumothorax", 5);
+                HF.AddAffliction(Character, "lungdamage", Strength);
+                HF.AddAffliction(Character, "organdamage", Strength / 4);
+                hitOrgan = true;
+            }
+
+            // Heart Injuries
+            if (HasHeart(Character) && !hitOrgan && Strength >= 5 && HF.Chance(Strength / 50f))
+            {
+                HF.AddAffliction(Character, "tamponade", 5);
+                HF.AddAffliction(Character, "heartdamage", Strength);
+                HF.AddAffliction(Character, "organdamage", Strength / 4);
+                hitOrgan = true;
+            }
+
+            // Liver + Kidney Injuries
+            if (!hitOrgan && Strength >= 2 && HF.Chance(0.5f))
+            {
+                HF.AddAfflictionLimb(Character, "organdamage", LimbType, Strength / 4);
+                HF.AddAffliction(Character, "infectedcavity", 5);
+
+                if (HF.Chance(0.5f))
+                {
+                    HF.AddAffliction(Character, "liverdamage", Strength);
+                }
+                else
+                {
+                    HF.AddAffliction(Character, "kidneydamage", Strength);
+                }
+            }
+
+            // Internal Bleeding
+            if (Strength >= 5)
+            {
+                HF.AddAffliction(Character, "internalbleeding", Strength * HF.RandomRange(0.3f, 0.6f));
+            }
+        }
+
+        // Head-specific injuries
+        if (Strength >= 1 && LimbType == LimbType.Head)
+        {
+            if (HF.Chance(Strength / 90f))
+            {
+                HF.BreakLimb(Character, LimbType);
+                CauseFullForeignBody = true;
+            }
+
+            if (Strength >= 5 && HF.Chance(0.7f))
+            {
+                HF.AddAffliction(Character, "neurotrauma", Strength * HF.RandomRange(0.1f, 0.4f));
+            }
+        }
+
+        // Extremity-specific injuries
+        if (Strength >= 1 && HF.LimbIsExtremity(LimbType))
+        {
+            if (HF.LimbIsBroken(Character, LimbType, false) && !(HF.LimbIsAmputated(Character, LimbType)) && HF.Chance(Strength / 60f))
+            {
+                HF.TraumamputateLimbAndGenerateItem(Character, LimbType, null);
+            }
+
+            if (HF.Chance(Strength / 60f))
+            {
+                HF.BreakLimb(Character, LimbType);
+                CauseFullForeignBody = true;
+            }
+        }
+
+        // Foreign Bodies
+        if (CauseFullForeignBody)
+        {
+            HF.AddAfflictionLimb(Character, "foreignbody", LimbType, Math.Clamp(Strength, 0, 30));
+        }
+        else if (HF.Chance(0.75f))
+        {
+            HF.AddAfflictionLimb(Character, "foreignbody", LimbType, Math.Clamp(Strength / 4f, 0, 20));
+        }
+
+        FallOffChair(NTCharacter, Character, Strength);
+    }
+
+    // Causes Foreign Bodies, Rib Fractures, Pneumothorax, Internal Bleeding, Fractures
+    public static void ExplosionDamage(Character Character, float Strength, LimbType LimbType)
+    {
+        // Normalize just in case
+        LimbType = HF.NormalizeLimbType(LimbType);
+
+        // Deal with Multipliers
+        NTHuman ?NTCharacter = NTHuman.getNTHumanFromCharacter(Character);
+
+        // Possible Foreign Bodies
+        if (HF.Chance(0.75f))
+        {
+            HF.AddAfflictionLimb(Character, "foreignbody", LimbType, Strength / 2f * (float)(NTC.GetMultiplier(NTCharacter, "foreignbodymultiplier")));
+        }
+
+        // Torso-specific injuries
+        if (Strength >= 1 && LimbType == LimbType.Torso)
+        {
+            // Fractures
+            if (Strength >= 10 && HF.Chance(Strength / 50f * (float)NTC.GetMultiplier(NTCharacter, "anyfracturechance") * NTConfig.Get("NT_fractureChance", 1f)))
+            {
+                HF.BreakLimb(Character, LimbType);
+            }
+
+            // Pneumothorax
+            if (HasLungs(Character) && Strength >= 5 && HF.Chance(Strength / 50f * (float)NTC.GetMultiplier(NTCharacter, "pneumothoraxchance") * NTConfig.Get("NT_pneumothoraxChance", 1f)))
+            {
+                HF.AddAffliction(Character, "pneumothorax", 5);
+            }
+
+            // Internal Bleeding
+            if (Strength >= 5)
+            {
+                HF.AddAffliction(Character, "internalbleeding", Strength * HF.RandomRange(0.2f, 0.5f));
+            }
+        }
+
+        // Head-specific injuries
+        if (Strength >= 1 && LimbType == LimbType.Head)
+        {
+            // Concussion (Armor-Reduced)
+            if (Strength >= 15 && HF.Chance(Math.Min(Strength / 60f, 0.7f)))
+            {
+                var OuterClothes = HF.GetItemInOuterWear(Character);
+                var HeadWear = HF.GetItemInHeadWear(Character);
+
+                float Reduction = Math.Max(10f - GetCalculatedConcussionReduction(OuterClothes, 10f) - GetCalculatedConcussionReduction(HeadWear, 10f), 0f);
+
+                HF.AddAfflictionResisted(Character, "concussion", Reduction);
+            }
+
+            // Fractured Skull
+            if (Strength >= 15 && HF.Chance(Math.Min(Strength / 60f, 0.7f) * (float)NTC.GetMultiplier(NTCharacter, "anyfracturechance") * NTConfig.Get("NT_fractureChance", 1f)))
+            {
+                HF.BreakLimb(Character, LimbType);
+            }
+
+            // Neck Fracture
+            if (Strength >= 15 && HF.Chance(Math.Min(Strength / 60f, 0.7f) * (float)NTC.GetMultiplier(NTCharacter, "anyfracturechance") * NTConfig.Get("NT_fractureChance", 1f)))
+            {
+                HF.AddAffliction(Character, "fracturedneck", 5);
+            }
+
+            // Remove the head
+            if (Strength >= 75 && HF.Chance(0.25f))
+            {
+                HF.GetItemInHeadWear(Character)?.Drop(Character, true);
+                HF.GetItemInHeadSet(Character)?.Drop(Character, true);
+
+                HF.TraumamputateLimbAndGenerateItem(Character, LimbType, null);
+            }
+        }
+
+        // Extremities
+        if (Strength >= 1 && HF.LimbIsExtremity(LimbType))
+        {
+            // Traumatic Amputations
+            if (HF.LimbIsBroken(Character, LimbType, false) 
+                && !HF.LimbIsAmputated(Character, LimbType) 
+                && HF.Chance(Strength / 60f * (float)NTC.GetMultiplier(NTCharacter, "traumamputatechance") * NTConfig.Get("NT_traumaticAmputationChance", 1f)))
+            {
+                HF.TraumamputateLimbAndGenerateItem(Character, LimbType, null);
+            }
+
+            // Fractures
+            if (HF.Chance(Strength / 60f * (float)NTC.GetMultiplier(NTCharacter, "anyfracturechance") * NTConfig.Get("NT_fractureChance", 1f)))
+            {
+                HF.BreakLimb(Character, LimbType);
+            }
+
+            // Dislocations
+            if (HF.Chance(0.35f * (float)NTC.GetMultiplier(NTCharacter, "dislocationchance") * NTConfig.Get("NT_dislocationChance", 1f)) && !HF.LimbIsAmputated(Character, LimbType))
+            {
+                HF.DislocateLimb(Character, LimbType);
+            }
+        }
+
+        FallOffChair(NTCharacter,Character,Strength,25);
+    }
+
+    // Causes Rib Fractures, Pneumothorax, Internal Bleeding, Concussion, Fractures
+    public static void BiteWounds(Character Character, float Strength, LimbType LimbType)
+    {
+        // Normalize just in case
+        LimbType = HF.NormalizeLimbType(LimbType);
+
+        // Deal with Multipliers
+        var NTCharacter = NTHuman.getNTHumanFromCharacter(Character);
+
+        // Torso-specific injuries
+        if (Strength >= 1 && LimbType == LimbType.Torso)
+        {
+            // Rib fractures
+            if (Strength >= 10 && HF.Chance((Strength - 10f) / 50f * (float)NTC.GetMultiplier(NTCharacter, "anyfracturechance") * NTConfig.Get("NT_fractureChance", 1f)))
+            {
+                HF.BreakLimb(Character, LimbType);
+            }
+
+            // Pneumothorax
+            if (HasLungs(Character) && Strength >= 5 && HF.Chance((Strength - 5f) / 50f * (float)NTC.GetMultiplier(NTCharacter, "pneumothoraxchance") * NTConfig.Get("NT_pneumothoraxChance", 1f)))
+            {
+                HF.AddAffliction(Character, "pneumothorax", 5);
+            }
+
+            // Internal Bleeding
+            if (Strength >= 5)
+            {
+                HF.AddAffliction(Character, "internalbleeding", Strength * HF.RandomRange(0.2f, 0.5f));
+            }
+        }
+
+        // Head-specific injuries
+        if (Strength >= 1 && LimbType == LimbType.Head)
+        {
+            // Concussion (Armor-Reduced)
+            if (Strength >= 15 && HF.Chance(Math.Min(Strength / 60f, 0.7f)))
+            {
+                var OuterClothes = HF.GetItemInOuterWear(Character);
+                var HeadWear = HF.GetItemInHeadWear(Character);
+
+                float Reduction = Math.Max(10f - GetCalculatedConcussionReduction(OuterClothes, 10f) - GetCalculatedConcussionReduction(HeadWear, 10f), 0f);
+
+                HF.AddAfflictionResisted(Character, "concussion", Reduction);
+            }
+
+            // Fractured Skull
+            if (Strength >= 15 && HF.Chance(Math.Min((Strength - 10f) / 60f, 0.7f) * (float)NTC.GetMultiplier(NTCharacter, "anyfracturechance") * NTConfig.Get("NT_fractureChance", 1f)))
+            {
+                HF.BreakLimb(Character, LimbType);
+            }
+        }
+
+        // Extremities
+        if (Strength >= 1 && HF.LimbIsExtremity(LimbType))
+        {
+            // Traumatic Amputation
+            if (HF.LimbIsBroken(Character, LimbType, false) 
+                && !(HF.LimbIsAmputated(Character, LimbType)) 
+                && HF.Chance((Strength - 5f) / 60f * (float)NTC.GetMultiplier(NTCharacter, "traumamputatechance") * NTConfig.Get("NT_traumaticAmputationChance", 1f)))
+            {
+                HF.TraumamputateLimbAndGenerateItem(Character, LimbType, Character.LastAttacker);
+            }
+
+            // Fractures
+            if (HF.Chance((Strength - 5f) / 60f * (float)NTC.GetMultiplier(NTCharacter, "anyfracturechance") * NTConfig.Get("NT_fractureChance", 1f)))
+            {
+                HF.BreakLimb(Character, LimbType);
+            }
+        }
+    }
+
+    // Causes Rib Fractures, Pneumothorax, Tamponade, Internal Bleeding, Fractures
+    public static void Lacerations(Character Character, float Strength, LimbType LimbType)
+    {
+        // Normalize just in case
+        LimbType = HF.NormalizeLimbType(LimbType);
+
+        // Deal with Multipliers
+        var NTCharacter = NTHuman.getNTHumanFromCharacter(Character);
+
+        // Torso-specific injuries
+        if (Strength >= 1 && LimbType == LimbType.Torso)
+        {
+            // Rib fractures
+            if (Strength >= 10 && HF.Chance((Strength - 10f) / 50f * (float)NTC.GetMultiplier(NTCharacter, "anyfracturechance") * NTConfig.Get("NT_fractureChance", 1f)))
+            {
+                HF.BreakLimb(Character, LimbType);
+            }
+
+            // Pneumothorax
+            if (HasLungs(Character) && Strength >= 5 && HF.Chance((Strength - 5f) / 50f * (float)NTC.GetMultiplier(NTCharacter, "pneumothoraxchance") * NTConfig.Get("NT_pneumothoraxChance", 1f)))
+            {
+                HF.AddAffliction(Character, "pneumothorax", 5);
+            }
+
+            // Tamponade
+            if (HasHeart(Character) && Strength >= 5 && HF.Chance((Strength - 5f) / 50f * (float)NTC.GetMultiplier(NTCharacter, "tamponadechance") * NTConfig.Get("NT_tamponadeChance", 1f)))
+            {
+                HF.AddAffliction(Character, "tamponade", 5);
+            }
+
+            // Internal bleeding
+            if (Strength >= 5)
+            {
+                HF.AddAffliction(Character, "internalbleeding", Strength * HF.RandomRange(0.2f, 0.5f));
+            }
+        }
+
+        // Head-specific injuries
+        if (Strength >= 1 && LimbType == LimbType.Head)
+        {
+            if (Strength >= 15 && HF.Chance(Math.Min((Strength - 15f) / 60f, 0.7f) * (float)NTC.GetMultiplier(NTCharacter, "anyfracturechance") * NTConfig.Get("NT_fractureChance", 1f)))
+            {
+                HF.BreakLimb(Character, LimbType);
+            }
+        }
+
+        // Extremities
+        if (Strength >= 1 && HF.LimbIsExtremity(LimbType))
+        {
+            // Traumatic amputation
+            if (HF.LimbIsBroken(Character, LimbType, false)
+                && !HF.LimbIsAmputated(Character, LimbType)
+                && HF.Chance(Strength / 60f * (float)NTC.GetMultiplier(NTCharacter, "traumamputatechance") * NTConfig.Get("NT_traumaticAmputationChance", 1f)))
+            {
+                HF.TraumamputateLimbAndGenerateItem(Character, LimbType, null);
+            }
+
+            // Fractures
+            if (HF.Chance((Strength - 5f) / 60f * (float)NTC.GetMultiplier(NTCharacter, "anyfracturechance") * NTConfig.Get("NT_fractureChance", 1f)))
+            {
+                HF.BreakLimb(Character, LimbType);
+            }
+        }
+    }
+
+    // Causes Rib Fractures, Organ Damage, Pneumothorax, Concussion, Fractures, Neurotrauma
+    public static void BluntTrauma(Character Character, float Strength, LimbType LimbType)
+    {
+        // Normalize just in case
+        LimbType = HF.NormalizeLimbType(LimbType);
+
+        // Deal with Multipliers
+        NTHuman? NTCharacter = NTHuman.getNTHumanFromCharacter(Character);
+
+        bool FractureImmune = HF.HasAffliction(Character, "cpr_fracturebuff");
+
+        // Torso
+        if (!FractureImmune && Strength >= 1 && LimbType == LimbType.Torso)
+        {
+            // Fractured Ribs
+            if (HF.Chance(Strength / 50f * (float)NTC.GetMultiplier(NTCharacter, "anyfracturechance") * NTConfig.Get("NT_fractureChance", 1f)))
+            {
+                HF.BreakLimb(Character, LimbType);
+            }
+
+            // Specific Organ Damage
+            HF.AddAffliction(Character, "lungdamage", Strength * HF.RandomRange(0f, 1f));
+            HF.AddAffliction(Character, "heartdamage", Strength * HF.RandomRange(0f, 1f));
+            HF.AddAffliction(Character, "liverdamage", Strength * HF.RandomRange(0f, 1f));
+            HF.AddAffliction(Character, "kidneydamage", Strength * HF.RandomRange(0f, 1f));
+            HF.AddAffliction(Character, "organdamage", Strength * HF.RandomRange(0f, 1f));
+
+            // Pneumothorax
+            if (HasLungs(Character) && Strength >= 5 && HF.Chance(
+                Strength / 50f * (float)NTC.GetMultiplier(NTCharacter, "pneumothoraxchance") * NTConfig.Get("NT_pneumothoraxChance", 1f)))
+            {
+                HF.AddAffliction(Character, "pneumothorax", 5);
+            }
+        }
+
+        // Head
+        if (!FractureImmune && Strength >= 1 && LimbType == LimbType.Head)
+        {
+            // Concussion (Armor-Reduced)
+            if (Strength >= 15 && HF.Chance(Math.Min(Strength / 60f, 0.7f)))
+            {
+                var OuterClothes = HF.GetItemInOuterWear(Character);
+                var HeadWear = HF.GetItemInHeadWear(Character);
+
+                float Reduction = Math.Max(10f - GetCalculatedConcussionReduction(OuterClothes, 10f) - GetCalculatedConcussionReduction(HeadWear, 10f), 0f);
+
+                HF.AddAfflictionResisted(Character, "concussion", Reduction);
+            }
+
+            // Fractured Skull
+            if (Strength >= 15 && HF.Chance(Math.Min((Strength - 10f) / 60f, 0.7f) * (float)NTC.GetMultiplier(NTCharacter, "anyfracturechance") * NTConfig.Get("NT_fractureChance", 1f)))
+            {
+                HF.BreakLimb(Character, LimbType);
+            }
+
+            // Fractured Neck
+            if (Strength >= 15 && HF.Chance(Math.Min((Strength - 10f) / 60f, 0.7f) * (float)NTC.GetMultiplier(NTCharacter, "anyfracturechance") * NTConfig.Get("NT_fractureChance", 1f)))
+            {
+                HF.AddAffliction(Character, "fracturedneck", 5);
+            }
+
+            // Neurotrauma
+            if (Strength >= 5 && HF.Chance(0.7f))
+            {
+                HF.AddAffliction(Character, "neurotrauma", Strength * HF.RandomRange(0.1f, 0.4f));
+            }
+        }
+
+        // Extremities
+        if (!FractureImmune && Strength >= 1 && HF.LimbIsExtremity(LimbType))
+        {
+            // Traumatic Amputation
+            if (Strength > 15
+                && HF.LimbIsBroken(Character, LimbType, false)
+                && !(HF.LimbIsAmputated(Character, LimbType))
+                && HF.Chance(Strength / 100f * (float)NTC.GetMultiplier(NTCharacter, "traumamputatechance") * NTConfig.Get("NT_traumaticAmputationChance", 1f)))
+            {
+                HF.TraumamputateLimbAndGenerateItem(Character, LimbType, null);
+            }
+
+            // Fractures
+            if (HF.Chance((Strength - 2f) / 60f * (float)NTC.GetMultiplier(NTCharacter, "anyfracturechance") * NTConfig.Get("NT_fractureChance", 1f)))
+            {
+                HF.BreakLimb(Character, LimbType);
+            }
+
+            // Dislocation
+            if (HF.Chance(Math.Clamp((Strength - 2f) / 80f, 0f, 0.5f)
+                * (float)NTC.GetMultiplier(NTCharacter, "dislocationchance")
+                * NTConfig.Get("NT_dislocationChance", 1f))
+                && !(HF.LimbIsAmputated(Character, LimbType)))
+            {
+                HF.DislocateLimb(Character, LimbType);
+            }
+        }
+
+        FallOffChair(NTCharacter, Character, Strength, 30);
+    }
+
+    // Causes Rib Fractures, Organ Damage, Pneumothorax, Concussion, Fractures
+    public static void InternalDamage(Character Character, float Strength, LimbType LimbType)
+    {
+        // Normalize just in case
+        LimbType = HF.NormalizeLimbType(LimbType);
+
+        // Deal with Multipliers
+        var NTCharacter = NTHuman.getNTHumanFromCharacter(Character);
+
+        // Torso
+        if (Strength >= 1 && LimbType == LimbType.Torso)
+        {
+            // Fractured Ribs
+            if (HF.Chance((Strength - 5f) / 50f * (float)NTC.GetMultiplier(NTCharacter, "anyfracturechance") * NTConfig.Get("NT_fractureChance", 1f)))
+            {
+                HF.BreakLimb(Character, LimbType);
+            }
+
+            // Specific Organ Damage
+            HF.AddAffliction(Character, "lungdamage", Strength * HF.RandomRange(0f, 1f));
+            HF.AddAffliction(Character, "heartdamage", Strength * HF.RandomRange(0f, 1f));
+            HF.AddAffliction(Character, "liverdamage", Strength * HF.RandomRange(0f, 1f));
+            HF.AddAffliction(Character, "kidneydamage", Strength * HF.RandomRange(0f, 1f));
+            HF.AddAffliction(Character, "organdamage", Strength * HF.RandomRange(0f, 1f));
+
+            // Pneumothorax
+            if (HasLungs(Character) && Strength >= 5 && HF.Chance(
+                (Strength - 5f) / 50f * (float)NTC.GetMultiplier(NTCharacter, "pneumothoraxchance") * NTConfig.Get("NT_pneumothoraxChance", 1f)))
+            {
+                HF.AddAffliction(Character, "pneumothorax", 5);
+            }
+        }
+
+        // Head
+        if (Strength >= 1 && LimbType == LimbType.Head)
+        {
+            // Concussion (Armor-Reduced)
+            if (Strength >= 15 && HF.Chance(Math.Min(Strength / 60f, 0.7f)))
+            {
+                var OuterClothes = HF.GetItemInOuterWear(Character);
+                var HeadWear = HF.GetItemInHeadWear(Character);
+
+                float Reduction = Math.Max(10f - GetCalculatedConcussionReduction(OuterClothes, 10f) - GetCalculatedConcussionReduction(HeadWear, 10f), 0f);
+
+                HF.AddAfflictionResisted(Character, "concussion", Reduction);
+            }
+
+            // Fractured Skull
+            if (Strength >= 15 && HF.Chance(Math.Min((Strength - 5f) / 60f, 0.7f) * (float)NTC.GetMultiplier(NTCharacter, "anyfracturechance") * NTConfig.Get("NT_fractureChance", 1f)))
+            {
+                HF.BreakLimb(Character, LimbType);
+            }
+
+            // Fractured Neck
+            if (Strength >= 15 && HF.Chance(Math.Min((Strength - 5f) / 60f, 0.7f) * (float)NTC.GetMultiplier(NTCharacter, "anyfracturechance") * NTConfig.Get("NT_fractureChance", 1f)))
+            {
+                HF.AddAffliction(Character, "fracturedneck", 5);
+            }
+        }
+
+        // Extremities
+        if (Strength >= 1 && HF.LimbIsExtremity(LimbType))
+        {
+            // Traumatic Amputation
+            if (Strength > 10
+                && HF.LimbIsBroken(Character, LimbType, false)
+                && !(HF.LimbIsAmputated(Character, LimbType))
+                && HF.Chance((Strength - 10f) / 60f * (float)NTC.GetMultiplier(NTCharacter, "traumamputatechance") * NTConfig.Get("NT_traumaticAmputationChance", 1f)))
+            {
+                HF.TraumamputateLimbAndGenerateItem(Character, LimbType, null);
+            }
+
+            // Fractures
+            if (HF.Chance((Strength - 5f) / 60f * (float)NTC.GetMultiplier(NTCharacter, "anyfracturechance") * NTConfig.Get("NT_fractureChance", 1f)))
+            {
+                HF.BreakLimb(Character, LimbType);
+            }
+
+            // Dislocations
+            if (HF.Chance(0.25f * (float)NTC.GetMultiplier(NTCharacter, "dislocationchance") * NTConfig.Get("NT_dislocationChance", 1f)) && !(HF.LimbIsAmputated(Character, LimbType)))
+            {
+                HF.DislocateLimb(Character, LimbType);
+            }
+        }
+    }
+
+    private static void FallOffChair(NTHuman NTCharacter, Character Character, double Strength, double MinimumStrength = 20)
+    {
+        // TODO: make it work
+        return;
+        if (NTCharacter != null && HF.IsCharacterValid(Character))
+        {
+            if (NTCharacter.GetAffliction("onwheelchair").Strength > 0 && Strength > MinimumStrength)
+            {
+                Item WheelChair = HF.GetItemInOuterWear(Character);
+                if (WheelChair == null) return;
+                WheelChair.Drop(Character);
+                Vector2 CharacterDirection = HF.GetCharacterLimb(Character, LimbType.Torso).LinearVelocity;
+                WheelChair.body.ApplyLinearImpulse(CharacterDirection * 15); // Move the wheel chair in the direction of the damage.
+                WheelChair.body.ApplyTorque((float)HF.Magnitude(CharacterDirection * 5));
+                NTCharacter.GetAffliction("onwheelchair").Strength = 0;
+            }
+        }
+    }
+}

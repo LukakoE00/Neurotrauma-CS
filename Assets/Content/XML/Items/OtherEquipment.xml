@@ -352,7 +352,7 @@
         <ItemComponent>
             <StatusEffect type="OnSpawn" target="This" disabledeltatime="true">
                 <Conditional scale="0.4" />
-                <LuaHook name="NT.medstartercrate.spawn" />
+                <LuaHook name="NTCS.SpawnMedicalStarterCrate" />
             </StatusEffect>
         </ItemComponent>
     </Item>
