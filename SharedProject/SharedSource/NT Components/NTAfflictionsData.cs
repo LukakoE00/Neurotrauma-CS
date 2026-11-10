@@ -4095,7 +4095,7 @@ public class NTAfflictionsToAdd
 
                 C.SetAffliction(ID, HF.BoolToNum(keep, 2f));
 
-                if (!keep) C.SetAffliction(ID, 0);
+                if (!keep) C.SetSymptomFalse(ID);
 
             })
             .Build()
