@@ -4088,18 +4088,14 @@ public class NTAfflictionsToAdd
 
                 // Readability / 10 ?
                 bool keep = C.GetAfflictionStrength("unconsciousness") <= 0
-                        && (!C.Human.IsClimbing)
-                        && (C.HasSymptom("forceprone")
-                            || (C.GetBoolStat("lockleftleg")
-                            && C.GetBoolStat("lockrightleg")
-                            && (!C.GetBoolStat("wheelchaired")))
-                        );
+                    && !C.Human.IsClimbing
+                    && !(C.GetBoolStat("wheelchaired"))
+                    && (C.HasSymptom("forceprone")
+                    || (C.GetBoolStat("lockleftleg") && C.GetBoolStat("lockrightleg")));
 
                 C.SetAffliction(ID,HF.BoolToNum(keep, 2f));
 
-                if (!keep) C.SetSymptomFalse(ID);
-
-                
+                if (!keep) C.SetAffliction(ID, 0);
 
             })
             .Build()

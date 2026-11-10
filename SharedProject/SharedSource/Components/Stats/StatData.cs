@@ -147,7 +147,7 @@ public partial class NTStats
         l.Add(new NTStatBool("wheelchaired", false, (C, dt) =>
         {
             Item OutWearItem = HF.GetItemInOuterWear(C.Human);
-            bool Res = (OutWearItem != null && OutWearItem.Prefab.Identifier.Value == "wheelchair") ? true : false;
+            bool Res = (OutWearItem != null && OutWearItem.Prefab.Identifier.Value == "nt_wheelchair") ? true : false;
 
             if (Res)
             {
