@@ -105,6 +105,22 @@ public class NTAfflictionsToAdd
                 {
                     C.SetSymptomTrue("nausea_nt", 2);
                 }
+
+                // Burns
+                float radsickburns = (max(0, strength - 50) / 20 * dT) / 6;
+
+                foreach (LimbType Limb in HF.LimbsToCheck)
+                {
+                    C.AddAfflictionLimb("burn", Limb, radsickburns);
+                }
+
+                // Bleeding
+                float radsickbleeds = (max(0, strength - 70) / 30 * dT) / 6;
+
+                foreach (LimbType Limb in HF.LimbsToCheck)
+                {
+                    C.AddAfflictionLimb("bleeding", Limb, radsickbleeds);
+                }
             })
             .Build()); 
 
