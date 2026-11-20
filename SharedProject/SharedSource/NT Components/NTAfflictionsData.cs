@@ -105,6 +105,18 @@ public class NTAfflictionsToAdd
                 {
                     C.SetSymptomTrue("nausea_nt", 2);
                 }
+
+                // Burns
+                if (strength > 75)
+                {
+                    C.AddAffliction("burn", 1);
+                }
+
+                // Bleeding
+                if (strength > 90)
+                {
+                    C.AddAffliction("bleeding", 0.8);
+                }
             })
             .Build()); 
 
