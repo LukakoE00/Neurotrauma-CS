@@ -27,7 +27,7 @@ public partial class NTStats
                 + Math.Max(C.GetAfflictionStrength("radiationsickness") - 25, 0) / 400
                )
                 * NTC.GetMultiplier(C.Human, "anyorgandamage")
-                * NTConfig.Get("NT_OrganDamageGain", 1)
+                * NTConfig.Get("NT_organDamageGain", 1)
                 * dt;
         }));
 
@@ -77,7 +77,7 @@ public partial class NTStats
             float Res = 1;
             if (C.GetAfflictionStrength("spinalcordinjury") > 0) Res = -9001f; // Wow, I find this to be a bit overkill    // It indeed might be overkill -Cookie
             if (C.GetAfflictionStrength("vomiting") > 0) Res *= .8f;
-            if (C.GetAfflictionStrength("nausea") > 0) Res *= .9f;
+            if (C.GetAfflictionStrength("nausea_nt") > 0) Res *= .9f;
             if (C.GetAfflictionStrength("anesthesia") > 0) Res *= .5f;
             if (C.GetAfflictionStrength("opiateoverdose") > 50) Res *= .5f;
 
@@ -187,7 +187,7 @@ public partial class NTStats
             float count = 0;
             foreach (LimbType Limb in HF.LimbsToCheck)
             {
-                if (C.GetAfflictionStrengthLimb("bonegrowth", Limb) > 0) count++;
+                if (C.GetAfflictionStrengthLimb("stimulatedbonegrowth", Limb) > 0) count++;
             }
             return count;
         }));

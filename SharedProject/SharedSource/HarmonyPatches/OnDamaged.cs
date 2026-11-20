@@ -114,19 +114,6 @@ public static class OnDamaged
             HF.SetAffliction(__instance.Character, "luabotomy", 1f);
         }
 
-        foreach (var hook in NTC.OnDamagedHooks)
-        {
-            try
-            {
-                hook(__instance, attackResult, hitLimb);
-            } catch (Exception e)
-            {
-                HF.PrintError("[Lua] Error in OnDamaged Hook: " + e.Message);
-                continue;
-            }
-            
-        }
-
         List<Affliction> Afflictions = attackResult.Afflictions;
 
         // NT Compatibility Modifying OnDamaged Hooks
@@ -148,7 +135,11 @@ public static class OnDamaged
             }
         }
 
-        // NT Compatibility OnDamaged Hooks
+        foreach (var hook in NTC.OnDamagedHooks)
+        {
+            hook(__instance, attackResult, hitLimb);
+        }
+
         foreach (var hook in OnDamaged.OnDamagedHooks)
         {
             hook(__instance, attackResult, hitLimb);
@@ -176,20 +167,26 @@ public static class OnDamaged
         // Deal with Multipliers
         NTHuman? NTCharacter = NTHuman.getNTHumanFromCharacter(Character);
 
+        float FractureChance = (float)NTC.GetMultiplier(NTCharacter, "anyfracturechance") * NTConfig.Get("NT_fractureChance", 1f);
+        float PneumothoraxChance = (float)NTC.GetMultiplier(NTCharacter, "pneumothoraxchance") * NTConfig.Get("NT_pneumothoraxChance", 1f);
+        float TamponadeChance = (float)NTC.GetMultiplier(NTCharacter, "tamponadechance") * NTConfig.Get("NT_tamponadeChance", 1f);
+        float AmputationChance = (float)NTC.GetMultiplier(NTCharacter, "traumamputatechance") * NTConfig.Get("NT_traumaticAmputationChance", 1f);
+        float ForeignBodyMultiplier = (float)NTC.GetMultiplier(NTCharacter, "foreignbodymultiplier");
+
         // Torso-specific injuries
         if (Strength >= 1 && LimbType == LimbType.Torso)
         {
             bool hitOrgan = false;
 
             // Rib Injuries
-            if (HF.Chance(Math.Clamp(Strength * 0.02f, 0f, 0.3f)))
+            if (HF.Chance(Math.Clamp(Strength * 0.02f, 0f, 0.3f) * FractureChance))
             {
                 HF.BreakLimb(Character, LimbType);
                 CauseFullForeignBody = true;
             }
 
             // Lung Injuries
-            if (HasLungs(Character) && HF.Chance(0.3f))
+            if (HasLungs(Character) && HF.Chance(0.3f * PneumothoraxChance))
             {
                 HF.AddAffliction(Character, "pneumothorax", 5);
                 HF.AddAffliction(Character, "lungdamage", Strength);
@@ -198,12 +195,18 @@ public static class OnDamaged
             }
 
             // Heart Injuries
-            if (HasHeart(Character) && !hitOrgan && Strength >= 5 && HF.Chance(Strength / 50f))
+            if (HasHeart(Character) && !hitOrgan && Strength >= 5 && HF.Chance(Strength / 50f * TamponadeChance))
             {
                 HF.AddAffliction(Character, "tamponade", 5);
                 HF.AddAffliction(Character, "heartdamage", Strength);
                 HF.AddAffliction(Character, "organdamage", Strength / 4);
                 hitOrgan = true;
+            }
+
+            // Internal Bleeding
+            if (Strength >= 5)
+            {
+                HF.AddAffliction(Character, "internalbleeding", Strength * HF.RandomRange(0.3f, 0.6f));
             }
 
             // Liver + Kidney Injuries
@@ -221,18 +224,12 @@ public static class OnDamaged
                     HF.AddAffliction(Character, "kidneydamage", Strength);
                 }
             }
-
-            // Internal Bleeding
-            if (Strength >= 5)
-            {
-                HF.AddAffliction(Character, "internalbleeding", Strength * HF.RandomRange(0.3f, 0.6f));
-            }
         }
 
         // Head-specific injuries
         if (Strength >= 1 && LimbType == LimbType.Head)
         {
-            if (HF.Chance(Strength / 90f))
+            if (HF.Chance(Strength / 90f * FractureChance))
             {
                 HF.BreakLimb(Character, LimbType);
                 CauseFullForeignBody = true;
@@ -247,12 +244,16 @@ public static class OnDamaged
         // Extremity-specific injuries
         if (Strength >= 1 && HF.LimbIsExtremity(LimbType))
         {
-            if (HF.LimbIsBroken(Character, LimbType, false) && !(HF.LimbIsAmputated(Character, LimbType)) && HF.Chance(Strength / 60f))
+            // Traumatic Amputation
+            if (HF.LimbIsBroken(Character, LimbType, false)
+                && !HF.LimbIsAmputated(Character, LimbType)
+                && HF.Chance(Strength / 60f * AmputationChance))
             {
                 HF.TraumamputateLimbAndGenerateItem(Character, LimbType, null);
             }
 
-            if (HF.Chance(Strength / 60f))
+            // Fractures
+            if (HF.Chance(Strength / 60f * FractureChance))
             {
                 HF.BreakLimb(Character, LimbType);
                 CauseFullForeignBody = true;
@@ -262,11 +263,11 @@ public static class OnDamaged
         // Foreign Bodies
         if (CauseFullForeignBody)
         {
-            HF.AddAfflictionLimb(Character, "foreignbody", LimbType, Math.Clamp(Strength, 0, 30));
+            HF.AddAfflictionLimb(Character, "foreignbody", LimbType, Math.Clamp(Strength, 0, 30) * ForeignBodyMultiplier);
         }
         else if (HF.Chance(0.75f))
         {
-            HF.AddAfflictionLimb(Character, "foreignbody", LimbType, Math.Clamp(Strength / 4f, 0, 20));
+            HF.AddAfflictionLimb(Character, "foreignbody", LimbType, Math.Clamp(Strength / 4f, 0, 20) * ForeignBodyMultiplier);
         }
 
         FallOffChair(NTCharacter, Character, Strength);

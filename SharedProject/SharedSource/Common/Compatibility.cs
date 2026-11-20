@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using MoonSharp.Interpreter;
 
 namespace Neurotrauma
@@ -24,7 +25,7 @@ namespace Neurotrauma
             HF.Print(Res); // Not 1:1 with OG NT
         }
 
-        
+
         public static void DebugPrintAllAffStrengths()
         {
             string Res = "Neurotrauma Affliction Strength Data:\n";
@@ -80,28 +81,55 @@ namespace Neurotrauma
 
         public static void AddOnDamagedHook(LuaCsAction Hook)
         {
-            Action<CharacterHealth, AttackResult, Limb> TranslatedHook = (H,Res,L) => 
-            { 
-                Hook.Invoke(H,Res,L);
+            Action<CharacterHealth, AttackResult, Limb> TranslatedHook = (H, Res, L) =>
+            {
+                Hook.Invoke(H, Res, L);
             };
             OnDamagedHooks.Add(TranslatedHook);
         }
 
-        // These might work?
-        public static readonly List<Action<CharacterHealth, List<Affliction>, Limb>> ModifyingOnDamagedHooks = new();
+
+        // This might work part 2: wallahi may it work
+        public static void AddModifyingOnDamagedHook(Func<CharacterHealth, List<Affliction>, Limb, List<Affliction>> Hook)
+        {
+            OnDamaged.ModifyingOnDamagedHooks.Add(Hook);
+        }
 
         public static void AddModifyingOnDamagedHook(Action<CharacterHealth, List<Affliction>, Limb> Hook)
         {
-            ModifyingOnDamagedHooks.Add(Hook);
+            OnDamaged.ModifyingOnDamagedHooks.Add((H, Affs, L) =>
+            {
+                Hook(H, Affs, L);
+                return Affs;
+            });
         }
 
-        public static void AddModifyingOnDamagedHook(LuaCsAction Hook)
+        public static void AddModifyingOnDamagedHook(LuaCsFunc Hook)
         {
-            Action<CharacterHealth, List<Affliction>, Limb> TranslatedHook = (H, Affs, L) =>
+            OnDamaged.ModifyingOnDamagedHooks.Add((H, Affs, L) =>
             {
-                Hook.Invoke(H, Affs, L);
-            };
-            ModifyingOnDamagedHooks.Add(TranslatedHook);
+                // Call the Lua function with the damage data.
+                object LuaReturn = Hook.Invoke(H, Affs, L);
+
+                // Lua uses dynamic values (same issue as the config) so change it to use it here.
+                if (LuaReturn is DynValue DV)
+                {
+                    LuaReturn = DV.ToObject();
+                }
+
+                // We gotta return the value into the affliction list so;
+                return LuaReturn switch
+                {
+                    // ÍF a list already, great!
+                    List<Affliction> list => list,
+
+                    // IF not, make it a list!
+                    IEnumerable<Affliction> seq => seq.ToList(),
+
+                    // IF something's fucked, return nothin
+                    _ => Affs
+                };
+            });
         }
 
         public static Dictionary<NTHuman, double> CharacterSpeedMultipliers = new();
@@ -150,7 +178,7 @@ namespace Neurotrauma
         public static void DivideSpeed(Character Char, double Multiplier)
         {
             if (Char == null) return;
-            NTHuman ?Human = NTHuman.getNTHumanFromCharacter(Char);
+            NTHuman? Human = NTHuman.getNTHumanFromCharacter(Char);
 
             if (Human == null)
             {
@@ -169,20 +197,20 @@ namespace Neurotrauma
         public static double GetSpeed(NTHuman Character)
         {
             if (Character == null) return 1;
-            return (CharacterSpeedMultipliers.ContainsKey(Character)) ? CharacterSpeedMultipliers[Character]: 1 ; // W C# moment
+            return (CharacterSpeedMultipliers.ContainsKey(Character)) ? CharacterSpeedMultipliers[Character] : 1; // W C# moment
         }
 
         public static double GetSpeed(Character Char)
         {
             if (Char == null) return 1;
-            NTHuman ?Human = NTHuman.getNTHumanFromCharacter(Char);
+            NTHuman? Human = NTHuman.getNTHumanFromCharacter(Char);
 
             if (Human == null)
             {
                 HF.PrintError($"Trying to get speed from an unknwon NTHuman : {Char.Name}");
                 return 1;
             }
-            
+
 
             return (CharacterSpeedMultipliers.ContainsKey(Human)) ? CharacterSpeedMultipliers[Human] : 1; // W C# moment
         }
@@ -196,7 +224,7 @@ namespace Neurotrauma
         public static void SetSpeed(Character Char, double Amount)
         {
             if (Char == null) return;
-            NTHuman ?Human = NTHuman.getNTHumanFromCharacter(Char);
+            NTHuman? Human = NTHuman.getNTHumanFromCharacter(Char);
 
             if (Human == null)
             {
@@ -323,7 +351,7 @@ namespace Neurotrauma
             }
         }
 
-        public static void SetMultiplier(NTHuman ?Character, string MultiplierIdentifier, float Multiplier)
+        public static void SetMultiplier(NTHuman? Character, string MultiplierIdentifier, float Multiplier)
         {
             if (Character == null) return;
             NTHuman.CharacterTags Tags = Character.Tags;
@@ -331,24 +359,24 @@ namespace Neurotrauma
             Tags.SetTag("mult", MultiplierIdentifier, CurrentMultiplier * Multiplier);
         }
 
-        public static void SetMultiplier(Character ?Char, string MultiplierIdentifier, float Multiplier)
+        public static void SetMultiplier(Character? Char, string MultiplierIdentifier, float Multiplier)
         {
             if (Char == null) return;
-            NTHuman ?Human = NTHuman.getNTHumanFromCharacter(Char);
+            NTHuman? Human = NTHuman.getNTHumanFromCharacter(Char);
 
             if (Human == null)
             {
                 HF.PrintError($"Trying to set the multiplier {MultiplierIdentifier} from an unknwon NTHuman : {Char.Name}");
                 return;
             }
-            
+
 
             NTHuman.CharacterTags Tags = Human.Tags;
             float CurrentMultiplier = GetMultiplier(Human, MultiplierIdentifier);
             Tags.SetTag("mult", MultiplierIdentifier, CurrentMultiplier * Multiplier);
         }
 
-        public static float GetMultiplier(NTHuman ?Character, string MultiplierIdentifier)
+        public static float GetMultiplier(NTHuman? Character, string MultiplierIdentifier)
         {
             if (Character == null) return 1;
             NTHuman.CharacterTags Tags = Character.Tags;
@@ -356,32 +384,33 @@ namespace Neurotrauma
             return Tags.GetTag("mult", MultiplierIdentifier);
         }
 
-        public static float GetMultiplier(Character ?Char, string MultiplierIdentifier)
+        public static float GetMultiplier(Character? Char, string MultiplierIdentifier)
         {
             if (Char == null) return 1;
-            NTHuman ?Human = NTHuman.getNTHumanFromCharacter(Char);
+            NTHuman? Human = NTHuman.getNTHumanFromCharacter(Char);
 
-            if (Human == null) {
+            if (Human == null)
+            {
                 HF.PrintError($"Trying to get the multiplier {MultiplierIdentifier} from an unknwon NTHuman : {Char.Name}");
                 return 1;
             }
-            
+
 
             NTHuman.CharacterTags Tags = Human.Tags;
             if (!Tags.HasTag("mult", MultiplierIdentifier)) return 1;
             return Tags.GetTag("mult", MultiplierIdentifier);
         }
 
-        public static void SetTag(NTHuman ?Character, string TagIdentifier)
+        public static void SetTag(NTHuman? Character, string TagIdentifier)
         {
             if (Character == null) return;
             Character.Tags.SetTag("tag", TagIdentifier);
         }
 
-        public static void SetTag(Character ?Char, string TagIdentifier)
+        public static void SetTag(Character? Char, string TagIdentifier)
         {
             if (Char == null) return;
-            NTHuman ?Human = NTHuman.getNTHumanFromCharacter(Char);
+            NTHuman? Human = NTHuman.getNTHumanFromCharacter(Char);
 
             if (Human == null)
             {
@@ -392,17 +421,17 @@ namespace Neurotrauma
             Human.Tags.SetTag("tag", TagIdentifier);
         }
 
-        public static bool HasTag(NTHuman ?Character, string TagIdentifier)
+        public static bool HasTag(NTHuman? Character, string TagIdentifier)
         {
             if (Character == null) return false;
-            return Character.Tags.HasTag("tag",TagIdentifier);
+            return Character.Tags.HasTag("tag", TagIdentifier);
         }
 
-        public static void TickCharacterTags(NTHuman ?Character) // Previously "TickCharacter", however due to changes with code this is a different function now.
+        public static void TickCharacterTags(NTHuman? Character) // Previously "TickCharacter", however due to changes with code this is a different function now.
         {
             if (Character == null) return;
             List<string> TagsToRemove = new();
-            foreach (KeyValuePair<string,float> Pair in Character.Tags.Tags)
+            foreach (KeyValuePair<string, float> Pair in Character.Tags.Tags)
             {
                 string Tag = Pair.Key;
                 if (Tag.StartsWith("mult"))

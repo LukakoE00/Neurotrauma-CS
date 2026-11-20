@@ -5,7 +5,7 @@ namespace Neurotrauma;
 public class NTHumanUpdate
 {
 
-    private static int UpdateIntervalHigh = (int)Math.Round(NTConfig.Get("NT_UpdateInterval_High", (float)NTAfflictions.AfflictionPriority.HIGH));
+    private static int UpdateIntervalHigh = (int)Math.Round(NTConfig.Get("NT_UpdateInterval_High", 120f));
     private static int UpdateIntervalMedium = UpdateIntervalHigh * 2;
     private static int UpdateIntervalLow = UpdateIntervalHigh * 3;
     private static int UpdateIntervalMonster = UpdateIntervalHigh * 3;                                 //(int)Math.Round(NTConfig.Get("NT_UpdateInterval_Monster", 120f));
@@ -26,7 +26,7 @@ public class NTHumanUpdate
 
     private static void RefreshIntervals()
     {
-        UpdateIntervalHigh = (int)Math.Round(NTConfig.Get("NT_UpdateInterval_High", (float) NTAfflictions.AfflictionPriority.HIGH));
+        UpdateIntervalHigh = (int)Math.Round(NTConfig.Get("NT_UpdateInterval_High", 120f));
         UpdateIntervalMedium = UpdateIntervalHigh * 2;
         UpdateIntervalLow = UpdateIntervalHigh * 3;
         UpdateIntervalMonster = UpdateIntervalHigh * 3;
@@ -88,13 +88,15 @@ public class NTHumanUpdate
         {
             if (character == null || character.isDead || character.IdFreed) continue;
 
-            double Delay = (((index + 1) / Character.CharacterList.Count) * UpdateIntervalHigh * 1000);
+            // Spread characters over one update interval (ticks / 60 = seconds), like Lua
+            double Delay = ((double)index / Character.CharacterList.Count) * (UpdateIntervalHigh / 60.0) * 1000.0;
 
             if (character.IsHuman)
-            { 
+            {
                 UpdateHuman(UpdatePriorities, character, Delay);
 
-            } else if (updateMonsters)
+            }
+            else if (updateMonsters)
             {
                 UpdateMonster(character, Delay);
             }
@@ -144,24 +146,24 @@ public class NTHumanUpdate
 
         LuaCsSetup.Instance.Timer.Wait((params object[] _) =>
         {
-        if (Monster != null && HF.IsCharacterValid(Monster)) // Verify this character exists.
-        {
-            double BloodLoss = HF.GetAfflictionStrength(Monster, "bloodloss", 0);
-            double OxygenLow = HF.GetAfflictionStrength(Monster, "oxygenlow", 0);
-
-            if (BloodLoss > 0)
+            if (Monster != null && HF.IsCharacterValid(Monster)) // Verify this character exists.
             {
-                HF.AddAffliction(Monster, "organdamage", (float)BloodLoss * 2, Monster);
-                HF.SetAffliction(Monster, "bloodloss", 0, Monster, (float)BloodLoss);
-            }
-            else if (OxygenLow > 50)
-            {
-                HF.AddAffliction(Monster, "organdamage", (float)(OxygenLow - 50) * 2, Monster);
-                HF.SetAffliction(Monster, "oxygenlow", 50, Monster, (float)OxygenLow);
+                double BloodLoss = HF.GetAfflictionStrength(Monster, "bloodloss", 0);
+                double OxygenLow = HF.GetAfflictionStrength(Monster, "oxygenlow", 0);
+
+                if (BloodLoss > 0)
+                {
+                    HF.AddAffliction(Monster, "organdamage", (float)BloodLoss * 2, Monster);
+                    HF.SetAffliction(Monster, "bloodloss", 0, Monster, (float)BloodLoss);
+                }
+                else if (OxygenLow > 50)
+                {
+                    HF.AddAffliction(Monster, "organdamage", (float)(OxygenLow - 50) * 2, Monster);
+                    HF.SetAffliction(Monster, "oxygenlow", 50, Monster, (float)OxygenLow);
 
 
+                }
             }
-        }
         }, (int)delay);
     }
 }

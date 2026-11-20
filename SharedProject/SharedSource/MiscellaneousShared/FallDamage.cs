@@ -9,7 +9,7 @@ namespace Neurotrauma
 
         public static bool HasLungs(Character C)
         {
-            return HasAffliction(C, "lungremoved");
+            return !HasAffliction(C, "lungremoved");
         }
 
         public static double GetReduction(double strength, Item armor, string type = "blunttrauma")
@@ -94,7 +94,7 @@ namespace Neurotrauma
         public static void OnChangeFallDamage(float impactDamage, Character character, Vector2 impactPos, Vector2 velocity)
         {
             if (!NTConfig.Get("NT_Calculations", true)) return;
-            
+
             if (!character.IsHuman) return;
 
             if (character.InWater) return;
@@ -103,22 +103,22 @@ namespace Neurotrauma
 
             if (HasAffliction(character, "cpr_fracturebuff") || HasAffliction(character, "stopcreatureabuse")) return;
 
-            if (!HasAffliction(character, "luabotomy")) SetAffliction(character, "luabotomy", 1,character,0);
+            if (!HasAffliction(character, "luabotomy")) SetAffliction(character, "luabotomy", 1, character, 0);
 
             double VelocityMagnitude = Magnitude(velocity);
-            VelocityMagnitude = Math.Pow(VelocityMagnitude,1.3);
+            VelocityMagnitude = Math.Pow(VelocityMagnitude, 1.3);
 
             // apply fall damage to all limbs based on fall direction
             Vector2 MainLimbPos = character.AnimController.MainLimb.WorldPosition;
 
-            Dictionary<LimbType,double> LimbDotResults = new();
+            Dictionary<LimbType, double> LimbDotResults = new();
             double MinDotRes = 1000;
 
             foreach (Limb Limb in character.AnimController.Limbs)
             {
                 foreach (LimbType Type in LimbsToCheck)
                 {
-                    if (Limb.type != Type ) continue;
+                    if (Limb.type != Type) continue;
                     // Fetch the direction of each limb relative to the torso.
                     Vector2 LimbPosition = Limb.WorldPosition;
                     Vector2 PosDif = LimbPosition - MainLimbPos;
@@ -142,7 +142,7 @@ namespace Neurotrauma
             // shift all weights out of the negatives
             // increase the weight of all limbs if speed is high
             // the effect of this is that, at higher speeds, all limbs take damage instead of mainly the ones facing the impact site
-            foreach (KeyValuePair<LimbType,double> Pair in LimbDotResults)
+            foreach (KeyValuePair<LimbType, double> Pair in LimbDotResults)
             {
                 LimbType Type = Pair.Key;
                 double DotResult = Pair.Value;
@@ -161,17 +161,17 @@ namespace Neurotrauma
 
                 // lets limit the numbers to the max value of blunttrauma so that resistances make sense
                 double DamageInflictedToThisLimb = Math.Min(
-                    RelativeWeight * Math.Max(0, Math.Pow(VelocityMagnitude - 10,1.5) * NTConfig.Get("NT_falldamage",1) * .5),
-                    NTConfig.Get("NT_falldamageCeiling",1) * 60);
+                    RelativeWeight * Math.Pow(Math.Max(0, VelocityMagnitude - 10), 1.5) * NTConfig.Get("NT_falldamage", 1f) * .5,
+                    NTConfig.Get("NT_falldamageCeiling", 1f) * 60);
 
-                CauseFallDamage(character,Pair.Key,DamageInflictedToThisLimb);
+                CauseFallDamage(character, Pair.Key, DamageInflictedToThisLimb);
             }
         }
 
         public static void CauseFallDamage(Character character, LimbType limbtype, double strength)
         {
             Item Armor1 = GetItemInOuterWear(character);
-            Item Armor2= GetItemInInnerWear(character);
+            Item Armor2 = GetItemInInnerWear(character);
             if (limbtype != LimbType.Head)
             {
                 strength = Math.Max(
@@ -222,7 +222,7 @@ namespace Neurotrauma
                         )))
                 {
                     BreakLimb(character, limbtype);
-                    if (HasLungs(character) && strength >= 5 && Chance((float)(strength/70*GetMultiplier(NTCharacter, "pneumothoraxchance") * NTConfig.Get("NT_pneumothoraxChance", 1))))
+                    if (HasLungs(character) && strength >= 5 && Chance((float)(strength / 70 * GetMultiplier(NTCharacter, "pneumothoraxchance") * NTConfig.Get("NT_pneumothoraxChance", 1))))
                     {
                         AddAffliction(character, "pneumothorax", 5, character);
                     }
@@ -239,17 +239,15 @@ namespace Neurotrauma
                     AddAfflictionResisted(
                         character,
                         "concussion",
-                        (float)
-                        Math.Max(
-                        Math.Max(
-                            10,
-                                -GetCalculatedConcussionReduction(Armor1, 10, limbtype)
-                                - GetCalculatedConcussionReduction(Armor2, 10, limbtype)),
-                        0), 
-                    character);
-                } 
+                        (float)Math.Max(
+                            10
+                                - GetCalculatedConcussionReduction(Armor1, 10, limbtype)
+                                - GetCalculatedConcussionReduction(Armor2, 10, limbtype),
+                            0),
+                        character);
+                }
 
-                if (strength >= 15 
+                if (strength >= 15
                     && Chance((float)(
                         Math.Min((strength - 15) / 100, .7)
                             * GetMultiplier(NTCharacter, "anyfracturechance")
@@ -269,7 +267,7 @@ namespace Neurotrauma
                 }
                 if (strength >= 5 && Chance(.7f))
                 {
-                    AddAffliction(character, "neurotrauma", (float) (strength * Rand.Range(0.1, 0.4)), character);
+                    AddAffliction(character, "neurotrauma", (float)(strength * Rand.Range(0.1, 0.4)), character);
                 }
             }
 
@@ -284,20 +282,18 @@ namespace Neurotrauma
                             * InjuryChanceMultiplier)))
                 {
                     BreakLimb(character, limbtype);
-                    if (Chance((float) (strength - 2) / 60))
+                    if (Chance((float)(strength - 2) / 60))
                     {
                         //this is here to simulate open fractures
                         ArteryCutLimb(character, limbtype);
                     }
                 }
 
-                if (Chance((float)(
-                    (strength - 15)
-                        / 100
-                        * NTC.GetMultiplier(NTCharacter, "anyfracturechance")
-                        * NTConfig.Get("NT_fractureChance", 1)
-                        * InjuryChanceMultiplier
-                        )))
+                if (!LimbIsAmputated(character, limbtype) && Chance((float)(
+                Math.Clamp((strength - 5) / 120, 0, 0.5)
+                    * NTC.GetMultiplier(NTCharacter, "dislocationchance")
+                    * NTConfig.Get("NT_dislocationChance", 1f)
+                    * InjuryChanceMultiplier)))
                 {
                     DislocateLimb(character, limbtype);
                 }

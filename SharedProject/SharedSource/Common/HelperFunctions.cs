@@ -967,7 +967,7 @@ namespace Neurotrauma
         {
             float SkillLevel = GetSkillLevel(Character, SkillType);
 
-            if (NTConfig.Get("NT_VanillaSkillCheck", false))
+            if (NTConfig.Get("NT_vanillaSkillCheck", false))
             {
                 return Chance(Math.Clamp((100 - (RequiredAmount - SkillLevel)) / 100, 0, 1));
             }
@@ -1022,13 +1022,12 @@ namespace Neurotrauma
         /// <returns>Surgery / Medical skill as a float.</returns>
         public static float GetSurgerySkill(Character Character)
         {
-            if (IsNTSPEnabled() && NTConfig.Get("NTSP_enableSurgerySkill", false)) 
-            { 
-                return Math.Max(GetSkillLevel(Character, "surgery".ToIdentifier()), GetSkillLevel(Character, "medical".ToIdentifier()) / 4);
+            if (IsNTSPEnabled() && NTConfig.Get("NTSP_enableSurgerySkill", false))
+            {
+                return Math.Max(5f, Math.Max(GetSkillLevel(Character, "surgery".ToIdentifier()), GetSkillLevel(Character, "medical".ToIdentifier()) / 4));
             }
-            
-            return GetSkillLevel(Character, "medical".ToIdentifier());
 
+            return GetSkillLevel(Character, "medical".ToIdentifier());
         }
 
         /// <summary>
@@ -1951,7 +1950,7 @@ namespace Neurotrauma
         /// <param name="Amount">Amount of fibrillation to experience.</param>
         public static void Fibrillate(Character Character, float Amount)
         {
-            float Tachycardia = GetAfflictionStrength(Character, "tachycardia");
+            float Tachycardia = GetAfflictionStrength(Character, "increasedheartrate");
             float Fibrillation = GetAfflictionStrength(Character, "fibrillation");
             float CardiacArrest = GetAfflictionStrength(Character, "cardiacarrest");
 
@@ -1993,7 +1992,7 @@ namespace Neurotrauma
                 }
             }
 
-            SetAffliction(Character, "tachycardia", Tachycardia, Character, 0);
+            SetAffliction(Character, "increasedheartrate", Tachycardia, Character, 0);
             SetAffliction(Character, "fibrillation", Fibrillation, Character, 0);
         }
 

@@ -80,13 +80,15 @@ public class NTAfflictionsToAdd
                 C.AddAffliction(ID, -0.02f * DeltaTime);
 
                 // Effects:   
-                if (strength > 25)
+                if (strength > 25 && !C.GetBoolStat("stasis"))
                 {
+                    float excess = Math.Max(strength - 25, 0);
+
                     // Additional Lung Damage
-                    C.SetAffliction("lungdamage", (Math.Max(C.GetAfflictionStrength("lungdamage") - 25, 0) / 800 * DeltaTime));
+                    C.AddAffliction("lungdamage", excess / 800f * NTC.GetMultiplier(C, "lungdamagegain") * DeltaTime);
 
                     // Bone Damage
-                    C.SetAffliction("bonedamage", (Math.Max(C.GetAfflictionStrength("bonedamage") - 25, 0) / 600 * DeltaTime));
+                    C.AddAffliction("bonedamage", excess / 600f * NTC.GetMultiplier(C, "bonedamagegain") * DeltaTime);
                 }
 
                 // Heart Damage (in NewOrganDamage)
@@ -130,7 +132,7 @@ public class NTAfflictionsToAdd
                         )
                 {
                     // Passive Regeneration
-                    C.AddAffliction(ID, (5f + HF.BoolToNum(C.GetAfflictionStrength("unconsciousness") < 0.1f, 45f)) * -dT);
+                    C.AddAffliction(ID, (2.5f + HF.BoolToNum(C.GetAfflictionStrength("unconsciousness") < 0.1f, 22.5f)) * -dT);
                 }
 
                 // Effects:
@@ -491,7 +493,7 @@ public class NTAfflictionsToAdd
                 // Apply Fibrillation multipliers only when progressing
                 if (fibrillationSpeed > 0)
                 {
-                    fibrillationSpeed *= NTC.GetMultiplier(C, "fibrillation") * NTConfig.Get("NT_fibrillationSpeed", 1);
+                    fibrillationSpeed *= NTC.GetMultiplier(C, "fibrillation") * NTConfig.Get("NT_fibrillationSpeed", 1f);
                 }
 
 
@@ -552,20 +554,6 @@ public class NTAfflictionsToAdd
             builder.New("cardiacarrest")
             .SetUpdateAction((C, ID, Limb, dT) =>
             {
-                // Removal Conditions
-                if ((!C.GetBoolStat("stasis")) // Not in Stasis
-                    && C.GetAfflictionStrength("heartremoved") <= 0 // Heart not removed
-                    && C.GetAfflictionStrength("brainremoved") <= 0 // Brain not removed
-                    && C.GetAfflictionStrength("heartdamage") <= 99 // Below Heart Damage threshold
-                    && C.GetAfflictionStrength("traumaticshock") <= 40 // Below Traumatic Shock threshold
-                    && C.GetAfflictionStrength("coma") <= 40 // Below Coma threshold
-                    && C.GetAfflictionStrength("hypoxemia") <= 80 // Below Hypoxemia threshold
-                    && C.GetAfflictionStrength("fibrillation") <= 20) // Below Fibrillation threshold
-                {
-                    C.SetAffliction(ID, 0);
-                    // AffData.Strength -= 50 * dT;
-                }
-
                 // Effects:
                 // Acidosis
                 // Shares increase with Respiratory Arrest
@@ -605,6 +593,14 @@ public class NTAfflictionsToAdd
                     C.AddAffliction("immunity", -dT * (Math.Min(1.4f, Math.Max(1, .8f + str / 100)))); // Lose Immunity
 
                     // Effects:
+                    // Sepsis
+                    float CavityAbove70 = str >= 70 ? str : 0;
+
+                    if (HF.Chance((float)Math.Pow(CavityAbove70 / 100f, 10)))
+                    {
+                        C.AddAffliction("sepsis", dT * NTConfig.Get("NT_SepsisRate", 1f));
+                    }
+
                     // Nausea & Fever & Abdominal Pain
                     if (str > 5)
                     {
@@ -783,14 +779,6 @@ public class NTAfflictionsToAdd
 
                 C.AddAffliction("acidosis", AcidosisIncrease);
 
-                // Neurotrauma
-                float NeurotraumaIncrease = str / 1000.0f * dT
-                    * NTC.GetMultiplier(C, "neurotraumagain")
-                    * NTConfig.Get("NT_neurotraumaGain", 1)
-                    * (1 - Math.Clamp(C.GetAfflictionStrength("afmannitol"), 0, 0.5f));
-
-                C.AddAffliction("neurotrauma", NeurotraumaIncrease);
-
                 // Hypertension (in BloodPressure constant)
 
                 // Nausea & Leg Swelling
@@ -856,14 +844,6 @@ public class NTAfflictionsToAdd
                 C.SetAffliction(ID, LiverDamage);
 
                 // Effects:
-                // Neurotrauma
-                float  NeurotraumaIncrease = (str / 800.0f * dT)
-                    * NTC.GetMultiplier(C, "neurotraumagain")
-                    * NTConfig.Get("NT_neurotraumaGain", 1)
-                    * (1 - Math.Clamp(C.GetAfflictionStrength("afmannitol"), 0, 0.5f));
-
-                C.AddAffliction("neurotrauma", NeurotraumaIncrease);
-
                 // Hypertension (in BloodPressure constant itself)
 
                 // Leg Swelling
@@ -1114,18 +1094,24 @@ public class NTAfflictionsToAdd
             );
 
         // GiveIn
+        // Constant; STOP FLICKERING!!!!!!!!!!!!!!!!!!!!
         // Type: Functionality
         // Effects: Enables give-in button.
         // Allows you to die while stuck in certain afflictions like Spinal Cord Injury, which are not lethal yet prevent character use.
         AfflictionsToAdd.Add(
             builder.New("givein")
+            .IsConst(true)
             .SetStrengths(0, 2, 0)
             .SetUpdateAction((C, ID, Limb, dT) =>
             {
-                C.AddAffliction(ID, -0.5f * dT);
+                bool NeedsGiveIn = C.HasSymptom("unconsciousness")
+                    || C.GetAfflictionStrength("unconsciousness") > 0
+                    || C.GetAfflictionStrength("spinalcordinjury") > 0;
+
+                C.SetAffliction(ID, HF.BoolToNum(NeedsGiveIn, 2));
             })
             .Build()
-            );
+        );
 
         // CPR Buff
         // Not constant; gets applied by other sources.
@@ -1255,11 +1241,21 @@ public class NTAfflictionsToAdd
         // Applied via Stasis Bag item.
         AfflictionsToAdd.Add(
             builder.New("stasis")
-            .SetStrengths(0,3,0)
+            .SetStrengths(0, 3, 0)
             .SetUpdateAction((C, ID, Limb, dT) =>
             {
                 // Passive Decrease
                 C.AddAffliction(ID, -1f * dT);
+
+                // Effects:
+                // Unconsciousness
+                C.SetSymptomTrue("unconsciousness", 2);
+
+                // Cardiac Arrest
+                C.AddAffliction("cardiacarrest", 200);
+
+                // Respiratory Arrest
+                C.AddAffliction("respiratoryarrest", 200);
 
                 // Reduce Husk Infection if below 100
                 if (HF.HasAffliction(C.Human, "huskinfection") && C.GetAfflictionStrength("huskinfection") < 100)
@@ -1274,7 +1270,7 @@ public class NTAfflictionsToAdd
                 }
             })
             .Build()
-            );
+        );
 
         // Locked Hands
         // Constant; too complicated otherwise.
@@ -1510,13 +1506,65 @@ public class NTAfflictionsToAdd
             .Build()
             );
 
+        // Chem Withdrawal
         AfflictionsToAdd.Add(
             builder.New("chemwithdrawal")
+            .SetUpdateAction((C, ID, Limb, dT) =>
+            {
+                float str = C.GetAfflictionStrength(ID);
+
+                // Craving
+                if (str > 20)
+                {
+                    if (C.GetAfflictionStrength("unconsciousness") <= 0)
+                    {
+                        C.SetSymptomTrue("craving", 2);
+                    }
+
+                    // Sweating
+                    if (str > 30)
+                    {
+                        C.SetSymptomTrue("sweating", 2);
+
+                        // Nausea
+                        if (str > 40)
+                        {
+                            C.SetSymptomTrue("nausea_nt", 2);
+                        }
+                    }
+                }
+            })
             .Build()
             );
 
+        // Opiate Withdrawal
         AfflictionsToAdd.Add(
             builder.New("opiatewithdrawal")
+            .SetUpdateAction((C, ID, Limb, dT) =>
+            {
+                float str = C.GetAfflictionStrength(ID);
+
+                // Craving
+                if (str > 20)
+                {
+                    if (C.GetAfflictionStrength("unconsciousness") <= 0)
+                    {
+                        C.SetSymptomTrue("craving", 2);
+                    }
+
+                    // Sweating
+                    if (str > 30)
+                    {
+                        C.SetSymptomTrue("sweating", 2);
+
+                        // Nausea
+                        if (str > 40)
+                        {
+                            C.SetSymptomTrue("nausea_nt", 2);
+                        }
+                    }
+                }
+            })
             .Build()
             );
 
@@ -1719,14 +1767,6 @@ public class NTAfflictionsToAdd
                 float str = C.GetAfflictionStrength(ID);
 
                 // Effects:
-                // Neurotrauma
-                float NeurotraumaGain = Math.Clamp(str, 0, 20) * 0.1f * dT
-                    * NTC.GetMultiplier(C, "neurotraumagain")
-                    * NTConfig.Get("NT_neurotraumaGain", 1)
-                    * (1 - Math.Clamp(C.GetAfflictionStrength("afmannitol"), 0f, 0.5f));
-
-                C.AddAffliction("neurotrauma", NeurotraumaGain);
-
                 // Headache
                 if (str > 1 && C.GetAfflictionStrength("unconsciousness") <= 0)
                 {
@@ -1757,27 +1797,39 @@ public class NTAfflictionsToAdd
                 // Does not progress in Stasis
                 if (C.GetBoolStat("stasis")) return;
 
-                // Does not regenerate with a Skull Fracture
-                bool HasFracture = C.HasAfflictionLimb("fracturedskull", LimbType.Head, 1);
-                float FractureModifier = HasFracture ? 0 : 1;
+                float FractureModifier = C.HasAfflictionLimb("fracturedskull", LimbType.Head, 1) ? 0f : 1f;
 
-                float PassiveRegeneration = -0.1f * C.GetFloatStat("healingrate") * FractureModifier * dT;
+                float PassiveRegeneration = (
+                    -0.1f * C.GetFloatStat("healingrate") * FractureModifier
+                    + C.GetAfflictionStrength("hypoxemia") / 100f
+                    + Math.Clamp(C.GetAfflictionStrength("stroke"), 0f, 20f) * 0.1f
+                    + C.GetAfflictionStrength("sepsis") / 100f * 0.4f
+                    + C.GetAfflictionStrength("liverdamage") / 800f
+                    + C.GetAfflictionStrength("kidneydamage") / 1000f
+                    + C.GetAfflictionStrength("traumaticshock") / 100f
+                ) * dT;
 
-                if (PassiveRegeneration < -0.08f * dT)
+                if (PassiveRegeneration > 0)
+                {
+                    PassiveRegeneration *= NTC.GetMultiplier(C, "neurotraumagain")
+                        * NTConfig.Get("NT_neurotraumaGain", 1f)
+                        * (1 - Math.Clamp(C.GetAfflictionStrength("afmannitol"), 0f, 0.5f));
+                }
+                else if (PassiveRegeneration < -0.04f * dT)
                 {
                     PassiveRegeneration *= 2.5f;
                 }
 
-                float str = C.GetAfflictionStrength(ID);
+                float Strength = Math.Clamp(C.GetAfflictionStrength(ID) + PassiveRegeneration, 0f, 200f);
 
-                C.SetAffliction(ID, Math.Clamp(str + PassiveRegeneration, 0, 200));
-
+                C.SetAffliction(ID, Strength);
 
                 // Effects:
                 // Unconsciousness & Respiratory Arrest
-                if (str > 100)
+                if (Strength > 100)
                 {
                     C.SetSymptomTrue("unconsciousness", 2);
+
                     if (HF.Chance(0.05f))
                     {
                         C.AddAffliction("respiratoryarrest", 200);
@@ -2214,10 +2266,15 @@ public class NTAfflictionsToAdd
             {
                 float str = C.GetAfflictionStrength(ID);
 
-                // Chest Pain & Abdominal Pain & Unconsciousness
                 if (str > 0)
                 {
-                    if (C.GetAfflictionStrength("unconsciousness") <= 0 && (!C.GetBoolStat("sedated")))
+                    bool conscious = C.GetAfflictionStrength("unconsciousness") <= 0;
+
+                    // Unconsciousness
+                    C.SetSymptomTrue("unconsciousness", 2);
+
+                    // Chest Pain & Abdominal Pain
+                    if (conscious && !C.GetBoolStat("sedated"))
                     {
                         C.SetSymptomTrue("chestpain", 2);
                         C.SetSymptomTrue("abdominalpain", 2);
@@ -2597,7 +2654,7 @@ public class NTAfflictionsToAdd
 
                 if (!(str > 0)) return;
 
-                C.AddAfflictionLimb("gangrene", Limb, HF.BoolToNum(HF.Chance(0.1f)) * 0.5f * NTConfig.Get("NT_gangrenespeed", 1) * dT);
+                C.AddAfflictionLimb("gangrene", Limb, HF.BoolToNum(HF.Chance(0.1f)) * 0.5f * NTConfig.Get("NT_gangrenespeed", 1f) * dT);
             })
             .Build()
             );
@@ -2682,19 +2739,16 @@ public class NTAfflictionsToAdd
             .IsLimbSpecific(true)
             .SetUpdateAction((C, ID, Limb, dT) =>
             {
-
                 float str = C.GetAfflictionStrengthLimb(ID, Limb);
 
                 if (!(str > 0)) return;
 
-                float WoundDamage = C.GetAfflictionStrengthLimb("firstdegreeburn", Limb)
-                    + C.GetAfflictionStrengthLimb("seconddegreeburn", Limb)
-                    + C.GetAfflictionStrengthLimb("thirddegreeburn", Limb)
+                float WoundDamage = C.GetAfflictionStrengthLimb("burn", Limb)
                     + C.GetAfflictionStrengthLimb("lacerations", Limb)
-                    + C.GetAfflictionStrengthLimb("foreignbody", Limb)
-                    + C.GetAfflictionStrengthLimb("arterialcut", Limb)
-                    + C.GetAfflictionStrengthLimb("infectedwound", Limb);
-                
+                    + C.GetAfflictionStrengthLimb("gunshotwound", Limb)
+                    + C.GetAfflictionStrengthLimb("bitewounds", Limb)
+                    + C.GetAfflictionStrengthLimb("explosiondamage", Limb);
+
                 float BandageDirtifySpeed = 0.1f
                     + Math.Clamp(WoundDamage / 100, 0, 0.4f)
                     + C.GetAfflictionStrengthLimb("bleeding", Limb) / 20;
@@ -2707,7 +2761,6 @@ public class NTAfflictionsToAdd
                 // Transition to dirty bandage
                 if (str <= 0.5f)
                 {
-                    
                     C.SetAfflictionLimb("bandageddirty", Limb, Math.Max(DirtyBandageStrength, 1));
                     C.SetAfflictionLimb(ID, Limb, 0);
                 }
@@ -2720,19 +2773,6 @@ public class NTAfflictionsToAdd
                 // Effects:
                 // Slowdown
                 C.SetFloatStat("speedmultiplier", C.GetFloatStat("speedmultiplier") * 0.9f);
-
-                // Wound Healing
-                C.AddAfflictionLimb("lacerations", Limb, -Math.Clamp(str, 0f, 1f) * 0.1f * dT);
-                C.AddAfflictionLimb("firstdegreeburn", Limb, -Math.Clamp(str, 0f, 1f) * 0.1f * dT);
-                C.AddAfflictionLimb("seconddegreeburn", Limb, -Math.Clamp(str, 0f, 1f) * 0.1f * dT);
-                C.AddAfflictionLimb("thirddegreeburn", Limb, -Math.Clamp(str, 0f, 1f) * 0.1f * dT);
-
-
-                // Infection Healing
-                if (C.GetAfflictionStrengthLimb("infectedwound", Limb) > 0)
-                {
-                    C.AddAfflictionLimb("infectedwound", Limb, -Math.Clamp(str, 0f, 1f) * 1.5f * dT);
-                }
             })
             .Build()
             );
@@ -2757,13 +2797,11 @@ public class NTAfflictionsToAdd
                     C.SetAfflictionLimb("bandaged", Limb, 0);
                 }
 
-                float WoundDamage = C.GetAfflictionStrengthLimb("firstdegreeburn", Limb)
-                    + C.GetAfflictionStrengthLimb("seconddegreeburn", Limb)
-                    + C.GetAfflictionStrengthLimb("thirddegreeburn", Limb)
+                float WoundDamage = C.GetAfflictionStrengthLimb("burn", Limb)
                     + C.GetAfflictionStrengthLimb("lacerations", Limb)
-                    + C.GetAfflictionStrengthLimb("foreignbody", Limb)
-                    + C.GetAfflictionStrengthLimb("arterialcut", Limb)
-                    + C.GetAfflictionStrengthLimb("infectedwound", Limb);
+                    + C.GetAfflictionStrengthLimb("gunshotwound", Limb)
+                    + C.GetAfflictionStrengthLimb("bitewounds", Limb)
+                    + C.GetAfflictionStrengthLimb("explosiondamage", Limb);
 
                 float BandageDirtifySpeed = 0.1f
                     + Math.Clamp(WoundDamage / 100, 0, 0.4f)
@@ -2774,13 +2812,6 @@ public class NTAfflictionsToAdd
                 // Effects:
                 // Slowdown
                 C.SetFloatStat("speedmultiplier", C.GetFloatStat("speedmultiplier") * 0.9f);
-
-                // Wound Healing
-
-                C.AddAfflictionLimb("lacerations", Limb, -Math.Clamp(str, 0f, 1f) * 0.05f * dT);
-                C.AddAfflictionLimb("firstdegreeburn", Limb, -Math.Clamp(str, 0f, 1f) * 0.05f * dT);
-                C.AddAfflictionLimb("seconddegreeburn", Limb, -Math.Clamp(str, 0f, 1f) * 0.05f * dT);
-                C.AddAfflictionLimb("thirddegreeburn", Limb, -Math.Clamp(str, 0f, 1f) * 0.05f * dT);
             })
             .Build()
             );
@@ -2869,9 +2900,11 @@ public class NTAfflictionsToAdd
                     InfectIndex += (C.GetAfflictionStrengthLimb("bandageddirty", Limb) / 20) * dT;
                 }
 
+                InfectIndex /= 5f;
+
                 if (InfectIndex > 0)
                 {
-                    InfectIndex *= NTConfig.Get("NT_infectionRate", 1) * Math.Clamp(C.GetAfflictionStrengthLimb("iced", Limb), 1, 10);
+                    InfectIndex *= NTConfig.Get("NT_infectionRate", 1f) * Math.Clamp(C.GetAfflictionStrengthLimb("iced", Limb), 1, 10);
                 }
 
                 C.AddAfflictionLimb(ID, Limb, InfectIndex);
@@ -2926,13 +2959,12 @@ public class NTAfflictionsToAdd
 
                 if (HF.Chance((float)SepsisChance))
                 {
-                    C.AddAffliction("sepsis", dT * NTConfig.Get("NT_SepsisRate", 1));
+                    C.AddAffliction("sepsis", dT * NTConfig.Get("NT_SepsisRate", 1f));
                 }
 
                 // Inflammation
                 if (str > 15)
                 {
-
                     C.AddAfflictionLimb("inflammation", Limb, 0.5f * dT);
                 }
 
@@ -2949,7 +2981,7 @@ public class NTAfflictionsToAdd
                 if (C.GetAfflictionStrengthLimb("bandageddirty", Limb) > 10)
                 {
                     float ForeignBodyDirtyIndex = str / 40 * dT;
-                    C.AddAffliction("infectedwound", ForeignBodyInfectIndex / 5);
+                    C.AddAfflictionLimb("infectedwound", Limb, ForeignBodyDirtyIndex / 5);
 
                     // Decrease Immunity
                     C.AddAffliction("immunity", -(Math.Clamp(ForeignBodyDirtyIndex / 3, 0, 10)));
@@ -3009,7 +3041,7 @@ public class NTAfflictionsToAdd
                 if (C.GetAfflictionStrengthLimb("bandageddirty", Limb) > 10)
                 {
                     float BurnDirtyIndex = str / 40 * dT;
-                    C.AddAfflictionLimb("infectedwound", Limb, BurnInfectIndex / 5);
+                    C.AddAfflictionLimb("infectedwound", Limb, BurnDirtyIndex / 5);
 
                     // Decrease Immunity
                     C.AddAffliction("immunity", -(Math.Clamp(BurnDirtyIndex / 3, 0, 10)));
@@ -3097,7 +3129,7 @@ public class NTAfflictionsToAdd
                 if (C.GetAfflictionStrengthLimb("bandageddirty", Limb) > 10)
                 {
                     float LacerationDirtyIndex = str / 40 * dT;
-                    C.AddAfflictionLimb("infectedwound", Limb, LacerationInfectIndex / 5);
+                    C.AddAfflictionLimb("infectedwound", Limb, LacerationDirtyIndex / 5);
 
                     // Decrease Immunity
                     C.AddAffliction("immunity", -(Math.Clamp(LacerationDirtyIndex / 3, 0, 10)));
@@ -3144,7 +3176,7 @@ public class NTAfflictionsToAdd
                 if (C.GetAfflictionStrengthLimb("bandageddirty", Limb) > 10)
                 {
                     float GSWDirtyIndex = str / 40 * dT;
-                    C.AddAfflictionLimb("infectedwound", Limb, GSWInfectIndex / 5);
+                    C.AddAfflictionLimb("infectedwound", Limb, GSWDirtyIndex / 5);
 
                     // Decrease Immunity
                     C.AddAffliction("immunity", -(Math.Clamp(GSWDirtyIndex / 3, 0, 10)));
@@ -3193,7 +3225,7 @@ public class NTAfflictionsToAdd
                 if (C.GetAfflictionStrengthLimb("bandageddirty", Limb) > 10)
                 {
                     float ExplosionDamageDirtyIndex = str / 40 * dT;
-                    C.AddAfflictionLimb("infectedwound", Limb, ExplosionDamageInfectIndex / 5);
+                    C.AddAfflictionLimb("infectedwound", Limb, ExplosionDamageDirtyIndex / 5);
 
                     // Decrease Immunity
                     C.AddAffliction("immunity", -(Math.Clamp(ExplosionDamageDirtyIndex / 3f, 0f, 10f)));
@@ -3242,7 +3274,7 @@ public class NTAfflictionsToAdd
                 if (C.GetAfflictionStrengthLimb("bandageddirty", Limb) > 10)
                 {
                     float BitesDirtyIndex = str / 40 * dT;
-                    C.AddAfflictionLimb("infectedwound", Limb, BitesInfectIndex / 5);
+                    C.AddAfflictionLimb("infectedwound", Limb, BitesDirtyIndex / 5);
 
                     // Decrease Immunity
                     C.AddAffliction("immunity", -(Math.Clamp(BitesDirtyIndex / 3, 0, 10)));
@@ -3369,22 +3401,31 @@ public class NTAfflictionsToAdd
                 C.SetAffliction(ID, (float)Math.Clamp(Double.Lerp(str, desiredBloodPressure, bloodPressureLerp), 5, 200));
 
                 // Effects:
+                bool IsConscious = C.GetAfflictionStrength("unconsciousness") <= 0;
+                bool IsSedated = C.GetBoolStat("sedated");
+
                 // Hyperventilation
                 if (str < 80)
                 {
-                    // Confusion
+                    C.SetSymptomTrue("hyperventilation", 2);
+
+                    // Lightheadedness & Headache
                     if (str < 60)
                     {
-                        if (C.GetAfflictionStrength("unconsciousness") <= 0)
+                        if (IsConscious)
                         {
                             C.SetSymptomTrue("lightheadedness", 2);
-                            C.SetSymptomTrue("headache", 2);
+
+                            if (!IsSedated)
+                            {
+                                C.SetSymptomTrue("headache", 2);
+                            }
                         }
 
                         // Blurred Vision
                         if (str < 55)
                         {
-                            if (C.GetAfflictionStrength("unconsciousness") <= 0)
+                            if (IsConscious)
                             {
                                 C.SetSymptomTrue("blurredvision", 2);
                             }
@@ -3397,12 +3438,36 @@ public class NTAfflictionsToAdd
                                 // Confusion
                                 if (str < 30)
                                 {
-                                    if (C.GetAfflictionStrength("unconsciousness") <= 0)
+                                    if (IsConscious)
                                     {
                                         C.SetSymptomTrue("confusion", 2);
                                     }
                                 }
                             }
+                        }
+                    }
+                }
+
+                // Prevent the earlier nesting from bugging out certain symptoms
+                float BloodAmount = C.GetFloatStat("bloodamount");
+
+                // Pale Skin
+                if (BloodAmount < 60)
+                {
+                    C.SetSymptomTrue("paleskin", 2);
+
+                    // Headache
+                    if (BloodAmount < 50)
+                    {
+                        if (IsConscious && !IsSedated)
+                        {
+                            C.SetSymptomTrue("headache", 2);
+                        }
+
+                        // Weakness
+                        if (BloodAmount < 40)
+                        {
+                            C.SetSymptomTrue("weakness", 2);
                         }
                     }
                 }
@@ -3415,7 +3480,7 @@ public class NTAfflictionsToAdd
                         C.AddAffliction("heartattack", 50);
                     }
 
-                    if (HF.Chance((float)(NTConfig.Get("NT_strokeChance", 1) * ((str - 150) / 50 * 0.02f + Math.Clamp(C.GetAfflictionStrength("afstreptokinase"), 0, 1) * 0.05f))))
+                    if (HF.Chance((float)(NTConfig.Get("NT_strokeChance", 1f) * ((str - 150) / 50 * 0.02f + Math.Clamp(C.GetAfflictionStrength("afstreptokinase"), 0, 1) * 0.05f))))
                     {
                         C.AddAffliction("stroke", 5);
                     }
@@ -3463,22 +3528,15 @@ public class NTAfflictionsToAdd
                 ));
 
                 // Effects:
-                // Neurotrauma
-                float NeurotraumaGain = str / 100 * dT
-                    * NTC.GetMultiplier(C, "neurotraumagain")
-                    * NTConfig.Get("NT_neurotraumaGain", 1)
-                    * (1 - Math.Clamp(C.GetAfflictionStrength("afmannitol"), 0, 0.5f));
-
-                C.AddAffliction("neurotrauma", NeurotraumaGain);
-
                 // Bone Damage
                 C.AddAffliction("bonedamage", str / 1000 * NTC.GetMultiplier(C, "bonedamagegain") * dT);
 
-                // Shortness of Breath
+                // Hyperventilation
                 if (str > 10)
                 {
                     C.SetSymptomTrue("hyperventilation", 2);
 
+                    // Shortness of Breath
                     if (str > 20)
                     {
                         if (C.GetAfflictionStrength("respiratoryarrest") <= 0)
@@ -3582,14 +3640,10 @@ public class NTAfflictionsToAdd
                 // Does not progress in Stasis
                 if (C.GetBoolStat("stasis")) return;
 
-                C.AddAffliction(ID, HF.BoolToNum(
-                        C.GetAfflictionStrength("hypoventilation") > 0f
-                        && C.GetAfflictionStrength("artificialventilation") <= 0.1f
-                    ) * 0.09f * dT
-                    - dT * 0.03f);
+                // Passive Decrease
+                C.AddAffliction(ID, -dT * 0.03f);
 
                 // Effects:
-
                 // Fibrillation (in IncreasedHeartrate constant)
                 // Increased Heartrate (in IncreasedHeartrate constant)
 
@@ -3648,16 +3702,19 @@ public class NTAfflictionsToAdd
                 float str = C.GetAfflictionStrength(ID);
 
                 // Effects:
-                // Wheezing
                 if (str < 90)
                 {
                     bool IsConscious = C.GetAfflictionStrength("unconsciousness") <= 0;
                     bool IsSedated = C.GetBoolStat("sedated");
 
+                    // Wheezing
                     if (C.GetAfflictionStrength("respiratoryarrest") <= 0)
                     {
                         C.SetSymptomTrue("wheezing", 2);
                     }
+
+                    // Nausea
+                    C.SetSymptomTrue("nausea_nt", 2);
 
                     // Abdominal Pain
                     if (str < 80)
@@ -3717,14 +3774,6 @@ public class NTAfflictionsToAdd
                 }
 
                 // Effects:
-                // Neurotrauma
-                float NeurotraumaGain = str / 100f * 0.4f * dT
-                    * (float) NTC.GetMultiplier(C, "neurotraumagain")
-                    * NTConfig.Get("NT_neurotraumaGain", 1)
-                    * (1f - Math.Clamp(C.GetAfflictionStrength("afmannitol"), 0f, 0.5f));
-
-                C.AddAffliction("neurotrauma", NeurotraumaGain);
-
                 // Bone Damage
                 C.AddAffliction("bonedamage", str / 500f * (float) NTC.GetMultiplier(C, "bonedamagegain") * dT);
 
@@ -3954,13 +4003,8 @@ public class NTAfflictionsToAdd
         // Unconsciousness
         // Type: Symptom, Talent Interaction
         // Removes itself when conditions are NOT met. Applied by other afflictions.
-        AfflictionsToAdd.Add(
-            builder.New("unconsciousness")
+        AfflictionsToAdd.Add(builder.New("unconsciousness")
             .IsSymptom(true)
-            .SetUpdateAction((C, ID, Limb, dT) =>
-            {
-                if (C.GetAfflictionStrength(ID) > 0) C.AddAffliction("givein", 2);
-            })
             .Build()
             );
 

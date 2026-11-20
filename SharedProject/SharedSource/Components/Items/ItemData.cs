@@ -80,10 +80,15 @@ public class NTItemsData
         bool packhasantibodyC = id is "bloodpackabc_positive";
         bool packhasantibodyRh = id is "bloodpacko_positive" or "bloodpacka_positive" or "bloodpackb_positive" or "bloodpackab_positive";
 
-        string ?targettype = NTBloodTypes.GetBloodType(infos.target.Human);
-        bool targethasantibodyA = targettype.Contains("a");
-        bool targethasantibodyB = targettype.Contains("b");
-        bool targethasantibodyC = targettype.Contains("c");
+        string targettype = NTBloodTypes.GetBloodType(infos.target.Human) ?? "o_negative";
+
+        // Only look at the group before the underscore, because "negative" contains an "a"
+        // How the fuck did I ever miss this :skull:
+        string targetgroup = targettype.Split('_')[0];
+
+        bool targethasantibodyA = targetgroup.Contains('a');
+        bool targethasantibodyB = targetgroup.Contains('b');
+        bool targethasantibodyC = targetgroup.Contains('c');
         bool targethasantibodyRh = targettype.Contains("positive");
 
         bool compatible = (targethasantibodyRh || !packhasantibodyRh)
@@ -905,7 +910,7 @@ public class NTItemsData
             float anesthesiaStrength = HF.GetAfflictionStrength(infos.target.Human, "anesthesia", 0);
             float anesthesiaGained = 1;
 
-            if (HF.HasTalent(infos.user.Human, "ntsp_propofol")) anesthesiaGained = 15;
+            if (HF.HasTalent(infos.user.Human, "ntsp_properfol")) anesthesiaGained = 15;
 
             if (anesthesiaStrength < 15)
             {
@@ -2385,24 +2390,48 @@ public class NTItemsData
 
         loader.Register("traumashears", infos =>
         {
-            if (HF.HasAffliction(infos.target.Human, "stasis", (float)0.1)) { return; }
+            LimbType limbtype = HF.NormalizeLimbType(infos.targetLimb.type);
 
-            List<string> cuttables = CuttableAfflictions;
-            cuttables = [.. cuttables, .. TraumaShearsAfflictions];
+            // Will not work on someone in Stasis
+            if (HF.HasAffliction(infos.target.Human, "stasis", 0.1f)) { return; }
+
+            List<string> cuttables = [.. CuttableAfflictions, .. TraumaShearsAfflictions];
+
+            // Does the target have anything cuttable on this limb?
+            bool canCut = false;
+            foreach (var affID in cuttables)
+            {
+                if (HF.HasAfflictionLimb(infos.target.Human, affID, limbtype, 0.1f))
+                {
+                    canCut = true;
+                    break;
+                }
+            }
+
+            if (!canCut) { return; }
 
             if (HF.GetSkillRequirementMet(infos.user.Human, "medical".ToIdentifier(), 10))
             {
+                HF.GiveItem(infos.target.Human, "ntsfx_scissors");
+
+                // Remove 8% fracture so that they don't scream again
+                if (HF.LimbIsBroken(infos.target.Human, limbtype, false)
+                    && HF.HasAfflictionLimb(infos.target.Human, "plastercast", limbtype, 0.1f))
+                {
+                    HF.BreakLimb(infos.target.Human, limbtype, -8f);
+                }
+
+                // Remove cuttables
                 foreach (var affID in cuttables)
                 {
-                    HF.SetAfflictionLimb(infos.target.Human, affID, infos.targetLimb.type, 0, infos.user.Human, 0);
+                    HF.SetAfflictionLimb(infos.target.Human, affID, limbtype, 0, infos.user.Human, 0);
                 }
             }
             else
             {
-                HF.AddAfflictionLimb(infos.target.Human, "bleeding", infos.targetLimb.type, 15, infos.user.Human);
-                HF.AddAfflictionLimb(infos.target.Human, "lacerations", infos.targetLimb.type, 10, infos.user.Human);
+                HF.AddAfflictionLimb(infos.target.Human, "bleeding", limbtype, 15, infos.user.Human);
+                HF.AddAfflictionLimb(infos.target.Human, "lacerations", limbtype, 10, infos.user.Human);
             }
-
         });
 
         // Diving Knife (Technically Override but similar to shears)

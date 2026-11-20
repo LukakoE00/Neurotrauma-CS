@@ -54,18 +54,21 @@ public static class HarmonyPatches
     }
 
     // Surgery Table Controller Update
-    [HarmonyPatch(typeof(Controller), "Update"), HarmonyPrefix] private static void SurgeryTableController_Update_Prefix(Controller __instance) 
+    [HarmonyPatch(typeof(Controller), "Update"), HarmonyPrefix] 
+    private static void SurgeryTableController_Update_Prefix(Controller __instance) 
     { 
         NTSurgeryTable.SurgeryTableControllerOverride.Prefix_Update(__instance); 
     }
 
-    [HarmonyPatch(typeof(Controller), "Update"), HarmonyPostfix] private static void SurgeryTableController_Update_Postfix() 
+    [HarmonyPatch(typeof(Controller), "Update"), HarmonyPostfix] 
+    private static void SurgeryTableController_Update_Postfix() 
     { 
         NTSurgeryTable.SurgeryTableControllerOverride.Postfix_Update(); 
     }
 
     // Surgery Table Character Selection
-    [HarmonyPatch(typeof(Character), "SelectedCharacter", MethodType.Setter), HarmonyPrefix] private static bool SurgeryTable_SetSelectedCharacter_Prefix(Character __instance, Character value) 
+    [HarmonyPatch(typeof(Character), "SelectedCharacter", MethodType.Setter), HarmonyPrefix] 
+    private static bool SurgeryTable_SetSelectedCharacter_Prefix(Character __instance, Character value) 
     { 
         return NTSurgeryTable.SurgeryTableControllerOverride.Prefix_SetSelectedCharacter(__instance, value); 
     }
@@ -77,10 +80,17 @@ public static class HarmonyPatches
         return AimWobblePatch.Prefix_GetAimWobble(__instance, ref __result);
     }
 
-    //// Fire Patch
-    //[HarmonyPatch(typeof(Character), "ApplyStatusEffects", new Type[] { typeof(ActionType), typeof(float) }), HarmonyPostfix]
-    //private static void ApplyStatusEffects_Postfix(Character __instance, ActionType actionType, float deltaTime)
-    //{
-    //    BurningPatch.Postfix_ApplyStatusEffects(__instance, actionType, deltaTime);
-    //}
+    // Disable vanilla bot rescue targeting
+    [HarmonyPatch(typeof(AIObjectiveRescueAll), "IsValidTarget", new Type[] { typeof(Character) }), HarmonyPrefix]
+    private static bool AIObjectiveRescueAll_IsValidTarget_Prefix(ref bool __result)
+    {
+        return AIObjectiveRescueAllPatch.Prefix_IsValidTarget(ref __result);
+    }
+
+    // Fire Patch
+    [HarmonyPatch(typeof(Character), "ApplyStatusEffects", new Type[] { typeof(ActionType), typeof(float), typeof(Limb), typeof(ISerializableEntity) }), HarmonyPostfix]
+    private static void ApplyStatusEffects_Postfix(Character __instance, ActionType actionType, float deltaTime)
+    {
+        BurningPatch.Postfix_ApplyStatusEffects(__instance, actionType, deltaTime);
+    }
 }

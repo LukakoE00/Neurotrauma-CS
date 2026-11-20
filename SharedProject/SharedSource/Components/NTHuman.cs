@@ -328,7 +328,7 @@ public class NTHuman
         if (limb == null) return false;
 
         Affliction aff = this.Human.CharacterHealth.GetAffliction(AfflictionID.ToIdentifier(), limb);
-        return aff != null && aff.Strength >= MinAmount;
+        return aff != null && aff.Strength > MinAmount;
     }
 
     private static readonly List<List<LimbType>> LocalLimbsToCheck = [[LimbType.LeftArm, LimbType.LeftForearm, LimbType.LeftHand],[LimbType.RightArm, LimbType.RightForearm, LimbType.RightHand],
@@ -393,14 +393,19 @@ public class NTHuman
 
         foreach (var aff in this.Human.CharacterHealth.GetAllAfflictions())
         {
-            if (!Initialization.NTAfflLoader.Exists(aff.Identifier.ToString())) continue;
+            NTAfflictionPrefab? NTPrefab = Initialization.NTAfflLoader.Get(aff.Identifier.ToString());
+            if (NTPrefab == null) continue;
+
+            // Only fetch afflictions whose priority is part of this cycle
+            if (!priorities.Contains(NTPrefab.Priority)) continue;
 
             if (aff.Prefab.LimbSpecific)
             {
-                r.Add(new KeyValuePair<string,LimbType>(
-                    aff.Prefab.Identifier.ToString(), 
+                r.Add(new KeyValuePair<string, LimbType>(
+                    aff.Prefab.Identifier.ToString(),
                     HF.NormalizeLimbType(this.Human.CharacterHealth.GetAfflictionLimb(aff).type)));
-            } else
+            }
+            else
             {
                 r.Add(new KeyValuePair<string, LimbType>(
                     aff.Prefab.Identifier.ToString(),
@@ -452,7 +457,7 @@ public class NTHuman
     /// First calls UpdateSymptoms() then calls every NTAffliction Update function for every NTAffliction in the given list.
     /// </summary>
     /// <param name="AfflictionsList">The list of affliction IDs with their target LimbType</param>
-    public void UpdateAfflictions(List<KeyValuePair<string, LimbType>> AfflictionsList,float deltaTime)
+    public void UpdateAfflictions(List<KeyValuePair<string, LimbType>> AfflictionsList, float deltaTime)
     {
         this.UpdateSymptoms();
 
@@ -479,8 +484,9 @@ public class NTHuman
                     if (delay != aff.Delay)
                     {
                         this.AffDelay[affID] = delay + 1;
-                    } 
-                } else
+                    }
+                }
+                else
                 {
                     this.AffDelay.Add(affID, 1);
                     continue;
@@ -507,12 +513,20 @@ public class NTHuman
                 }
             }
 
-        
-            
-            aff.Update(this, affID, limb, deltaTime);
+            // Priority afflictions only run every N cycles, so they need N times the deltaTime.
+            // Constant afflictions run every cycle, so they keep the plain deltaTime.
+            // Why did cookie forgor?
+            float affDeltaTime = deltaTime;
 
+            if (!NTAfflictions.ConstantAfflicitonPrefabs.Contains(affID))
+            {
+                affDeltaTime = deltaTime
+                    * NTHumanUpdate.GetUpdateInterval(aff.Priority)
+                    / NTHumanUpdate.GetUpdateInterval(AfflictionPriority.HIGH);
+            }
+
+            aff.Update(this, affID, limb, affDeltaTime);
         }
-
     }
 
     public void PostHook(float deltaTime)
@@ -572,8 +586,13 @@ public class NTHuman
             return;
         }
 
+        // Characters with AlwaysStayConscious never go unconscious
+        if (Affliction.ID == "unconsciousness" && this.Human.HasAbilityFlag(AbilityFlags.AlwaysStayConscious))
+        {
+            return;
+        }
+
         this.Symptoms.AddSymptom(Affliction, Duration, Limb);
-        
     }
 
     /// <summary>
