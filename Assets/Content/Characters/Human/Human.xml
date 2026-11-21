@@ -39,8 +39,9 @@
     
     
     <names path="Content/Characters/Human/names.xml" />
-    <ragdolls folder="default" />
-    <animations folder="default" />
+	<!-- Leaving this to default will cause issues. Be explicit -->
+    <ragdolls folder="Content/Characters/Human/Ragdolls" />
+    <animations folder="Content/Characters/Human/Animations" />
     <damageemitter drawontop="True" Particle="gib" AngleMin="0" AngleMax="360" ScaleMin="0.25" ScaleMax="0.5" VelocityMin="50" VelocityMax="300" EmitInterval="0" ParticlesPerSecond="0" ParticleAmount="10" HighQualityCollisionDetection="False" CopyEntityAngle="False" />
     <bloodemitter Particle="blood" AngleMin="0" AngleMax="0" ScaleMin="1" ScaleMax="1" VelocityMin="0" VelocityMax="0" EmitInterval="0" ParticlesPerSecond="0" ParticleAmount="10" HighQualityCollisionDetection="False" CopyEntityAngle="False" />
     <bloodemitter Particle="waterblood" AngleMin="0" AngleMax="0" ScaleMin="1" ScaleMax="1" VelocityMin="0" VelocityMax="0" EmitInterval="0" ParticlesPerSecond="0" ParticleAmount="1" HighQualityCollisionDetection="False" CopyEntityAngle="False" />
@@ -120,74 +121,79 @@
     Commonness="1" />
 
     <StatusEffect type="OnDeconstructed" target="Character">
-      <SpawnItem identifiers="carbon" spawnposition="ThisInventory" count="2" probablity="1" />
-      <SpawnItem identifiers="poop" spawnposition="ThisInventory" count="1" probablity="1" />
-      <SpawnItem identifiers="calcium" spawnposition="ThisInventory" count="1" probablity="1" />
+      <SpawnItem identifiers="humanmeat" spawnposition="ThisInventory" count="2" probability="1" />
+      <SpawnItem identifiers="poop" spawnposition="ThisInventory" count="1" probability="1" />
+      <SpawnItem identifiers="calcium" spawnposition="ThisInventory" count="1" probability="1" />
     </StatusEffect>
 
     <!-- Blood pack only if blood loss is under 30% + Blood type -->
     <!-- 0- -->
-    <StatusEffect type="OnDeconstructed" target="Character">
+    <StatusEffect type="OnDeconstructed" target="Character" ConditionalComparison="and" >
       <Conditional bloodloss="lt 30" />
       <Conditional o_negative="gt 0" />
       <SpawnItem identifiers="antibloodloss2" spawnposition="ThisInventory" count="1" probability="1" />
     </StatusEffect>
 
     <!-- 0+ -->
-    <StatusEffect type="OnDeconstructed" target="Character">
+    <StatusEffect type="OnDeconstructed" target="Character" ConditionalComparison="and" >
       <Conditional bloodloss="lt 30" />
       <Conditional o_positive="gt 0" />
       <SpawnItem identifiers="bloodpacko_positive" spawnposition="ThisInventory" count="1" probability="1" />
     </StatusEffect>
 
     <!-- A- -->
-    <StatusEffect type="OnDeconstructed" target="Character">
+    <StatusEffect type="OnDeconstructed" target="Character" ConditionalComparison="and" >
       <Conditional bloodloss="lt 30" />
       <Conditional a_positive="gt 0" />
       <SpawnItem identifiers="bloodpacka_negative" spawnposition="ThisInventory" count="1" probability="1" />
     </StatusEffect>
 
     <!-- A+ -->
-    <StatusEffect type="OnDeconstructed" target="Character">
+    <StatusEffect type="OnDeconstructed" target="Character" ConditionalComparison="and" >
       <Conditional bloodloss="lt 30" />
       <Conditional a_negative="gt 0" />
       <SpawnItem identifiers="bloodpacka_positive" spawnposition="ThisInventory" count="1" probability="1" />
     </StatusEffect>
 
     <!-- B- -->
-    <StatusEffect type="OnDeconstructed" target="Character">
+    <StatusEffect type="OnDeconstructed" target="Character" ConditionalComparison="and" >
       <Conditional bloodloss="lt 30" />
       <Conditional b_positive="gt 0" />
       <SpawnItem identifiers="bloodpackb_negative" spawnposition="ThisInventory" count="1" probability="1" />
     </StatusEffect>
 
     <!-- B+ -->
-    <StatusEffect type="OnDeconstructed" target="Character">
+    <StatusEffect type="OnDeconstructed" target="Character" ConditionalComparison="and" >
       <Conditional bloodloss="lt 30" />
       <Conditional b_negative="gt 0" />
       <SpawnItem identifiers="bloodpackb_positive" spawnposition="ThisInventory" count="1" probability="1" />
     </StatusEffect>
 
     <!-- AB- -->
-    <StatusEffect type="OnDeconstructed" target="Character">
+    <StatusEffect type="OnDeconstructed" target="Character" ConditionalComparison="and" >
       <Conditional bloodloss="lt 30" />
       <Conditional ab_negative="gt 0" />
       <SpawnItem identifiers="bloodpackab_negative" spawnposition="ThisInventory" count="1" probability="1" />
     </StatusEffect>
 
     <!-- AB+ -->
-    <StatusEffect type="OnDeconstructed" target="Character">
+    <StatusEffect type="OnDeconstructed" target="Character" ConditionalComparison="and" >
       <Conditional bloodloss="lt 30" />
       <Conditional ab_positive="gt 0" />
       <SpawnItem identifiers="bloodpackab_positive" spawnposition="ThisInventory" count="1" probability="1" />
     </StatusEffect>
 
-    <StatusEffect type="OnDeconstructing" target="Character" disabledeltatime="true" interval="1">
-      <Affliction identifier="fracturedextremity" amount="50" probability="0.8" />
-      <Affliction identifier="fracturedskull" amount="50" probability="0.3" />
-      <Affliction identifier="fracturedribs" amount="50" probability="0.3" />
-      <!-- <LuaHook name="IsDeconstructingHuman" /> -->
-    </StatusEffect>
+	  <StatusEffect type="OnDeconstructing" target="Character" targetlimbs="LeftArm,RightArm,LeftLeg,RightLeg" disabledeltatime="true" interval="1">
+		  <Affliction identifier="fracturedextremity" amount="50" probability="0.8" />
+	  </StatusEffect>
+
+	  <StatusEffect type="OnDeconstructing" target="Character" targetlimbs="Head" disabledeltatime="true" interval="1">
+		  <Affliction identifier="fracturedskull" amount="50" probability="0.3" />
+	  </StatusEffect>
+
+	  <StatusEffect type="OnDeconstructing" target="Character" targetlimbs="Torso" disabledeltatime="true" interval="1">
+		  <Affliction identifier="fracturedribs" amount="50" probability="0.3" />
+	  </StatusEffect>
 
     <Heads>
       <Head tags="head1,male" sheetindex="0,0" />
