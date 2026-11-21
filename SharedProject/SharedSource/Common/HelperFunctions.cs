@@ -1375,7 +1375,12 @@ namespace Neurotrauma
         {
 
             if (Character == null || Character.CharacterHealth == null || Character.IdFreed) return null;
-            return Character.CharacterHealth.GetAffliction(Identifier.ToIdentifier(), Character.AnimController.GetLimb(GivenLimbType));
+
+            Limb limb = Character.AnimController.GetLimb(GivenLimbType);
+
+            if (limb == null) return null;
+
+            return Character.CharacterHealth.GetAffliction(Identifier.ToIdentifier(), limb);
         }
 
         /// <summary>
@@ -2004,8 +2009,7 @@ namespace Neurotrauma
         /// <param name="Key">The stat relevant for this limb.</param>
         /// <returns>True if it should, else False.</returns>
         public static bool LimbLockedInitial(NTHuman C, LimbType Limb, string Key)
-        {
-            
+        {   
             return (
                     C.HasSymptom(Key)
                     || LimbIsAmputated(C.Human, Limb)
