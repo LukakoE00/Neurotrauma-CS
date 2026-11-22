@@ -159,7 +159,10 @@ public class NTHuman
 
     public Affliction GetAfflictionLimb(string AfflictionID, LimbType Limb)
     {
-        return this.Human.CharacterHealth.GetAffliction(AfflictionID.ToIdentifier(), this.Human.AnimController.GetLimb(Limb));
+        Limb? RealLimb = this.Human.AnimController.GetLimb(Limb);
+        if (RealLimb == null) return null;
+
+        return this.Human.CharacterHealth.GetAffliction(AfflictionID.ToIdentifier(), RealLimb);
     }
 
     public float GetAfflictionStrength(string AfflictionID, float DefaultValue = 0f)
@@ -201,6 +204,9 @@ public class NTHuman
 
     public void AddAfflictionLimb(string AfflictionID, LimbType Limb, float Strength, Character? Aggressor = null)
     {
+        Limb? RealLimb = this.Human.AnimController.GetLimb(Limb);
+        if (RealLimb == null) return;
+
         if (Aggressor == null)
         {
             Aggressor = this.Human;
@@ -209,7 +215,7 @@ public class NTHuman
         if (Strength < 0)
         {
             this.Human.CharacterHealth.ReduceAfflictionOnLimb(
-                HF.GetCharacterLimb(this.Human, Limb),
+                RealLimb,
                 AfflictionID.ToIdentifier(),
                 HF.NormalizeFloat(-Strength),
                 null,
@@ -236,7 +242,7 @@ public class NTHuman
 
         // No need to manually calculate strength, just stack it - Lukako
         this.Human.CharacterHealth.ApplyAffliction(
-            this.Human.AnimController.GetLimb(Limb),
+            RealLimb,
             Affliction,
             true,
             false,
@@ -264,6 +270,9 @@ public class NTHuman
 
     public void SetAfflictionLimb(string AfflictionID, LimbType Limb, float Strength, Character? Aggressor = null)
     {
+        Limb? RealLimb = this.Human.AnimController.GetLimb(Limb);
+        if (RealLimb == null) return;
+
         // This Error was in the original but not ported for some reason?
         if (!AfflictionPrefab.Prefabs.TryGet(AfflictionID, out AfflictionPrefab? Prefab) || Prefab == null || this.Human == null || this.Human.CharacterHealth == null)
         {
@@ -289,7 +298,7 @@ public class NTHuman
         bool RecalculateVitality = NTC.AfflictionsAffectingVitality.Contains(AfflictionID);
 
         this.Human.CharacterHealth.ApplyAffliction(
-            this.Human.AnimController.GetLimb(Limb),
+            RealLimb,
             Affliction,
             false,
             false,
