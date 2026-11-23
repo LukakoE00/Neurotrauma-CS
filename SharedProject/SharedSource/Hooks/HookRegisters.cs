@@ -26,6 +26,9 @@ public static class Hooks
         LuaCsSetup.Instance.EventService.Add("NT.multiscalpel.speedflex", "NTCS.multiscalpel.speedflex", OnMultiscalpelSpeedflex);
         LuaCsSetup.Instance.EventService.Add("OnInsertedIntoBloodAnalyzer", "NTCS.BloodAnalyzer", OnBloodAnalyzer);
         LuaCsSetup.Instance.EventService.Add("surgerytable.update", "NTCS.SurgeryTable", OnSurgeryTableUpdate);
+        LuaCsSetup.Instance.EventService.Add("roundStart", "NTCS.RoundStartFixItems", OnRoundStart);
+        LuaCsSetup.Instance.EventService.Add("item.created", "NTCS.ItemCreatedFixItems", OnItemCreated);
+        LuaCsSetup.Instance.EventService.Add("NT.RotOrgan", "NTCS.RotOrgan", OnOrganRot);
     }
 
     // All functions that should trigger every tick.
@@ -127,6 +130,27 @@ public static class Hooks
     public static object? OnSurgeryTableUpdate(params object[] args)
     {
         NTSurgeryTable.OnSurgeryTableUpdate(args);
+        return null;
+    }
+
+    // All functions that should trigger when a round starts.
+    public static object? OnRoundStart(params object[] args)
+    {
+        NTItemsData.RefreshCondition();
+        return null;
+    }
+
+    // All functions that should trigger when an item is created.
+    public static object? OnItemCreated(params object[] args)
+    {
+        NTItemsData.TryFixCondition(args);
+        return null;
+    }
+
+    // All functions that should trigger when an organ rots.
+    public static object? OnOrganRot(params object[] args)
+    {
+        NTItemsData.RotOrgan(args);
         return null;
     }
 }

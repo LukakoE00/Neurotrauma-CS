@@ -100,7 +100,6 @@ public partial class Initialization : IAssemblyPlugin
         NTInfo.PrintNTInitInfo();
         DynamicItems.InitDynamicItems(); // Add the DynamicItems hooks
         OnDamaged.InitializeOnDamagedMethods(); // Add OnDamaged patches
-        NTItemsData.EnsureWorkingItems(); // Runs the FixItems hooks
 
         //BotTreatment.InitBotTreatment(); // Bot Treatment code
     }

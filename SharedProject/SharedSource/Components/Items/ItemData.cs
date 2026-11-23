@@ -231,28 +231,6 @@ public class NTItemsData
     /// </summary>
     public static void DefineAllItems()
     {
-
-#pragma warning disable CS0618
-        LuaCsSetup.Instance.Hook.Add("NT.RotOrgan", "Neurotrauma.Items.RotOrgan", (params object[] args) =>
-        {
-            var organ = args[2] as Item;
-            if (organ == null) return null;
-
-            // TODO : ReplaceItemIdentifier
-            /*string id = organ.Prefab.Identifier.Value;
-            List<string> variants = [ "liver", "kidney", "heart", "lung", "brain" ];
-
-            if(variants.Any(variant => id == variant + "transplant" || id == variant+"transplant_q1"))
-            {
-                
-            }*/
-
-            HF.RemoveItem(organ);
-
-            return null;
-        });
-#pragma warning restore CS0618
-
         NTItemFunctionLoader loader = Initialization.NTItemsLoader;
 
 
@@ -2633,39 +2611,42 @@ public class NTItemsData
         "antisepticspray"
     };
 
-    private static void TryFixCondition(Item item)
+    public static object ?TryFixCondition(object[] args)
     {
+        Item? item = args[0] as Item;
+
         if (item != null && FixCondition.Contains(item.Prefab.Identifier.Value))
         {
             item.Condition = 100f;
         }
+
+        return null;
     }
 
     public static void RefreshCondition()
     {
         foreach (Item item in Item.ItemList)
         {
-            TryFixCondition(item);
+            TryFixCondition(new object[] { item });
         }
     }
 
-    public static void EnsureWorkingItems()
+    public static object? RotOrgan(object[] args)
     {
-#pragma warning disable CS0618
+        var organ = args[2] as Item;
+        if (organ == null) return null;
 
-        LuaCsSetup.Instance.Hook.Add("roundStart", "NT.RoundStartFixItems", (params object[] args) =>
+        // TODO : ReplaceItemIdentifier
+        /*string id = organ.Prefab.Identifier.Value;
+        List<string> variants = [ "liver", "kidney", "heart", "lung", "brain" ];
+
+        if(variants.Any(variant => id == variant + "transplant" || id == variant+"transplant_q1"))
         {
-            RefreshCondition(); // catches items already present when the round starts
-            return null;
-        });
 
+        }*/
 
-        LuaCsSetup.Instance.Hook.Add("item.created", "NT.ItemCreatedFixItems", (params object[] args) =>
-        {
-            TryFixCondition(args[0] as Item);
-            return null;
-        });
+        HF.RemoveItem(organ);
 
-#pragma warning restore CS0618
+        return null;
     }
 }

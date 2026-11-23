@@ -44,7 +44,7 @@ namespace Neurotrauma
                     }
                     else
                     {
-                        HF.Print("nt_recreatestores: Tried to recreate stores in the campaign map, but there is none!");
+                        HF.Print("nt_recreatestores: Tried to recreate stores in the campaign map, but there are none!");
                     }
                 }));
         }
