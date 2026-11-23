@@ -978,6 +978,12 @@
             <limbposition limb="LeftFoot" position="380,-20" allowusinglimb="true"/>
             <limbposition limb="RightHand" position="234,-10" allowusinglimb="true"/>
             <limbposition limb="LeftHand" position="234,-10" allowusinglimb="true"/>
+            
+            <!-- Extra affliction only given while laying down.-->
+            <StatusEffect type="OnActive" target="Character" disabledeltatime="true">
+                <Affliction identifier="laytable" amount="60" />
+            </StatusEffect>
+
             <!-- Give analgesia/anesthesia, if tank is present -->
             <!-- Analgesia -->
             <StatusEffect type="OnActive" target="Contained,Character" targettags="analgesictank,Human" Condition="-0.7" conditionalComparison="And" disabledeltatime="true" interval="1">
@@ -1085,6 +1091,7 @@
                 <ReduceAffliction identifier="deliriuminepoisoning" amount="1.6" />
                 <Affliction identifier="sepsis" amount="1" probability="0.001" />
             </StatusEffect>
+
             <StatusEffect type="OnActive" target="Character">
                 <reduceaffliction identifier="nausea" strength="0.05"/>
                 <reduceaffliction identifier="opiatewithdrawal" strength="0.05"/>

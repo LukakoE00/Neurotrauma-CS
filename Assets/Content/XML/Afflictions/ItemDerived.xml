@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Override>
   <Afflictions>
-     <!-- Adrenaline / Epinephrine. Visible on Hematology Analyzer. Counters Pain and increases Blood Pressure. -->
+    <!-- Adrenaline / Epinephrine. Visible on Hematology Analyzer. Counters Pain and increases Blood Pressure. -->
     <Affliction
       name=""
       description=""
@@ -199,6 +199,27 @@
       maxstrength="100">
 
       <icon texture="%ModDir%/Images/AfflictionIcons.png" sheetindex="3,3" sheetelementsize="128,128" origin="0,0"/>
+    </Affliction>
+
+    <!-- Laying down on the Surgery Table. Can be toggled to give extra effects. -->
+    <Affliction
+      name=""
+      description=""
+      identifier="laytable"
+      
+      healableinmedicalclinic="false"
+      targets="human"
+      type="resistance"
+      isbuff="true"
+      limbspecific="false"
+      
+      showinhealthscannerthreshold="999"
+      showiconthreshold="75"
+      maxstrength="100">
+
+      <Effect minstrength="1" maxstrength="100" strengthchange="-40" disabledeltatime="false" />
+
+      <icon texture="Content/UI/MainIconsAtlas.png" sourcerect="256,896,128,128" color="10,193,114,255" origin="0,0" />
     </Affliction>
   </Afflictions>
 </Override>

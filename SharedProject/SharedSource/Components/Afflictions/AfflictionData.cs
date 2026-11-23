@@ -4224,9 +4224,43 @@ public class NTAfflictionsToAdd
             .IsSymptom(true)
             .Build());
 
-        // DEBUG
+
+        // Laytable
+        // Not constant; gets applied by other sources, removes itself however.
+        // Type: Non-Limb Specific
+        // Caused By: Laying on surgery table.
+        // Effects: Additional healing.
         AfflictionsToAdd.Add(
-            builder.New("amputation")
+            builder.New("laytable")
+            .SetUpdateAction((C, ID, Limb, dT) =>
+            {
+                if (!NTConfig.Get("NT_SurgeryTableHealsMore", false))
+                {
+                    C.SetAffliction(ID, 0);
+                    return;
+                }
+
+                // Bed applies 45 strength and it decays by 20/s, so you need to lay down a bit. If you leave the bed it drops below this threshold and healing stops.
+                if (C.GetAfflictionStrength(ID) < 75f)
+                {
+                    return;
+                }
+
+                // Internal bleeding
+                C.AddAffliction("internalbleeding", -0.015f * dT);
+
+                // Heart damage
+                C.AddAffliction("heartdamage", -0.004f * dT);
+
+                // Lung damage
+                C.AddAffliction("lungdamage", -0.004f * dT);
+
+                // Liver damage
+                C.AddAffliction("liverdamage", -0.004f * dT);
+
+                // Kidney damage
+                C.AddAffliction("kidneydamage", -0.004f * dT);
+            })
             .Build());
 
         Initialization.NTAfflLoader.Registers(AfflictionsToAdd);

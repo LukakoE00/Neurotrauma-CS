@@ -1301,6 +1301,15 @@ namespace Neurotrauma
                             Description = TextManager.Get("ntconfig.entrydescription.doorganscalpels"),
                         },
 
+                        ["NT_SurgeryTableHealsMore"] = new ConfigEntry
+                        {
+                            Page = "itemchanges",
+                            Name = TextManager.Get("ntconfig.entryname.surgerytablehealsmore"),
+                            Default = false,
+                            Type = ConfigEntryType.Bool,
+                            Description = TextManager.Get("ntconfig.entrydescription.surgerytablehealsmore"),
+                        },
+
                         // ================================= AFFLICTION CHANGES =================================
 
                         ["NT_AfflictionChanges"] = new ConfigEntry
