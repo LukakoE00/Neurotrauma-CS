@@ -221,7 +221,7 @@ public class NTItemsData
         if (HF.HasAfflictionLimb(infos.target.Human, "sawedbones", limbType, 99))
         {
             HF.SetAfflictionLimb(infos.target.Human, "sawedbones", limbType, 0f, infos.user.Human, 99);
-            HF.SurgicallyAmputateLimb(infos.target.Human, limbType, 0, 0);
+            HF.RegenerateLimb(infos.target.Human, limbType, infos.user.Human);
             HF.RemoveItem(infos.item);
         }
     }
@@ -1563,7 +1563,7 @@ public class NTItemsData
 
                 LuaCsSetup.Instance.Timer.Wait((params object[] _) =>
                 {
-                    HF.SurgicallyAmputateLimbAndGenerateItem(infos.user.Human, infos.target.Human, infos.targetLimb.type);
+                    HF.AmputateLimbAndGenerateItem(infos.user.Human, infos.targetLimb.type, infos.target.Human);
                 }, 1);
             }
 
@@ -2619,6 +2619,7 @@ public class NTItemsData
                 }, 50);
             }
         });
+        
     }
 
     public static readonly HashSet<string> FixCondition = new()

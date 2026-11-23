@@ -249,7 +249,7 @@ public static class OnDamaged
                 && !HF.LimbIsAmputated(Character, LimbType)
                 && HF.Chance(Strength / 60f * AmputationChance))
             {
-                HF.TraumamputateLimbAndGenerateItem(Character, LimbType, null);
+                HF.AmputateLimbAndGenerateItem(null, LimbType, Character, true);
             }
 
             // Fractures
@@ -342,7 +342,7 @@ public static class OnDamaged
                 HF.GetItemInHeadWear(Character)?.Drop(Character, true);
                 HF.GetItemInHeadSet(Character)?.Drop(Character, true);
 
-                HF.TraumamputateLimbAndGenerateItem(Character, LimbType, null);
+                HF.AmputateLimbAndGenerateItem(null, LimbType, Character, true);
             }
         }
 
@@ -354,7 +354,7 @@ public static class OnDamaged
                 && !HF.LimbIsAmputated(Character, LimbType) 
                 && HF.Chance(Strength / 60f * (float)NTC.GetMultiplier(NTCharacter, "traumamputatechance") * NTConfig.Get("NT_traumaticAmputationChance", 1f)))
             {
-                HF.TraumamputateLimbAndGenerateItem(Character, LimbType, null);
+                HF.AmputateLimbAndGenerateItem(null, LimbType, Character, true);
             }
 
             // Fractures
@@ -433,7 +433,7 @@ public static class OnDamaged
                 && !(HF.LimbIsAmputated(Character, LimbType)) 
                 && HF.Chance((Strength - 5f) / 60f * (float)NTC.GetMultiplier(NTCharacter, "traumamputatechance") * NTConfig.Get("NT_traumaticAmputationChance", 1f)))
             {
-                HF.TraumamputateLimbAndGenerateItem(Character, LimbType, Character.LastAttacker);
+                HF.AmputateLimbAndGenerateItem(Character.LastAttacker, LimbType, Character, true);
             }
 
             // Fractures
@@ -498,7 +498,7 @@ public static class OnDamaged
                 && !HF.LimbIsAmputated(Character, LimbType)
                 && HF.Chance(Strength / 60f * (float)NTC.GetMultiplier(NTCharacter, "traumamputatechance") * NTConfig.Get("NT_traumaticAmputationChance", 1f)))
             {
-                HF.TraumamputateLimbAndGenerateItem(Character, LimbType, null);
+                HF.AmputateLimbAndGenerateItem(null, LimbType, Character, true);
             }
 
             // Fractures
@@ -586,7 +586,7 @@ public static class OnDamaged
                 && !(HF.LimbIsAmputated(Character, LimbType))
                 && HF.Chance(Strength / 100f * (float)NTC.GetMultiplier(NTCharacter, "traumamputatechance") * NTConfig.Get("NT_traumaticAmputationChance", 1f)))
             {
-                HF.TraumamputateLimbAndGenerateItem(Character, LimbType, null);
+                HF.AmputateLimbAndGenerateItem(null, LimbType, Character, true);
             }
 
             // Fractures
@@ -677,7 +677,7 @@ public static class OnDamaged
                 && !(HF.LimbIsAmputated(Character, LimbType))
                 && HF.Chance((Strength - 10f) / 60f * (float)NTC.GetMultiplier(NTCharacter, "traumamputatechance") * NTConfig.Get("NT_traumaticAmputationChance", 1f)))
             {
-                HF.TraumamputateLimbAndGenerateItem(Character, LimbType, null);
+                HF.AmputateLimbAndGenerateItem(null, LimbType, Character, true);
             }
 
             // Fractures

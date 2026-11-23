@@ -2552,8 +2552,7 @@ public class NTAfflictionsToAdd
                 // Limb must be an extremity
                 if (!HF.LimbIsExtremity(Limb)) return;
 
-                // Surgical amputation prevents Gangrene on that stump
-                if (HF.LimbIsSurgicallyAmputated(C.Human, Limb))
+                if (HF.LimbIsAmputated(C.Human, Limb))
                 {
                     C.SetAfflictionLimb(ID, Limb, 0);
                     return;

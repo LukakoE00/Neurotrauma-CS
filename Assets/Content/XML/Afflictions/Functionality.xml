@@ -899,5 +899,27 @@
 
       <icon texture="%ModDir%/Images/AfflictionIcons.png" sheetindex="3,1" sheetelementsize="128,128" color="10,193,114,255" origin="0,0"/>
     </Affliction>
+
+      <Affliction
+      name=""
+      description=""
+      identifier="amputation_nt"
+
+      type="surgery_nt"
+      limbspecific="true"
+      affectmachines="false"
+      
+      showinhealthscannerthreshold="999"
+      showiconthreshold="999"
+      maxstrength="100">
+
+      <icon texture="Content/UI/TalentsIcons4.png" sourcerect="640,384,128,128" color="200,30,30,255" origin="0,0"/>
+      <Effect minstrength="0" maxstrength="100">
+        <StatusEffect type="OnActive" target="Limb" disabledeltatime="true">
+          <BreakLimb/>
+          <ReduceAffliction identifier="amputation_nt" amount="100"/>
+        </StatusEffect>
+      </Effect>
+    </Affliction>
   </Afflictions>
 </Override>
