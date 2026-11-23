@@ -1283,8 +1283,9 @@ Can give blood to: AB+</entitydescription.ab_positivecard>
 <ntconfig.resetconfirm.no>No</ntconfig.resetconfirm.no>
 
 <!-- Default Pages -->
-<ntconfig.defaultpage.prices>Item Price Multipliers</ntconfig.defaultpage.prices>
-<ntconfig.defaultpage.availability>Item Availability Options</ntconfig.defaultpage.availability>
+<ntconfig.defaultpage.prices>Adjust Item Prices</ntconfig.defaultpage.prices>
+<ntconfig.defaultpage.itemchanges>Adjust Items</ntconfig.defaultpage.itemchanges>
+<ntconfig.defaultpage.afflictionchanges>Adjust Afflictions</ntconfig.defaultpage.afflictionchanges>
 <ntconfig.defaultpage.experimental>Experimental</ntconfig.defaultpage.experimental>
 
 <!-- Default Warning -->
@@ -1696,8 +1697,8 @@ Can give blood to: AB+</entitydescription.ab_positivecard>
 <!-- Multipurpose Scalpel -->
 <ntconfig.entryname.itemprice_advscalpel>Multipurpose Scalpel</ntconfig.entryname.itemprice_advscalpel>
 
-<!-- =================== Dynamic Item Availability ===================-->
-<ntconfig.entryname.header8>Change Item Use Amounts</ntconfig.entryname.header8>
+<!-- =================== Item Changes ===================-->
+<ntconfig.entryname.header8>Adjust Item Functionality</ntconfig.entryname.header8>
 
 <!-- Osteosynthesis Implant Uses -->
 <ntconfig.entryname.osteoimplants_uses>Osteosynthesis Implant Uses</ntconfig.entryname.osteoimplants_uses>
@@ -1705,21 +1706,24 @@ Can give blood to: AB+</entitydescription.ab_positivecard>
 <!-- Spinal Cord Implant Uses -->
 <ntconfig.entryname.spinalimplants_uses>Spinal Cord Implant Uses</ntconfig.entryname.spinalimplants_uses>
 
-<!-- Hardmode Aortic Rupture -->
-<ntconfig.entryname.hardmodeaorticrupture>Hardmode Aortic Rupture</ntconfig.entryname.hardmodeaorticrupture>
-<ntconfig.entrydescription.hardmodeaorticrupture>Enable the Medical Stent and Aortic Balloon as the only method to fix Aortic Rupture.</ntconfig.entrydescription.hardmodeaorticrupture>
-
-<!-- Open Close Tamponade -->
-<ntconfig.entryname.openclosetamponade>Open Close Tamponade</ntconfig.entryname.openclosetamponade>
-<ntconfig.entrydescription.openclosetamponade>Enable the closing with sutures as the only method to fix Cardiac Tamponade.</ntconfig.entrydescription.openclosetamponade>
-
 <!-- Enable Sodium Nitroprusside -->
 <ntconfig.entryname.donitroprusside>Enable Sodium Nitroprusside</ntconfig.entryname.donitroprusside>
-<ntconfig.entrydescription.donitroprusside>Allow Sodium Nitroprusside to be fabricated, bought and found.</ntconfig.entrydescription.donitroprusside>
+<ntconfig.entrydescription.donitroprusside>This setting can be changed at any time. \n\n‖color:gui.green‖Enabled:‖end‖ Sodium Nitroprusside can be found/bought/fabricated. \n\n‖color:gui.red‖Disabled:‖end‖ Sodium Nitroprusside cannot be found/bought/fabricated.</ntconfig.entrydescription.donitroprusside>
 
 <!-- Enable Organ Scalpels -->
 <ntconfig.entryname.doorganscalpels>Enable Organ Scalpels</ntconfig.entryname.doorganscalpels>
-<ntconfig.entrydescription.doorganscalpels>Allow Organ scalpels and Surgery Box Scalpel set to be fabricated, bought and found.</ntconfig.entrydescription.doorganscalpels>
+<ntconfig.entrydescription.doorganscalpels>This setting can be changed at any time. \n\n‖color:gui.green‖Enabled:‖end‖ Organ Scalpels can be found/bought/fabricated. \n\n‖color:gui.red‖Disabled:‖end‖ Organ Scalpels cannot be found/bought/fabricated.\n\nThe Multiscalpel is exempt from this setting.</ntconfig.entrydescription.doorganscalpels>
+
+<!-- =================== Affliction Changes =================== -->
+<ntconfig.entryname.afflictionchanges>Adjust Affliction Functionality</ntconfig.entryname.afflictionchanges>
+
+<!-- Hardmode Aortic Rupture -->
+<ntconfig.entryname.hardmodeaorticrupture>Hardmode Aortic Rupture</ntconfig.entryname.hardmodeaorticrupture>
+<ntconfig.entrydescription.hardmodeaorticrupture>This setting can be changed at any time. \n\n‖color:gui.green‖Enabled:‖end‖ Aortic Ruptures now require the Medical Stent and Endovascular Balloon to be cured; also enables these items to be found/bought/fabricated. \n\n‖color:gui.red‖Disabled:‖end‖ Aortic Ruptures can be cured with just Open / Close Surgery; also ensures Medical Stents and Endovascular balloons cannot be found/bought/fabricated.</ntconfig.entrydescription.hardmodeaorticrupture>
+
+<!-- Open Close Tamponade -->
+<ntconfig.entryname.openclosetamponade>Open Close Tamponade</ntconfig.entryname.openclosetamponade>
+<ntconfig.entrydescription.openclosetamponade>This setting can be changed at any time. \n\n‖color:gui.green‖Enabled:‖end‖ Cardiac Tamponade can be cured with just Open / Close Surgery. \n\n‖color:gui.red‖Disabled:‖end‖ Cardiac Tamponade can only be cured with a Drainage during Open / Close Surgery.</ntconfig.entrydescription.openclosetamponade>
 
 <!-- =================== EXPERIMENTAL =================== -->
 

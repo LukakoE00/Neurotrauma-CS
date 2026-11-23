@@ -19,7 +19,8 @@ namespace Neurotrauma
         public static readonly List<(LocalizedString Name, string Identifier)> BaseConfigPages = new()
         {
             (TextManager.Get("ntconfig.defaultpage.prices"), "prices"),
-            (TextManager.Get("ntconfig.defaultpage.availability"), "availability"),
+            (TextManager.Get("ntconfig.defaultpage.itemchanges"), "itemchanges"),
+            (TextManager.Get("ntconfig.defaultpage.afflictionchanges"), "afflictionchanges"),
             (TextManager.Get("ntconfig.defaultpage.experimental"), "experimental")
         };
 

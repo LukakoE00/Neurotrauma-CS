@@ -1253,10 +1253,10 @@ namespace Neurotrauma
                             Resettable = true,
                         },
 
-                        // ================================= DYNAMIC ITEM AVAILABILITY =================================
+                        // ================================= ITEM CHANGES =================================
                         ["NT_ItemDurabilityHeader"] = new ConfigEntry
                         {
-                            Page = "availability",
+                            Page = "itemchanges",
                             Name = TextManager.Get("ntconfig.entryname.header8"),
                             Type = ConfigEntryType.Category,
                         },
@@ -1264,7 +1264,7 @@ namespace Neurotrauma
                         ["NT_OsteoImplants_uses"] = new ConfigEntry
                         {
                             Name = TextManager.Get("ntconfig.entryname.osteoimplants_uses"),
-                            Page = "availability",
+                            Page = "itemchanges",
                             Default = 4f,
                             Range = new float[] { 1, 10 },
                             Type = ConfigEntryType.Float,
@@ -1274,7 +1274,7 @@ namespace Neurotrauma
 
                         ["NT_SpinalImplants_uses"] = new ConfigEntry
                         {
-                            Page = "availability",
+                            Page = "itemchanges",
                             Name = TextManager.Get("ntconfig.entryname.spinalimplants_uses"),
                             Default = 1f,
                             Range = new float[] { 0.99f, 10 },
@@ -1283,27 +1283,9 @@ namespace Neurotrauma
                             Resettable = true,
                         },
 
-                        ["NT_HardmodeAorticRupture"] = new ConfigEntry
-                        {
-                            Page = "availability",
-                            Name = TextManager.Get("ntconfig.entryname.hardmodeaorticrupture"),
-                            Default = false,
-                            Type = ConfigEntryType.Bool,
-                            Description = TextManager.Get("ntconfig.entrydescription.hardmodeaorticrupture"),
-                        },
-
-                        ["NT_OpenCloseTamponade"] = new ConfigEntry
-                        {
-                            Page = "availability",
-                            Name = TextManager.Get("ntconfig.entryname.openclosetamponade"),
-                            Default = false,
-                            Type = ConfigEntryType.Bool,
-                            Description = TextManager.Get("ntconfig.entrydescription.openclosetamponade"),
-                        },
-
                         ["NT_DoNitroprusside"] = new ConfigEntry
                         {
-                            Page = "availability",
+                            Page = "itemchanges",
                             Name = TextManager.Get("ntconfig.entryname.donitroprusside"),
                             Default = false,
                             Type = ConfigEntryType.Bool,
@@ -1312,13 +1294,39 @@ namespace Neurotrauma
 
                         ["NT_DoOrganScalpels"] = new ConfigEntry
                         {
-                            Page = "availability",
+                            Page = "itemchanges",
                             Name = TextManager.Get("ntconfig.entryname.doorganscalpels"),
                             Default = false,
                             Type = ConfigEntryType.Bool,
                             Description = TextManager.Get("ntconfig.entrydescription.doorganscalpels"),
                         },
 
+                        // ================================= AFFLICTION CHANGES =================================
+
+                        ["NT_AfflictionChanges"] = new ConfigEntry
+                        {
+                            Page = "afflictionchanges",
+                            Name = TextManager.Get("ntconfig.entryname.afflictionchanges"),
+                            Type = ConfigEntryType.Category,
+                        },
+
+                        ["NT_OpenCloseTamponade"] = new ConfigEntry
+                        {
+                            Page = "afflictionchanges",
+                            Name = TextManager.Get("ntconfig.entryname.openclosetamponade"),
+                            Default = false,
+                            Type = ConfigEntryType.Bool,
+                            Description = TextManager.Get("ntconfig.entrydescription.openclosetamponade"),
+                        },
+
+                        ["NT_HardmodeAorticRupture"] = new ConfigEntry
+                        {
+                            Page = "afflictionchanges",
+                            Name = TextManager.Get("ntconfig.entryname.hardmodeaorticrupture"),
+                            Default = false,
+                            Type = ConfigEntryType.Bool,
+                            Description = TextManager.Get("ntconfig.entrydescription.hardmodeaorticrupture"),
+                        },
 
                         // ================================= EXPERIMENTAL =================================
 
