@@ -3956,6 +3956,33 @@ public class NTAfflictionsToAdd
             .Build()
             );
 
+        // Force Prone
+        // Constant; too complicated otherwise.
+        // Type: Functionality
+        // Effects: Changes the animations of a character to be unable to walk.
+        AfflictionsToAdd.Add(
+            builder.New("forceprone")
+            .IsConst(true)
+            .IsSymptom(true)
+            .SetStrengths(0, 2, 0)
+            .SetUpdateAction((C, ID, Limb, dT) =>
+            {
+
+                // Readability / 10 ?
+                bool keep = C.GetAfflictionStrength("unconsciousness") <= 0
+                    && !C.Human.IsClimbing
+                    && !(C.GetBoolStat("wheelchaired"))
+                    && (C.HasSymptom("forceprone")
+                    || (C.GetBoolStat("lockleftleg") && C.GetBoolStat("lockrightleg")));
+
+                C.SetAffliction(ID, HF.BoolToNum(keep, 2f));
+
+                if (!keep) C.SetAffliction(ID, 0);
+
+            })
+            .Build()
+            );
+
         // Hyperventilation
         // Not constant; gets applied by other sources, removes itself however.
         // Type: Non-Limb Specific
