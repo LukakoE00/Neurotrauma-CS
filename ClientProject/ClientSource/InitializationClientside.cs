@@ -26,6 +26,18 @@ public partial class Initialization
             IReadMessage msg = (IReadMessage)args[0];
             NTConfig.ReceiveConfig(msg);
         });
+
+        LuaCsSetup.Instance.Networking.Receive("NT.RegenLimb", (object[] args) =>
+        {
+            IReadMessage msg = (IReadMessage)args[0];
+            ushort CharacterID = msg.ReadUInt16();
+            LimbType Limb = (LimbType)msg.ReadInt32();
+
+            if (Entity.FindEntityByID(CharacterID) is Character C)
+            {
+                Amputations.RegenerateLimb(C, Limb, ReceivedFromServer: true);
+            }
+        });
     }
 
     partial void DisposeClient()
