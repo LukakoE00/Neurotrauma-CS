@@ -950,87 +950,6 @@ public class NTAfflictionsToAdd
             .Build()
             );
 
-        // =============== Limbs =============== //
-        // Traumatic Right Arm Amputation
-        // Not constant; gets applied by other sources.
-        // Type: Indicator
-        // Effects: None.
-        // Applied via Damage Sustained. Does nothing.
-        AfflictionsToAdd.Add(
-            builder.New("tra_amputation").Build());
-
-        // Traumatic Left Arm Amputation
-        // Not constant; gets applied by other sources.
-        // Type: Indicator
-        // Effects: None.
-        // Applied via Damage Sustained. Does nothing.
-        AfflictionsToAdd.Add(
-            builder.New("tla_amputation").Build());
-
-        // Traumatic Right Leg Amputation
-        // Not constant; gets applied by other sources.
-        // Type: Indicator
-        // Effects: None.
-        // Applied via Damage Sustained. Does nothing.
-        AfflictionsToAdd.Add(
-            builder.New("trl_amputation").Build());
-
-        // Traumatic Left Leg Amputation
-        // Not constant; gets applied by other sources.
-        // Type: Indicator
-        // Effects: None.
-        // Applied via Damage Sustained. Does nothing.
-        AfflictionsToAdd.Add(
-            builder.New("tll_amputation").Build());
-
-        // Traumatic Head Amputation
-        // Not constant; gets applied by other sources.
-        // Type: Indicator
-        // Effects: None.
-        // Applied via Damage Sustained. Does nothing. Act of removing the head kills instantly.
-        AfflictionsToAdd.Add(
-            builder.New("th_amputation").Build());
-
-        // Surgical Right Arm Amputation
-        // Not constant; gets applied by other sources.
-        // Type: Indicator, Surgery
-        // Effects: None.
-        // Result of Surgical Amputation. Does nothing.
-        AfflictionsToAdd.Add(
-            builder.New("sra_amputation").Build());
-
-        // Surgical Left Arm Amputation
-        // Not constant; gets applied by other sources.
-        // Type: Indicator, Surgery
-        // Effects: None.
-        // Result of Surgical Amputation. Does nothing.
-        AfflictionsToAdd.Add(
-            builder.New("sla_amputation").Build());
-
-        // Surgical Right Leg Amputation
-        // Not constant; gets applied by other sources.
-        // Type: Indicator, Surgery
-        // Effects: None.
-        // Result of Surgical Amputation. Does nothing.
-        AfflictionsToAdd.Add(
-            builder.New("srl_amputation").Build());
-
-        // Surgical Left Leg Amputation
-        // Not constant; gets applied by other sources.
-        // Type: Indicator, Surgery
-        // Effects: None.
-        // Result of Surgical Amputation. Does nothing.
-        AfflictionsToAdd.Add(
-            builder.New("sll_amputation").Build());
-
-        // Surgical Head Amputation
-        // Not constant; gets applied by other sources.
-        // Type: Indicator, Surgery
-        // Effects: None.
-        // Result of Surgical Amputation. Does nothing. Act of removing the head kills instantly.
-        AfflictionsToAdd.Add(
-            builder.New("sh_amputation").Build());
-
         // =============== Utility =============== //
         // Luabotomy
         // Not constant; gets applied by other sources.
@@ -1342,86 +1261,6 @@ public class NTAfflictionsToAdd
             })
             .Build()
             );
-
-        // TraumaticAmputating Left Leg + Item
-        // Not constant; gets applied by other sources.
-        // Type: Functionality
-        // Effects: Spawns the respective limb while applying the Traumatic Amputation affliction for that limb; also applies arterial bleeding, pain and a fracture.
-        // Uses XML to cause TraumaAmputations.
-        AfflictionsToAdd.Add(
-            builder.New("gate_ta_ll").Build());
-
-        // TraumaticAmputating Right Leg + Item
-        // Not constant; gets applied by other sources.
-        // Type: Functionality
-        // Effects: Spawns the respective limb while applying the Traumatic Amputation affliction for that limb; also applies arterial bleeding, pain and a fracture.
-        // Uses XML to cause TraumaAmputations.
-        AfflictionsToAdd.Add(
-            builder.New("gate_ta_rl").Build());
-
-        // TraumaticAmputating Left Arm + Item
-        // Not constant; gets applied by other sources.
-        // Type: Functionality
-        // Effects: Spawns the respective limb while applying the Traumatic Amputation affliction for that limb; also applies arterial bleeding, pain and a fracture.
-        // Uses XML to cause TraumaAmputations.
-        AfflictionsToAdd.Add(
-            builder.New("gate_ta_la").Build());
-
-        // TraumaticAmputating Right Arm + Item
-        // Not constant; gets applied by other sources.
-        // Type: Functionality
-        // Effects: Spawns the respective limb while applying the Traumatic Amputation affliction for that limb; also applies arterial bleeding, pain and a fracture.
-        // Uses XML to cause TraumaAmputations.
-        AfflictionsToAdd.Add(
-            builder.New("gate_ta_ra").Build());
-
-        // TraumaticAmputating Head + Item
-        // Not constant; gets applied by other sources.
-        // Type: Functionality
-        // Effects: Kills you ontop of spawning a severed head.
-        // Uses XML to cause TraumaAmputations.
-        AfflictionsToAdd.Add(
-            builder.New("gate_ta_h").Build());
-
-        // TraumaticAmputating Left Leg
-        // Not constant; gets applied by other sources.
-        // Type: Functionality
-        // Effects: Traumatically amputates a limb, causes a fracture, pain and an arterial bleed without spawning an item.
-        // Uses XML to cause TraumaAmputations.
-        AfflictionsToAdd.Add(
-            builder.New("gate_ta_ll_2").Build());
-
-        // TraumaticAmputating Right Leg
-        // Not constant; gets applied by other sources.
-        // Type: Functionality
-        // Effects: Traumatically amputates a limb, causes a fracture, pain and an arterial bleed without spawning an item.
-        // Uses XML to cause TraumaAmputations.
-        AfflictionsToAdd.Add(
-            builder.New("gate_ta_rl_2").Build());
-
-        // TraumaticAmputating Left Arm
-        // Not constant; gets applied by other sources.
-        // Type: Functionality
-        // Effects: Traumatically amputates a limb, causes a fracture, pain and an arterial bleed without spawning an item.
-        // Uses XML to cause TraumaAmputations.
-        AfflictionsToAdd.Add(
-            builder.New("gate_ta_la_2").Build());
-
-        // TraumaticAmputating Right Arm
-        // Not constant; gets applied by other sources.
-        // Type: Functionality
-        // Effects: Traumatically amputates a limb, causes a fracture, pain and an arterial bleed without spawning an item.
-        // Uses XML to cause TraumaAmputations.
-        AfflictionsToAdd.Add(
-            builder.New("gate_ta_ra_2").Build());
-
-        // TraumaticAmputating Head
-        // Not constant; gets applied by other sources.
-        // Type: Functionality
-        // Effects: Kills you.
-        // Uses XML to cause TraumaAmputations.
-        AfflictionsToAdd.Add(
-            builder.New("gate_ta_h_2").Build());
 
         // Opioids in Blood
         // Not constant; gets applied by other sources.
@@ -4118,33 +3957,6 @@ public class NTAfflictionsToAdd
             .Build()
             );
 
-        // Force Prone
-        // Constant; too complicated otherwise.
-        // Type: Functionality
-        // Effects: Changes the animations of a character to be unable to walk.
-        AfflictionsToAdd.Add(
-            builder.New("forceprone")
-            .IsConst(true)
-            .IsSymptom(true)
-            .SetStrengths(0,2,0)
-            .SetUpdateAction((C, ID, Limb, dT) =>
-            {
-
-                // Readability / 10 ?
-                bool keep = C.GetAfflictionStrength("unconsciousness") <= 0
-                    && !C.Human.IsClimbing
-                    && !(C.GetBoolStat("wheelchaired"))
-                    && (C.HasSymptom("forceprone")
-                    || (C.GetBoolStat("lockleftleg") && C.GetBoolStat("lockrightleg")));
-
-                C.SetAffliction(ID,HF.BoolToNum(keep, 2f));
-
-                if (!keep) C.SetAffliction(ID, 0);
-
-            })
-            .Build()
-            );
-
         // Hyperventilation
         // Not constant; gets applied by other sources, removes itself however.
         // Type: Non-Limb Specific
@@ -4384,6 +4196,11 @@ public class NTAfflictionsToAdd
         AfflictionsToAdd.Add(
             builder.New("spasm")
             .IsSymptom(true)
+            .Build());
+
+        // DEBUG
+        AfflictionsToAdd.Add(
+            builder.New("amputation")
             .Build());
 
         Initialization.NTAfflLoader.Registers(AfflictionsToAdd);
