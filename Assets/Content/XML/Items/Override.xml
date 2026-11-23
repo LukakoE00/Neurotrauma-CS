@@ -1742,5 +1742,12 @@
                 <QualityStat stattype="RepairSpeed" value="0.1"/>
             </Quality>
         </Item>
+
+        <!-- Bonesaw; used for amputations in vanilla. -->
+        <!-- We already have a method for surgical amputations, so we don't need it. Instead of overriding this to make it the new surgical saw we just prevent it from spawning. -->
+        <Item name="" identifier="bonesaw" category="Medical" tags="smallitem,medical,tool,mountableweapon" cargocontaineridentifier="mediccrate" Scale="0.5" impactsoundtag="impact_metal_light" RequireAimToUse="True" UseInHealthInterface="True" RequireAmputableLimb="True">
+            <!-- Do nothing -->
+            <Sprite texture="Content/Items/Tools/tools.png" sourcerect="288,257,112,32" depth="0.55" origin="0.4,0.5" />
+        </Item>
     </Items>
 </Override>
