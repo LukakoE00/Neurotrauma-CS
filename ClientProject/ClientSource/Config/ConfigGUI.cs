@@ -141,11 +141,14 @@ namespace Neurotrauma
 
             // TextBox 80% / 50% the size of the ConfigPresetLayoutGroup.
             // This holds the name of the currently selected Config Preset and is used to determine to which Preset settings should be saved.
-            ConfigFileNameTextBox = new GUITextBox(new RectTransform(new Vector2(0.8f, 0.5f), parent: ConfigPresetLayoutGroup.RectTransform, anchor: Anchor.CenterLeft), createPenIcon: false)
+            ConfigFileNameTextBox = new GUITextBox(new RectTransform(new Vector2(0.7f, 0.5f), parent: ConfigPresetLayoutGroup.RectTransform, anchor: Anchor.CenterLeft), createPenIcon: false)
             {
                 Text = Path.GetFileNameWithoutExtension(NTConfig.CurrentConfigPath),
                 CanBeFocused = false
             };
+
+            // Created after the textbox so it sits to its right.
+            GUIComponents.CreateCreditsButton(ConfigPresetLayoutGroup);
 
             // LayoutGroup 95% / 95% the size of the InnerFrame. Invisible.
             // This group holds all the elements needed to display or alter visible content.
@@ -1171,12 +1174,25 @@ namespace Neurotrauma
 
             return "";
         }
+
+        public static void CreateCreditsButton(GUILayoutGroup Parent)
+        {
+            new GUIButton(new RectTransform(new Vector2(0.5f, 0.5f), parent: Parent.RectTransform, anchor: Anchor.CenterLeft, scaleBasis: ScaleBasis.BothHeight), style: "WorkshopMenu.InfoButton")
+            {
+                ToolTip = TextManager.Get("ntconfig.header.credits"),
+                OnClicked = (_, _) =>
+                {
+                    ConfigPresets.OpenCredits();
+                    return false;
+                }
+            };
+        }
     }
 
     public static class ConfigPresets
     {
         // Hide the config UI + pause menu while a preset popup is open.
-        private static void HideMenus()
+        public static void HideMenus()
         {
             if (ConfigurationMenu.BaseFrame != null)
             {
@@ -1322,6 +1338,53 @@ namespace Neurotrauma
             };
 
             MessageBox.Buttons[1].OnClicked = (_, _) =>
+            {
+                CloseAndRestore(MessageBox);
+                return false;
+            };
+        }
+
+        private static string Coloured(string Text, byte R, byte G, byte B, byte A = 255)
+        {
+            return $"‖color:{R},{G},{B},{A}‖{Text}‖end‖";
+        }
+
+        // Credits body. Edit names and colours here.
+        private static readonly string CreditsText =
+            "Development Team:" + "\n" +
+            "- " + Coloured("Mannatu", 182, 3, 252) + " for creating the original Neurotrauma." + "\n" +
+            "- " + Coloured("Heelge", 255, 102, 102) + " for maintaining Lua Neurotrauma." + "\n" +
+            "- " + Coloured("Lukako", 152, 0, 0) + ", " + Coloured("Cookie", 255, 127, 0) + " and " + Coloured("Bean", 51, 102, 0) + " for developing NTCS and its addons." + "\n" +
+
+            "\n" + "Other Contributors:" + "\n" +
+            "- " + Coloured("EvilFactory", 255, 0, 0) + " for C# documentation help." + "\n" +
+            "- " + Coloured("ThousandFields", 153, 255, 255) + " for the enhanced descriptions." + "\n" +
+            "- " + Coloured("AceFinka", 0, 102, 204) + " for miscellaneous code contributions." + "\n" +
+            "- " + Coloured("Lillian Vorpa", 225, 157, 237) + " supplying additional ideas." + "\n" +
+
+            "\n" + "Notable Testers:" + "\n" +
+            "- Captain Isaac, SzaraKryik, JustGlassin." + "\n" +
+
+            "\n" + "Notable Community Members:" + "\n" +
+            "- Rosa, FancyPants, MediumTank M4A1 76."
+        ;
+
+        public static void OpenCredits()
+        {
+            HideMenus();
+
+            var MessageBox = new GUIMessageBox(TextManager.Get("ntconfig.header.credits"), "", buttons: new[] { TextManager.Get("Close") }, relativeSize: (0.4f, 0.5f));
+
+            var CreditsListBox = new GUIListBox(new RectTransform((1.0f, 0.7f), parent: MessageBox.Content.RectTransform));
+
+            var CreditsTextBlock = new GUITextBlock(new RectTransform(new Vector2(1.0f, 0.0f), parent: CreditsListBox.Content.RectTransform), RichString.Rich(CreditsText), wrap: true)
+            {
+                CanBeFocused = false
+            };
+
+            CreditsTextBlock.CalculateHeightFromText();
+
+            MessageBox.Buttons[0].OnClicked = (_, _) =>
             {
                 CloseAndRestore(MessageBox);
                 return false;

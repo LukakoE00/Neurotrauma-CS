@@ -1293,6 +1293,9 @@ Can give blood to: AB+</entitydescription.ab_positivecard>
 <!-- Reset Button-->
 <ntconfig.tooltip.resetbutton>Reset to Default</ntconfig.tooltip.resetbutton>
 
+<!-- Credits -->
+<ntconfig.header.credits>Credits</ntconfig.header.credits>
+
 <!-- =================== Default Config Content =================== -->
 <!-- Dislocation chance multiplier -->
 <ntconfig.entryname.dislocationchance>Dislocation chance multiplier</ntconfig.entryname.dislocationchance>
@@ -1718,7 +1721,7 @@ Can give blood to: AB+</entitydescription.ab_positivecard>
 <ntconfig.entryname.doorganscalpels>Enable Organ Scalpels</ntconfig.entryname.doorganscalpels>
 <ntconfig.entrydescription.doorganscalpels>Allow Organ scalpels and Surgery Box Scalpel set to be fabricated, bought and found.</ntconfig.entrydescription.doorganscalpels>
 
-<!-- =================== EXPERIMENTAL ===================-->
+<!-- =================== EXPERIMENTAL =================== -->
 
 <ntconfigname_header9>Experimental Settings</ntconfigname_header9>
 
