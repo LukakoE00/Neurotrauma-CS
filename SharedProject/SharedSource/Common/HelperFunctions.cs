@@ -1758,187 +1758,6 @@ namespace Neurotrauma
         }
 
         /// <summary>
-        /// Checks to see if a limb has a traumatic amputation.
-        /// </summary>
-        /// <param name="Character">Character to check.</param>
-        /// <param name="GivenLimbType">Limb to check.</param>
-        /// <returns>True if the limb was traumatically amputated, else False.</returns>
-        public static bool LimbIsTraumaticallyAmputated(Character character, LimbType givenLimbType)
-        {
-            givenLimbType = NormalizeLimbType(givenLimbType);
-
-            return HasAffliction(character, "t" + CreateLimbAfflictionID(givenLimbType, "amputation"));
-        }
-
-        /// <summary>
-        /// Checks to see if a limb has a surgical amputation.
-        /// </summary>
-        /// <param name="Character">Character to check.</param>
-        /// <param name="GivenLimbType">Limb to check.</param>
-        /// <returns>True if the limb was surgically amputated, else False.</returns>
-        public static bool LimbIsSurgicallyAmputated(Character character, LimbType givenLimbType)
-        {
-            givenLimbType = NormalizeLimbType(givenLimbType);
-
-            return HasAffliction(character, "s" + CreateLimbAfflictionID(givenLimbType, "amputation"));
-        }
-
-        /// <summary>
-        /// Checks to see if a limb was amputated.
-        /// </summary>
-        /// <param name="Character">Character to check.</param>
-        /// <param name="GivenLimbType">Limb to check.</param>
-        /// <returns>True if the limb was amputated, else False.</returns>
-        public static bool LimbIsAmputated(Character Character, LimbType GivenLimbType)
-        {
-            GivenLimbType = NormalizeLimbType(GivenLimbType);
-
-            return LimbIsSurgicallyAmputated(Character, GivenLimbType) || LimbIsTraumaticallyAmputated(Character, GivenLimbType);
-        }
-
-        /// <summary>
-        /// Traumatically amputates a limb and spawns the respective limb item.
-        /// </summary>
-        /// <param name="Character">Character whose limb will get traumatically amputated.</param>
-        /// <param name="GivenLimbType">The limb to traumatically amputate.</param>
-        /// <param name="Attacker">A possible attacker that caused the traumatic amputation.</param>
-        public static void TraumamputateLimbAndGenerateItem(Character Character, LimbType GivenLimbType, Character ?Attacker)
-        {
-            GivenLimbType = NormalizeLimbType(GivenLimbType);
-            if (!LimbsToCheck.Contains(GivenLimbType)) 
-            { 
-                return;
-            }
-
-            Dictionary<LimbType, string> LimbToAffliction = new Dictionary<LimbType, string>() { 
-                {LimbType.RightLeg,"gate_ta_rl" }, 
-                { LimbType.LeftLeg, "gate_ta_ll" },
-                { LimbType.RightArm, "gate_ta_ra" },
-                { LimbType.LeftArm, "gate_ta_la" },
-                { LimbType.Head, "gate_ta_h" } 
-            };
-
-            Dictionary<LimbType, string> LimbToItem = new Dictionary<LimbType, string>() { 
-                {LimbType.RightLeg,"rleg" }, 
-                { LimbType.LeftLeg, "lleg" },                                                                    
-                { LimbType.RightArm, "rarm" },
-                { LimbType.LeftArm, "larm" },
-                { LimbType.Head, "headta" } 
-            };
-
-            LimbToAffliction.TryGetValue(GivenLimbType, out string? Value);
-            LimbToItem.TryGetValue(GivenLimbType, out string? Value2);
-            string ?Aff = Value;
-            string ?LimbItem = Value2;
-
-            if (Attacker != null && (!Attacker.IsHuman) && (!Attacker.Inventory.IsFull()))
-            {
-                GiveItem(Attacker, LimbToAffliction[GivenLimbType]);
-                AddAfflictionLimb(Character, LimbToAffliction[GivenLimbType] + "_2", GivenLimbType, 10, Attacker);
-            }
-            else
-            {
-                AddAfflictionLimb(Character, LimbToAffliction[GivenLimbType], GivenLimbType, 10, Character);
-            }
-        }
-
-        /// <summary>
-        /// Traumatically amputate a limb without spawning a replacement item.
-        /// </summary>
-        /// <param name="Character">Character whose limb will get traumatically amputated.</param>
-        /// <param name="GivenLimbType">The limb to traumatically amputate.</param>
-        /// <param name="Attacker">A possible attacker that caused the traumatic amputation.</param>
-        public static void TraumamputateLimb(Character Character, LimbType GivenLimbType, Character ?Attacker)
-        {
-            GivenLimbType = NormalizeLimbType(GivenLimbType);
-            if (!LimbsToCheck.Contains(GivenLimbType)) 
-            { 
-                return; 
-            }
-
-            Dictionary<LimbType, string> LimbToAffliction = new Dictionary<LimbType, string>() {
-                {LimbType.RightLeg,"gate_ta_rl" },
-                { LimbType.LeftLeg, "gate_ta_ll" },
-                { LimbType.RightArm, "gate_ta_ra" },
-                { LimbType.LeftArm, "gate_ta_la" },
-                { LimbType.Head, "gate_ta_h" }
-            };
-
-            Dictionary<LimbType, string> LimbToItem = new Dictionary<LimbType, string>() {
-                {LimbType.RightLeg,"rleg" },
-                { LimbType.LeftLeg, "lleg" },
-                { LimbType.RightArm, "rarm" },
-                { LimbType.LeftArm, "larm" },
-                { LimbType.Head, "headta" }
-            };
-
-            LimbToAffliction.TryGetValue(GivenLimbType, out string ?Value);
-            LimbToItem.TryGetValue(GivenLimbType, out string ?Value2);
-            string ?Aff = Value;
-            string ?LimbItem = Value2;
-
-            AddAfflictionLimb(Character, LimbToAffliction[GivenLimbType], GivenLimbType, 10, Character);
-        }
-
-        /// <summary>
-        /// Removes an extremity by applying the Surgical Amputation affliction respective to that limb and spawning the respective transplant item.
-        /// </summary>
-        /// <param name="usingCharacter">Character performing the surgery.</param>
-        /// <param name="targetCharacter">Character recieving the surgery.</param>
-        /// <param name="limbType">Limb being surgically removed.</param>
-        public static void SurgicallyAmputateLimbAndGenerateItem(Character usingCharacter, Character targetCharacter, LimbType limbType)
-        {
-            limbType = NormalizeLimbType(limbType);
-
-            Item prevItem = GetItemInHeadWear(targetCharacter);
-
-            if (prevItem != null && limbType == LimbType.Head)
-            {
-                prevItem.Drop(usingCharacter, true);
-            }
-
-            bool dropLimb = !LimbIsAmputated(targetCharacter, limbType) && !HasAfflictionLimb(targetCharacter, "gangrene", limbType, 15);
-
-            SurgicallyAmputateLimb(targetCharacter, limbType);
-
-            if (!dropLimb) return;
-
-            Dictionary<LimbType, string> limbToItem = new()
-            {
-                { LimbType.RightLeg, "rleg" },
-                { LimbType.LeftLeg, "lleg" },
-                { LimbType.RightArm, "rarm" },
-                { LimbType.LeftArm, "larm" },
-                { LimbType.Head, "headsa" }
-            };
-
-            if (limbToItem.TryGetValue(limbType, out string ?itemIdentifier))
-            {
-                GiveItem(usingCharacter, itemIdentifier);
-                GiveSurgerySkill(usingCharacter, 0.5f);
-            }
-        }
-
-        /// <summary>
-        /// Removes an extremity by applying the Surgical Amputation affliction respective to that limb.
-        /// </summary>
-        /// <param name="usingCharacter">Character performing the surgery.</param>
-        /// <param name="targetCharacter">Character recieving the surgery.</param>
-        /// <param name="limbType">Limb being surgically removed.</param>
-        public static void SurgicallyAmputateLimb(Character character, LimbType GivenLimbType, float strength = 100f, float traumampStrength = 0f)
-        {
-            GivenLimbType = NormalizeLimbType(GivenLimbType);
-
-            string ?baseId = CreateLimbAfflictionID(GivenLimbType, "amputation");
-
-            SetAffliction(character, "s" + baseId, strength, null, 0);
-
-            SetAffliction(character, "t" + baseId, traumampStrength, null, 0);
-
-            SetAfflictionLimb(character, "gangrene", GivenLimbType, 0, null, 0);
-        }
-
-        /// <summary>
         /// Checks if Surgery can be performed on a character.
         /// </summary>
         /// <param name="Character">The character that gets checked for Surgery Viability.</param>
@@ -2216,6 +2035,104 @@ namespace Neurotrauma
             }
 
             return false;
+        }
+
+        // ---------------------------------------- NEW AMPUTATION FUNCTIONS ----------------------------------------
+
+        /// <summary>
+        /// Checks to see if a limb was amputated.
+        /// </summary>
+        /// <param name="Character">Character to check.</param>
+        /// <param name="GivenLimbType">Limb to check.</param>
+        /// <returns>True if the limb was amputated, else False.</returns>
+        public static bool LimbIsAmputated(Character Character, LimbType GivenLimbType)
+        {
+            var Limbs = Character?.AnimController?.Limbs;
+            if (Limbs == null) return false;
+
+            LimbType Extremity = NormalizeLimbType(GivenLimbType);
+            return Limbs.Any(SubLimb => SubLimb != null && SubLimb.IsSevered && NormalizeLimbType(SubLimb.type) == Extremity);
+        }
+
+        /// <summary>
+        /// Amputates an extremity by applying the amputation_nt affliction; its XML BreakLimb effect does the actual severing.
+        /// </summary>
+        /// <param name="Character">Character whose limb will be amputated.</param>
+        /// <param name="GivenLimbType">The limb to amputate.</param>
+        /// <param name="Attacker">A possible attacker that caused the amputation.</param>
+        /// <returns>True if the affliction was applied, False if the limb was already gone.</returns>
+        public static bool AmputateLimb(Character Character, LimbType GivenLimbType, Character? Attacker = null, bool IsTraumatic = false)
+        {
+            GivenLimbType = NormalizeLimbType(GivenLimbType);
+
+            if (!LimbsToCheck.Contains(GivenLimbType) || LimbIsAmputated(Character, GivenLimbType))
+            {
+                return false;
+            }
+
+            if (IsTraumatic)
+            {
+                SetAfflictionLimb(Character, "arterialcut", GivenLimbType, 100f, null);
+            }
+
+            SetAfflictionLimb(Character, "gangrene", GivenLimbType, 0f, null);
+            SetAfflictionLimb(Character, "amputation_nt", GivenLimbType, 100f, null);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Amputates an extremity and gives the surgeon the respective limb item.
+        /// </summary>
+        /// <param name="UsingCharacter">Character performing the surgery.</param>
+        /// <param name="GivenLimbType">Limb being surgically removed.</param>
+        /// <param name="TargetCharacter">Character receiving the surgery.</param>
+        public static void AmputateLimbAndGenerateItem(Character UsingCharacter, LimbType GivenLimbType, Character TargetCharacter, bool IsTraumatic = false)
+        {
+            if (TargetCharacter == null || TargetCharacter.Removed) return;
+
+            GivenLimbType = NormalizeLimbType(GivenLimbType);
+
+            if (GivenLimbType == LimbType.Head)
+            {
+                GetItemInHeadWear(TargetCharacter)?.Drop(TargetCharacter, true);
+            }
+
+            bool dropLimb = !LimbIsAmputated(TargetCharacter, GivenLimbType) && !HasAfflictionLimb(TargetCharacter, "gangrene", GivenLimbType, 15);
+
+            if (!AmputateLimb(TargetCharacter, GivenLimbType, UsingCharacter, IsTraumatic) || !dropLimb) return;
+
+            string? itemIdentifier = GivenLimbType switch
+            {
+                LimbType.RightLeg => "rleg",
+                LimbType.LeftLeg => "lleg",
+                LimbType.RightArm => "rarm",
+                LimbType.LeftArm => "larm",
+                LimbType.Head => IsTraumatic ? "headta" : "headsa",
+                _ => null
+            };
+
+            if (itemIdentifier == null) return;
+
+            if (IsTraumatic)
+            {
+                SpawnItemAt(itemIdentifier, TargetCharacter.WorldPosition);
+                return;
+            }
+
+            GiveItem(UsingCharacter, itemIdentifier);
+            GiveSurgerySkill(UsingCharacter, 0.5f);
+        }
+
+        /// <summary>
+        /// Regenerates a severed extremity (see Amputations.RegenerateLimb).
+        /// </summary>
+        /// <param name="Character">Character whose limb will be regenerated.</param>
+        /// <param name="GivenLimbType">Any limb of the extremity to regenerate.</param>
+        /// <returns>True if something was regenerated, else False.</returns>
+        public static void RegenerateLimb(Character Character, LimbType GivenLimbType, Character UsingCharacter)
+        {
+            Amputations.RegenerateLimb(Character, GivenLimbType);
         }
     }
 }
