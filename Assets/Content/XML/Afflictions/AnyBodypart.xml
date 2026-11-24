@@ -12,6 +12,7 @@
       limbspecific="true"
       type="bandage"
       isbuff="true"
+      hideiconafterdelay="true"
 
       showinhealthscannerthreshold="999"
       showiconthreshold="0"
@@ -49,6 +50,7 @@
       limbspecific="true"
       type="resistance"
       isbuff="true"
+      hideiconafterdelay="true"
 
       showinhealthscannerthreshold="999"
       showiconthreshold="0"
@@ -68,7 +70,8 @@
       limbspecific="true"
       type="resistance"
       isbuff="true"
-
+      hideiconafterdelay="true"
+      
       showinhealthscannerthreshold="999"
       showiconthreshold="0"
       maxstrength="100">

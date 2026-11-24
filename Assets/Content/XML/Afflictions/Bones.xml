@@ -30,6 +30,7 @@
       targets="human"
       limbspecific="true"
       type="resistance"
+      hideiconafterdelay="true"
       
       showinhealthscannerthreshold="999"
       showiconthreshold="0"

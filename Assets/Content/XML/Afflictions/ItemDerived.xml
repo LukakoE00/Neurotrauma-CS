@@ -212,6 +212,7 @@
       type="resistance"
       isbuff="true"
       limbspecific="false"
+      hideiconafterdelay="true"
       
       showinhealthscannerthreshold="999"
       showiconthreshold="75"
