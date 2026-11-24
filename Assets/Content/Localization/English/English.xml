@@ -1734,6 +1734,10 @@ Can give blood to: AB+</entitydescription.ab_positivecard>
 <ntconfig.entryname.openclosetamponade>Open Close Tamponade</ntconfig.entryname.openclosetamponade>
 <ntconfig.entrydescription.openclosetamponade>This setting can be changed at any time. \n\n‖color:gui.green‖Enabled:‖end‖ Cardiac Tamponade can be cured with just Open / Close Surgery. \n\n‖color:gui.red‖Disabled:‖end‖ Cardiac Tamponade can only be cured with a Drainage during Open / Close Surgery.</ntconfig.entrydescription.openclosetamponade>
 
+<!-- Additional Matriarch Genes Healing -->
+<ntconfig.entryname.extramatriarchhealing>Additional Matriarch Genes Healing</ntconfig.entryname.extramatriarchhealing>
+<ntconfig.entrydescription.extramatriarchhealing>This setting can be changed at any time. \n\nMake the Hammerhead Matriarch genes heal Neurotrauma organ damage, scaling with Gene strength.</ntconfig.entrydescription.extramatriarchhealing>
+
 <!-- =================== EXPERIMENTAL =================== -->
 
 <ntconfigname_header9>Experimental Settings</ntconfigname_header9>

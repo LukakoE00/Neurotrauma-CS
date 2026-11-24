@@ -4258,10 +4258,47 @@ public class NTAfflictionsToAdd
                 // Liver damage
                 C.AddAffliction("liverdamage", -0.004f * dT);
 
-                // Kidney damage
-                C.AddAffliction("kidneydamage", -0.004f * dT);
+                // Kidney Damage
+                float kidney = C.GetAfflictionStrength("kidneydamage");
+                if (kidney >= 51f || kidney < 50f)
+                {
+                    C.AddAffliction("kidneydamage", -0.004f * dT);
+                }
             })
             .Build());
+
+        // Matriarch Genes
+        // Not constant; gets applied by other sources, removes itself however.
+        // Type: Non-Limb Specific
+        // Caused By: Having matriarch genes equipped.
+        // Effects: Additional healing.
+        AfflictionsToAdd.Add(
+             builder.New("healdamage")
+             .SetUpdateAction((C, ID, Limb, dT) =>
+             {
+                 if (!NTConfig.Get("NT_DoExtraMatriarchHealing", false))
+                 {
+                     return;
+                 }
+
+                 float str = C.GetAfflictionStrength(ID);
+
+                 // Basegame healing is in linear blocks. We'll adjust dynamically instead.
+                 float HealAmount = 0.0009f * str * dT;
+
+                 C.AddAffliction("internalbleeding", -HealAmount);
+                 C.AddAffliction("heartdamage", -HealAmount);
+                 C.AddAffliction("lungdamage", -HealAmount);
+                 C.AddAffliction("liverdamage", -HealAmount);
+
+                 // Ensure we don't regenerate a dead kidney
+                 float kidney = C.GetAfflictionStrength("kidneydamage");
+                 if (kidney >= 51f || kidney < 50f)
+                 {
+                     C.AddAffliction("kidneydamage", -HealAmount);
+                 }
+             })
+             .Build());
 
         Initialization.NTAfflLoader.Registers(AfflictionsToAdd);
     }

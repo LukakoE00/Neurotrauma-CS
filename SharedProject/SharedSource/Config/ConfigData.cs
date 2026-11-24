@@ -1337,6 +1337,15 @@ namespace Neurotrauma
                             Description = TextManager.Get("ntconfig.entrydescription.hardmodeaorticrupture"),
                         },
 
+                        ["NT_DoExtraMatriarchHealing"] = new ConfigEntry
+                        {
+                            Page = "afflictionchanges",
+                            Name = TextManager.Get("ntconfig.entryname.extramatriarchhealing"),
+                            Default = false,
+                            Type = ConfigEntryType.Bool,
+                            Description = TextManager.Get("ntconfig.entrydescription.extramatriarchhealing"),
+                        },
+
                         // ================================= EXPERIMENTAL =================================
 
                         ["NT_ExperimentalHeader"] = new ConfigEntry
