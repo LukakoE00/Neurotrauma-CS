@@ -51,6 +51,7 @@ public static class NTInfo
     // Each one has some things it needs to function, which will get passed along.
     // Object Oriented Coding!!!!!!
 
+    [MoonSharpHidden]
     public static void RegisterAddon(NTAddon addon)
     {
         RegisteredAddons[addon.Name] = addon;

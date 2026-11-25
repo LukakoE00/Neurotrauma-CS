@@ -27,6 +27,8 @@ public partial class Initialization : IAssemblyPlugin
 
     public void Initialize()
     {
+        LuaCompat.RegisterTypes();
+
         PluginService.TryGetPackageForPlugin<Initialization>(out NeurotraumaContentPackage);
         NeurotraumaModDir = Path.GetDirectoryName(NeurotraumaContentPackage.Path.ToString());
 
