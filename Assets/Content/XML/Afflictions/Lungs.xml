@@ -18,7 +18,7 @@
       maxstrength="100">
 
       <Effect minstrength="0" maxstrength="2">
-              <StatusEffect target="Character" speechimpediment="100"/>
+        <StatusEffect target="Character" speechimpediment="100"/>
       </Effect>
 
       <icon texture="%ModDir%/Images/AfflictionIcons.png" sheetindex="3,0" sheetelementsize="128,128" origin="0,0"/>
@@ -82,6 +82,7 @@
     </Affliction>
 
     <!-- Pneumothorax / Collapsed Lung. Visible on Health Scanner. Causes: Shortness of Breath, Tachycardia / Increased Heartrate, Hyperventilation, Hypotension and Chest Pain. -->
+    <!-- Treatment Params here hide the Needle suggestion on the UI but maintain it for bots. -->
     <Affliction
       name=""
       description=""
@@ -91,6 +92,9 @@
       targets="human"
       limbspecific="False"
       indicatorlimb="Torso"
+
+      TreatmentSuggestionThreshold="999"
+      TreatmentThreshold="30"
 
       showinhealthscannerthreshold="0"
       showiconthreshold="999"

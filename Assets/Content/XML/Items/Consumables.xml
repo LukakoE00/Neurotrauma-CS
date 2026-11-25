@@ -113,6 +113,9 @@
         <SuitableTreatment identifier="infectedwound" suitability="-100"/>
         <SuitableTreatment identifier="inflammation" suitability="-100"/>
 
+        <!-- Prevent bot softlock -->
+        <SuitableTreatment identifier="iced" suitability="-100"/>
+
         <InventoryIcon texture="%ModDir%/Images/InventoryItemIconAtlas.png" sourcerect="64,256,64,64" origin="0.5,0.5"/>
         <Sprite texture="%ModDir%/Images/InGameItemIconAtlas.png" sourcerect="896,512,128,128" depth="0.6" origin="0.5,0.5"/>
         <Body width="80" height="45" density="11"/>
