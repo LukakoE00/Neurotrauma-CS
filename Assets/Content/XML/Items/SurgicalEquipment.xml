@@ -95,6 +95,11 @@
             <RequiredItem identifier="aluminium" />
         </Fabricate>
 
+        <SuitableTreatment identifier="pneumothorax" suitability="50"/>
+
+        <!-- Prevent bot overusing -->
+        <SuitableTreatment identifier="needlec" suitability="-100"/>
+
         <Deconstruct/>
 
         <InventoryIcon texture="%ModDir%/Images/InventoryItemIconAtlas.png" sourcerect="256,128,64,64" origin="0.5,0.5"/>
@@ -235,9 +240,6 @@
         <Sprite texture="%ModDir%/Images/InGameItemIconAtlas.png" sourcerect="384,0,128,128" depth="0.55" origin="0.5,0.5"/>
         <Body width="120" height="110" density="50"/>
 
-        <!-- <SuitableTreatment identifier="analgesia" suitability="0.02"/>
-        <SuitableTreatment identifier="unconsciousness" suitability="0.02"/> -->
-
         <MeleeWeapon slots="Any,RightHand,LeftHand" aimpos="40,5" handle1="0,-13" holdangle="-90" reload="1.0"/>
     </Item>
 
@@ -254,9 +256,6 @@
         <InventoryIcon texture="%ModDir%/Images/InventoryItemIconAtlas.png" sourcerect="256,0,64,64" origin="0.5,0.5"/>
         <Sprite texture="%ModDir%/Images/InGameItemIconAtlas.png" sourcerect="0,128,128,128" depth="0.55" origin="0.5,0.5"/>
         <Body width="120" height="110" density="50"/>
-
-        <!-- <SuitableTreatment identifier="analgesia" suitability="0.03"/>
-        <SuitableTreatment identifier="unconsciousness" suitability="0.03"/> -->
 
         <MeleeWeapon slots="Any,RightHand,LeftHand" aimpos="40,5" handle1="0,-13" holdangle="-90" reload="1.0"/>
         <SkillRequirementHint identifier="medical" level="30"/>
@@ -321,9 +320,6 @@
         <Sprite texture="%ModDir%/Images/InGameItemIconAtlas.png" sourcerect="0,256,128,128" depth="0.55" origin="0.5,0.5"/>
         <Body width="65" height="65" density="50"/>
 
-        <!-- <SuitableTreatment identifier="analgesia" suitability="0.05"/>
-        <SuitableTreatment identifier="unconsciousness" suitability="0.05"/> -->
-
         <MeleeWeapon slots="Any,RightHand,LeftHand" aimpos="5,0" handle1="-5,-5" holdangle="10" reload="1.0"/>
         <SkillRequirementHint identifier="medical" level="30"/>
     </Item>
@@ -350,13 +346,14 @@
         <Body width="60" height="55" density="50"/>
 
         <SuitableTreatment identifier="bandageddirty" suitability="100"/>
-        <SuitableTreatment identifier="bandaged" suitability="100"/>
-        <SuitableTreatment identifier="gypsumcast" suitability="100"/>
-        <SuitableTreatment identifier="arteriesclamp" suitability="100"/>
         <SuitableTreatment identifier="triagetag_green" suitability="100"/>
         <SuitableTreatment identifier="triagetag_yellow" suitability="100"/>
         <SuitableTreatment identifier="triagetag_red" suitability="100"/>
         <SuitableTreatment identifier="triagetag_black" suitability="100"/>
+
+        <!-- Surpress Bot treatment in AfflictionXML for this, but keep it so the UI button remains. -->
+        <SuitableTreatment identifier="tourniqueted" suitability="100"/>
+        <SuitableTreatment identifier="plastercast" suitability="100"/>
 
         <MeleeWeapon slots="Any,RightHand,LeftHand" aimpos="40,5" handle1="12,-2" holdangle="210" reload="1.0">
             <StatusEffect type="OnUse" target="Limb" comparison="and"/>
@@ -378,9 +375,6 @@
         <InventoryIcon texture="%ModDir%/Images/InventoryItemIconAtlas.png" sourcerect="0,0,64,64" origin="0.5,0.5"/>
         <Sprite texture="%ModDir%/Images/InGameItemIconAtlas.png" sourcerect="131,188,122,8" depth="0.55" origin="0.5,0.5"/>
         <Body width="65" height="15" density="50"/>
-
-        <!-- <SuitableTreatment identifier="analgesia" suitability="0.01"/>
-        <SuitableTreatment identifier="unconsciousness" suitability="0.01"/> -->
 
         <MeleeWeapon slots="Any,RightHand,LeftHand" aimpos="40,5" handle1="-7,2" holdangle="60" reload="1.0"/>
 
@@ -412,9 +406,6 @@
         <InventoryIcon texture="%ModDir%/Images/InventoryItemIconAtlas.png" sourcerect="0,256,64,64" origin="0.5,0.5"/>
         <Sprite texture="%ModDir%/Images/InGameItemIconAtlas.png" sourcerect="131,218,122,8" depth="0.55" origin="0.5,0.5"/>
         <Body width="65" height="15" density="50"/>
-
-        <!-- <SuitableTreatment identifier="analgesia" suitability="0.04"/>
-        <SuitableTreatment identifier="unconsciousness" suitability="0.04"/> -->
 
         <MeleeWeapon slots="Any,RightHand,LeftHand" aimpos="40,5" handle1="-7,2" holdangle="60" reload="1.0"/>
 

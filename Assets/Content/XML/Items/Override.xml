@@ -553,7 +553,7 @@
             <SuitableTreatment identifier="opiateaddiction" suitability="-25" />
             <SuitableTreatment identifier="opiateoverdose" suitability="-25"/>
             <SuitableTreatment identifier="opiatewithdrawal" suitability="2"/>
-            <SuitableTreatment identifier="pain" suitability="20"/>
+            <!-- <SuitableTreatment identifier="pain" suitability="20"/> -->
             
             <InventoryIcon texture="Content/Items/InventoryIconAtlas.png" sourcerect="512,768,64,64" origin="0.5,0.5"/>
             <Sprite texture="Content/Items/Medical/Medicines.png" sourcerect="406,452,29,58" depth="0.6" origin="0.5,0.5"/>
@@ -620,7 +620,7 @@
             <SuitableTreatment identifier="opiatewithdrawal" suitability="5" />
             <SuitableTreatment identifier="opiateoverdose" suitability="-20"/>
             <SuitableTreatment identifier="opiateaddiction" suitability="-20"/>
-            <SuitableTreatment identifier="pain" suitability="40"/>
+            <!-- <SuitableTreatment identifier="pain" suitability="40"/> -->
 
             <Fabricate suitablefabricators="medicalfabricator" requiredtime="30">
                 <RequiredSkill identifier="medical" level="18" />
@@ -701,7 +701,7 @@
             <SuitableTreatment identifier="opiatewithdrawal" suitability="100"/>
             <SuitableTreatment identifier="opiateoverdose" suitability="-50"/>
             <SuitableTreatment identifier="opiateaddiction" suitability="-20"/>
-            <SuitableTreatment identifier="pain" suitability="50"/>
+            <!-- <SuitableTreatment identifier="pain" suitability="50"/> -->
 
             <Fabricate suitablefabricators="medicalfabricator" requiredtime="45">
                 <RequiredSkill identifier="medical" level="50" />
@@ -865,6 +865,9 @@
             <SuitableTreatment identifier="damage" suitability="-33"/>
             <SuitableTreatment identifier="huskinfection" suitability="30"/>
             <SuitableTreatment identifier="sepsis" suitability="50"/>
+
+            <!-- Prevent bot overusing -->
+            <SuitableTreatment identifier="afantibiotics" suitability="-100"/>
 
             <MeleeWeapon canBeCombined="true" removeOnCombined="true" slots="Any,RightHand,LeftHand" aimpos="40,5" handle1="0,0" holdangle="220" reload="1.0" msg="ItemMsgPickUpSelect" HitOnlyCharacters="true">
                 <RequiredSkill identifier="medical" level="25"/>
@@ -1433,7 +1436,7 @@
             <Body width="65" height="15" density="25" />
 
             <SuitableTreatment identifier="bandageddirty" suitability="50"/>
-            <SuitableTreatment identifier="bandaged" suitability="50"/>
+            <!-- <SuitableTreatment identifier="bandaged" suitability="50"/> -->
             <SuitableTreatment identifier="triagetag_green" suitability="100"/>
             <SuitableTreatment identifier="triagetag_yellow" suitability="100"/>
             <SuitableTreatment identifier="triagetag_red" suitability="100"/>
