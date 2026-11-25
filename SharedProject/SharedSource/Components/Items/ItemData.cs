@@ -1071,6 +1071,13 @@ public class NTItemsData
             HF.GiveItem(infos.target.Human, "ntsfx_squeak");
         });
 
+        // Lizard Doggo
+        loader.Register("lizarddoggo", infos =>
+        {
+            HF.AddAffliction(infos.target.Human, "psychosis", -2f, infos.user.Human);
+            HF.GiveItem(infos.target.Human, "ntsfx_squeak");
+        });
+
         // ============== Overrides ==============
         // Wrenches
         WrenchItems.AddRange(

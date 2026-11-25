@@ -805,6 +805,10 @@ Can give blood to: AB+</entitydescription.ab_positivecard>
 <entityname.blahaj>Blue Shark</entityname.blahaj>
 <entitydescription.blahaj>A cute plushie that will slightly reduce ‖color:gui.green‖Psychosis‖end‖ each time a patient is hit with it.</entitydescription.blahaj>
 
+<!-- Lizard Doggo -->
+<entityname.lizarddoggo>Lizard Doggo</entityname.lizarddoggo>
+<entitydescription.lizarddoggo>A cute plushie that will slightly reduce ‖color:gui.green‖Psychosis‖end‖ each time a patient is hit with it. DO NOT FEED THEM RADIOACTIVE WASTE!</entitydescription.lizarddoggo>
+
 <!-- Analgesic Tank -->
 <entityname.analgesictank>Analgesic Tank</entityname.analgesictank>
 <entitydescription.analgesictank>A tank of analgesics which can be installed on a ‖color:gui.blue‖Surgery Table‖end‖ to provide the patient-laying-down enough Analgesia to perform surgery. It can also be used in an ‖color:gui.blue‖Ambubag‖end‖, but causes extra ‖color:gui.red‖Addiction‖end‖.</entitydescription.analgesictank>
