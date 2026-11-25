@@ -44,5 +44,5 @@
     <Talents file="%ModDir%/XML/Talents/Talents.xml"/>
 
     <!-- Dependencies -->
-    <Dependency identifier="luacsplugin" names="LuaCsPlugin" ids="3693624471" isoptional="false" />
+    <Dependency identifier="luacsplugin" names="LuaCsPlugin" ids="2559634234" isoptional="false" />
 </contentpackage>
