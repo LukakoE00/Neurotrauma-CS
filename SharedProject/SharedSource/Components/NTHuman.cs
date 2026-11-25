@@ -159,7 +159,7 @@ public class NTHuman
 
     public Affliction GetAfflictionLimb(string AfflictionID, LimbType Limb)
     {
-        Limb? RealLimb = this.Human.AnimController.GetLimb(Limb);
+        Limb? RealLimb = this.Human.AnimController.GetLimb(Limb, excludeSevered: false);
         if (RealLimb == null) return null;
 
         return this.Human.CharacterHealth.GetAffliction(AfflictionID.ToIdentifier(), RealLimb);
@@ -204,7 +204,7 @@ public class NTHuman
 
     public void AddAfflictionLimb(string AfflictionID, LimbType Limb, float Strength, Character? Aggressor = null)
     {
-        Limb? RealLimb = this.Human.AnimController.GetLimb(Limb);
+        Limb? RealLimb = this.Human.AnimController.GetLimb(Limb, excludeSevered: false);
         if (RealLimb == null) return;
 
         if (Aggressor == null)
@@ -270,7 +270,7 @@ public class NTHuman
 
     public void SetAfflictionLimb(string AfflictionID, LimbType Limb, float Strength, Character? Aggressor = null)
     {
-        Limb? RealLimb = this.Human.AnimController.GetLimb(Limb);
+        Limb? RealLimb = this.Human.AnimController.GetLimb(Limb, excludeSevered: false);
         if (RealLimb == null) return;
 
         // This Error was in the original but not ported for some reason?
