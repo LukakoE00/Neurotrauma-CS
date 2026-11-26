@@ -513,8 +513,8 @@
 <afflictiondescription.craving>A craving for drugs, caused by ‖color:gui.red‖Withdrawal‖end‖.</afflictiondescription.craving>
 
 <!-- Nausea -->
-<afflictionname.nausea>Nausea</afflictionname.nausea>
-<afflictiondescription.nausea>The skin is clammy and the patient is nauseous. Usually caused by ‖color:gui.red‖Kidney Damage‖end‖, a ‖color:gui.red‖Concussion‖end‖, ‖color:gui.red‖Drug Withdrawal‖end‖, or ‖color:gui.red‖Hemotransfusion Shock‖end‖. Vomiting will cause ‖color:gui.red‖Alkalosis‖end‖.</afflictiondescription.nausea>
+<afflictionname.nausea_nt>Nausea</afflictionname.nausea_nt>
+<afflictiondescription.nausea_nt>The skin is clammy and the patient is nauseous. Usually caused by ‖color:gui.red‖Kidney Damage‖end‖, a ‖color:gui.red‖Concussion‖end‖, ‖color:gui.red‖Drug Withdrawal‖end‖, or ‖color:gui.red‖Hemotransfusion Shock‖end‖. Vomiting will cause ‖color:gui.red‖Alkalosis‖end‖.</afflictiondescription.nausea_nt>
 
 <!-- On Fire -->
 <afflictionname.onfire>On fire!</afflictionname.onfire>
