@@ -1,0 +1,1742 @@
+<?xml version="1.0" encoding="utf-8"?>
+<infotexts language="Russian" nowhitespace="false" translatedname="Russian">
+<!-- ================================================= ORIGINAL SKELETON ================================================= -->
+
+<!-- Sample Client Setting --><!--
+<MyModName.SampleSettingClient.DisplayName>Sample Client Setting</MyModName.SampleSettingClient.DisplayName>
+<MyModName.SampleSettingClient.DisplayCategory>Sample</MyModName.SampleSettingClient.DisplayCategory>
+<MyModName.SampleSettingClient.Tooltip>Sample tooltip!</MyModName.SampleSettingClient.Tooltip>
+
+--><!-- Sample Server Setting --><!--
+<MyModName.SampleSettingServer.DisplayName>Sample Server Setting</MyModName.SampleSettingServer.DisplayName>
+<MyModName.SampleSettingServer.DisplayCategory>Sample</MyModName.SampleSettingServer.DisplayCategory>
+<MyModName.SampleSettingServer.Tooltip>Sample tooltip!</MyModName.SampleSettingServer.Tooltip>
+
+--><!-- Sample Shared Setting --><!--
+<MyModName.SampleSettingShared.DisplayName>Sample Shared Setting</MyModName.SampleSettingShared.DisplayName>
+<MyModName.SampleSettingShared.DisplayCategory>Sample</MyModName.SampleSettingShared.DisplayCategory>
+<MyModName.SampleSettingShared.Tooltip>Sample tooltip!</MyModName.SampleSettingShared.Tooltip>-->
+	
+
+<!-- ================================================= COLOUR CODING ================================================= -->
+<!-- Blue: Used for Items. -->
+<!-- Green: Beneficial; Effect or Affliction. -->
+<!-- Red: Detrimental; Effect or Affliction. -->
+<!-- Orange: Surgical Procedures -->
+
+<!-- ================================================= AFFLICTIONS ================================================= -->
+<!-- TEMPLATE -->
+
+<!-- <afflictionname.organdamage>AfflictionName</afflictionname.organdamage> -->
+<!-- <afflictiondescription.organdamage>AfflictionDescription</afflictiondescription.organdamage> -->
+<!-- <afflictioncauseofdeath.organdamage>CauseOfDeathOther</afflictioncauseofdeath.organdamage> -->
+<!-- <afflictioncauseofdeathself.organdamage>CauseOfDeathSelf</afflictioncauseofdeathself.organdamage> -->
+
+<!-- ================================================= Any Bodypart ================================================= -->
+<!-- Bandaged -->
+<afflictionname.bandaged>Повязка</afflictionname.bandaged>
+<afflictiondescription.bandaged>Защищает конечность от незначительной ‖color:gui.red‖Инфекции‖end‖, стабилизирует ‖color:gui.red‖Вывихи‖end‖, а также ‖color:gui.red‖Переломы‖end‖ рук и увеличивает регенерацию незначительных открытых ран. Однако это ‖color:gui.red‖снижает‖end‖ скорость передвижения.</afflictiondescription.bandaged>
+
+<!-- Dirty Bandage -->
+<afflictionname.bandageddirty>Грязная повязка</afflictionname.bandageddirty>
+<afflictiondescription.bandageddirty>‖color:gui.blue‖Повязка‖end‖, которая стала слишком грязной и должна быть снята или заменена; иначе она будет способствовать ‖color:gui.red‖Инфекциям‖end‖. Она всё ещё способна стабилизировать ‖color:gui.red‖Вывихи‖end‖ и ‖color:gui.red‖Переломы‖end‖ рук.</afflictiondescription.bandageddirty>
+
+<!-- Iced -->
+<afflictionname.iced>Охлаждено</afflictionname.iced>
+<afflictiondescription.iced>Применение ‖color:gui.blue‖Гелевого охлаждающего пакета‖end‖ на эту конечность значительно увеличило естественную скорость заживления ‖color:gui.red‖Тупой травмы‖end‖ и со временем лечит ‖color:gui.red‖Внутреннее кровотечение‖end‖. Однако это ‖color:gui.red‖снижает‖end‖ скорость передвижения и ухудшает ‖color:gui.red‖Инфекции‖end‖.</afflictiondescription.iced>
+
+<!-- Ointmented -->
+<afflictionname.ointmented>Антибиотическая мазь</afflictionname.ointmented>
+<afflictiondescription.ointmented>Слой антибиотического геля защищает и очищает рану от микроорганизмов. ‖color:gui.red‖Инфекции‖end‖ очень трудно развиться здесь.</afflictiondescription.ointmented>
+
+<!-- Infected Wound-->
+<afflictionname.infectedwound>Инфицированная рана</afflictionname.infectedwound>
+
+<!-- Foreign Body -->
+<afflictionname.foreignbody>Инородное тело</afflictionname.foreignbody>
+
+<!-- First-Degree Burn -->
+<afflictionname.firstdegreeburn>Ожог первой степени</afflictionname.firstdegreeburn>
+<afflictiondescription.firstdegreeburn>Область красная и болезненная на ощупь, при высокой тяжести может возникнуть ‖color:gui.red‖Инфекция‖end‖. ‖color:gui.blue‖Повязки‖end‖, ‖color:gui.blue‖Антибиотический клей‖end‖ или ‖color:gui.blue‖Антибиотическая мазь‖end‖ могут быть использованы для лечения ожога при необходимости.</afflictiondescription.firstdegreeburn>
+
+<!-- Second-Degree Burn-->
+<afflictionname.seconddegreeburn>Ожог второй степени</afflictionname.seconddegreeburn>
+<afflictiondescription.seconddegreeburn>На поражённой области есть очень болезненные волдыри. Высокий риск ‖color:gui.red‖Инфекции‖end‖, что может привести к опасному для жизни ‖color:gui.red‖Сепсису‖end‖. ‖color:gui.blue‖Повязки‖end‖, ‖color:gui.blue‖Антибиотическая клей‖end‖ или ‖color:gui.blue‖Антибиотическая мазь‖end‖ могут быть использованы для лечения ожога.</afflictiondescription.seconddegreeburn>
+
+<!-- Third-Degree Burn-->
+<afflictionname.thirddegreeburn>Ожог третьей степени</afflictionname.thirddegreeburn>
+<afflictiondescription.thirddegreeburn>Поражённая область сморщенная, жёсткая и полностью потеряла чувствительность. ‖color:gui.red‖Инфекция‖end‖ почти неизбежна, и поэтому начало ‖color:gui.red‖Сепсиса‖end‖ быстрое. ‖color:gui.blue‖Антибиотический клей‖end‖ — самое быстрое лечение, хотя ‖color:gui.blue‖Эластичный бинт‖end‖ может быть использован во время ‖color:gui.orange‖Открытой / Закрывающей операции‖end‖ для полной замены кожи.</afflictiondescription.thirddegreeburn>
+
+<!-- ================================================= Blood ================================================= -->
+
+<!-- Blood Pressure -->
+<afflictionname.bloodpressure>Кровяное давление</afflictionname.bloodpressure>
+
+<!-- Hypoxemia -->
+<afflictionname.hypoxemia>Гипоксемия</afflictionname.hypoxemia>
+
+<!-- Alkalosis -->
+<afflictionname.alkalosis>Алкалоз</afflictionname.alkalosis>
+
+<!-- Acidosis -->
+<afflictionname.acidosis>Ацидоз</afflictionname.acidosis>
+
+<!-- Sepsis -->
+<afflictionname.sepsis>Сепсис</afflictionname.sepsis>
+
+<!-- Immunity -->
+<afflictionname.immunity>Иммунитет</afflictionname.immunity>
+
+<!-- Hemotransfusion Shock -->
+<afflictionname.hemotransfusionshock>Гемотрансфузионный шок</afflictionname.hemotransfusionshock>
+
+<!-- ================================================= Bones ================================================= -->
+
+<!-- Bone Damage-->
+<afflictionname.bonedamage>Повреждение костей</afflictionname.bonedamage>
+
+<!-- Bone Death -->
+<afflictionname.bonedeath>Распад костных тканей</afflictionname.bonedeath>
+
+<!-- Stimulated Bone Growth -->
+<afflictionname.stimulatedbonegrowth>Стимулированный рост костей</afflictionname.stimulatedbonegrowth>
+<afflictiondescription.stimulatedbonegrowth>Рост костей был стимулирован. Чтобы вылечить ‖color:gui.red‖Распад костных тканей‖end‖, это состояние должно быть на каждой части тела.</afflictiondescription.stimulatedbonegrowth>
+
+<!-- Fractured Extremity -->
+<afflictionname.fracturedextremity>Перелом конечности</afflictionname.fracturedextremity>
+<afflictiondescription.fracturedextremity>Эта конечность сломана и будет вызывать ‖color:gui.red‖Боль‖end‖, пока на неё не будет наложен ‖color:gui.blue‖Гипсовый слепок‖end‖ или она не будет хирургически восстановлена.</afflictiondescription.fracturedextremity>
+
+<!-- Dislocation -->
+<afflictionname.dislocation>Вывих</afflictionname.dislocation>
+<afflictiondescription.dislocation>Кость была смещена в этой конечности, вызывая ‖color:gui.red‖Боль‖end‖ и затрудняя движение. ‖color:gui.blue‖Повязка‖end‖ восстановит использование этой конечности, а ‖color:gui.blue‖Гаечный ключ‖end‖ должен быть использован для вправления кости.</afflictiondescription.dislocation>
+
+<!-- Fractured Ribs -->
+<afflictionname.fracturedribs>Перелом рёбер</afflictionname.fracturedribs>
+<afflictiondescription.fracturedribs>Одно или несколько рёбер сломаны, и если торс не будет ‖color:gui.green‖Перевязан‖end‖, структурная нестабильность может вызвать ‖color:gui.red‖Пневмоторакс‖end‖. Рёбра должны быть восстановлены с помощью ‖color:gui.orange‖Остеосинтеза‖end‖.</afflictiondescription.fracturedribs>
+
+<!-- Fractured Skull -->
+<afflictionname.fracturedskull>Перелом черепа</afflictionname.fracturedskull>
+<afflictiondescription.fracturedskull>Череп сломан, и структурная нестабильность будет препятствовать естественному снижению ‖color:gui.red‖Нейротравмы‖end‖. Череп должен быть восстановлен с помощью ‖color:gui.orange‖Остеосинтеза‖end‖.</afflictiondescription.fracturedskull>
+
+<!-- Fractured Neck -->
+<afflictionname.fracturedneck>Перелом шеи</afflictionname.fracturedneck>
+<afflictiondescription.fracturedneck>Шея сломана, и если не будет ‖color:gui.green‖Перевязана‖end‖, структурная нестабильность вызовет ‖color:gui.red‖Травму спинного мозга‖end‖. Шея должна быть восстановлена с помощью ‖color:gui.orange‖Остеосинтеза‖end‖.</afflictiondescription.fracturedneck>
+
+<!-- ================================================= Brain ================================================= -->
+
+<!-- Stroke -->
+<afflictionname.stroke>Инсульт</afflictionname.stroke>
+
+<!-- Seizure -->
+<afflictionname.seizure>Судорожный припадок</afflictionname.seizure>
+<afflictiondescription.seizure>Пациент испытывает судороги всего тела. Обычно вызывается тяжёлым ‖color:gui.red‖Ацидозом‖end‖, ‖color:gui.red‖Алкалозом‖end‖, ‖color:gui.red‖Инсультом‖end‖, ‖color:gui.red‖Передозировкой опиатов‖end‖ или ‖color:gui.red‖Лучевой болезнью‖end‖.</afflictiondescription.seizure>
+
+<!-- Coma -->
+<afflictionname.coma>Кома</afflictionname.coma>
+
+<!-- Neurotrauma -->
+<afflictionname.neurotrauma>Нейротравма</afflictionname.neurotrauma>
+<afflictioncauseofdeath.neurotrauma>Смерть от нейротравмы</afflictioncauseofdeath.neurotrauma>
+<afflictioncauseofdeathself.neurotrauma>Вы умерли от нейротравмы.</afflictioncauseofdeathself.neurotrauma>
+
+<!-- Brain Removed -->
+<afflictionname.brainremoved>Мозг удалён</afflictionname.brainremoved>
+<afflictiondescription.brainremoved>Мозг был хирургически удалён.</afflictiondescription.brainremoved>
+<afflictioncauseofdeath.brainremoved>Умер из-за отсутствия мозга</afflictioncauseofdeath.brainremoved>
+<afflictioncauseofdeathself.brainremoved>Ваш мозг был удалён.</afflictioncauseofdeathself.brainremoved>
+
+<!-- Brain Swap -->
+<afflictionname.brainswap>Замена мозга</afflictionname.brainswap>
+<afflictiondescription.brainswap>Старый мозг был хирургически подготовлен для новой трансплантации.</afflictiondescription.brainswap>
+<afflictioncauseofdeath.brainswap>Умер из-за отсутствия мозга</afflictioncauseofdeath.brainswap>
+<afflictioncauseofdeathself.brainswap>Ваш мозг был в процессе замены.</afflictioncauseofdeathself.brainswap>
+ 
+<!-- ================================================= Extremities ================================================= -->
+
+<!-- Plaster Cast -->
+<afflictionname.plastercast>Гипсовый слепок</afflictionname.plastercast>
+<afflictiondescription.plastercast>Медленно лечит ‖color:gui.red‖Переломы‖end‖ конечностей, хотя ‖color:gui.red‖снижает‖end‖ скорость передвижения при наличии. Их можно снять с помощью ‖color:gui.blue‖Медицинских ножниц‖end‖.</afflictiondescription.plastercast>
+
+<!-- Tourniqueted -->
+<afflictionname.tourniqueted>Наложен жгут</afflictionname.tourniqueted>
+<afflictiondescription.tourniqueted>‖color:gui.red‖Кровотечение‖end‖ из артерии остановлено, но кровоток к конечности сильно снижен — ‖color:gui.red‖Гангрена‖end‖ возникнет, если жгут не будет снят вовремя.</afflictiondescription.tourniqueted>
+
+<!-- Arterial Bleeding -->
+<afflictionname.arterialcut>Артериальное кровотечение</afflictionname.arterialcut>
+<afflictiondescription.arterialcut>Артерия повреждена и вызывает тяжёлую ‖color:gui.red‖Потерю крови‖end‖, наложите ‖color:gui.blue‖Жгут‖end‖ как можно скорее!</afflictiondescription.arterialcut>
+
+<!-- Gangrene -->
+<afflictionname.gangrene>Гангрена</afflictionname.gangrene>
+<afflictiondescription.gangrene>Конечность сморщилась и почернела. Выше 15% эту конечность уже нельзя спасти, и её ‖color:gui.red‖необходимо‖end‖ ‖color:gui.orange‖Ампутировать‖end‖.</afflictiondescription.gangrene>
+
+<!-- Traumatic Amputations -->
+<afflictionname.tra_amputation>Травматическая ампутация</afflictionname.tra_amputation>
+<afflictiondescription.tra_amputation>Большая часть тканей правой руки была оторвана. Эту конечность можно заменить после ‖color:gui.orange‖Распиливания костей‖end‖.</afflictiondescription.tra_amputation>
+
+<afflictionname.tla_amputation>Травматическая ампутация</afflictionname.tla_amputation>
+<afflictiondescription.tla_amputation>Большая часть тканей левой руки была оторвана. Эту конечность можно заменить после ‖color:gui.orange‖Распиливания костей‖end‖.</afflictiondescription.tla_amputation>
+
+<afflictionname.trl_amputation>Травматическая ампутация</afflictionname.trl_amputation>
+<afflictiondescription.trl_amputation>Большая часть тканей правой ноги была оторвана. Эту конечность можно заменить после ‖color:gui.orange‖Распиливания костей‖end‖.</afflictiondescription.trl_amputation>
+
+<afflictionname.tll_amputation>Травматическая ампутация</afflictionname.tll_amputation>
+<afflictiondescription.tll_amputation>Большая часть тканей левой ноги была оторвана. Эту конечность можно заменить после ‖color:gui.orange‖Распиливания костей‖end‖.</afflictiondescription.tll_amputation>
+
+<afflictionname.th_amputation>Травматическая ампутация</afflictionname.th_amputation>
+<afflictiondescription.th_amputation>Голова была насильно отделена от тела, вызывая ‖color:gui.red‖мгновенную смерть‖end‖.</afflictiondescription.th_amputation>
+
+<!-- Surgical Amputations -->
+<afflictionname.sra_amputation>Ампутация</afflictionname.sra_amputation>
+<afflictiondescription.sra_amputation>Правая рука была хирургически ампутирована.</afflictiondescription.sra_amputation>
+
+<afflictionname.sla_amputation>Ампутация</afflictionname.sla_amputation>
+<afflictiondescription.sla_amputation>Левая рука была хирургически ампутирована.</afflictiondescription.sla_amputation>
+
+<afflictionname.srl_amputation>Ампутация</afflictionname.srl_amputation>
+<afflictiondescription.srl_amputation>Правая нога была хирургически ампутирована.</afflictiondescription.srl_amputation>
+
+<afflictionname.sll_amputation>Ампутация</afflictionname.sll_amputation>
+<afflictiondescription.sll_amputation>Левая нога была хирургически ампутирована.</afflictiondescription.sll_amputation>
+
+<afflictionname.sh_amputation>Ампутация</afflictionname.sh_amputation>
+<afflictiondescription.sh_amputation>Голова была хирургически ампутирована.</afflictiondescription.sh_amputation>
+
+<!-- ================================================= Functionality ================================================= -->
+
+<!-- Luabotomy -->
+<afflictionname.luabotomy>Без Lua</afflictionname.luabotomy>
+<afflictiondescription.luabotomy>Lua не работает. Это значит, что нейротравма и любые другие моды, использующие её, не будут работать. Пожалуйста, прочитайте страницы в мастерской модов, которые вы планируете использовать.</afflictiondescription.luabotomy>
+
+<!-- Mod Conflict -->
+<afflictionname.modconflict>Конфликт модов</afflictionname.modconflict>
+<afflictiondescription.modconflict>Обнаружен конфликт модов. Другой мод перезаписывает некоторые из тех же предметов, что и Neurotrauma. Некоторые вещи могут работать неправильно. Пожалуйста, отрегулируйте порядок загрузки.</afflictiondescription.modconflict>
+
+<!-- Traumatic Shock Immunity -->
+<afflictionname.tshocktimeout>Иммунитет к травматическому шоку</afflictionname.tshocktimeout>
+<afflictiondescription.tshocktimeout>Пациент был оставлен без присмотра, и некоторое время он не будет осознавать, что его вскрыли.</afflictiondescription.tshocktimeout>
+
+<!-- ================================================= Head ================================================= -->
+
+<!-- Spinal Cord Injury -->
+<afflictionname.spinalcordinjury>Повреждение спинного мозга</afflictionname.spinalcordinjury>
+<afflictiondescription.spinalcordinjury>Нервная ткань была повреждена из-за ‖color:gui.red‖Перелома шеи‖end‖, вызывая ‖color:gui.red‖паралич всего тела‖end‖ и ‖color:gui.green‖Анальгезию‖end‖ — хотя это не вызывает ‖color:gui.red‖Потерю сознания‖end‖. Повреждение должно быть хирургически восстановлено с помощью ‖color:gui.blue‖Имплантатов спинного мозга‖end‖.</afflictiondescription.spinalcordinjury>
+<afflictioncauseofdeath.spinalcordinjury>Умер от паралича</afflictioncauseofdeath.spinalcordinjury>
+<afflictioncauseofdeathself.spinalcordinjury>Вы умерли от паралича.</afflictioncauseofdeathself.spinalcordinjury>
+
+<!-- Carotid Artery Bleeding -->
+<afflictionname.carotidarterialcut>Кровотечение сонной артерии</afflictionname.carotidarterialcut>
+<afflictiondescription.carotidarterialcut>Артерия повреждена и вызывает тяжёлую ‖color:gui.red‖Потерю крови‖end‖. Вы не можете наложить жгут на сонную артерию, поэтому её нужно хирургически исправить!</afflictiondescription.carotidarterialcut>
+
+<!-- ================================================= Heart ================================================= -->
+
+<!-- Increased Heartrate -->
+<afflictionname.increasedheartrate>Учащённое сердцебиение</afflictionname.increasedheartrate>
+<afflictiondescription.increasedheartrate>Пульс пациента аномально высок. Если это состояние усиливается, происходит потенциально смертельная ‖color:gui.red‖Фибрилляция‖end‖; обычно из-за ‖color:gui.red‖Гипотензии‖end‖ или ‖color:gui.red‖Гипоксемии‖end‖.</afflictiondescription.increasedheartrate>
+
+<!-- Irregular heartbeat -->
+<afflictionname.fibrillation>Нерегулярное сердцебиение</afflictionname.fibrillation>
+<afflictiondescription.fibrillation>Сердце пациента бьётся ненормально; это может быть признаком потенциально смертельной ‖color:gui.red‖Фибрилляции‖end‖; обычно из-за ‖color:gui.red‖Гипотензии‖end‖ или ‖color:gui.red‖Гипоксемии‖end‖. </afflictiondescription.fibrillation>
+
+<!-- Increased Heartrate -->
+<afflictionname.cardiacarrest>Остановка сердца</afflictionname.cardiacarrest>
+<afflictiondescription.cardiacarrest>Сердце пациента не бьётся. Препятствует нормализации ‖color:gui.red‖Кровяного давления‖end‖ и вызывает ‖color:gui.red‖Кому‖end‖, если не лечить. Конечный результат ‖color:gui.red‖Фибрилляции‖end‖, а также вызывается ‖color:gui.red‖Гипоксемией‖end‖. Сердце должно быть перезапущено с помощью ‖color:gui.blue‖Дефибриллятора‖end‖, ‖color:gui.blue‖Адреналина‖end‖ или ‖color:gui.blue‖AutoPulse‖end‖.</afflictiondescription.cardiacarrest>
+
+<!-- Cardiac tamponade -->
+<afflictionname.tamponade>Тампонада сердца</afflictionname.tamponade>
+
+<!-- Heart attack -->
+<afflictionname.heartattack>Сердечный приступ</afflictionname.heartattack>
+
+<!-- Heart damage -->
+<afflictionname.heartdamage>Повреждение сердца</afflictionname.heartdamage>
+
+<!-- Heart failure -->
+<afflictionname.heartfailure>Сердечная недостаточность</afflictionname.heartfailure>
+
+<!-- Heart Removed -->
+<afflictionname.heartremoved>Сердце удалено</afflictionname.heartremoved>
+<afflictiondescription.heartremoved>Сердце было хирургически удалено.</afflictiondescription.heartremoved>
+<afflictioncauseofdeath.heartremoved>Умер из-за отсутствия сердца</afflictioncauseofdeath.heartremoved>
+<afflictioncauseofdeathself.heartremoved>Ваше сердце было удалено.</afflictioncauseofdeathself.heartremoved>
+
+<!-- Heart Swap -->
+<afflictionname.heartswap>Замена сердца</afflictionname.heartswap>
+<afflictiondescription.heartswap>Старое сердце было хирургически подготовлено для новой трансплантации.</afflictiondescription.heartswap>
+<afflictioncauseofdeath.heartswap>Умер из-за отсутствия сердца</afflictioncauseofdeath.heartswap>
+<afflictioncauseofdeathself.heartswap>Ваше сердце было в процессе замены.</afflictioncauseofdeathself.heartswap>
+
+<!-- ================================================= Item Derived ================================================= -->
+
+<!-- Skin Ointment -->
+<afflictionname.skinointmented>Регенеративная мазь</afflictionname.skinointmented>
+<afflictiondescription.skinointmented>Слой регенеративного геля ускоряет процесс заживления ожогов и тупых травм.</afflictiondescription.skinointmented>
+
+<!-- Needle -->
+<afflictionname.needlec>Игла</afflictionname.needlec>
+<afflictiondescription.needlec>Игла с воздушным клапаном в груди предотвращает ухудшение ‖color:gui.red‖Пневмоторакса‖end‖. Однако применение иглы на здоровом пациенте вызовет ‖color:gui.red‖Пневмоторакс‖end‖; потребуется использование ‖color:gui.blue‖Дренажа‖end‖ во время ‖color:gui.orange‖Открытой / Закрывающей операции‖end‖ для его лечения.</afflictiondescription.needlec>
+
+<!-- Analgesia -->
+<afflictionname.analgesia>Анальгезия</afflictionname.analgesia>
+<afflictiondescription.analgesia>Безболезненность подавляет некоторые симптомы и делает возможной операцию. При высоких уровнях увеличивает ‖color:gui.green‖Сопротивление урону и оглушению‖end‖, а также стабилизирует прицеливание.</afflictiondescription.analgesia>
+
+<!-- Anesthesia -->
+<afflictionname.anesthesia>Анестезия</afflictionname.anesthesia>
+<afflictiondescription.anesthesia>Контролируемая ‖color:gui.red‖Потеря сознания‖end‖, вероятно, от препарата. Безопасно проводить операцию на этом человеке.</afflictiondescription.anesthesia>
+
+<!-- Adrenaline -->
+<afflictionname.afadrenaline>Адреналин</afflictionname.afadrenaline>
+
+<!-- Anti-clot -->
+<afflictionname.afstreptokinase>Антикоагулянт</afflictionname.afstreptokinase>
+
+<!-- Thiamine -->
+<afflictionname.afthiamine>Тиамин</afflictionname.afthiamine>
+
+<!-- Blood pressure reducers -->
+<afflictionname.afpressuredrug>Снижающие давление препараты</afflictionname.afpressuredrug>
+
+<!-- Saline -->
+<afflictionname.afsaline>Физраствор</afflictionname.afsaline>
+
+<!-- Ringer's solution -->
+<afflictionname.afringerssolution>Раствор Рингера</afflictionname.afringerssolution>
+
+<!-- Mannitol -->
+<afflictionname.afmannitol>Маннитол</afflictionname.afmannitol>
+
+<!-- Antibiotics -->
+<afflictionname.afantibiotics>Антибиотики</afflictionname.afantibiotics>
+
+<!-- Anaesthetics -->
+<afflictionname.afanaesthetic>Анестетики</afflictionname.afanaesthetic>
+
+<!-- Opioids -->
+<afflictionname.afopioid>Опиоиды</afflictionname.afopioid>
+
+<!-- Immunosuppressants -->
+<afflictionname.afimmunosuppressant>Иммунодепрессанты</afflictionname.afimmunosuppressant>
+
+<!-- ================================================= Kidneys ================================================= -->
+
+<!-- Kidney Damage -->
+<afflictionname.kidneydamage>Повреждение почек</afflictionname.kidneydamage>
+
+<!-- Kidneys Removed -->
+<afflictionname.kidneyremoved>Почки удалены</afflictionname.kidneyremoved>
+<afflictiondescription.kidneyremoved>Почки были хирургически удалены.</afflictiondescription.kidneyremoved>
+
+<!-- Replacing Kidneys -->
+<afflictionname.kidneyswap>Замена почек</afflictionname.kidneyswap>
+<afflictiondescription.kidneyswap>Старые почки были хирургически подготовлены для новой трансплантации.</afflictiondescription.kidneyswap>
+
+<!-- ================================================= Liver ================================================= -->
+
+<!-- Liver Damage -->
+<afflictionname.liverdamage>Повреждение печени</afflictionname.liverdamage>
+
+<!-- Liver Removed -->
+<afflictionname.liverremoved>Печень удалена</afflictionname.liverremoved>
+<afflictiondescription.liverremoved>Печень была хирургически удалена.</afflictiondescription.liverremoved>
+
+<!-- Replacing Liver -->
+<afflictionname.liverswap>Замена печени</afflictionname.liverswap>
+<afflictiondescription.liverswap>Старая печень была хирургически подготовлена для новой трансплантации.</afflictiondescription.liverswap>
+
+<!-- ================================================= Lungs ================================================= -->
+
+<!-- Respiratory Arrest -->
+<afflictionname.respiratoryarrest>Остановка дыхания</afflictionname.respiratoryarrest>
+<afflictiondescription.respiratoryarrest>Пациент не дышит. Смертельное состояние, которое препятствует насыщение кислородом крови. Обычно вызывается ‖color:gui.red‖Гипоксемией‖end‖, ‖color:gui.red‖Нейротравмой‖end‖ или ‖color:gui.red‖Передозировкой опиатов‖end‖. ‖color:gui.green‖Искусственная вентиляция‖end‖ с ‖color:gui.blue‖Операционного стола‖end‖ компенсирует эффекты этого состояния.</afflictiondescription.respiratoryarrest>
+
+<!-- Hyperventilation -->
+<afflictionname.hyperventilation>Гипервентиляция</afflictionname.hyperventilation>
+<afflictiondescription.hyperventilation>Пациент дышит тревожно быстро. Постепенно увеличивает не смертельный ‖color:gui.red‖Алкалоз‖end‖ и обычно вызывается ‖color:gui.red‖Гипотензией‖end‖, ‖color:gui.red‖Гипоксемией‖end‖ или ‖color:gui.red‖Пневмотораксом‖end‖.</afflictiondescription.hyperventilation>
+
+<!-- Hypoventilation -->
+<afflictionname.hypoventilation>Гиповентиляция</afflictionname.hypoventilation>
+<afflictiondescription.hypoventilation>Пациент дышит тревожно медленно. Постепенно увеличивает потенциально смертельный ‖color:gui.red‖Ацидоз‖end‖, который можно предотвратить с помощью ‖color:gui.green‖Искусственной вентиляции‖end‖ с ‖color:gui.blue‖Операционного стола‖end‖. Обычно вызывается ‖color:gui.green‖Анальгезией‖end‖. Тяжёлый ‖color:gui.red‖Ацидоз‖end‖ вызовет ‖color:gui.red‖Фибрилляцию‖end‖.</afflictiondescription.hypoventilation>
+
+<!-- Shortness of Breath -->
+<afflictionname.shortnessofbreath>Одышка</afflictionname.shortnessofbreath>
+<afflictiondescription.shortnessofbreath>Дыхание пациента затруднено и поверхностно, обычно вызывается ‖color:gui.red‖Тампонадой сердца‖end‖, ‖color:gui.red‖Пневмотораксом‖end‖ или ‖color:gui.red‖Гипоксемией‖end‖.</afflictiondescription.shortnessofbreath>
+
+<!-- Pneumothorax -->
+<afflictionname.pneumothorax>Пневмоторакс</afflictionname.pneumothorax>
+
+<!-- Lung Damage -->
+<afflictionname.lungdamage>Повреждение лёгких</afflictionname.lungdamage>
+
+<!-- Lungs Removed -->
+<afflictionname.lungremoved>Лёгкие удалены</afflictionname.lungremoved>
+<afflictiondescription.lungremoved>Лёгкие были хирургически удалены.</afflictiondescription.lungremoved>
+<afflictioncauseofdeath.lungswap>Умер из-за отсутствия лёгких</afflictioncauseofdeath.lungswap>
+<afflictioncauseofdeathself.lungswap>Ваши лёгкие были удалены.</afflictioncauseofdeathself.lungswap>
+
+<!-- Lungs Swap-->
+<afflictionname.lungswap>Замена лёгких</afflictionname.lungswap>
+<afflictiondescription.lungswap>Старые лёгкие были хирургически подготовлены для новой трансплантации.</afflictiondescription.lungswap>
+<afflictioncauseofdeath.lungswap>Умер из-за отсутствия лёгких</afflictioncauseofdeath.lungswap>
+<afflictioncauseofdeathself.lungswap>Ваши лёгкие были в процессе замены.</afflictioncauseofdeathself.lungswap>
+
+<!-- ================================================= Surgical ================================================= -->
+
+<!-- Surgery Incision -->
+<afflictionname.surgeryincision>Хирургический надрез</afflictionname.surgeryincision>
+<afflictiondescription.surgeryincision>Надрез был сделан ‖color:gui.blue‖Скальпелем‖end‖.</afflictiondescription.surgeryincision>
+
+<!-- Clamped Bleeding -->
+<afflictionname.clampedbleeding>Зажатое кровотечение</afflictionname.clampedbleeding>
+<afflictiondescription.clampedbleeding>Кровотечение, вызванное разрезом, было остановлено с помощью ‖color:gui.blue‖Зажима‖end‖.</afflictiondescription.clampedbleeding>
+
+<!-- Retracted Skin-->
+<afflictionname.retractedskin>Оттянутая кожа</afflictionname.retractedskin>
+<afflictiondescription.retractedskin>Кожа удерживается открытой набором ‖color:gui.blue‖Кожных Расширителей‖end‖.</afflictiondescription.retractedskin>
+
+<!-- Drilled Bones -->
+<afflictionname.drilledbones>Просверленные кости</afflictionname.drilledbones>
+<afflictiondescription.drilledbones>Кости были подготовлены для ортопедических процедур с помощью ‖color:gui.blue‖Хирургической дрели‖end‖.</afflictiondescription.drilledbones>
+
+<!-- Stitched Incision -->
+<afflictionname.suturedi>Зашитый надрез</afflictionname.suturedi>
+<afflictiondescription.suturedi>Надрез был закрыт с помощью ‖color:gui.blue‖Швов‖end‖.</afflictiondescription.suturedi>
+
+<!-- Bones Sawed-->
+<afflictionname.sawedbones>Распиленные кости</afflictionname.sawedbones>
+<afflictiondescription.sawedbones>Кость была перерезана с помощью ‖color:gui.blue‖Хирургической пилы‖end‖.</afflictiondescription.sawedbones>
+
+<!-- Ballooned Aorta -->
+<afflictionname.balloonedaorta>Закупоренная аорта</afflictionname.balloonedaorta>
+<afflictiondescription.balloonedaorta>Аорта перестала кровоточить, но кровоток к конечностям и органам прекращён.</afflictiondescription.balloonedaorta>
+
+<!-- Stitched Wound -->
+<afflictionname.suturedw>Зашитая рана</afflictionname.suturedw>
+<afflictiondescription.suturedw>Раны были закрыты с помощью ‖color:gui.blue‖Швов‖end‖.</afflictiondescription.suturedw>
+
+<!-- Traumatic Shock -->
+<afflictionname.traumaticshock>Травматический шок</afflictionname.traumaticshock>
+<afflictiondescription.traumaticshock>Обычно возникает в небезопасных условиях операции, вызывая потенциально смертельную ‖color:gui.red‖Гипотензию‖end‖. Для безопасной операции пациент должен находиться под воздействием ‖color:gui.green‖Анальгезии‖end‖ и рядом с любой ‖color:gui.blue‖Кроватью‖end‖ или быть ‖color:gui.red‖Без сознания‖end‖.</afflictiondescription.traumaticshock>
+
+<!-- Cavity Cleaning -->
+<afflictionname.caviclean>Очистка полости</afflictionname.caviclean>
+<afflictiondescription.caviclean>Брюшная полость промывается под давлением физраствора, очищая её от инфекции.</afflictiondescription.caviclean>
+
+<!-- ================================================= Symptoms ================================================= -->
+
+<!-- Cough -->
+<afflictionname.cough>Кашель</afflictionname.cough>
+<afflictiondescription.cough>Пациент периодически кашляет. Обычно вызывается ‖color:gui.red‖Тампонадой сердца‖end‖, ‖color:gui.red‖Повреждением лёгких‖end‖ или ‖color:gui.red‖Повреждением сердца‖end‖.</afflictiondescription.cough>
+
+<!-- Pale Skin -->
+<afflictionname.paleskin>Бледная кожа</afflictionname.paleskin>
+<afflictiondescription.paleskin>Кожа пациента бледная. Обычно вызывается ‖color:gui.red‖Гипоксемией‖end‖ или ‖color:gui.red‖Потерей крови‖end‖.</afflictiondescription.paleskin>
+
+<!-- Lightheadedness -->
+<afflictionname.lightheadedness>Головокружение</afflictionname.lightheadedness>
+<afflictiondescription.lightheadedness>Пациент испытывает головокружение. Обычно вызывается ‖color:gui.red‖Гипотензией‖end‖.</afflictiondescription.lightheadedness>
+
+<!-- Blurred Vision -->
+<afflictionname.blurredvision>Размытое зрение</afflictionname.blurredvision>
+<afflictiondescription.blurredvision>Пациент испытывает размытое зрение. Обычно вызывается ‖color:gui.red‖Гипотензией‖end‖ или ‖color:gui.red‖Сотрясением мозга‖end‖.</afflictiondescription.blurredvision>
+
+<!-- Confusion -->
+<afflictionname.confusion>Спутанность сознания</afflictionname.confusion>
+<afflictiondescription.confusion>Пациент выглядит дезориентированным и сбитым с толку. Обычно вызывается ‖color:gui.red‖Гипоксемией‖end‖, ‖color:gui.red‖Ацидозом‖end‖ или ‖color:gui.red‖Сотрясением мозга‖end‖.</afflictiondescription.confusion>
+
+<!-- Headache -->
+<afflictionname.headache>Головная боль</afflictionname.headache>
+<afflictiondescription.headache>Пациент испытывает головную боль. Обычно вызывается ‖color:gui.red‖Гипоксемией‖end‖, ‖color:gui.red‖Переломом черепа‖end‖, ‖color:gui.red‖Ацидозом‖end‖, ‖color:gui.red‖Сотрясением мозга‖end‖ или ‖color:gui.red‖Инсультом‖end‖.</afflictiondescription.headache>
+
+<!-- Leg Swelling -->
+<afflictionname.legswelling>Отёк ног</afflictionname.legswelling>
+<afflictiondescription.legswelling>Ноги пациента опухли. Обычно вызывается ‖color:gui.red‖Повреждением печени‖end‖, ‖color:gui.red‖Почек‖end‖ или тяжёлым ‖color:gui.red‖Повреждением сердца‖end‖.</afflictiondescription.legswelling>
+
+<!-- Weakness -->
+<afflictionname.weakness>Слабость</afflictionname.weakness>
+<afflictiondescription.weakness>Пациент испытывает слабость в конечностях. Обычно вызывается ‖color:gui.red‖Тампонадой сердца‖end‖, ‖color:gui.red‖Потерей крови‖end‖ или ‖color:gui.red‖Ацидозом‖end‖.</afflictiondescription.weakness>
+
+<!-- Wheezing -->
+<afflictionname.wheezing>Хрипы</afflictionname.wheezing>
+<afflictiondescription.wheezing>Дыхание пациента сопровождается высоким свистящим звуком. Обычно вызывается ‖color:gui.red‖Гемотрансфузионным шоком‖end‖.</afflictiondescription.wheezing>
+
+<!-- Vomiting -->
+<afflictionname.vomiting>Рвота</afflictionname.vomiting>
+<afflictiondescription.vomiting>Пациент периодически блюёт. Обычно вызывается ‖color:gui.red‖Повреждением почек‖end‖, употреблением алкоголя или ‖color:gui.red‖Гемотрансфузионным шоком‖end‖. Рвота вызовет ‖color:gui.red‖Алкалоз‖end‖.</afflictiondescription.vomiting>
+<afflictioncauseofdeath.vomiting>Захлебнулся рвотой</afflictioncauseofdeath.vomiting>
+<afflictioncauseofdeathself.vomiting>Вы захлебнулись собственной рвотой.</afflictioncauseofdeathself.vomiting>
+
+<!-- Vomiting Blood -->
+<afflictionname.vomitingblood>Рвота кровью</afflictionname.vomitingblood>
+<afflictiondescription.vomitingblood>Пациент периодически блюёт кровью. Обычно вызывается тяжёлым ‖color:gui.red‖Внутренним кровотечением‖end‖ или ‖color:gui.red‖Повреждением печени‖end‖.</afflictiondescription.vomitingblood>
+
+<!-- Fever -->
+<afflictionname.fever>Жар</afflictionname.fever>
+<afflictiondescription.fever>Температура тела пациента повышена. Обычно вызывается ‖color:gui.red‖Сепсисом‖end‖ или ‖color:gui.red‖Инфицированной брюшной полостью‖end‖.</afflictiondescription.fever>
+
+<!-- Abdominal Discomfort -->
+<afflictionname.abdominaldiscomfort>Дискомфорт в животе</afflictionname.abdominaldiscomfort>
+<afflictiondescription.abdominaldiscomfort>Пациент испытывает дискомфорт в животе. Обычно вызывается ‖color:gui.red‖Повреждением печени‖end‖.</afflictiondescription.abdominaldiscomfort>
+
+<!-- Bloating -->
+<afflictionname.bloating>Вздутие</afflictionname.bloating>
+<afflictiondescription.bloating>Живот пациента вздут. Обычно вызывается ‖color:gui.red‖Повреждением печени‖end‖.</afflictiondescription.bloating>
+
+<!-- Jaundice -->
+<afflictionname.jaundice>Желтуха</afflictionname.jaundice>
+<afflictiondescription.jaundice>Кожа пациента приобрела болезненный жёлтый оттенок. Обычно вызывается тяжёлым ‖color:gui.red‖Повреждением печени‖end‖.</afflictiondescription.jaundice>
+
+<!-- Sweating -->
+<afflictionname.sweating>Потоотделение</afflictionname.sweating>
+<afflictiondescription.sweating>Пациент чрезмерно потеет. Обычно вызывается ‖color:gui.red‖Сердечным приступом‖end‖ или ‖color:gui.red‖Наркотической ломкой‖end‖.</afflictiondescription.sweating>
+
+<!-- Palpitations -->
+<afflictionname.palpitations>Учащённое сердцебиение</afflictionname.palpitations>
+<afflictiondescription.palpitations>Пациент испытывает учащённое сердцебиение. Обычно вызывается ‖color:gui.red‖Алкалозом‖end‖.</afflictiondescription.palpitations>
+
+<!-- Unconsciousness -->
+<afflictionname.unconsciousness>Потеря сознания</afflictionname.unconsciousness>
+<afflictiondescription.unconsciousness>Пациент без сознания. Обычно вызывается тяжёлой физической травмой, ‖color:gui.red‖Гипоксемией‖end‖, ‖color:gui.red‖Нейротравмой‖end‖, ‖color:gui.red‖Разрывом аорты‖end‖ или ‖color:gui.red‖Передозировкой опиатов‖end‖.</afflictiondescription.unconsciousness>
+
+<!-- Inflammation -->
+<afflictionname.inflammation>Воспаление</afflictionname.inflammation>
+<afflictiondescription.inflammation>Область красная, опухшая и тёплая. Обычно вызывается ‖color:gui.red‖Инфекцией‖end‖ или ‖color:gui.red‖Инородными телами‖end‖.</afflictiondescription.inflammation>
+
+<!-- Spasms -->
+<afflictionname.spasm>Спазм</afflictionname.spasm>
+<afflictiondescription.spasm>Пациент не может контролировать беспорядочное поведение конечности. Обычно вызывается тяжёлым ‖color:gui.red‖Ацидозом‖end‖, ‖color:gui.red‖Алкалозом‖end‖, ‖color:gui.red‖Инсультом‖end‖, ‖color:gui.red‖Передозировкой опиатов‖end‖ или ‖color:gui.red‖Лучевой болезнью‖end‖.</afflictiondescription.spasm>
+
+<!-- Craving -->
+<afflictionname.craving>Ломка</afflictionname.craving>
+<afflictiondescription.craving>Тяга к наркотикам, вызванная ‖color:gui.red‖Наркотической ломкой‖end‖.</afflictiondescription.craving>
+
+<!-- Nausea -->
+<afflictionname.nausea>Тошнота</afflictionname.nausea>
+<afflictiondescription.nausea>Кожа липкая, и пациент испытывает тошноту. Обычно вызывается ‖color:gui.red‖Повреждением почек‖end‖, ‖color:gui.red‖Сотрясением мозга‖end‖, ‖color:gui.red‖Абстинентным синдромом‖end‖ или ‖color:gui.red‖Гемотрансфузионным шоком‖end‖. Рвота вызовет ‖color:gui.red‖Алкалоз‖end‖.</afflictiondescription.nausea>
+
+<!-- On Fire -->
+<afflictionname.onfire>В огне!</afflictionname.onfire>
+<afflictiondescription.onfire>Пациент горит заживо! Хватайте огнетушитель!</afflictiondescription.onfire>
+
+<!-- Chest Pain -->
+<afflictionname.chestpain>Боль в груди</afflictionname.chestpain>
+<afflictiondescription.chestpain>Пациент выражает острую, пронзительную боль в груди. Обычно вызывается ‖color:gui.red‖Гемотрансфузионным шоком‖end‖ или ‖color:gui.red‖Переломом рёбер‖end‖.</afflictiondescription.chestpain>
+
+<!-- Abdominal Pain -->
+<afflictionname.abdominalpain>Боль в животе</afflictionname.abdominalpain>
+<afflictiondescription.abdominalpain>Пациент выражает постоянную боль в животе. Обычно вызывается ‖color:gui.red‖Гемотрансфузионным шоком‖end‖.</afflictiondescription.abdominalpain>
+
+<!-- Vomiting -->
+<afflictionname.intensepain>Интенсивная боль</afflictionname.intensepain>
+<afflictiondescription.intensepain>Пациент выражает интенсивную боль в поражённой области. Обычно вызывается ‖color:gui.red‖Вывихами‖end‖ или ‖color:gui.red‖Переломами‖end‖.</afflictiondescription.intensepain>
+
+<!-- ================================================= Torso ================================================= -->
+
+<!-- Internal Bleeding -->
+<afflictionname.internalbleeding>Внутреннее кровотечение</afflictionname.internalbleeding>
+
+<!-- Aortic Rupture -->
+<afflictionname.aorticrupture>Разрыв аорты</afflictionname.aorticrupture>
+
+<!-- Infected Stomach Cavity -->
+<afflictionname.infectedcavity>Инфицированная брюшная полость</afflictionname.infectedcavity>
+
+<!-- ================================================= Invisible Afflictions ================================================= -->
+<afflictionname.safesurgery>Безопасная операция</afflictionname.safesurgery>
+<afflictionname.artificialventilation>Искусственная вентиляция</afflictionname.artificialventilation>
+
+<!-- ================================================= ITEMS ================================================= -->
+
+<!-- ================================================= Blood Stuff ================================================= -->
+
+<!-- Hematology Analyzer -->
+<entityname.bloodanalyzer>Гематологический анализатор</entityname.bloodanalyzer>
+<entitydescription.bloodanalyzer>Инструмент, отображающий группу крови и иммунитет пациента. Дополнительно показывает, есть ли у пациента ‖color:gui.red‖Потеря крови‖end‖, ‖color:gui.red‖Сепсис‖end‖, ‖color:gui.red‖Ацидоз‖end‖, ‖color:gui.red‖Алкалоз‖end‖ или наркотики в крови. Если вставить ‖color:gui.blue‖пустую донорскую карту‖end‖, он напечатает группу крови пациента на его ID-карте. Если вставить ‖color:gui.blue‖пакет крови‖end‖, будут показаны любые имеющиеся ‖color:gui.red‖Сепсис‖end‖, ‖color:gui.red‖Ацидоз‖end‖ или ‖color:gui.red‖Алкалоз‖end‖. Для печати донорских карт анализатору требуется немного ‖color:gui.red‖крови‖end‖.</entitydescription.bloodanalyzer>
+
+<!-- Blank Donor Card -->
+<entityname.bloodcollector>Пустая донорская карта</entityname.bloodcollector>
+<entitydescription.bloodcollector>Пустая донорская карта, используемая ‖color:gui.blue‖гематологическим анализатором‖end‖ для отпечатывания группы крови пациента.</entitydescription.bloodcollector>
+
+<!-- Empty Blood Pack -->
+<entityname.emptybloodpack>Пустой пакет крови</entityname.emptybloodpack>
+<entitydescription.emptybloodpack>Пустой пакет для забора крови. Забранная кровь сохранит небольшое количество ‖color:gui.red‖Ацидоза‖end‖, ‖color:gui.red‖Алкалоза‖end‖ или ‖color:gui.red‖Сепсиса‖end‖ донора, если они у него были. Безопасно брать один пакет крови у пациента, при условии, что он здоров. При неудаче будет взято ‖color:gui.red‖потенциально смертельное‖end‖ количество крови.</entitydescription.emptybloodpack>
+  
+<!-- Blood Pack O+ -->
+<entityname.bloodpacko_positive>Пакет крови O+</entityname.bloodpacko_positive>
+<entitydescription.bloodpacko_positive>Можно вводить: O+, A+, B+, AB+</entitydescription.bloodpacko_positive>
+  
+<!-- Blood Pack O- -->
+<entityname.antibloodloss2>Пакет крови O-</entityname.antibloodloss2>
+<entitydescription.antibloodloss2>Пакет крови, который можно использовать на любом пациенте.</entitydescription.antibloodloss2>
+  
+<!-- Blood Pack A+ -->
+<entityname.bloodpacka_positive>Пакет крови A+</entityname.bloodpacka_positive>
+<entitydescription.bloodpacka_positive>Можно вводить: A+, AB+</entitydescription.bloodpacka_positive>
+  
+<!-- Blood Pack A- -->
+<entityname.bloodpacka_negative>Пакет крови A-</entityname.bloodpacka_negative>
+<entitydescription.bloodpacka_negative>Можно вводить: A-, A+, AB-, AB+</entitydescription.bloodpacka_negative>
+  
+<!-- Blood Pack B+ -->
+<entityname.bloodpackb_positive>Пакет крови B+</entityname.bloodpackb_positive>
+<entitydescription.bloodpackb_positive>Можно вводить: B+, AB+</entitydescription.bloodpackb_positive>
+  
+<!-- Blood Pack B- -->
+<entityname.bloodpackb_negative>Пакет крови B-</entityname.bloodpackb_negative>
+<entitydescription.bloodpackb_negative>Можно вводить: B-, B+, AB-, AB+</entitydescription.bloodpackb_negative>
+  
+<!-- Blood Pack AB+ -->
+<entityname.bloodpackab_positive>Пакет крови AB+</entityname.bloodpackab_positive>
+<entitydescription.bloodpackab_positive>Можно вводить: AB+</entitydescription.bloodpackab_positive>
+  
+<!-- Blood Pack AB- -->
+<entityname.bloodpackab_negative>Пакет крови AB-</entityname.bloodpackab_negative>
+<entitydescription.bloodpackab_negative>Можно вводить: AB-, AB+</entitydescription.bloodpackab_negative>
+  
+<!-- Donor card O- -->
+<entityname.o_negativecard>Донорская карта O-</entityname.o_negativecard>
+<entitydescription.o_negativecard>Можно брать кровь у: O-
+Можно давать кровь: всем</entitydescription.o_negativecard>
+  
+<!-- Donor card O+ -->
+<entityname.o_positivecard>Донорская карта O+</entityname.o_positivecard>
+<entitydescription.o_positivecard>Можно брать кровь у: O-, O+
+Можно давать кровь: O+, A+, B+, AB+</entitydescription.o_positivecard>
+  
+<!-- Donor card A- -->
+<entityname.a_negativecard>Донорская карта A-</entityname.a_negativecard>
+<entitydescription.a_negativecard>Можно брать кровь у: O-, A-
+Можно давать кровь: A-, A+, AB-, AB+</entitydescription.a_negativecard>
+  
+<!-- Donor card A+ -->
+<entityname.a_positivecard>Донорская карта A+</entityname.a_positivecard>
+<entitydescription.a_positivecard>Можно брать кровь у: O-, O+, A-, A+
+Можно давать кровь: A+, AB+</entitydescription.a_positivecard>
+  
+<!-- Donor card B- -->
+<entityname.b_negativecard>Донорская карта B-</entityname.b_negativecard>
+<entitydescription.b_negativecard>Можно брать кровь у: O-, B-
+Можно давать кровь: B-, B+, AB-, AB+</entitydescription.b_negativecard>
+  
+<!-- Donor card B+ -->
+<entityname.b_positivecard>Донорская карта B+</entityname.b_positivecard>
+<entitydescription.b_positivecard>Можно брать кровь у: O-, O+, B-, B+
+Можно давать кровь: B+, AB+</entitydescription.b_positivecard>
+  
+<!-- Donor card AB- -->
+<entityname.ab_negativecard>Донорская карта AB-</entityname.ab_negativecard>
+<entitydescription.ab_negativecard>Можно брать кровь у: O-, A-, B-, AB-
+Можно давать кровь: AB-, AB+</entitydescription.ab_negativecard>
+  
+<!-- Donor card AB+ -->
+<entityname.ab_positivecard>Донорская карта AB+</entityname.ab_positivecard>
+<entitydescription.ab_positivecard>Можно брать кровь у: всех
+Можно давать кровь: AB+</entitydescription.ab_positivecard>
+
+<!-- ================================================= Bodyparts ================================================= -->
+  
+<!-- Right Arm -->
+<entityname.rarm>Правая рука</entityname.rarm>
+<entitydescription.rarm>Отрезанная правая рука. Может быть хирургически прикреплена после ‖color:gui.orange‖Распиливания костей‖end‖. Отрезанные конечности будут медленно разлагаться, если не хранить их в холодильнике, хотя состояние конечности не имеет значения для трансплантации. Кости богаты ‖color:gui.blue‖Кальцием‖end‖ и являются вкусным лакомством для питомцев.</entitydescription.rarm>
+  
+<!-- Left Arm -->
+<entityname.larm>Левая рука</entityname.larm>
+<entitydescription.larm>Отрезанная левая рука. Может быть хирургически прикреплена после ‖color:gui.orange‖Распиливания костей‖end‖. Отрезанные конечности будут медленно разлагаться, если не хранить их в холодильнике, хотя состояние конечности не имеет значения для трансплантации. Кости богаты ‖color:gui.blue‖Кальцием‖end‖ и являются вкусным лакомством для питомцев.</entitydescription.larm>
+  
+<!-- Right Leg -->
+<entityname.rleg>Правая нога</entityname.rleg>
+<entitydescription.rleg>Отрезанная правая нога. Может быть хирургически прикреплена после ‖color:gui.orange‖Распиливания костей‖end‖. Отрезанные конечности будут медленно разлагаться, если не хранить их в холодильнике, хотя состояние конечности не имеет значения для трансплантации. Кости богаты ‖color:gui.blue‖Кальцием‖end‖ и являются вкусным лакомством для питомцев.</entitydescription.rleg>
+  
+<!-- Left Leg -->
+<entityname.lleg>Левая нога</entityname.lleg>
+<entitydescription.lleg>Отрезанная левая нога. Может быть хирургически прикреплена после ‖color:gui.orange‖Распиливания костей‖end‖. Отрезанные конечности будут медленно разлагаться, если не хранить их в холодильнике, хотя состояние конечности не имеет значения для трансплантации. Кости богаты ‖color:gui.blue‖Кальцием‖end‖ и являются вкусным лакомством для питомцев.</entitydescription.lleg>
+  
+<!-- Severed Head -->
+<entityname.headta>Остатки головы</entityname.headta>
+<entitydescription.headta>Остатки человеческой головы, которая была оторвана. Лицо изуродовано и неузнаваемо, и оно будет медленно разлагаться, если не хранить его в холодильнике. Кости богаты ‖color:gui.blue‖Кальцием‖end‖ и являются вкусным лакомством для питомцев. Нет, вы не можете её трансплантировать, даже не думайте об этом.</entitydescription.headta>
+  
+<!-- Amputated Head -->
+<entityname.headsa>Ампутированная голова</entityname.headsa>
+<entitydescription.headsa>Ампутированная голова в мешке, которая будет медленно разлагаться, если не хранить её в холодильнике. Кости богаты ‖color:gui.blue‖Кальцием‖end‖ и являются вкусным лакомством для питомцев. Нет, вы не можете её трансплантировать, даже не думайте об этом.</entitydescription.headsa>
+  
+<!-- Right Arm Prosthesis -->
+<entityname.rarmp>Бионический протез правой руки</entityname.rarmp>
+<entitydescription.rarmp>Бионическая правая рука. Может использоваться для лечения ампутации, превращаясь в биологическую руку. Может быть прикреплена после ‖color:gui.orange‖Распиливания костей‖end‖.</entitydescription.rarmp>
+  
+<!-- Left Arm Prosthesis -->
+<entityname.larmp>Бионический протез левой руки</entityname.larmp>
+<entitydescription.larmp>Бионическая левая рука. Может использоваться для лечения ампутации, превращаясь в биологическую руку. Может быть прикреплена после ‖color:gui.orange‖Распиливания костей‖end‖.</entitydescription.larmp>
+  
+<!-- Right Leg Prosthesis -->
+<entityname.rlegp>Бионический протез правой ноги</entityname.rlegp>
+<entitydescription.rlegp>Бионическая правая нога. Может использоваться для лечения ампутации, превращаясь в биологическую руку. Может быть прикреплена после ‖color:gui.orange‖Распиливания костей‖end‖.</entitydescription.rlegp>
+  
+<!-- Left Leg Prosthesis -->
+<entityname.llegp>Бионический протез левой ноги</entityname.llegp>
+<entitydescription.llegp>Бионическая левая нога. Может использоваться для лечения ампутации, превращаясь в биологическую руку. Может быть прикреплена после ‖color:gui.orange‖Распиливания костей‖end‖.</entitydescription.llegp>
+  
+<!-- Liver Transplant Item -->
+<entityname.livertransplant>Трансплантат печени</entityname.livertransplant>
+<entitydescription.livertransplant>Человеческая печень. Для трансплантации органа старый нужно удалить, а новый поместить внутрь. Органы быстро разлагаются, если не хранить их в холодильнике или в человеке, и являются вкусным лакомством для питомцев.</entitydescription.livertransplant>
+<entityname.livertransplant_q1>Трансплантат печени</entityname.livertransplant_q1>
+<entitydescription.livertransplant_q1>Человеческая печень. Для трансплантации органа старый нужно удалить, а новый поместить внутрь. Органы быстро разлагаются, если не хранить их в холодильнике или в человеке, и являются вкусным лакомством для питомцев.</entitydescription.livertransplant_q1>
+<entityname.livertransplant_q2>Трансплантат печени</entityname.livertransplant_q2>
+<entityname.livertransplant_q3>Трансплантат печени</entityname.livertransplant_q3>
+<entityname.livertransplant_q4>Трансплантат печени</entityname.livertransplant_q4>
+<entityname.livertransplant_q5>Трансплантат печени</entityname.livertransplant_q5>
+  
+<!-- Lungs Transplant Item -->
+<entityname.lungtransplant>Трансплантат лёгких</entityname.lungtransplant>
+<entitydescription.lungtransplant>Набор человеческих лёгких. Для трансплантации органа старый нужно удалить, а новый поместить внутрь. Органы быстро разлагаются, если не хранить их в холодильнике или в человеке, и являются вкусным лакомством для питомцев.</entitydescription.lungtransplant>
+<entityname.lungtransplant_q1>Трансплантат лёгких</entityname.lungtransplant_q1>
+<entitydescription.lungtransplant_q1>Набор человеческих лёгких. Для трансплантации органа старый нужно удалить, а новый поместить внутрь. Органы быстро разлагаются, если не хранить их в холодильнике или в человеке, и являются вкусным лакомством для питомцев.</entitydescription.lungtransplant_q1>
+<entityname.lungtransplant_q2>Трансплантат лёгких</entityname.lungtransplant_q2>
+<entityname.lungtransplant_q3>Трансплантат лёгких</entityname.lungtransplant_q3>
+<entityname.lungtransplant_q4>Трансплантат лёгких</entityname.lungtransplant_q4>
+<entityname.lungtransplant_q5>Трансплантат лёгких</entityname.lungtransplant_q5>
+  
+<!-- Kidney Transplant Item -->
+<entityname.kidneytransplant>Трансплантат почки</entityname.kidneytransplant>
+<entitydescription.kidneytransplant>Человеческая почка. Для трансплантации органа старый нужно удалить, а новый поместить внутрь. Органы быстро разлагаются, если не хранить их в холодильнике или в человеке, и являются вкусным лакомством для питомцев.</entitydescription.kidneytransplant>
+<entityname.kidneytransplant_q1>Трансплантат почки</entityname.kidneytransplant_q1>
+<entitydescription.kidneytransplant_q1>Человеческая почка. Для трансплантации органа старый нужно удалить, а новый поместить внутрь. Органы быстро разлагаются, если не хранить их в холодильнике или в человеке, и являются вкусным лакомством для питомцев.</entitydescription.kidneytransplant_q1>
+<entityname.kidneytransplant_q2>Трансплантат почки</entityname.kidneytransplant_q2>
+<entityname.kidneytransplant_q3>Трансплантат почки</entityname.kidneytransplant_q3>
+<entityname.kidneytransplant_q4>Трансплантат почки</entityname.kidneytransplant_q4>
+<entityname.kidneytransplant_q5>Трансплантат почки</entityname.kidneytransplant_q5>
+  
+<!-- Heart Transplant Item -->
+<entityname.hearttransplant>Трансплантат сердца</entityname.hearttransplant>
+<entitydescription.hearttransplant>Человеческое сердце. Для трансплантации органа старый нужно удалить, а новый поместить внутрь. Органы быстро разлагаются, если не хранить их в холодильнике или в человеке, и являются вкусным лакомством для питомцев.</entitydescription.hearttransplant>
+<entityname.hearttransplant_q1>Трансплантат сердца</entityname.hearttransplant_q1>
+<entitydescription.hearttransplant_q1>Человеческое сердце. Для трансплантации органа старый нужно удалить, а новый поместить внутрь. Органы быстро разлагаются, если не хранить их в холодильнике или в человеке, и являются вкусным лакомством для питомцев.</entitydescription.hearttransplant_q1>
+<entityname.hearttransplant_q2>Трансплантат сердца</entityname.hearttransplant_q2>
+<entityname.hearttransplant_q3>Трансплантат сердца</entityname.hearttransplant_q3>
+<entityname.hearttransplant_q4>Трансплантат сердца</entityname.hearttransplant_q4>
+<entityname.hearttransplant_q5>Трансплантат сердца</entityname.hearttransplant_q5>
+  
+<!-- Brain Transplant Item -->
+<entityname.braintransplant>Трансплантат мозга</entityname.braintransplant>
+<entitydescription.braintransplant>Человеческий мозг. Для трансплантации органа старый нужно удалить, а новый поместить внутрь. Мозг будет разлагаться даже в холодильнике и крайне хрупок, а также является вкусным лакомством для питомцев.</entitydescription.braintransplant>
+
+<!-- Arm Locks -->
+<entityname.armlock>Неработающая рука</entityname.armlock>
+<entitydescription.armlock>Эта рука стала непригодной для использования! \nЭто может быть из-за ‖color:gui.red‖Вывиха‖end‖, ‖color:gui.red‖Перелома‖end‖ или ‖color:gui.red‖Ампутации‖end‖.</entitydescription.armlock>
+
+<!-- ================================================= Consumables ================================================= -->
+  
+<!-- Mannitol -->
+<entityname.mannitol>Маннитол</entityname.mannitol>
+<entitydescription.mannitol>Сахарный спирт, используемый для лечения значительной части ‖color:gui.green‖Нейротравмы‖end‖ и снижения скорости её увеличения вдвое. Однако он не будет работать, если у пациента нет более 70% кровяного давления и кислород насыщенной крови. Кроме того, он вызовет ‖color:gui.red‖Повреждение сердца‖end‖ и ‖color:gui.red‖Почек‖end‖. При неудаче он менее эффективен и вызовет больше ‖color:gui.red‖Повреждений сердца‖end‖ и ‖color:gui.red‖Почек‖end‖.</entitydescription.mannitol>
+  
+<!-- Streptokinase -->
+<entityname.streptokinase>Стрептокиназа</entityname.streptokinase>
+<entitydescription.streptokinase>Фермент, расщепляющий сгустки крови, полезен при лечении ‖color:gui.green‖Сердечных приступов‖end‖. Однако он увеличит риск ‖color:gui.red‖Инсультов‖end‖, если у пользователя кровяное давление выше 150%. Кроме того, используется для лечения ‖color:gui.green‖Гемотрансфузионного шока‖end‖.</entitydescription.streptokinase>
+  
+<!-- Azathioprine -->
+<entityname.immunosuppressant>Азатиоприн</entityname.immunosuppressant>
+<entitydescription.immunosuppressant>Иммунодепрессант, который снижает ‖color:gui.green‖Иммунитет‖end‖ пациента. Это полезно для предотвращения ‖color:gui.green‖Отторжения органа‖end‖ или для ‖color:gui.green‖введения несовместимых групп крови‖end‖ без запуска иммунного ответа. Однако сниженный иммунитет сделает пациента более восприимчивым к ‖color:gui.red‖Сепсису‖end‖. Если пациенту пересадили орган, но он сразу отказал, значит, он был отторгнут иммунной системой. При неудаче вызывает ‖color:gui.red‖Сепсис‖end‖.</entitydescription.immunosuppressant>
+  
+<!-- Thiamine -->
+<entityname.thiamine>Тиамин</entityname.thiamine>
+<entitydescription.thiamine>Иначе известен как витамин B1. Эти таблетки дают небольшой прирост к ‖color:gui.green‖Регенерации органов‖end‖. При неудаче менее эффективен.</entitydescription.thiamine>
+  
+<!-- Antibiotic ointment -->
+<entityname.ointment>Антибиотическая мазь</entityname.ointment>
+<entitydescription.ointment>Антибиотический гель, который помогает бороться с ‖color:gui.green‖Заражёнными ранами‖end‖ и облегчает незначительные ‖color:gui.green‖Ожоги‖end‖. При неудаче менее эффективен.</entitydescription.ointment>
+
+<!-- Tourniquet -->
+<entityname.tourniquet>Жгут</entityname.tourniquet>
+<entitydescription.tourniquet>Предмет, предотвращающий ‖color:gui.green‖Потерю крови из артериального кровотечения‖end‖. Не может быть использован для ‖color:gui.red‖Кровотечения сонной артерии‖end‖. Конечность с жгутом со временем подвергнется ‖color:gui.red‖Гангрене‖end‖, и жгут снимается во время операции. При неудаче вызывает ‖color:gui.red‖Тупую травму‖end‖.</entitydescription.tourniquet>
+  
+<!-- Drainage -->
+<entityname.drainage>Дренаж</entityname.drainage>
+<entitydescription.drainage>Лечит ‖color:gui.green‖Пневмоторакс‖end‖ и ‖color:gui.green‖Тампонаду сердца‖end‖, отводя воздух и жидкость соответственно. Может быть использован после ‖color:gui.orange‖Оттягивания кожи‖end‖.</entitydescription.drainage>
+  
+<!-- Needle -->
+<entityname.needle>Игла</entityname.needle>
+<entitydescription.needle>Специализированная игла, используемая для сброса давления воздуха и жидкости в качестве первой помощи при ‖color:gui.green‖Пневмотораксе‖end‖ и ‖color:gui.green‖Тампонаде сердца‖end‖. Если у пациента ещё нет пневмоторакса, она ‖color:gui.red‖вызовет его‖end‖. При неудаче вызывает ‖color:gui.red‖Повреждение органов‖end‖ и ‖color:gui.red‖Кровотечение‖end‖.</entitydescription.needle>
+  
+<!-- Ringer's solution -->
+<entityname.ringerssolution>Раствор Рингера</entityname.ringerssolution>
+<entitydescription.ringerssolution>Изотонический раствор, используемый для повышения ‖color:gui.green‖Кровяного давления‖end‖ и дополнительно вызывающий ‖color:gui.green‖Алкалоз‖end‖. При неудаче имеет меньшую длительность.</entitydescription.ringerssolution>
+  
+<!-- Propofol -->
+<entityname.propofol>Пропофол</entityname.propofol>
+<entitydescription.propofol>Общий ‖color:gui.green‖Анестетик‖end‖. Его эффекты наступают через некоторое время и длятся не очень долго. Пациенты под анестезией ‖color:gui.red‖Без сознания‖end‖ и не получают ‖color:gui.green‖Травматический шок‖end‖ от хирургических операций. Использование может сопровождаться различными несмертельными ‖color:gui.red‖Побочными эффектами‖end‖.</entitydescription.propofol>
+  
+<!-- Gypsum -->
+<entityname.gypsum>Гипс</entityname.gypsum>
+<entitydescription.gypsum>Порошок, из которого можно сформировать гипсовый слепок. Используется для фиксации ‖color:gui.green‖Переломов конечностей‖end‖, позволяя им заживать. Применяется после ‖color:gui.blue‖Перевязки‖end‖ конечности. При неудаче расходуется без формирования слепка.</entitydescription.gypsum>
+  
+<!-- Gel coolant pack -->
+<entityname.gelipack>Гелевый охлаждающий пакет</entityname.gelipack>
+<entitydescription.gelipack>Пакет с холодным гелем, который значительно увеличивает естественное заживление ‖color:gui.green‖Тупой травмы‖end‖ и со временем лечит ‖color:gui.green‖Внутреннее кровотечение‖end‖. Неэффективен против ‖color:gui.red‖других типов травм‖end‖ и ухудшает ‖color:gui.red‖Инфекции‖end‖. Эффекты, увеличивающие скорость естественного заживления, не работают, если травма превышает порог естественного заживления. Может использоваться до трёх раз и теряет эффективность, если не хранить в холодильнике. В холодильнике его состояние со временем восстанавливается. При неудаче длительность охлаждения снижается.</entitydescription.gelipack>
+
+<!-- ================================================= Other Equipment ================================================= -->
+
+<!-- Manual defibrillator -->
+<entityname.defibrillator>Ручной дефибриллятор</entityname.defibrillator>
+<entitydescription.defibrillator>Инструмент, использующий энергию батареи для лечения ‖color:gui.green‖Остановки сердца‖end‖ или сброса ‖color:gui.green‖Фибрилляции‖end‖. Для лечения остановки сердца используйте ‖color:gui.blue‖АВД‖end‖, если медицинский навык ниже 80. Для лечения фибрилляции используйте ‖color:gui.blue‖АВД‖end‖, если медицинский навык ниже 100. При неудаче вызывает ‖color:gui.red‖Остановку сердца‖end‖.</entitydescription.defibrillator>
+
+<!-- Automated external defibrillator / AED -->
+<entityname.aed>Автоматизированный внешний дефибриллятор</entityname.aed>
+<entitydescription.aed>АВД использует энергию батареи с небольшим шансом вылечить ‖color:gui.green‖Остановку сердца‖end‖ и гарантированно сбрасывает ‖color:gui.green‖Фибрилляцию‖end‖. Для лечения остановки сердца используйте ‖color:gui.blue‖Ручной дефибриллятор‖end‖, если медицинский навык выше 80.</entitydescription.aed>
+
+<!-- Ambu bag -->
+<entityname.bvm>Мешок Амбу</entityname.bvm>
+<entitydescription.bvm>Мешок Амбу лечит ‖color:gui.green‖Низкий кислород‖end‖ при наличии кислородного баллона и дополнительно лечит ‖color:gui.green‖Остановку дыхания‖end‖ при наличии баллона с кислородитом.</entitydescription.bvm>
+
+<!-- AutoPulse -->
+<entityname.autocpr>АвтоПульс</entityname.autocpr>
+<entitydescription.autocpr>Машина, занимающая слот верхней одежды пациента. Со временем лечит ‖color:gui.green‖Остановку сердца‖end‖ и ‖color:gui.green‖Фибрилляцию‖end‖. Ношение АвтоПульса дополнительно повышает ‖color:gui.green‖Кровяное давление‖end‖, что может быть полезно в экстренной ситуации. Не забудьте снять его, когда он больше не нужен! Его также можно надеть через интерфейс здоровья и снять, используя ‖color:gui.blue‖Гаечный ключ‖end‖ на торсе.</entitydescription.autocpr>
+
+<!-- Trauma shears -->
+<entityname.traumashears>Медицинские ножницы</entityname.traumashears>
+<entitydescription.traumashears>Инструмент, используемый для снятия ‖color:gui.green‖Повязок‖end‖ или ‖color:gui.green‖Гипсовых слепков‖end‖. При неудаче вызывает ‖color:gui.red‖Кровотечение‖end‖ и ‖color:gui.red‖Рваные раны‖end‖.</entitydescription.traumashears>
+
+<!-- Wheelchair -->
+<entityname.nt_wheelchair>Инвалидная коляска</entityname.nt_wheelchair>
+	<entitydescription.nt_wheelchair>Инструмент, занимающий слот верхней одежды пациента. Позволяет использовать руки для передвижения, позволяя вам лучше двигаться с повреждёнными ногами.</entitydescription.nt_wheelchair>
+
+<!-- Blue Shark -->
+<entityname.blahaj>Синяя акула</entityname.blahaj>
+<entitydescription.blahaj>Милый плюшевый зверёк, который слегка снижает ‖color:gui.green‖Психоз‖end‖ каждый раз, когда пациента ударяют им.</entitydescription.blahaj>
+
+<!-- Analgesic Tank -->
+<entityname.analgesictank>Баллон с анальгетиком</entityname.analgesictank>
+<entitydescription.analgesictank>Баллон с анальгетиками, который можно установить на ‖color:gui.blue‖Операционный стол‖end‖, чтобы обеспечить лежащему пациенту достаточно анальгезии для проведения операции. Также может использоваться в ‖color:gui.blue‖Мешке Амбу‖end‖, но вызывает дополнительную ‖color:gui.red‖Наркотическую зависимость‖end‖.</entitydescription.analgesictank>
+
+<!-- Dialysis Filter -->
+<entityname.dialyzer>Диализный фильтр</entityname.dialyzer>
+<entitydescription.dialyzer>Фильтр, который можно установить на ‖color:gui.blue‖Операционный стол‖end‖, чтобы снизить ‖color:gui.green‖Алкалоз‖end‖ и ‖color:gui.green‖Ацидоз‖end‖ у лежащего пациента. Снижение этих состояний даёт небольшой риск заражения ‖color:gui.red‖Сепсисом‖end‖.</entitydescription.dialyzer>
+
+<!-- Toxin Filter -->
+<entityname.toxfilter>Токсинный фильтр</entityname.toxfilter>
+<entitydescription.toxfilter>Фильтр, который можно установить на ‖color:gui.blue‖Операционный стол‖end‖, чтобы лечить ‖color:gui.green‖Яды‖end‖ у лежащего пациента. Хотя он медленнее антидотов, он может лечить все ванильные яды. Лечение ядов даёт небольшой риск заражения ‖color:gui.red‖Сепсисом‖end‖.</entitydescription.toxfilter>
+
+<!-- Health scanner -->
+<entityname.healthscanner>Сканер здоровья</entityname.healthscanner>
+<entitydescription.healthscanner>Инструмент, использующий энергию батареи для отображения состояний. Его можно направить на человека для полного сканирования тела или применить в интерфейсе здоровья, чтобы показать состояния на конкретной части тела. Использование сканера вызывает небольшое количество ‖color:gui.red‖Лучевой болезни‖end‖. Не будет отображать группу крови, ‖color:gui.red‖Сепсис‖end‖, ‖color:gui.green‖Иммунитет‖end‖, ‖color:gui.red‖Ацидоз‖end‖, ‖color:gui.red‖Алкалоз‖end‖ или наркотики; для этих состояний требуется ‖color:gui.blue‖Гематологический анализатор‖end‖.</entitydescription.healthscanner>
+
+<!-- Medical container -->
+<entityname.medtoolbox>Медицинский контейнер</entityname.medtoolbox>
+<entitydescription.medtoolbox>Может хранить лекарства и медицинские инструменты</entitydescription.medtoolbox>
+  
+<!-- Surgery toolbox -->
+<entityname.surgerytoolbox>Ящик для хирургических инструментов</entityname.surgerytoolbox>
+<entitydescription.surgerytoolbox>Может хранить множество мелких предметов, используемых во время операции</entitydescription.surgerytoolbox>
+  
+<!-- Surgery toolbox (Kit) -->
+<entityname.surgerytoolboxset>Ящик для хирургических инструментов</entityname.surgerytoolboxset>
+<entitydescription.surgerytoolboxset>Может хранить множество мелких предметов, используемых во время операции</entitydescription.surgerytoolboxset>
+<displayname.surgeryset>[itemname] (набор)</displayname.surgeryset>
+<displayname.surgerysetscalpel>[itemname] (набор, скальпели для органов)</displayname.surgerysetscalpel>
+  
+<!-- Refrigerated crate -->
+<entityname.organcrate>Холодильный ящик</entityname.organcrate>
+<entitydescription.organcrate>Ящик для хранения ценных готовых к трансплантации органов и конечностей. Органы быстро разлагаются на открытом воздухе, а конечности — медленнее. Органы и конечности восстанавливаются в холодильнике — но только если состояние органа выше 90% или конечности выше 95%.</entitydescription.organcrate>
+  
+<!-- Medical starter crate -->
+<entityname.medstartercrate>Стартовый медицинский ящик</entityname.medstartercrate>
+<entitydescription.medstartercrate>После получения этот ящик создаст предметы первой помощи и хирургические принадлежности.</entitydescription.medstartercrate>
+  
+<!-- Refrigerated container -->
+<entityname.organtoolbox>Холодильный контейнер</entityname.organtoolbox>
+<entitydescription.organtoolbox>Контейнер для хранения ценных готовых к трансплантации органов и конечностей. Органы быстро разлагаются на открытом воздухе, а конечности — медленнее. Органы и конечности восстанавливаются в холодильнике — но только если состояние органа выше 90% или конечности выше 95%.</entitydescription.organtoolbox>
+  
+<!-- Body bag -->
+<entityname.bodybag>Мешок для трупов</entityname.bodybag>
+<entitydescription.bodybag>Мешок, занимающий слот верхней одежды пациента или трупа. Позволяет ‖color:gui.green‖тащить их на полной скорости‖end‖, но живой человек не может дышать через мешок, что вызывает ‖color:gui.red‖Низкий кислород‖end‖.</entitydescription.bodybag>
+  
+<!-- Stasis bag -->
+<entityname.stasisbag>Стазис-мешок</entityname.stasisbag>
+<entitydescription.stasisbag>Мешок, занимающий слот верхней одежды пациента, защищающий от давления до 7000 метров. Это вызовет ‖color:gui.red‖Остановку сердца‖end‖, ‖color:gui.red‖Остановку дыхания‖end‖, ‖color:gui.red‖Потерю сознания‖end‖ и ‖color:gui.red‖предотвратит хирургические операции‖end‖, но ‖color:gui.green‖приостановит прогрессирование негативных состояний‖end‖ во время ношения. При ношении мешок изнашивается на 1% каждые четыре секунды.</entitydescription.stasisbag>
+<stasisbagequipconfirmation>Вы потеряете сознание. Вы уверены, что хотите надеть стазис-мешок?</stasisbagequipconfirmation>
+
+<!-- ================================================= Surgical Equipment ================================================= -->
+   
+<!-- Scalpel -->
+<entityname.advscalpel>Скальпель</entityname.advscalpel>
+<entitydescription.advscalpel>Инструмент, используемый для создания ‖color:gui.orange‖Хирургических разрезов‖end‖ во время операции. Разрезы — первый шаг во всех хирургических операциях, но вызовут ‖color:gui.red‖Потерю крови‖end‖, если после них не использовать ‖color:gui.blue‖Гемостат‖end‖. Кроме того, разрезы можно делать только в том случае, если пациент не чувствует боли, а пациенты, которые начинают чувствовать боль во время операции, получат ‖color:gui.red‖Травматический шок‖end‖. При неудаче вызывает ‖color:gui.red‖Кровотечение‖end‖ и ‖color:gui.red‖Рваные раны‖end‖.</entitydescription.advscalpel>
+  
+<!-- Hemostat -->
+<entityname.advhemostat>Зажим</entityname.advhemostat>
+<entitydescription.advhemostat>Инструмент, используемый для ‖color:gui.orange‖Зажима кровеносных сосудов‖end‖ во время операции. Второй шаг в большинстве хирургических операций, выполняется после ‖color:gui.orange‖Хирургических разрезов‖end‖.</entitydescription.advhemostat>
+  
+<!-- Skin retractors -->
+<entityname.advretractors>Кожный расширитель</entityname.advretractors>
+<entitydescription.advretractors>Инструмент, используемый для ‖color:gui.orange‖Оттягивания кожи‖end‖ во время операции. Оттягивание кожи — третий шаг в большинстве хирургических операций, но вызовет ‖color:gui.red‖Травматический шок‖end‖, если пациент в сознании и не лежит на кровати или рядом с ‖color:gui.blue‖Операционным столом‖end‖ или больничной койкой. Используется после ‖color:gui.orange‖Зажима‖end‖. При неудаче вызывает ‖color:gui.red‖Внутренние повреждения‖end‖.</entitydescription.advretractors>
+  
+<!-- Tweezers -->
+<entityname.tweezers>Пинцет</entityname.tweezers>
+<entitydescription.tweezers>Небольшой инструмент, позволяющий удалять нежелательные ткани. После ‖color:gui.orange‖Оттягивания кожи‖end‖ пинцет можно использовать для удаления некоторых ‖color:gui.green‖Инородных тел‖end‖ или преобразования ‖color:gui.green‖Тупой травмы‖end‖ и ‖color:gui.green‖Внутренних повреждений‖end‖ в ‖color:gui.blue‖Зашиваемые‖end‖ ‖color:gui.red‖Рваные раны‖end‖. ‖color:gui.green‖Инородные тела‖end‖ также можно удалить через открытые огнестрельные раны или глубокие повреждения тканей, но это вызовет небольшой ‖color:gui.red‖Травматический шок‖end‖. При неудаче вызывает ‖color:gui.red‖Внутренние повреждения‖end‖.</entitydescription.tweezers>
+  
+<!-- Surgical saw -->
+<entityname.surgerysaw>Хирургическая пила</entityname.surgerysaw>
+<entitydescription.surgerysaw>Инструмент, используемый для ‖color:gui.orange‖Распиливания костей‖end‖. После ‖color:gui.orange‖Оттягивания кожи‖end‖ кости можно распилить, чтобы удалить существующие конечности или добавить новые. Замена конечностей требуется, если гангрена превышает 15%. При неудаче вызывает ‖color:gui.red‖Кровотечение‖end‖, ‖color:gui.red‖Внутренние повреждения‖end‖ и ‖color:gui.red‖Рваные раны‖end‖.</entitydescription.surgerysaw>
+  
+<!-- Suture -->
+<entityname.suture>Медицинские швы</entityname.suture>
+<entitydescription.suture>Биоразлагаемые швы, используемые для завершения операции. При использовании завершают хирургические операции на любом этапе. Кроме того, их можно использовать для ‖color:gui.orange‖Ушивания‖end‖ ‖color:gui.green‖Открытых ран‖end‖ и значительного снижения внешнего ‖color:gui.green‖Кровотечения‖end‖. При неудаче вызывает ‖color:gui.red‖Внутренние повреждения‖end‖.</entitydescription.suture>
+  
+<!-- Surgical drill -->
+<entityname.surgicaldrill>Хирургическая дрель</entityname.surgicaldrill>
+<entitydescription.surgicaldrill>Инструмент, используемый для ‖color:gui.orange‖Просверливания костей‖end‖ во время операции. После ‖color:gui.orange‖Оттягивания кожи‖end‖ кости можно просверлить для выполнения ‖color:gui.orange‖Остеосинтеза‖end‖, который может исправить переломы. При неудаче вызывает ‖color:gui.red‖Кровотечение‖end‖ и ‖color:gui.red‖Внутренние повреждения‖end‖.</entitydescription.surgicaldrill>
+  
+<!-- Osteosynthesis implants -->
+<entityname.osteosynthesisimplants>Остеосинтетические имплантаты</entityname.osteosynthesisimplants>
+<entitydescription.osteosynthesisimplants>Титановые имплантаты, используемые для восстановления переломов. Их можно установить после ‖color:gui.orange‖Просверливания костей‖end‖. В случае полного омертвения костей ‖color:gui.orange‖Остеосинтез‖end‖ должен быть выполнен на всех частях тела. При неудаче вызывает ‖color:gui.red‖Кровотечение‖end‖ и ‖color:gui.red‖Внутренние повреждения‖end‖.</entitydescription.osteosynthesisimplants>
+  
+<!-- Spinal cord implants -->
+<entityname.spinalimplant>Имплантаты спинного мозга</entityname.spinalimplant>
+<entitydescription.spinalimplant>Титановые имплантаты, используемые для восстановления повреждений спинного мозга. Их можно установить после ‖color:gui.orange‖Оттягивания кожи‖end‖. Однако спинной мозг снова будет повреждён, если перелом шеи не исправлен с помощью ‖color:gui.orange‖Остеосинтеза‖end‖. При неудаче вызывает ‖color:gui.red‖Кровотечение‖end‖ и ‖color:gui.red‖Внутренние повреждения‖end‖.</entitydescription.spinalimplant>
+  
+<!-- Surgery table -->
+<entityname.operatingtable>Операционный стол</entityname.operatingtable>
+<entitydescription.operatingtable>Портативная версия больничной койки, предназначенная для установки на подводных лодках. Как и больничная койка, он оснащён ‖color:gui.green‖Искусственной вентиляцией‖end‖. Кроме того, он имеет электрические разъёмы, которые могут выводить показатели жизнедеятельности человека. Встроены слоты для размещения ‖color:gui.blue‖Баллона с анальгетиком‖end‖, одного из ‖color:gui.blue‖Фильтров‖end‖ и ‖color:gui.blue‖Холодильного ящика‖end‖. Чтобы использовать ‖color:gui.blue‖Баллон с анальгетиком‖end‖ и ‖color:gui.blue‖Фильтры‖end‖ на пациенте без сознания, его придётся принудительно уложить на стол.</entitydescription.operatingtable>
+<itemmsgmodifytable>[[attack]] Взаимодействовать</itemmsgmodifytable>
+<operatingtabellabel>Улучшения операционного стола</operatingtabellabel>  
+
+<!-- Multipurpose scalpel -->
+<entityname.multiscalpel>Многофункциональный скальпель</entityname.multiscalpel>
+<entitydescription.multiscalpel>Новинка-скальпель. Отключён и требует активации. В руках практикующего врача панель кнопок может быть использована для активации скальпеля и переключения между операциями: нанесение разрезов, извлечение органов, снятие повязок или врачебная ошибка.</entitydescription.multiscalpel>
+<multiscalpel.incision>Активный режим: Хирургический разрез</multiscalpel.incision>
+<multiscalpel.kidneys>Активный режим: Извлечение почек</multiscalpel.kidneys>
+<multiscalpel.liver>Активный режим: Извлечение печени</multiscalpel.liver>
+<multiscalpel.lungs>Активный режим: Извлечение лёгких</multiscalpel.lungs>
+<multiscalpel.heart>Активный режим: Извлечение сердца</multiscalpel.heart>
+<multiscalpel.brain>Активный режим: Извлечение мозга</multiscalpel.brain>
+<multiscalpel.bandage>Активный режим: Снятие повязок и слепков / врачебная ошибка</multiscalpel.bandage>
+<multiscalpel.speedflex>Режим: Адаптивное извлечение органов. После ‖color:gui.orange‖Оттягивания кожи‖end‖ используйте на соответствующей конечности для удаления следующих ‖color:gui.blue‖органов‖end‖. Чтобы извлечь ‖color:gui.blue‖органы‖end‖ без трансплантации новых, используйте на соответствующей конечности дважды. Экипируйте в руку, чтобы сменить режим.
+- Голова: ‖color:gui.blue‖Мозг‖end‖
+- Левая рука: ‖color:gui.blue‖Почки‖end‖
+- Торс: ‖color:gui.blue‖Печень‖end‖
+- Правая рука: ‖color:gui.blue‖Сердце‖end‖
+- Левая нога: ‖color:gui.blue‖Лёгкие‖end‖</multiscalpel.speedflex>
+
+<multiscalpel.btn.incision>Надрез</multiscalpel.btn.incision>
+<multiscalpel.btn.kidneys>Почки</multiscalpel.btn.kidneys>
+<multiscalpel.btn.liver>Печень</multiscalpel.btn.liver>
+<multiscalpel.btn.lungs>Лёгкие</multiscalpel.btn.lungs>
+<multiscalpel.btn.heart>Сердце</multiscalpel.btn.heart>
+<multiscalpel.btn.brain>Мозг</multiscalpel.btn.brain>
+<multiscalpel.btn.bandage>Повязки, слепки, врачебная ошибка</multiscalpel.btn.bandage>
+<multiscalpel.btn.speedflex>Адаптивное извлечение органов</multiscalpel.btn.speedflex>
+
+<!-- Surgery Kit -->
+<entityname.surgerykit>Хирургический набор</entityname.surgerykit>
+<entitydescription.surgerykit>Набор, содержащий всё основное хирургическое оборудование, которое может понадобиться медику, с небольшим дополнительным местом для других предметов. \n\n‖color:gui.blue‖Позволяет использовать все базовые инструменты Neurotrauma в меню здоровья.‖end‖</entitydescription.surgerykit>
+
+	<!-- ================================================= Toggleable ================================================= -->
+
+<!-- Sodium nitroprusside -->
+<entityname.pressuremeds>Нитропруссид натрия</entityname.pressuremeds>
+<entitydescription.pressuremeds>Лекарство, используемое для снижения ‖color:gui.green‖Кровяного давления‖end‖. При неудаче менее эффективно.</entitydescription.pressuremeds>
+
+<!-- Endovascular balloon -->
+<entityname.endovascballoon>Эндоваскулярный баллон</entityname.endovascballoon>
+<entitydescription.endovascballoon>Баллон, вставляемый в разорванную аорту. Это предотвратит ‖color:gui.green‖Потерю крови‖end‖, вызванную разрывом, но закупорка со временем вызовет ‖color:gui.red‖Гангрену‖end‖. Может быть установлен после ‖color:gui.orange‖Надреза скальпелем‖end‖.</entitydescription.endovascballoon>
+  
+<!-- Medical stent -->
+<entityname.medstent>Медицинский стент</entityname.medstent>
+<entitydescription.medstent>Стент, который можно вставить в аорту для восстановления разрыва. Должен использоваться после ‖color:gui.blue‖Эндоваскулярного баллона‖end‖.</entitydescription.medstent>
+
+<!-- Antiseptic -->
+<entityname.antiseptic>Антисептик</entityname.antiseptic>
+<entitydescription.antiseptic>Используется ‖color:gui.blue‖Антисептическим распылителем‖end‖, эффективен против лечения ‖color:gui.green‖Заражённых ран‖end‖.</entitydescription.antiseptic>
+  
+<!-- Antiseptic sprayer -->
+<entityname.antisepticspray>Антисептический спрей</entityname.antisepticspray>
+<entitydescription.antisepticspray>Распыляет ‖color:gui.blue‖Антисептик‖end‖ для борьбы с ‖color:gui.green‖Заражёнными ранами‖end‖.</entitydescription.antisepticspray>
+
+<!-- Organ procurement scalpel: Liver -->
+<entityname.organscalpel_liver>Скальпель для забора органов: Печень</entityname.organscalpel_liver>
+<entitydescription.organscalpel_liver>Специализированный скальпель для извлечения печени.</entitydescription.organscalpel_liver>
+  
+<!-- Organ procurement scalpel: Kidneys -->
+<entityname.organscalpel_kidneys>Скальпель для забора органов: Почки</entityname.organscalpel_kidneys>
+<entitydescription.organscalpel_kidneys>Специализированный скальпель для извлечения почек.</entitydescription.organscalpel_kidneys>
+  
+<!-- Organ procurement scalpel: Lungs -->
+<entityname.organscalpel_lungs>Скальпель для забора органов: Лёгкие</entityname.organscalpel_lungs>
+<entitydescription.organscalpel_lungs>Специализированный скальпель для извлечения лёгких.</entitydescription.organscalpel_lungs>
+  
+<!-- Organ procurement scalpel: Heart -->
+<entityname.organscalpel_heart>Скальпель для забора органов: Сердце</entityname.organscalpel_heart>
+<entitydescription.organscalpel_heart>Специализированный скальпель для извлечения сердца.</entitydescription.organscalpel_heart>
+  
+<!-- Organ procurement scalpel: Brain -->
+<entityname.organscalpel_brain>Скальпель для забора органов: Мозг</entityname.organscalpel_brain>
+<entitydescription.organscalpel_brain>Специализированный скальпель для извлечения мозга.</entitydescription.organscalpel_brain>
+
+<!-- ================================================= Vanilla Overrides ================================================= -->
+<!-- 99% of this is by the goat ThousandFields. -->
+
+<!-- Alien Blood -->
+<entitydescription.alienblood>Кровь, извлечённая из европской формы жизни. Она ‖color:gui.red‖несовместима‖end‖ с человеческой кровью.</entitydescription.alienblood>
+
+<!-- Saline -->
+<entitydescription.antibloodloss1>Инфузия хлорида натрия, используемая для повышения ‖color:gui.green‖Кровяного давления‖end‖, и дополнительно вызывающая ‖color:gui.green‖Ацидоз‖end‖. При неудаче имеет меньшую длительность.</entitydescription.antibloodloss1>
+
+<!-- Bandages -->
+<entitydescription.antibleeding1>Базовые бинты, полезные при лечении ‖color:gui.green‖Кровотечения‖end‖, и увеличивают естественное заживление ‖color:gui.green‖незначительных ожогов‖end‖ и ‖color:gui.green‖ран‖end‖. Кроме того, перевязка стабилизирует ‖color:gui.green‖Переломы‖end‖ и ‖color:gui.green‖Вывихи‖end‖. Эффекты, увеличивающие скорость естественного заживления, не работают, если травма превышает порог естественного заживления. При неудаче менее эффективны. Стабилизация предотвращает: \n- Достижение переломами рук 100% \n- Вызывание переломами шеи повреждения спинного мозга и внутренних повреждений \n- Вызывание переломами рёбер пневмоторакса \n- Вызывание вывихами внутренних повреждений \n- Блокировку рук при вывихе \n- И восстанавливает функцию вывихнутых ног</entitydescription.antibleeding1>
+
+<!-- Plastiseal -->
+<entitydescription.antibleeding2>Синтетическая кожа с гемостатическими свойствами, способная эффективно запечатывать ‖color:gui.green‖Кровотечения‖end‖ и является хорошим средством против ‖color:gui.green‖незначительных ожогов‖end‖, одновременно увеличивая естественное заживление ‖color:gui.green‖ран‖end‖. Кроме того, стабилизирует ‖color:gui.green‖Переломы‖end‖ и ‖color:gui.green‖Вывихи‖end‖. Наконец, может использоваться для лечения ‖color:gui.green‖Ожогов третьей степени‖end‖ при применении после ‖color:gui.orange‖Оттягивания кожи‖end‖. При неудаче менее эффективен.</entitydescription.antibleeding2>
+
+<!-- Opium -->
+<entitydescription.opium>Относительно мягкий ‖color:gui.blue‖Опиоидный‖end‖ ‖color:gui.green‖Анальгетик‖end‖, получаемый из водяного мака. Чаще всего используется для производства морфина и фентанила. При неудаче менее эффективен и существует больший риск ‖color:gui.red‖Наркотической зависимости‖end‖ и ‖color:gui.red‖Передозировки‖end‖.</entitydescription.opium>
+
+<!-- Morphine -->
+<entitydescription.antidama1>Мощный ‖color:gui.blue‖Опиоидный‖end‖ ‖color:gui.green‖Анальгетик‖end‖, но злоупотребление вызовет ‖color:gui.red‖Наркотическую зависимость‖end‖ и ‖color:gui.red‖Передозировку‖end‖. При неудаче менее эффективен и существует больший риск ‖color:gui.red‖Наркотической зависимости‖end‖ и ‖color:gui.red‖Передозировки‖end‖.</entitydescription.antidama1>
+
+<!-- Fentanyl -->
+<entitydescription.antidama2>Очень сильный ‖color:gui.blue‖Опиоидный‖end‖ ‖color:gui.green‖Анальгетик‖end‖, но злоупотребление вызовет ‖color:gui.red‖Наркотическую зависимость‖end‖ и ‖color:gui.red‖Передозировку‖end‖. Анальгезия не только предотвратит ‖color:gui.green‖боль‖end‖, но также уменьшит ‖color:gui.green‖получаемый урон‖end‖ и увеличит ‖color:gui.green‖сопротивление оглушению‖end‖. При неудаче менее эффективен и существует больший риск ‖color:gui.red‖Наркотической зависимости‖end‖ и ‖color:gui.red‖Передозировки‖end‖.</entitydescription.antidama2>
+
+<!-- Naloxone -->
+<entitydescription.antinarc>Антагонист опиоидов для лечения опиатного ‖color:gui.green‖Наркотической зависимости‖end‖ и ‖color:gui.green‖Передозировки‖end‖. Кроме того, он снизит ‖color:gui.green‖Анальгезию‖end‖. При неудаче менее эффективен и может вызвать короткую ‖color:gui.red‖Кому‖end‖.</entitydescription.antinarc>
+
+<!-- Broad-Spectrum Antibiotics -->
+<entitydescription.antibiotics>Антибиотик широкого спектра действия, эффективное средство против ‖color:gui.green‖Сепсиса‖end‖ и в меньшей степени ‖color:gui.green‖Заражения паразитом хаска‖end‖. Однако его широкий спектр действия вызывает ‖color:gui.red‖Повреждение органов‖end‖. Используется как ингредиент во многих медицинских составах. При неудаче менее эффективен.</entitydescription.antibiotics>
+
+<!-- Adrenaline -->
+<entitydescription.adrenaline>Естественно вырабатываемый гормон. На короткое время он повысит ‖color:gui.green‖Кровяное давление‖end‖ пациента, увеличит ‖color:gui.green‖Урон в ближнем бою‖end‖, вдвое снизит ‖color:gui.green‖Скорость фибрилляции‖end‖, предотвратит ‖color:gui.green‖Боль‖end‖ и предотвратит блокировку конечностей и замедление от ‖color:gui.green‖Переломов‖end‖ и ‖color:gui.green‖Вывихов‖end‖. При использовании он также вылечит ‖color:gui.green‖Остановку сердца‖end‖, снимет ‖color:gui.green‖Оглушение‖end‖ и ненадолго уменьшит ‖color:gui.green‖входящие оглушения‖end‖.</entitydescription.adrenaline>
+
+<!-- Captain's Pipe -->
+<entitydescription.captainspipe>Для успокоения нервов, когда море штормит. Впрочем, это тяжело для лёгких.</entitydescription.captainspipe>
+
+<!-- Cigar -->
+<entitydescription.cigar>Жизнь подводника умственно утомительна, но, возможно, эта изысканно изготовленная сигара поможет вам немного успокоить нервы. Впрочем, это тяжело для лёгких.</entitydescription.cigar>
+
+<!-- Liquid Oxygenite -->
+<entitydescription.liquidoxygenite>‖color:gui.red‖Летучий‖end‖ шприц с кислородитом, который можно ввести, принудительно ‖color:gui.green‖насыщая кислородом кровь‖end‖ на короткий период времени. Однако его токсичность вызывает небольшое ‖color:gui.red‖Повреждение органов‖end‖. При неудаче насыщение кислородом ‖color:gui.red‖мгновенное‖end‖ и ‖color:gui.red‖органы получают дополнительный урон‖end‖. Гипоксемия повреждает мозг и органы и является основной причиной смерти в результате боевых травм.</entitydescription.liquidoxygenite>
+
+<!-- Deusizine -->
+<entitydescription.deusizine>Стимулятор, повышающий ‖color:gui.green‖мышечную выносливость‖end‖ и может использоваться для лечения ‖color:gui.green‖Внутренних повреждений‖end‖, ‖color:gui.green‖Кислородного голодания‖end‖ и ‖color:gui.green‖Потери крови‖end‖. При неудаче менее эффективен.</entitydescription.deusizine>
+
+<!-- Antibiotic Glue -->
+<entitydescription.antibleeding3>Антибиотический клей с гемостатическими свойствами. Запечатывает ‖color:gui.green‖Кровоточащие‖end‖ раны почти мгновенно и предотвращает их ‖color:gui.green‖Заражение‖end‖. Также эффективен против ‖color:gui.green‖Ожогов‖end‖. При неудаче может вызвать ‖color:gui.red‖подвижные сгустки‖end‖ в кровотоке.</entitydescription.antibleeding3>
+
+<!-- Methamphetamine -->
+<entitydescription.meth>Мощный стимулятор нервной системы, временно повышающий ‖color:gui.green‖мышечную скорость‖end‖ пользователя. Однако он вызывает ‖color:gui.red‖химическую зависимость‖end‖, слегка повреждает ‖color:gui.red‖Органы‖end‖ и вызовет некоторую ‖color:gui.red‖Нейротравму‖end‖. При неудаче менее эффективен, вызывает больше ‖color:gui.red‖химической зависимости‖end‖ и ‖color:gui.red‖повреждений‖end‖.</entitydescription.meth>
+
+<!-- Anabolic Steroids -->
+<entitydescription.steroids>Временно повышают ‖color:gui.green‖мышечную силу‖end‖ и ‖color:gui.green‖выносливость‖end‖. Вызывают химическую зависимость. При неудаче менее эффективны и вызывает больше ‖color:gui.red‖химической зависимости‖end‖.</entitydescription.steroids>
+
+<!-- Hyperzine -->
+<entitydescription.hyperzine>Чрезвычайно мощный мышечный стимулятор для тех моментов, когда нужно быстро бежать. Повышает ‖color:gui.green‖мышечную силу‖end‖, ‖color:gui.green‖выносливость‖end‖ и ‖color:gui.green‖скорость‖end‖, а также снижает ‖color:gui.green‖восприимчивость к оглушению‖end‖. Он вызывает ‖color:gui.red‖Химическую зависимость‖end‖ и небольшое количество ‖color:gui.red‖Нейротравмы‖end‖. При неудаче вызывает больше ‖color:gui.red‖Химической зависимости‖end‖ и больше ‖color:gui.red‖Нейротравмы‖end‖.</entitydescription.hyperzine>
+
+<!-- Haloperidol -->
+<entitydescription.antipsychosis>Сильный ‖color:gui.green‖антипсихотический‖end‖ препарат, эффективный против лечения ‖color:gui.green‖Алкогольной зависимости‖end‖. При неудаче менее эффективен.</entitydescription.antipsychosis>
+
+<!-- Anaparalyzant -->
+<entitydescription.antiparalysis>Средство от ‖color:gui.green‖Паралича‖end‖, преждевременно прекращает ‖color:gui.green‖Анестезию‖end‖. Чрезмерное использование может вызвать ‖color:gui.red‖Психоз‖end‖. При неудаче менее эффективен и вызывает больше ‖color:gui.red‖Психоза‖end‖.</entitydescription.antiparalysis>
+
+<!-- Tonic Liquid -->
+<entitydescription.tonicliquid>Медицинский раствор, умеренно эффективный как средство от ‖color:gui.green‖Внутренних повреждений‖end‖, но чаще используется для ‖color:gui.green‖увеличения длительности‖end‖ действия препаратов, циркулирующих в крови, и стимуляторов.</entitydescription.tonicliquid>
+
+<!-- Nitroglycerin -->
+<entitydescription.nitroglycerin>Крайне нестабильная жидкость, которая может взорваться при нагревании или физическом ударе. При введении пациенту вызывает вазодилатацию и снижает ‖color:gui.green‖Кровяное давление‖end‖.</entitydescription.nitroglycerin>
+
+<!-- Pomegrenade Extract -->
+<entitydescription.pomegrenadeextract>Концентрированный сок взрывного граната. Обладает незначительными ‖color:gui.green‖ранозаживляющими‖end‖ свойствами, включая заживление ‖color:gui.green‖Зашитых ран‖end‖. При неудаче менее эффективен.</entitydescription.pomegrenadeextract>
+
+<!-- Combat Stimulant -->
+<entitydescription.combatstimulantsyringe>Высокоэффективный стимулятор, который заставляет пользователя быстро восстанавливаться от ‖color:gui.green‖Урона‖end‖, ‖color:gui.green‖Ожогов‖end‖ и ‖color:gui.green‖Потери крови‖end‖. Кроме того, у пользователя быстро сворачивается ‖color:gui.green‖Внешнее‖end‖ и ‖color:gui.green‖Внутреннее кровотечение‖end‖. Он вызывает ‖color:gui.red‖Химическую зависимость‖end‖. При неудаче вызывает больше ‖color:gui.red‖Химической зависимости‖end‖.</entitydescription.combatstimulantsyringe>
+
+<!-- Ethanol -->
+<entitydescription.ethanol>Медицинский спирт, используемый как ингредиент для производства различных лекарств. Не рекомендуется пить на дежурстве, а чрезмерное употребление вредно для печени.</entitydescription.ethanol>
+
+<!-- Rum -->
+<entitydescription.rum>Отличный ликёр, изготовленный из рапторбейна или сока помегната. Некоторые пуристы настаивают, что настоящий ром делают из сахарного тростника, но удачи найти его на Европе. Его крепость достаточна, чтобы уничтожить раннее ‖color:gui.green‖Заражение хаска‖end‖, но чрезмерное употребление вредно для печени.</entitydescription.rum>
+
+<!-- Diving Knife -->
+<entitydescription.divingknife>Колет, тычет, режет и рубит. Также может использоваться для снятия старых ‖color:gui.green‖Повязок‖end‖. При неудаче вызывает ‖color:gui.red‖Рваные раны‖end‖ и ‖color:gui.red‖Кровотечение‖end‖.</entitydescription.divingknife>
+
+<!-- Raptor Bane Extract -->
+<entitydescription.raptorbaneextract>Концентрированный сок бича раптора. Умеренно токсичен для людей, катастрофически токсичен для грязевых рапторов. Вызывает рвоту у людей, что делает его неплохим средством от ‖color:gui.green‖Ацидоза‖end‖. При неудаче не вызывает рвоту.</entitydescription.raptorbaneextract>
+
+<!-- Protein Bar -->
+<entitydescription.proteinbar>Может содержать следы галенита. Лечит немного внешнего ‖color:gui.green‖Урона‖end‖ и ‖color:gui.green‖Ожоги‖end‖.</entitydescription.proteinbar>
+
+<!-- Stabilozine -->
+<entitydescription.stabilozine>Используется как ингредиент для производства различных лекарств. Сам по себе может использоваться для замедления эффектов ‖color:gui.green‖ядов‖end‖ и ‖color:gui.green‖Лучевой болезни‖end‖. При неудаче менее эффективен.</entitydescription.stabilozine>
+
+<!-- Hallucinogenic Bufotoxin -->
+<entitydescription.hallucinogenicbufotoxin>Галлюциногенный токсин, выделяемый некоторыми европейскими видами. В крайнем случае служит ‖color:gui.green‖Антипаралитиком‖end‖.</entitydescription.hallucinogenicbufotoxin>
+
+<!-- Cyanide -->
+<entitydescription.cyanide>Высокотоксичное химическое вещество, вызывающее быструю смерть после введения достаточно большой дозы. Может использоваться как рискованный метод уничтожения ‖color:gui.green‖Инфекции хаска‖end‖.</entitydescription.cyanide>
+
+<!-- Europabrew -->
+<entitydescription.europabrew>Двуострый химический напиток. Хотя он активирует иммунную систему для умеренного лечения ‖color:gui.green‖ядов‖end‖, он также значительно ослабляет цель, делая её более восприимчивой ко всем видам ‖color:gui.red‖Урона‖end‖, ‖color:gui.red‖Ожогов‖end‖ и ‖color:gui.red‖Инфекции хаска‖end‖.</entitydescription.europabrew>
+
+<!-- Sufforin -->
+<entitydescription.sufforin>Скрытый нейротоксин, необнаружимый на ранних стадиях. Вызывает потерю зрения и, в конечном итоге, смерть. Может использоваться как рискованный метод уничтожения ‖color:gui.green‖Инфекции хаска‖end‖.</entitydescription.sufforin>
+
+<!-- Antirad -->
+<entitydescription.antirad>Замедляет клеточную деградацию, вызванную радиацией. При неудаче менее эффективен.</entitydescription.antirad>
+
+<!-- Calyxanide -->
+<entitydescription.calyxanide>Антипаразитарный препарат, используемый для лечения ‖color:gui.green‖Инфекции хаска‖end‖. При неудаче менее эффективен.</entitydescription.calyxanide>
+
+<!-- Extinguisher -->
+<entitydescription.extinguisher>Ручной углекислотный огнетушитель. Также тушит горящих людей.</entitydescription.extinguisher>
+
+<!-- Diving Suit -->
+<entitydescription.divingsuit>Атмосферный водолазный костюм, способный выдерживать огромное давление под корой Европы. Обеспечивает достаточную защиту только до глубины 4000 метров — за этой точкой требуется костюм Бездны или Боевой костюм. Герметичные костюмы, подобные этому, легко гасят пламя.</entitydescription.divingsuit>
+
+<!-- Repair Pack -->
+<entitydescription.repairpack>Импровизированный мультиинструмент, способный быстро исправлять как механические, так и электрические проблемы. Как и ‖color:gui.blue‖Гаечный ключ‖end‖, может использоваться для вправления ‖color:gui.green‖Вывихов‖end‖. При неудаче приводит к ‖color:gui.red‖Перелому‖end‖.</entitydescription.repairpack>
+
+<!-- Wrench -->
+<entitydescription.wrench>Делает возможным механический ремонт. Также используется для исправления ‖color:gui.green‖Вывихов‖end‖, для чего требуется вдвое меньше навыка, если пациент не чувствует боли. Однако неудача при вправлении вывиха приведёт к ‖color:gui.red‖Перелому‖end‖.</entitydescription.wrench>
+
+<!-- Syringe Gun -->
+<entitydescription.syringegun>Запускает шприцы, содержащие наркотики или яды. Похоже, несовместим с ‖color:gui.blue‖Опиоидами‖end‖.</entitydescription.syringegun>
+
+<!-- Advanced Syringe Gun -->
+<entitydescription.advancedsyringegun>Запускает шприцы, содержащие наркотики или яды. Имеет большую ёмкость и встроенный сканер здоровья. Похоже, несовместим с ‖color:gui.blue‖Опиоидами‖end‖.</entitydescription.advancedsyringegun>
+
+<!-- ================================================= Unused ================================================= -->
+
+<!-- Emergency Suit -->
+<!--<entityname.emergencysuit>Emergency suit</entityname.emergencysuit>
+<entitydescription.emergencysuit>Makes it relatively safe for using a defibrillator and performing all kinds of surgeries. Stops movement, but has a battery slot to power artificial ventilation.</entitydescription.emergencysuit>-->
+
+<!-- Regenerative ointment -->
+<entityname.skinaid>Регенеративная мазь</entityname.skinaid>
+<entitydescription.skinaid>Мощный регенеративный гель, способствующий естественному заживлению большинства поверхностных травм.</entitydescription.skinaid>
+  
+<!-- ================================================= Miscellaneous Translations ================================================= -->
+
+<!-- Emergency Suit Equip Warning -->
+<!--<emergencysuitequipconfirmation>Equipping this will cause you to go immobile. Are you sure?</emergencysuitequipconfirmation>-->
+
+<!-- ================================================= AI Voicelines ================================================= -->
+
+<!-- Fractured Neck -->
+<npcdialogsym.fracturedneck_1>Кажется, я сломал шею!</npcdialogsym.fracturedneck_1>
+<npcdialogsym.fracturedneck_2>Моя шея только что издала громкий хрустящий звук!</npcdialogsym.fracturedneck_2>
+
+<!-- Carotid Arterial Bleeding -->
+<npcdialogsym.carotidarterialcut_1>Кровь хлещет из моей шеи!</npcdialogsym.carotidarterialcut_1>
+<npcdialogsym.carotidarterialcut_2>У меня сильное кровотечение из шеи!</npcdialogsym.carotidarterialcut_2>
+
+<!-- Arterial Bleeding -->
+<npcdialogsym.arterialcut_1>Кровь хлещет из одной из моих конечностей!</npcdialogsym.arterialcut_1>
+<npcdialogsym.arterialcut_2>У меня сильное кровотечение из одной из конечностей!</npcdialogsym.arterialcut_2>
+
+<!-- Vomiting Blood -->
+<npcdialogsym.vomitingblood_1>Меня рвёт кровью!</npcdialogsym.vomitingblood_1>
+<npcdialogsym.vomitingblood_2>Меня только что вырвало кровью!</npcdialogsym.vomitingblood_2>
+<npcdialogsym.vomitingblood_3>Моя рвота кровавая!</npcdialogsym.vomitingblood_3>
+
+<!-- Pale Skin -->
+<npcdialogsym.paleskin_1>Моя кожа становится бледной!</npcdialogsym.paleskin_1>
+<npcdialogsym.paleskin_2>Мне холодно, и моя кожа обесцвечивается!</npcdialogsym.paleskin_2>
+
+<!-- Confusion -->
+<npcdialogsym.confusion_1>Я чувствую себя сбитым с толку..</npcdialogsym.confusion_1>
+<npcdialogsym.confusion_2>Я так потерян.. что происходит?</npcdialogsym.confusion_2>
+<npcdialogsym.confusion_3>Я отключаюсь..</npcdialogsym.confusion_3>
+
+<!-- Lightheadedness -->
+<npcdialogsym.lightheadedness_1>У меня кружится голова..</npcdialogsym.lightheadedness_1>
+<npcdialogsym.lightheadedness_2>Всё вращается вокруг меня..</npcdialogsym.lightheadedness_2>
+<npcdialogsym.lightheadedness_3>Я чувствую дурноту..</npcdialogsym.lightheadedness_3>
+
+<!-- Abdominal Pain -->
+<npcdialogsym.abdominalpain_1>У меня сильно болит живот!</npcdialogsym.abdominalpain_1>
+<npcdialogsym.abdominalpain_2>Что-то в моём животе очень болит!</npcdialogsym.abdominalpain_2>
+<npcdialogsym.abdominalpain_3>У меня боль в животе!</npcdialogsym.abdominalpain_3>
+
+<!-- Inflammation -->
+<npcdialogsym.inflammation_1>Одна из моих ран очень горячая!</npcdialogsym.inflammation_1>
+<npcdialogsym.inflammation_2>Одна из моих ран опухает!</npcdialogsym.inflammation_2>
+<npcdialogsym.inflammation_3>Одна из моих ран выглядит очень красной!</npcdialogsym.inflammation_3>
+
+<!-- Gangrene -->
+<npcdialogsym.gangrene_1>Одна из моих конечностей чернеет!</npcdialogsym.gangrene_1>
+<npcdialogsym.gangrene_2>Я теряю чувствительность в одной из моих конечностей!</npcdialogsym.gangrene_2>
+<npcdialogsym.gangrene_3>Кажется, одна из моих конечностей гниёт!</npcdialogsym.gangrene_3>
+
+<!-- Fever -->
+<npcdialogsym.fever_1>Я чувствую, будто горю!</npcdialogsym.fever_1>
+<npcdialogsym.fever_2>У меня жар!</npcdialogsym.fever_2>
+<npcdialogsym.fever_3>Мне жарко, но меня продолжает знобить!</npcdialogsym.fever_3>
+
+<!-- Headache -->
+<npcdialogsym.headache_1>Моя голова раскалывается!</npcdialogsym.headache_1>
+<npcdialogsym.headache_2>Моя голова убивает меня!</npcdialogsym.headache_2>
+<npcdialogsym.headache_3>У кого-нибудь есть ибупрофен? У меня болит голова.</npcdialogsym.headache_3>
+<npcdialogsym.headache_4>У меня пульсирующая боль в голове!</npcdialogsym.headache_4>
+
+<!-- Blurred Vision -->
+<npcdialogsym.blurredvision_1>Всё выглядит размытым!</npcdialogsym.blurredvision_1>
+<npcdialogsym.blurredvision_2>Я не могу ни на чём сосредоточиться!</npcdialogsym.blurredvision_2>
+<npcdialogsym.blurredvision_3>Я больше не вижу как следует!</npcdialogsym.blurredvision_3>
+
+<!-- Fractured Ribs -->
+<npcdialogsym.fracturedribs_1>Кажется, я сломал несколько рёбер!</npcdialogsym.fracturedribs_1>
+<npcdialogsym.fracturedribs_2>Моя грудь издала громкий трескающий звук!</npcdialogsym.fracturedribs_2>
+<npcdialogsym.fracturedribs_3>Мои рёбра болят, когда я дышу!</npcdialogsym.fracturedribs_3>
+
+<!-- Fractured Skull -->
+<npcdialogsym.fracturedskull_1>Мой череп издал громкий трескающий звук!</npcdialogsym.fracturedskull_1>
+<npcdialogsym.fracturedskull_2>Что-то не так с моей головой!</npcdialogsym.fracturedskull_2>
+<npcdialogsym.fracturedskull_3>Кажется, я только что сломал себе череп!</npcdialogsym.fracturedskull_3>
+
+<!-- Fractured Extremity -->
+<npcdialogsym.fracturedextremity_1>Кажется, я сломал одну из своих конечностей!</npcdialogsym.fracturedextremity_1>
+<npcdialogsym.fracturedextremity_2>Одна из моих конечностей только что издала громкий трескающий звук!</npcdialogsym.fracturedextremity_2>
+<npcdialogsym.fracturedextremity_3>Я не могу нормально двигать конечностью!</npcdialogsym.fracturedextremity_3>
+
+<!-- Dislocation -->
+<npcdialogsym.dislocation_1>Кажется, я вывихнул одну из своих конечностей!</npcdialogsym.dislocation_1>
+<npcdialogsym.dislocation_2>Одна из моих конечностей только что выскочила из сустава!</npcdialogsym.dislocation_2>
+<npcdialogsym.dislocation_3>Я не могу нормально двигать конечностью!</npcdialogsym.dislocation_3>
+
+<!-- Chest Pain -->
+<npcdialogsym.chestpain_1>У меня болит грудь!</npcdialogsym.chestpain_1>
+<npcdialogsym.chestpain_2>Я чувствую болезненное давление в груди!</npcdialogsym.chestpain_2>
+<npcdialogsym.chestpain_3>У меня болезненное ощущение в груди!</npcdialogsym.chestpain_3>
+
+<!-- Weakness -->
+<npcdialogsym.weakness_1>Я чувствую себя таким слабым..</npcdialogsym.weakness_1>
+<npcdialogsym.weakness_2>Такое чувство, что мои мышцы не работают..</npcdialogsym.weakness_2>
+
+<!-- Sweating -->
+<npcdialogsym.sweating_1>Я сильно потею!</npcdialogsym.sweating_1>
+<npcdialogsym.sweating_2>Я весь в поту!</npcdialogsym.sweating_2>
+<npcdialogsym.sweating_3>С меня капает пот!</npcdialogsym.sweating_3>
+
+<!-- Shortness of Breath -->
+<npcdialogsym.shortnessofbreath_1>Я не могу нормально дышать!</npcdialogsym.shortnessofbreath_1>
+<npcdialogsym.shortnessofbreath_2>Такое чувство, что я не могу дышать!</npcdialogsym.shortnessofbreath_2>
+<npcdialogsym.shortnessofbreath_3>Что-то не так с моим дыханием!</npcdialogsym.shortnessofbreath_3>
+
+<!-- Bloating -->
+<npcdialogsym.bloating_1>Мой живот кажется вздутым!</npcdialogsym.bloating_1>
+<npcdialogsym.bloating_2>Мой живот кажется опухшим!</npcdialogsym.bloating_2>
+
+<!-- Leg Swelling -->
+<npcdialogsym.legswelling_1>Моя нога опухает!</npcdialogsym.legswelling_1>
+<npcdialogsym.legswelling_2>Моя нога намного больше обычного!</npcdialogsym.legswelling_2>
+
+<!-- Craving -->
+<npcdialogsym.craving_1>Мне действительно нужна моя доза..</npcdialogsym.craving_1>
+<npcdialogsym.craving_2>Мне бы очень не помешало взбодриться..</npcdialogsym.craving_2>
+
+<!-- Palpitations -->
+<npcdialogsym.palpitations_1>Моё сердце колотится!</npcdialogsym.palpitations_1>
+<npcdialogsym.palpitations_2>Моё сердце бьётся быстрее обычного!</npcdialogsym.palpitations_2>
+<npcdialogsym.palpitations_3>Моё сердце стучит!</npcdialogsym.palpitations_3>
+
+<!-- ================================================= HUI Button Translations ================================================= -->
+<!-- Scalpel Button -->
+<nt_huibutton_enabled_scalpel>Использовать скальпель на выбранной конечности. \nТребуемый медицинский навык: ‖color:gui.green‖30‖end‖</nt_huibutton_enabled_scalpel>
+
+<!-- Hemostat Button -->
+<nt_huibutton_enabled_hemostat>Использовать зажим на выбранной конечности. \nТребуемый медицинский навык: ‖color:gui.green‖Нет‖end‖</nt_huibutton_enabled_hemostat>
+
+<!-- Skin Retractors Button -->
+<nt_huibutton_enabled_skinretractors>Использовать кожные расширители на выбранной конечности. \nТребуемый медицинский навык: ‖color:gui.green‖30‖end‖</nt_huibutton_enabled_skinretractors>
+
+<!-- Surgical Drill Button -->
+<nt_huibutton_enabled_surgicaldrill>Использовать хирургическую дрель на выбранной конечности. \nТребуемый медицинский навык: ‖color:gui.green‖45‖end‖</nt_huibutton_enabled_surgicaldrill>
+
+<!-- Surgery Saw Button -->
+<nt_huibutton_enabled_surgerysaw>Использовать хирургическую пилу на выбранной конечности. \nТребуемый медицинский навык: ‖color:gui.green‖50‖end‖</nt_huibutton_enabled_surgerysaw>
+
+<!-- Tweezers Button -->
+<nt_huibutton_enabled_tweezers>Использовать пинцет на выбранной конечности. \nТребуемый медицинский навык: ‖color:gui.green‖30‖end‖</nt_huibutton_enabled_tweezers>
+
+<!-- Trauma Shears Button -->
+<nt_huibutton_enabled_traumashears>Использовать медицинские ножницы на выбранной конечности. \nТребуемый медицинский навык: ‖color:gui.green‖10‖end‖</nt_huibutton_enabled_traumashears>
+
+<!-- Organ Scalpel Button -->
+<nt_huibutton_enabled_organscalpel>Заменить или удалить конкретный орган в торсе или голове, в зависимости от выбранной конечности.</nt_huibutton_enabled_organscalpel>
+
+<!-- Disabled Tooltip for Surgery Kit Dependencies -->
+<nt_huibutton_disabled_surgerykit>Требуется хирургический набор в инвентаре!</nt_huibutton_disabled_surgerykit>
+
+<!-- ================================================= Config Options ================================================= -->
+<!-- Pause Menu Button -->
+<ntconfig.header.pausemenu>Настройки Neurotrauma</ntconfig.header.pausemenu>
+
+<!-- Save Preset -->
+<ntconfig.tooltip.savepresetbutton>Создать новый пресет с текущими выбранными настройками.</ntconfig.tooltip.savepresetbutton>
+<ntconfig.header.savepreset>Создать новый пресет</ntconfig.header.savepreset>
+
+<!-- Load Preset -->
+<ntconfig.tooltip.loadpresetbutton>Загрузить существующий пресет и изменить настройки соответствующим образом.</ntconfig.tooltip.loadpresetbutton>
+<ntconfig.header.loadpreset>Загрузить существующий пресет</ntconfig.header.loadpreset>
+
+<!-- Button Row-->
+<ntconfig.button.saveexit>Сохранить настройки в пресет и выйти</ntconfig.button.saveexit>
+<ntconfig.button.discardexit>Отменить изменения и выйти</ntconfig.button.discardexit>
+<ntconfig.button.resetexit>Сбросить настройки до значений по умолчанию и выйти</ntconfig.button.resetexit>
+
+<ntconfig.resetconfirm.header>Сбросить настройки Neurotrauma</ntconfig.resetconfirm.header>
+<ntconfig.resetconfirm.body>Вы уверены, что хотите сбросить настройки Neurotrauma до значений по умолчанию?</ntconfig.resetconfirm.body>
+<ntconfig.resetconfirm.yes>Да</ntconfig.resetconfirm.yes>
+<ntconfig.resetconfirm.no>Нет</ntconfig.resetconfirm.no>
+
+<!-- Default Pages -->
+<ntconfig.defaultpage.prices>Множители цен предметов</ntconfig.defaultpage.prices>
+<ntconfig.defaultpage.availability>Настройки доступности предметов</ntconfig.defaultpage.availability>
+<ntconfig.defaultpage.experimental>Экспериментальное</ntconfig.defaultpage.experimental>
+
+<!-- Default Warning -->
+<ntconfig.body.defaultwarning>Серверные настройки может изменять только хост или авторизованные клиенты.</ntconfig.body.defaultwarning>
+
+<!-- Reset Button-->
+<ntconfig.tooltip.resetbutton>Сбросить до значений по умолчанию</ntconfig.tooltip.resetbutton>
+
+<!-- =================== Default Config Content =================== -->
+<!-- Dislocation chance multiplier -->
+<ntconfig.entryname.dislocationchance>Множитель шанса вывиха</ntconfig.entryname.dislocationchance>
+<ntconfig.entrydescription.dislocationchance>‖color:gui.green‖Отключите вывихи, установив значение 0.‖end‖\n\nНастройте вероятность возникновения вывиха. Множитель 0.5 уменьшит шанс на 50%, а увеличение до 1.5 увеличит его на 50%.</ntconfig.entrydescription.dislocationchance>
+
+<!-- Fracture chance multiplier -->
+<ntconfig.entryname.fracturechance>Множитель шанса перелома</ntconfig.entryname.fracturechance>
+<ntconfig.entrydescription.fracturechance>‖color:gui.green‖Отключите переломы, установив значение 0.‖end‖\n\nНастройте вероятность возникновения перелома. Множитель 0.5 уменьшит шанс на 50%, а увеличение до 1.5 увеличит его на 50%.</ntconfig.entrydescription.fracturechance>
+
+<!-- Pneumothorax chance multiplier -->
+<ntconfig.entryname.pneumothoraxchance>Множитель шанса пневмоторакса</ntconfig.entryname.pneumothoraxchance>
+<ntconfig.entrydescription.pneumothoraxchance>‖color:gui.green‖Отключите пневмотораксы, установив значение 0.‖end‖\n\nНастройте вероятность возникновения пневмоторакса. Множитель 0.5 уменьшит шанс на 50%, а увеличение до 1.5 увеличит его на 50%.</ntconfig.entrydescription.pneumothoraxchance>
+
+<!-- Tamponade chance multiplier -->
+<ntconfig.entryname.tamponadechance>Множитель шанса тампонады сердца</ntconfig.entryname.tamponadechance>
+<ntconfig.entrydescription.tamponadechance>‖color:gui.green‖Отключите тампонаду сердца, установив значение 0.‖end‖\n\nНастройте вероятность возникновения тампонады сердца. Множитель 0.5 уменьшит шанс на 50%, а увеличение до 1.5 увеличит его на 50%.</ntconfig.entrydescription.tamponadechance>
+
+<!-- Heart attack chance multiplier -->
+<ntconfig.entryname.heartattackchance>Множитель шанса сердечного приступа</ntconfig.entryname.heartattackchance>
+<ntconfig.entrydescription.heartattackchance>‖color:gui.green‖Отключите сердечные приступы, установив значение 0.‖end‖\n\nНастройте вероятность возникновения сердечного приступа. Множитель 0.5 уменьшит шанс на 50%, а увеличение до 1.5 увеличит его на 50%.</ntconfig.entrydescription.heartattackchance>
+
+<!-- Stroke chance multiplier -->
+<ntconfig.entryname.strokechance>Множитель шанса инсульта</ntconfig.entryname.strokechance>
+<ntconfig.entrydescription.strokechance>‖color:gui.green‖Отключите инсульты, установив значение 0.‖end‖\n\nНастройте вероятность возникновения инсульта. Множитель 0.5 уменьшит шанс на 50%, а увеличение до 1.5 увеличит его на 50%.</ntconfig.entrydescription.strokechance>
+
+<!-- Infection rate multiplier -->
+<ntconfig.entryname.infectionrate>Множитель скорости инфекции</ntconfig.entryname.infectionrate>
+<ntconfig.entrydescription.infectionrate>‖color:gui.green‖Отключите зараженные раны, установив значение 0.‖end‖\n\nНастройте вероятность возникновения инфицированных ран. Множитель 0.5 уменьшит шанс на 50%, а увеличение до 1.5 увеличит его на 50%.</ntconfig.entrydescription.infectionrate>
+
+<!-- Sepsis rate multiplier -->
+<ntconfig.entryname.sepsisrate>Множитель скорости сепсиса</ntconfig.entryname.sepsisrate>
+<ntconfig.entrydescription.sepsisrate>‖color:gui.green‖Отключите сепсис, установив значение 0.‖end‖\n\nНастройте вероятность возникновения сепсиса. Множитель 0.5 уменьшит шанс на 50%, а увеличение до 1.5 увеличит его на 50%.</ntconfig.entrydescription.sepsisrate>
+
+<!-- CPR fracture chance multiplier -->
+<ntconfig.entryname.cprfracturechance>Множитель шанса перелома при СЛР</ntconfig.entryname.cprfracturechance>
+<ntconfig.entrydescription.cprfracturechance>‖color:gui.green‖Отключите переломы от СЛР, установив значение 0.‖end‖\n\nНастройте вероятность того, что СЛР вызовет переломы. Множитель 0.5 уменьшит шанс на 50%, а увеличение до 1.5 увеличит его на 50%.</ntconfig.entrydescription.cprfracturechance>
+
+<!-- Traumatic amputation chance multiplier -->
+<ntconfig.entryname.traumaticamputationchance>Множитель шанса травматической ампутации</ntconfig.entryname.traumaticamputationchance>
+<ntconfig.entrydescription.traumaticamputationchance>‖color:gui.green‖Отключите травматические ампутации, установив значение 0.‖end‖\n\nНастройте вероятность возникновения травматической ампутации. Множитель 0.5 уменьшит шанс на 50%, а увеличение до 1.5 увеличит его на 50%.</ntconfig.entrydescription.traumaticamputationchance>
+
+<!-- Neurotrauma gain rate -->
+<ntconfig.entryname.neurotraumagain>Скорость нейротравмы</ntconfig.entryname.neurotraumagain>
+<ntconfig.entrydescription.neurotraumagain>Настройте скорость изменения нейротравмы. Множитель 0.5 уменьшит скорость на 50%, а увеличение до 1.5 увеличит её на 50%.</ntconfig.entrydescription.neurotraumagain>
+
+<!-- Organ damage gain rate -->
+<ntconfig.entryname.organdamagegain>Скорость повреждения органов</ntconfig.entryname.organdamagegain>
+<ntconfig.entrydescription.organdamagegain>Настройте скорость изменения повреждения конкретных органов. Множитель 0.5 уменьшит скорость на 50%, а увеличение до 1.5 увеличит её на 50%.</ntconfig.entrydescription.organdamagegain>
+
+<!-- Fibrillation gain rate -->
+<ntconfig.entryname.fibrillationspeed>Скорость фибрилляции</ntconfig.entryname.fibrillationspeed>
+<ntconfig.entrydescription.fibrillationspeed>Настройте скорость изменения фибрилляции. Множитель 0.5 уменьшит скорость на 50%, а увеличение до 1.5 увеличит её на 50%.</ntconfig.entrydescription.fibrillationspeed>
+
+<!-- Gangrene gain rate -->
+<ntconfig.entryname.gangrenespeed>Скорость гангрены</ntconfig.entryname.gangrenespeed>
+<ntconfig.entrydescription.gangrenespeed>Настройте скорость изменения гангрены. Множитель 0.5 уменьшит скорость на 50%, а увеличение до 1.5 увеличит её на 50%.</ntconfig.entrydescription.gangrenespeed>
+
+<!-- Maximum fall damage multiplier -->
+<ntconfig.entryname.falldamageceiling>Множитель максимального урона от падения</ntconfig.entryname.falldamageceiling>
+<ntconfig.entrydescription.falldamageceiling>‖color:gui.green‖Отключите урон от падения, установив значение 0.‖end‖\n\nНастройте максимальный урон, получаемый от падения. Множитель 0.5 уменьшит величину на 50%, а увеличение до 1.5 увеличит её на 50%.</ntconfig.entrydescription.falldamageceiling>
+
+<!-- Falldamage multiplier -->
+<ntconfig.entryname.falldamage>Множитель урона от падения</ntconfig.entryname.falldamage>
+<ntconfig.entrydescription.falldamage>‖color:gui.green‖Отключите урон от падения, установив значение 0.‖end‖\n\nНастройте величину урона, получаемого от падения. Множитель 0.5 уменьшит шанс на 50%, а увеличение до 1.5 увеличит его на 50%.</ntconfig.entrydescription.falldamage>
+
+<!-- Falldamage serious injury chance multiplier -->
+<ntconfig.entryname.falldamageseriousinjurychance>Множитель шанса серьёзной травмы от падения</ntconfig.entryname.falldamageseriousinjurychance>
+<ntconfig.entrydescription.falldamageseriousinjurychance>‖color:gui.green‖Сделайте урон от падения только незначительным, установив значение 0.‖end‖\n\nНастройте вероятность серьёзных травм от падения. Множитель 0.5 уменьшит шанс на 50%, а увеличение до 1.5 увеличит его на 50%.</ntconfig.entrydescription.falldamageseriousinjurychance>
+
+<!-- Clientside: Show HUI Buttons -->
+<ntconfig.entryname.DoHUIButtons>Показывать кнопки инструментов Neurotrauma</ntconfig.entryname.DoHUIButtons>
+<ntconfig.entrydescription.DoHUIButtons>‖color:gui.green‖Клиентская настройка.‖end‖\n\nДобавляет дополнительный оверлей в HealthUI, на который можно нажать, чтобы использовать изображённый предмет. Отключите это, если не планируете их использовать и находите их раздражающими.</ntconfig.entrydescription.DoHUIButtons>
+
+<!-- Deterministic Blood Types -->
+<ntconfig.entryname.DoDeterministicBloodTypes>Детерминированные группы крови</ntconfig.entryname.DoDeterministicBloodTypes>
+<ntconfig.entrydescription.DoDeterministicBloodTypes>Если включено, ваша группа крови рассчитывается на основе имени вашего персонажа, а не случайным образом. Это значит, что вы сохраните ту же группу крови между жизнями и не сможете перебросить её.</ntconfig.entrydescription.DoDeterministicBloodTypes>
+
+<!-- Character calculations -->
+<ntconfig.entryname.calculations>Функциональность мода Neurotrauma</ntconfig.entryname.calculations>
+<ntconfig.entrydescription.calculations>‖color:gui.red‖Отключение этого приведёт к неправильной работе мода.‖end‖\n\nОтключить расчёты обновления для мода. Это не следует делать, если вы не испытываете ужасных рассинхронизаций или лагов — поскольку отключение расчётов NT может снова сделать игру играбельной.</ntconfig.entrydescription.calculations>
+
+<!-- Vanilla skill check formula -->
+<ntconfig.entryname.vanillaskillcheck>Ванильная формула проверки навыка</ntconfig.entryname.vanillaskillcheck>
+<ntconfig.entrydescription.vanillaskillcheck>Использовать ванильную формулу проверки навыка вместо модифицированной формулы Neurotrauma. Эффективное изменение: Навык / ТребуемыйНавык (NTCS) на 100 - (ТребуемыйНавык - Навык) / 100 (Ваниль).</ntconfig.entrydescription.vanillaskillcheck>
+
+<!-- Disable bot treatment algorithms -->
+<ntconfig.entryname.disablebotalgorithms>Отключить алгоритмы лечения ботов</ntconfig.entryname.disablebotalgorithms>
+<ntconfig.entrydescription.disablebotalgorithms>Предотвращает попытки ботов лечить состояния.\nЭто желательно, потому что боты на данный момент плохо справляются с лечением.</ntconfig.entrydescription.disablebotalgorithms>
+
+<!-- Screams -->
+<ntconfig.entryname.screams>Крики</ntconfig.entryname.screams>
+<ntconfig.entrydescription.screams>Если включено, персонажи могут кричать от сильной боли.</ntconfig.entrydescription.screams>
+
+<!-- Organ rejection -->
+<ntconfig.entryname.organrejection>Отторжение органа</ntconfig.entryname.organrejection>
+<ntconfig.entrydescription.organrejection>Если включено, существует шанс, что пересаженный орган будет отторгнут.\n\nЧем выше иммунитет пациента на момент трансплантации, тем выше шанс отторжения.</ntconfig.entrydescription.organrejection>
+
+<!-- Fractures remove casts -->
+<ntconfig.entryname.fracturesremovecasts>Переломы снимают слепки</ntconfig.entryname.fracturesremovecasts>
+<ntconfig.entrydescription.fracturesremovecasts>Если включено, урон, который сломал бы уже загипсованную конечность, вместо этого снимет слепок и снова сломает конечность.</ntconfig.entrydescription.fracturesremovecasts>
+
+<!-- NPC Consent Required -->
+<ntconfig.entryname.consentrequiredextra>Требование согласия NPC на медицинские взаимодействия</ntconfig.entryname.consentrequiredextra>
+<ntconfig.entrydescription.consentrequiredextra>Интегрированный мод согласия.\nЕсли включено, NPC вне вашей команды или миссии подводной лодки будут раздражаться от медицинских взаимодействий.</ntconfig.entrydescription.consentrequiredextra>
+
+<!-- Excluded creatures that abuse the fall damage mechanic -->
+<ntconfig.entryname.creaturenofalldamage>Исключённые существа, злоупотребляющие механикой урона от падения</ntconfig.entryname.creaturenofalldamage>
+<ntconfig.style.creaturenofalldamage>SpeciesName,SpeciesName</ntconfig.style.creaturenofalldamage>
+<ntconfig.entrydescription.creaturenofalldamage>Некоторые существа злоупотребляют уроном от падения таким образом, что это наносит слишком много урона; урон от существ в этом списке уменьшен, чтобы противодействовать этому.\n\nВы можете добавлять или удалять существ, чтобы настроить этот список по своему вкусу. Используйте отладочную команду `nt_listcreatures`, чтобы вывести SpeciesName существа, которое вы патчите в своей игре.\n\nСообщайте о других существах, злоупотребляющих уроном от падения, на сервере Discord, чтобы улучшить этот список по умолчанию.</ntconfig.entrydescription.creaturenofalldamage>
+
+<!-- =================== Scanner Settings =================== -->
+<ntconfig.entryname.header2>Настройки сканера</ntconfig.entryname.header2>
+
+<!-- Colored Scanner -->
+<ntconfig.entryname.enablecoloredscanner>Цветной сканер</ntconfig.entryname.enablecoloredscanner>
+<ntconfig.entrydescription.enablecoloredscanner>Включить цветные текстовые сообщения сканера здоровья.</ntconfig.entrydescription.enablecoloredscanner>
+
+<!-- Low-Medium Text Threshold -->
+<ntconfig.entryname.lowmedthreshold>Порог текста Низкий-Средний</ntconfig.entryname.lowmedthreshold>
+<ntconfig.entrydescription.lowmedthreshold>Где заканчивается цвет прогресса Низкий и начинается цвет прогресса Средний.</ntconfig.entrydescription.lowmedthreshold>
+
+<!-- Medium-High Text Threshold -->
+<ntconfig.entryname.medhighthreshold>Порог текста Средний-Высокий</ntconfig.entryname.medhighthreshold>
+<ntconfig.entrydescription.medhighthreshold>Где заканчивается цвет прогресса Средний и начинается цвет прогресса Высокий.</ntconfig.entrydescription.medhighthreshold>
+
+<!-- Base Text Color -->
+<ntconfig.entryname.basecolor>Базовый цвет текста</ntconfig.entryname.basecolor>
+<ntconfig.style.basecolor>R,G,B</ntconfig.style.basecolor>
+<ntconfig.entrydescription.basecolor>Цвет текста сканера.</ntconfig.entrydescription.basecolor>
+
+<!-- Name Text Color -->
+<ntconfig.entryname.namecolor>Цвет текста имён</ntconfig.entryname.namecolor>
+<ntconfig.style.namecolor>R,G,B</ntconfig.style.namecolor>
+<ntconfig.entrydescription.namecolor>Цвет текста сканера для имён игроков.</ntconfig.entrydescription.namecolor>
+
+<!-- Low Priority Color -->
+<ntconfig.entryname.lowcolor>Цвет низкого приоритета</ntconfig.entryname.lowcolor>
+<ntconfig.style.lowcolor>R,G,B</ntconfig.style.lowcolor>
+<ntconfig.entrydescription.lowcolor>Цвет текста сканера для состояний с низким прогрессом.</ntconfig.entrydescription.lowcolor>
+
+<!-- Medium Priority Color -->
+<ntconfig.entryname.medcolor>Цвет среднего приоритета</ntconfig.entryname.medcolor>
+<ntconfig.style.medcolor>R,G,B</ntconfig.style.medcolor>
+<ntconfig.entrydescription.medcolor>Цвет текста сканера для состояний со средним прогрессом.</ntconfig.entrydescription.medcolor>
+
+<!-- High Priority Color -->
+<ntconfig.entryname.highcolor>Цвет высокого приоритета</ntconfig.entryname.highcolor>
+<ntconfig.style.highcolor>R,G,B</ntconfig.style.highcolor>
+<ntconfig.entrydescription.highcolor>Цвет текста сканера для состояний с высоким прогрессом.</ntconfig.entrydescription.highcolor>
+
+<!-- Vital Priority Color -->
+<ntconfig.entryname.vitalcolor>Цвет жизненно важного приоритета</ntconfig.entryname.vitalcolor>
+<ntconfig.style.vitalcolor>R,G,B</ntconfig.style.vitalcolor>
+<ntconfig.entrydescription.vitalcolor>Цвет текста сканера для жизненно важных состояний (артериальное кровотечение, травматическая ампутация).</ntconfig.entrydescription.vitalcolor>
+
+<!-- Removed Organ Color -->
+<ntconfig.entryname.removalcolor>Цвет удалённого органа</ntconfig.entryname.removalcolor>
+<ntconfig.style.removalcolor>R,G,B</ntconfig.style.removalcolor>
+<ntconfig.entrydescription.removalcolor>Цвет текста сканера для удалённых органов (сердце удалено, ампутация ноги).</ntconfig.entrydescription.removalcolor>
+
+<!-- Custom Category Color -->
+<ntconfig.entryname.customcolor>Цвет пользовательской категории</ntconfig.entryname.customcolor>
+<ntconfig.style.customcolor>R,G,B</ntconfig.style.customcolor>
+<ntconfig.entrydescription.customcolor>Цвет текста сканера для пользовательской категории.</ntconfig.entrydescription.customcolor>
+
+<!-- Included Vital Afflictions -->
+<ntconfig.entryname.vitalcategory>Включённые жизненно важные состояния</ntconfig.entryname.vitalcategory>
+<ntconfig.style.vitalcategory>identifier,identifier</ntconfig.style.vitalcategory>
+<ntconfig.entrydescription.vitalcategory>Вы можете добавлять или удалять состояния, чтобы настроить этот список по своему вкусу.</ntconfig.entrydescription.vitalcategory>
+
+<!-- Included Removal Affictions -->
+<ntconfig.entryname.removalcategory>Включённые состояния удаления</ntconfig.entryname.removalcategory>
+<ntconfig.style.removalcategory>identifier,identifier</ntconfig.style.removalcategory>
+<ntconfig.entrydescription.removalcategory>Вы можете добавлять или удалять состояния, чтобы настроить этот список по своему вкусу.</ntconfig.entrydescription.removalcategory>
+
+<!-- Custom Affliction Category -->
+<ntconfig.entryname.customcategory>Пользовательская категория состояний</ntconfig.entryname.customcategory>
+<ntconfig.style.customcategory>identifier,identifier</ntconfig.style.customcategory>
+<ntconfig.entrydescription.customcategory>Вы можете добавлять или удалять состояния, чтобы настроить этот список по своему вкусу.</ntconfig.entrydescription.customcategory>
+
+<!-- Ignored Afflictions -->
+<ntconfig.entryname.ignoredcategory>Игнорируемые состояния</ntconfig.entryname.ignoredcategory>
+<ntconfig.style.ignoredcategory>identifier,identifier</ntconfig.style.ignoredcategory>
+<ntconfig.entrydescription.ignoredcategory>Состояния, добавленные в эту категорию, будут игнорироваться сканером здоровья.</ntconfig.entrydescription.ignoredcategory>
+
+<ntconfigname_debugmode>Режим отладки</ntconfigname_debugmode>
+<ntconfigdescription_debugmode>БОЛЬШЕ ЛОГОВ! Полезно, если вы отлаживаете или разрабатываете аддон.</ntconfigdescription_debugmode>
+	
+<!-- =================== Common Item Price Multipliers =================== -->
+<ntconfig.entryname.header3>Множители цен обычных предметов</ntconfig.entryname.header3>
+<!-- Morphine -->
+<ntconfig.entryname.itemprice_antidama1>Морфин</ntconfig.entryname.itemprice_antidama1>
+
+<!-- Gypsum -->
+<ntconfig.entryname.itemprice_gypsum>Гипс</ntconfig.entryname.itemprice_gypsum>
+
+<!-- Suture -->
+<ntconfig.entryname.itemprice_suture>Медицинские швы</ntconfig.entryname.itemprice_suture>
+
+<!-- Tourniquet -->
+<ntconfig.entryname.itemprice_tourniquet>Жгут</ntconfig.entryname.itemprice_tourniquet>
+
+<!-- Needle -->
+<ntconfig.entryname.itemprice_needle>Игла</ntconfig.entryname.itemprice_needle>
+
+<!-- Drainage -->
+<ntconfig.entryname.itemprice_drainage>Дренаж</ntconfig.entryname.itemprice_drainage>
+
+<!-- Gel Coolant Pack -->
+<ntconfig.entryname.itemprice_gelipack>Гелевый охлаждающий пакет</ntconfig.entryname.itemprice_gelipack>
+
+<!-- Antibiotic Ointment -->
+<ntconfig.entryname.itemprice_ointment>Антибиотическая мазь</ntconfig.entryname.itemprice_ointment>
+
+<!-- Bandage -->
+<ntconfig.entryname.itemprice_antibleeding1>Бинт</ntconfig.entryname.itemprice_antibleeding1>
+
+<!-- Plastiseal -->
+<ntconfig.entryname.itemprice_antibleeding2>Эластичный бинт</ntconfig.entryname.itemprice_antibleeding2>
+
+<!-- Blood Packs -->
+<ntconfig.entryname.itemprice_bloodpacks>Пакеты крови</ntconfig.entryname.itemprice_bloodpacks>
+
+<!-- Empty Blood Pack -->
+<ntconfig.entryname.itemprice_emptybloodpack>Пустой пакет крови</ntconfig.entryname.itemprice_emptybloodpack>
+
+<!-- Osteosynthesis Implants -->
+<ntconfig.entryname.itemprice_osteosynthesisimplants>Остеосинтетические имплантаты</ntconfig.entryname.itemprice_osteosynthesisimplants>
+
+<!-- Spinal Cord Implants -->
+<ntconfig.entryname.itemprice_spinalimplant>Имплантаты спинного мозга</ntconfig.entryname.itemprice_spinalimplant>
+
+<!-- =================== Bodypart Price Multipliers =================== -->
+<ntconfig.entryname.header4>Множители цен частей тела</ntconfig.entryname.header4>
+
+<!-- Arms -->
+<ntconfig.entryname.itemprice_arms>Руки</ntconfig.entryname.itemprice_arms>
+
+<!-- Legs -->
+<ntconfig.entryname.itemprice_legs>Ноги</ntconfig.entryname.itemprice_legs>
+
+<!-- Bionic Arms -->
+<ntconfig.entryname.itemprice_bionicarms>Бионические руки</ntconfig.entryname.itemprice_bionicarms>
+
+<!-- Bionic Legs -->
+<ntconfig.entryname.itemprice_bioniclegs>Бионические ноги</ntconfig.entryname.itemprice_bioniclegs>
+
+<!-- Liver Transplant -->
+<ntconfig.entryname.itemprice_livertransplant>Трансплантат печени</ntconfig.entryname.itemprice_livertransplant>
+
+<!-- Lung Transplant -->
+<ntconfig.entryname.itemprice_lungtransplant>Трансплантат лёгких</ntconfig.entryname.itemprice_lungtransplant>
+
+<!-- Kidney Transplant -->
+<ntconfig.entryname.itemprice_kidneytransplant>Трансплантат почки</ntconfig.entryname.itemprice_kidneytransplant>
+
+<!-- Heart Transplant -->
+<ntconfig.entryname.itemprice_hearttransplant>Трансплантат сердца</ntconfig.entryname.itemprice_hearttransplant>
+
+<!-- =================== Gear Price Multipliers =================== -->
+<ntconfig.entryname.header5>Множители цен снаряжения</ntconfig.entryname.header5>
+
+<!-- Health Scanner -->
+<ntconfig.entryname.itemprice_healthscanner>Сканер здоровья</ntconfig.entryname.itemprice_healthscanner>
+
+<!-- Hematology Analyzer -->
+<ntconfig.entryname.itemprice_bloodanalyzer>Гематологический анализатор</ntconfig.entryname.itemprice_bloodanalyzer>
+
+<!-- Manual Defibrillator -->
+<ntconfig.entryname.itemprice_defibrillator>Ручной дефибриллятор</ntconfig.entryname.itemprice_defibrillator>
+
+<!-- Automated External Defibrillator -->
+<ntconfig.entryname.itemprice_aed>Автоматический внешний дефибриллятор</ntconfig.entryname.itemprice_aed>
+
+<!-- BVM -->
+<ntconfig.entryname.itemprice_bvm>Мешок Амбу</ntconfig.entryname.itemprice_bvm>
+
+<!-- AutoPulse -->
+<ntconfig.entryname.itemprice_autocpr>АвтоПульс</ntconfig.entryname.itemprice_autocpr>
+
+<!-- Refrigerated Crate -->
+<ntconfig.entryname.itemprice_organcrate>Холодильный ящик</ntconfig.entryname.itemprice_organcrate>
+
+<!-- Refrigerated Container -->
+<ntconfig.entryname.itemprice_organtoolbox>Холодильный контейнер</ntconfig.entryname.itemprice_organtoolbox>
+
+<!-- Medical Container -->
+<ntconfig.entryname.itemprice_medtoolbox>Медицинский контейнер</ntconfig.entryname.itemprice_medtoolbox>
+
+<!-- Surgery Toolbox -->
+<ntconfig.entryname.itemprice_surgerytoolbox>Хирургический ящик</ntconfig.entryname.itemprice_surgerytoolbox>
+
+<!-- Surgery Toolbox (Kit) -->
+<ntconfig.entryname.itemprice_surgerytoolboxset>Хирургический ящик (набор)</ntconfig.entryname.itemprice_surgerytoolboxset>
+
+<!-- Medical Starter Crate -->
+<ntconfig.entryname.itemprice_medstartercrate>Стартовый медицинский ящик</ntconfig.entryname.itemprice_medstartercrate>
+
+<!-- Bodybag -->
+<ntconfig.entryname.itemprice_bodybag>Мешок для трупов</ntconfig.entryname.itemprice_bodybag>
+
+<!-- Stasis Bag -->
+<ntconfig.entryname.itemprice_stasisbag>Стазис-мешок</ntconfig.entryname.itemprice_stasisbag>
+
+<!-- Wheelchair -->
+<ntconfig.entryname.itemprice_wheelchair>Инвалидная коляска</ntconfig.entryname.itemprice_wheelchair>
+
+<!-- Analgesic Tank -->
+<ntconfig.entryname.itemprice_analgesictank>Баллон с анальгетиком</ntconfig.entryname.itemprice_analgesictank>
+
+<!-- Toxin Filter -->
+<ntconfig.entryname.itemprice_toxfilter>Токсинный фильтр</ntconfig.entryname.itemprice_toxfilter>
+
+<!-- Dialyzer -->
+<ntconfig.entryname.itemprice_dialyzer>Диализный фильтр</ntconfig.entryname.itemprice_dialyzer>
+
+<!-- =================== Other Medicine Items Price Multipliers =================== -->
+<ntconfig.entryname.header6>Множители цен других медицинских предметов</ntconfig.entryname.header6>
+
+<!-- Saline -->
+<ntconfig.entryname.itemprice_antibloodloss1>Физраствор</ntconfig.entryname.itemprice_antibloodloss1>
+
+<!-- Opium -->
+<ntconfig.entryname.itemprice_opium>Опиум</ntconfig.entryname.itemprice_opium>
+
+<!-- Fentanyl -->
+<ntconfig.entryname.itemprice_antidama2>Фентанил</ntconfig.entryname.itemprice_antidama2>
+
+<!-- Ringer's Solution -->
+<ntconfig.entryname.itemprice_ringerssolution>Раствор Рингера</ntconfig.entryname.itemprice_ringerssolution>
+
+<!-- Mannitol -->
+<ntconfig.entryname.itemprice_mannitol>Маннитол</ntconfig.entryname.itemprice_mannitol>
+
+<!-- Azathioprine -->
+<ntconfig.entryname.itemprice_immunosuppressant>Азатиоприн</ntconfig.entryname.itemprice_immunosuppressant>
+
+<!-- Thiamine -->
+<ntconfig.entryname.itemprice_thiamine>Тиамин</ntconfig.entryname.itemprice_thiamine>
+
+<!-- Streptokinase -->
+<ntconfig.entryname.itemprice_streptokinase>Стрептокиназа</ntconfig.entryname.itemprice_streptokinase>
+
+<!-- Naloxone -->
+<ntconfig.entryname.itemprice_antinarc>Налоксон</ntconfig.entryname.itemprice_antinarc>
+
+<!-- Broad-Spectrum Antibiotics -->
+<ntconfig.entryname.itemprice_antibiotics>Антибиотики широкого спектра</ntconfig.entryname.itemprice_antibiotics>
+
+<!-- Adrenaline -->
+<ntconfig.entryname.itemprice_adrenaline>Адреналин</ntconfig.entryname.itemprice_adrenaline>
+
+<!-- Liquid Oxygenite -->
+<ntconfig.entryname.itemprice_liquidoxygenite>Жидкий кислородит</ntconfig.entryname.itemprice_liquidoxygenite>
+
+<!-- Deusizine -->
+<ntconfig.entryname.itemprice_deusizine>Деусицин</ntconfig.entryname.itemprice_deusizine>
+
+<!-- Antibiotic Glue -->
+<ntconfig.entryname.itemprice_antibleeding3>Антибиотический клей</ntconfig.entryname.itemprice_antibleeding3>
+
+<!-- Methamphetamine -->
+<ntconfig.entryname.itemprice_meth>Метамфетамин</ntconfig.entryname.itemprice_meth>
+
+<!-- Hyperzine -->
+<ntconfig.entryname.itemprice_hyperzine>Гиперцин</ntconfig.entryname.itemprice_hyperzine>
+
+<!-- Haloperidol -->
+<ntconfig.entryname.itemprice_antipsychosis>Галоперидол</ntconfig.entryname.itemprice_antipsychosis>
+
+<!-- Anaparalyzant -->
+<ntconfig.entryname.itemprice_antiparalysis>Антипарализатор</ntconfig.entryname.itemprice_antiparalysis>
+
+<!-- Nitroglycerin -->
+<ntconfig.entryname.itemprice_nitroglycerin>Нитроглицерин</ntconfig.entryname.itemprice_nitroglycerin>
+
+<!-- =================== Surgical Tools Price Multipliers =================== -->
+<ntconfig.entryname.header7>Множители цен хирургических инструментов</ntconfig.entryname.header7>
+
+<!-- Hemostat -->
+<ntconfig.entryname.itemprice_advhemostat>Зажим</ntconfig.entryname.itemprice_advhemostat>
+
+<!-- Retractors -->
+<ntconfig.entryname.itemprice_advretractors>Кожные расширители</ntconfig.entryname.itemprice_advretractors>
+
+<!-- Surgical Drill -->
+<ntconfig.entryname.itemprice_surgicaldrill>Хирургическая дрель</ntconfig.entryname.itemprice_surgicaldrill>
+
+<!-- Surgical Saw -->
+<ntconfig.entryname.itemprice_surgerysaw>Хирургическая пила</ntconfig.entryname.itemprice_surgerysaw>
+
+<!-- Tweezers -->
+<ntconfig.entryname.itemprice_tweezers>Пинцет</ntconfig.entryname.itemprice_tweezers>
+
+<!-- Trauma Shears -->
+<ntconfig.entryname.itemprice_traumashears>Медицинские ножницы</ntconfig.entryname.itemprice_traumashears>
+
+<!-- Multipurpose Scalpel -->
+<ntconfig.entryname.itemprice_advscalpel>Многофункциональный скальпель</ntconfig.entryname.itemprice_advscalpel>
+
+<!-- =================== Dynamic Item Availability ===================-->
+<ntconfig.entryname.header8>Изменить количество использований предметов</ntconfig.entryname.header8>
+
+<!-- Osteosynthesis Implant Uses -->
+<ntconfig.entryname.osteoimplants_uses>Использования остеосинтетических имплантатов</ntconfig.entryname.osteoimplants_uses>
+
+<!-- Spinal Cord Implant Uses -->
+<ntconfig.entryname.spinalimplants_uses>Использования имплантатов спинного мозга</ntconfig.entryname.spinalimplants_uses>
+
+<!-- Hardmode Aortic Rupture -->
+<ntconfig.entryname.hardmodeaorticrupture>Хардмод разрыва аорты</ntconfig.entryname.hardmodeaorticrupture>
+<ntconfig.entrydescription.hardmodeaorticrupture>Включить медицинский стент и аортальный баллон как единственный способ исправить разрыв аорты.</ntconfig.entrydescription.hardmodeaorticrupture>
+
+<!-- Open Close Tamponade -->
+<ntconfig.entryname.openclosetamponade>Открытое-закрытое лечение тампонады</ntconfig.entryname.openclosetamponade>
+<ntconfig.entrydescription.openclosetamponade>Включить закрытие швами как единственный способ исправить тампонаду сердца.</ntconfig.entrydescription.openclosetamponade>
+
+<!-- Enable Sodium Nitroprusside -->
+<ntconfig.entryname.donitroprusside>Включить нитропруссид натрия</ntconfig.entryname.donitroprusside>
+<ntconfig.entrydescription.donitroprusside>Разрешить производство, покупку и нахождение нитропруссида натрия.</ntconfig.entrydescription.donitroprusside>
+
+<!-- Enable Organ Scalpels -->
+<ntconfig.entryname.doorganscalpels>Включить скальпели для органов</ntconfig.entryname.doorganscalpels>
+<ntconfig.entrydescription.doorganscalpels>Разрешить производство, покупку и нахождение скальпелей для органов и набора скальпелей для хирургического ящика.</ntconfig.entrydescription.doorganscalpels>
+
+<!-- =================== EXPERIMENTAL ===================-->
+
+<ntconfigname_header9>Экспериментальные настройки</ntconfigname_header9>
+
+<ntconfigname_description1>Настройки ниже определяют время (в тиках, 60 тиков в секунду) между каждым циклом обновления. Состояния разделены на разные уровни приоритета в зависимости от их "важности". Изменение этих значений может вызвать непредвиденное поведение, меняйте их только если знаете, что делаете!</ntconfigname_description1>
+<ntconfigname_description2></ntconfigname_description2>
+
+<ntconfigname_updateinterval_high>Интервал обновления (высокоприоритетные состояния)</ntconfigname_updateinterval_high>
+<ntconfigname_updateinterval_medium>Интервал обновления (среднеприоритетные состояния)</ntconfigname_updateinterval_medium>
+<ntconfigname_updateinterval_low>Интервал обновления (низкоприоритетные состояния)</ntconfigname_updateinterval_low>
+<ntconfigname_updateinterval_monster>Интервал обновления (монстры)</ntconfigname_updateinterval_monster>
+
+<ntconfigdescription_updateinterval_high></ntconfigdescription_updateinterval_high>
+<ntconfigdescription_updateinterval_medium></ntconfigdescription_updateinterval_medium>
+<ntconfigdescription_updateinterval_low></ntconfigdescription_updateinterval_low>
+<ntconfigdescription_updateinterval_monster></ntconfigdescription_updateinterval_monster>
+
+<ntconfig.entryname.reviveexcluded>Исключённые состояния при возрождении</ntconfig.entryname.reviveexcluded>
+<ntconfig.style.reviveexcluded>identifier,identifier</ntconfig.style.reviveexcluded>
+<ntconfig.entrydescription.reviveexcluded>Состояния в этом списке ‖color:gui.red‖не‖end‖ будут удалены при использовании команды Revive.</ntconfig.entrydescription.reviveexcluded>
+
+</infotexts>
