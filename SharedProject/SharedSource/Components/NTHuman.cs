@@ -154,223 +154,66 @@ public class NTHuman
 
     public Affliction GetAffliction(string AfflictionID)
     {
-        return this.Human.CharacterHealth.GetAffliction(AfflictionID);
+        return HF.GetAffliction(this.Human, AfflictionID);
     }
 
-    public Affliction GetAfflictionLimb(string AfflictionID, LimbType Limb)
+    public Affliction? GetAfflictionLimb(string AfflictionID, LimbType Limb)
     {
-        Limb? RealLimb = this.Human.AnimController.GetLimb(Limb, excludeSevered: false);
-        if (RealLimb == null) return null;
-
-        return this.Human.CharacterHealth.GetAffliction(AfflictionID.ToIdentifier(), RealLimb);
+        return HF.GetAfflictionLimb(this.Human, AfflictionID, Limb);
     }
 
     public float GetAfflictionStrength(string AfflictionID, float DefaultValue = 0f)
     {
-        Affliction aff = this.GetAffliction(AfflictionID);
-
-        if (aff == null)
-        {
-            return DefaultValue;
-        }
-
-        return HF.NormalizeFloat(aff.Strength);
-        
-
+        return HF.GetAfflictionStrength(this.Human, AfflictionID, DefaultValue);
     }
 
     public float GetAfflictionStrengthLimb(string AfflictionID, LimbType Limb, float DefaultValue = 0f)
     {
-
-        Affliction aff = this.GetAfflictionLimb(AfflictionID, Limb);
-
-        if (aff == null)
-        {
-            return DefaultValue;
-        }
-
-        return HF.NormalizeFloat(aff.Strength);
+        return HF.GetAfflictionStrengthLimb(this.Human, Limb, AfflictionID, DefaultValue);
     }
 
     public void AddAffliction(string AfflictionID, float Strength, NTHuman Aggressor) => AddAffliction(AfflictionID, Strength, Aggressor.Human);
 
     public void AddAffliction(string AfflictionID, float Strength, Character? Aggressor = null)
     {
-        float prev = this.GetAfflictionStrength(AfflictionID, 0f);
-        this.SetAffliction(AfflictionID, prev + Strength, Aggressor == null ? this.Human : Aggressor);
+        HF.AddAffliction(this.Human, AfflictionID, Strength, Aggressor);
     }
 
     public void AddAfflictionLimb(string AfflictionID, LimbType Limb, float Strength, NTHuman Aggressor) => AddAfflictionLimb(AfflictionID, Limb, Strength, Aggressor.Human);
 
     public void AddAfflictionLimb(string AfflictionID, LimbType Limb, float Strength, Character? Aggressor = null)
     {
-        Limb? RealLimb = this.Human.AnimController.GetLimb(Limb, excludeSevered: false);
-        if (RealLimb == null) return;
-
-        if (Aggressor == null)
-        {
-            Aggressor = this.Human;
-        }
-
-        if (Strength < 0)
-        {
-            this.Human.CharacterHealth.ReduceAfflictionOnLimb(
-                RealLimb,
-                AfflictionID.ToIdentifier(),
-                HF.NormalizeFloat(-Strength),
-                null,
-                Aggressor);
-
-            return;
-        }
-
-        if (!AfflictionPrefab.Prefabs.TryGet(AfflictionID, out AfflictionPrefab? Prefab) || Prefab == null || this.Human == null || this.Human.CharacterHealth == null)
-        {
-            return;
-        }
-
-        float Resistance = this.Human.CharacterHealth.GetResistance(Prefab, Limb);
-
-        if (Resistance >= 1)
-        {
-            return;
-        }
-
-        float ScaledStrength = Strength * this.Human.CharacterHealth.MaxVitality / 100 / (1 - Resistance);
-        Affliction Affliction = Prefab.Instantiate(ScaledStrength, Aggressor);
-        bool RecalculateVitality = NTC.AfflictionsAffectingVitality.Contains(AfflictionID);
-
-        // No need to manually calculate strength, just stack it - Lukako
-        this.Human.CharacterHealth.ApplyAffliction(
-            RealLimb,
-            Affliction,
-            true,
-            false,
-            RecalculateVitality
-        );
+        HF.AddAfflictionLimb(this.Human, AfflictionID, Limb, Strength, Aggressor);
     }
 
     public void AddAfflictionResisted(string AfflictionID, float Strength, Character? Aggressor = null)
     {
-        if (Aggressor == null)
-        {
-            Aggressor = this.Human;
-        }
-
-        float PrevStrength = GetAfflictionStrength(AfflictionID);
-        Strength *= 1 - HF.GetResistance(this.Human, AfflictionID);
-
-        SetAffliction(AfflictionID, Strength + PrevStrength, Aggressor);
+        HF.AddAfflictionResisted(this.Human, AfflictionID, Strength, Aggressor);
     }
 
     public void SetAffliction(string AfflictionID, float Strength, Character? Aggressor = null)
     {
-        SetAfflictionLimb(AfflictionID, LimbType.Torso, HF.NormalizeFloat(Strength), Aggressor == null ? this.Human : Aggressor);
+        HF.SetAffliction(this.Human, AfflictionID, Strength, Aggressor);
     }
 
     public void SetAfflictionLimb(string AfflictionID, LimbType Limb, float Strength, Character? Aggressor = null)
     {
-        Limb? RealLimb = this.Human.AnimController.GetLimb(Limb, excludeSevered: false);
-        if (RealLimb == null) return;
-
-        // This Error was in the original but not ported for some reason?
-        if (!AfflictionPrefab.Prefabs.TryGet(AfflictionID, out AfflictionPrefab? Prefab) || Prefab == null || this.Human == null || this.Human.CharacterHealth == null)
-        {
-            LuaCsLogger.LogError(string.Format(
-                "Can't apply affliction to character limb\ncharacter = {0}, limbtype = {1}, affliction = {2}, strength = {3}",
-                this.Human != null ? this.Human.Name : "nil",
-                Limb.ToString(),
-                Prefab != null ? $"{Prefab.Name} ({Prefab.Identifier})" : AfflictionID ?? "nil",
-                Strength.ToString("F3")
-            ));
-            return;
-        }
-
-        float Resistance = this.Human.CharacterHealth.GetResistance(Prefab, Limb);
-        if (Resistance >= 1)
-        {
-            return;
-        }
-
-        // Flip the resistances effects so we get the right values accounting for them
-        float ScaledStrength = Strength * this.Human.CharacterHealth.MaxVitality / 100 / (1 - Resistance);
-        Affliction Affliction = Prefab.Instantiate(HF.NormalizeFloat(ScaledStrength), Aggressor);
-        bool RecalculateVitality = NTC.AfflictionsAffectingVitality.Contains(AfflictionID);
-
-        this.Human.CharacterHealth.ApplyAffliction(
-            RealLimb,
-            Affliction,
-            false,
-            false,
-            true
-        );
+        HF.SetAfflictionLimb(this.Human, AfflictionID, Limb, Strength, Aggressor);
     }
 
     public bool HasAffliction(string AfflictionID = "", float MinAmount = 0)
     {
-        if (AfflictionID == "" || this.Human.CharacterHealth == null)
-        {
-            return false;
-        }
-
-        // Is the affliction null?
-        Affliction Aff = GetAffliction(AfflictionID);
-        if (Aff == null)
-        {
-            return false;
-        }
-
-        float AffStrength = Aff.Strength;
-        if (AffStrength > MinAmount)
-        {
-            return true;
-        }
-
-        return false;
+        return HF.HasAffliction(this.Human, AfflictionID, MinAmount);
     }
 
     public bool HasAfflictionLimb(string AfflictionID = "", LimbType TargetLimb = LimbType.Torso, float MinAmount = 0)
     {
-        if (string.IsNullOrEmpty(AfflictionID) || this.Human.CharacterHealth == null) return false;
-
-        Limb? limb = this.Human.AnimController.GetLimb(TargetLimb);
-        if (limb == null) return false;
-
-        Affliction aff = this.Human.CharacterHealth.GetAffliction(AfflictionID.ToIdentifier(), limb);
-        return aff != null && aff.Strength > MinAmount;
+        return HF.HasAfflictionLimb(this.Human, AfflictionID, TargetLimb, MinAmount);
     }
-
-    private static readonly List<List<LimbType>> LocalLimbsToCheck = [[LimbType.LeftArm, LimbType.LeftForearm, LimbType.LeftHand],[LimbType.RightArm, LimbType.RightForearm, LimbType.RightHand],
-                                                        [LimbType.LeftLeg, LimbType.LeftThigh, LimbType.LeftFoot],[LimbType.RightLeg, LimbType.RightThigh, LimbType.RightFoot]];
 
     public bool HasAfflictionExtremity(string AfflictionID = "", LimbType GivenLimbType = LimbType.Torso, double MinAmount = 0.5)
     {
-        Affliction? Aff = null;
-        
-        foreach (List<LimbType> SubList in LocalLimbsToCheck)
-        {
-            if (HF.NormalizeLimbType(GivenLimbType) == SubList[0])
-            {
-                Aff = GetAfflictionLimb(AfflictionID, SubList[0]);
-                if (Aff == null)
-                {
-                    Aff = GetAfflictionLimb(AfflictionID, SubList[1]);
-                }
-                if (Aff == null)
-                {
-                    Aff = GetAfflictionLimb(AfflictionID, SubList[2]);
-                }
-                break; // We can end the for loop, we found what we were looking for.
-            }
-        }
-
-        bool Res = false;
-        if (Aff != null)
-        {
-            Res = Aff.Strength >= MinAmount;
-        }
-
-        return Res;
+        return HF.HasAfflictionExtremity(this.Human, AfflictionID, GivenLimbType, MinAmount);
     }
 
     #endregion

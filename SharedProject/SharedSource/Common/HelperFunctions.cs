@@ -1291,54 +1291,49 @@ namespace Neurotrauma
         /// <summary>
         /// Checks a character for a specific affliction.
         /// </summary>
-        /// <param name="Character">The character to check.</param>
+        /// <param name="Target">The character to check.</param>
         /// <param name="Identifier">The affliction identifier to look for.</param>
         /// <param name="GivenLimbType">The limb to check.</param>
         /// <param name="MinAmount">The Minimum Amount of strength this affliction should have to return true.</param>
         /// <returns>True if the Affliction is present, else False.</returns>
-        public static bool HasAfflictionLimb(Character Character, string Identifier = "", LimbType GivenLimbType = LimbType.Torso, float MinAmount = 0)
+        public static bool HasAfflictionLimb(Character Target, string AfflictionID, LimbType GivenLimbType = LimbType.Torso, float MinAmount = 0)
         {
-            if (Character?.CharacterHealth == null || string.IsNullOrEmpty(Identifier))
-            {
-                return false;
-            }
+            if (string.IsNullOrEmpty(AfflictionID) || Target?.CharacterHealth == null) return false;
 
-            Limb limb = Character.AnimController?.GetLimb(GivenLimbType);
-            if (limb == null)
-            {
-                return false;
-            }
+            Limb? limb = Target.AnimController.GetLimb(GivenLimbType);
+            if (limb == null) return false;
 
-            Affliction Affliction = Character.CharacterHealth.GetAffliction(Identifier.ToIdentifier(), limb);
-            return Affliction != null && Affliction.Strength >= MinAmount;
+            Affliction aff = Target.CharacterHealth.GetAffliction(AfflictionID.ToIdentifier(), limb);
+            return aff != null && aff.Strength > MinAmount;
         }
+
+        private static readonly List<List<LimbType>> LocalLimbsToCheck = [[LimbType.LeftArm, LimbType.LeftForearm, LimbType.LeftHand],[LimbType.RightArm, LimbType.RightForearm, LimbType.RightHand],
+                                                        [LimbType.LeftLeg, LimbType.LeftThigh, LimbType.LeftFoot],[LimbType.RightLeg, LimbType.RightThigh, LimbType.RightFoot]];
 
         /// <summary>
         /// Checks to see if an Extremity has an affliction.
         /// </summary>
-        /// <param name="Character">The character to check.</param>
-        /// <param name="Identifier">The affliction identifier to look for.</param>
+        /// <param name="Target">The character to check.</param>
+        /// <param name="AfflictionID">The affliction identifier to look for.</param>
         /// <param name="GivenLimbType">The limb to check.</param>
         /// <param name="MinAmount">The Minimum Amount of strength this affliction should have to return true.</param>
         /// <returns>True if the Affliction is present, else False.</returns>
-        public static bool HasAfflictionExtremity(Character Character, string Identifier = "", LimbType GivenLimbType = LimbType.Torso, double MinAmount = 0.5)
+        public static bool HasAfflictionExtremity(Character Target, string AfflictionID, LimbType GivenLimbType = LimbType.Torso, double MinAmount = 0.5)
         {
-            Affliction ?Aff = null;
-            List<List<LimbType>> LocalLimbsToCheck = [[LimbType.LeftArm, LimbType.LeftForearm, LimbType.LeftHand],[LimbType.RightArm, LimbType.RightForearm, LimbType.RightHand],
-                                                        [LimbType.LeftLeg, LimbType.LeftThigh, LimbType.LeftFoot],[LimbType.RightLeg, LimbType.RightThigh, LimbType.RightFoot]];
+            Affliction? Aff = null;
 
             foreach (List<LimbType> SubList in LocalLimbsToCheck)
             {
-                if (NormalizeLimbType(GivenLimbType) == SubList[0])
+                if (HF.NormalizeLimbType(GivenLimbType) == SubList[0])
                 {
-                    Aff = GetAfflictionLimb(Character, Identifier, SubList[0]);
+                    Aff = GetAfflictionLimb(Target,AfflictionID, SubList[0]);
                     if (Aff == null)
                     {
-                        Aff = GetAfflictionLimb(Character, Identifier, SubList[1]);
+                        Aff = GetAfflictionLimb(Target, AfflictionID, SubList[1]);
                     }
                     if (Aff == null)
                     {
-                        Aff = GetAfflictionLimb(Character, Identifier, SubList[2]);
+                        Aff = GetAfflictionLimb(Target, AfflictionID, SubList[2]);
                     }
                     break; // We can end the for loop, we found what we were looking for.
                 }
@@ -1356,43 +1351,42 @@ namespace Neurotrauma
         /// <summary>
         /// Fetches an Affliction from a character.
         /// </summary>
-        /// <param name="Character">The character to check.</param>
-        /// <param name="Identifier">The Affliction Identifier to fetch.</param>
+        /// <param name="Target">The character to check.</param>
+        /// <param name="AfflictionID">The Affliction Identifier to fetch.</param>
         /// <returns>Returns a Barotrauma Affliction if present.</returns>
-        public static Affliction GetAffliction(Character Character, String Identifier = "")
+        public static Affliction GetAffliction(Character Target, String AfflictionID = "")
         {
-            return Character.CharacterHealth.GetAffliction(Identifier); // No error handling on this one, gonna need someone smarter to do that.
+            return Target.CharacterHealth.GetAffliction(AfflictionID); // No error handling on this one, gonna need someone smarter to do that.
         }
 
         /// <summary>
         /// Fetches a limb-specific Affliction from a character.
         /// </summary>
-        /// <param name="Character">The character to check.</param>
-        /// <param name="Identifier">The Affliction Identifier to fetch.</param>
+        /// <param name="Target">The character to check.</param>
+        /// <param name="AfflictionID">The Affliction Identifier to fetch.</param>
         /// <param name="GivenLimbType">Limb to grab the affliction from.</param>
         /// <returns>Returns a Barotrauma Affliction if present.</returns>
-        public static Affliction ?GetAfflictionLimb(Character Character, String Identifier = "", LimbType GivenLimbType = LimbType.Torso)
+        public static Affliction ?GetAfflictionLimb(Character Target, String AfflictionID, LimbType GivenLimbType = LimbType.Torso)
         {
 
-            if (Character == null || Character.CharacterHealth == null || Character.IdFreed) return null;
+            if (Target == null || Target.CharacterHealth == null || Target.IdFreed) return null;
 
-            Limb limb = Character.AnimController.GetLimb(GivenLimbType);
+            Limb? RealLimb = Target.AnimController.GetLimb(GivenLimbType, excludeSevered: false);
+            if (RealLimb == null) return null;
 
-            if (limb == null) return null;
-
-            return Character.CharacterHealth.GetAffliction(Identifier.ToIdentifier(), limb);
+            return Target.CharacterHealth.GetAffliction(AfflictionID.ToIdentifier(), RealLimb);
         }
 
         /// <summary>
         /// Fetches the strength of an affliction.
         /// </summary>
-        /// <param name="Character">The character to check.</param>
-        /// <param name="Identifier">The Affliction Identifier to check.</param>
+        /// <param name="Target">The character to check.</param>
+        /// <param name="AfflictionID">The Affliction Identifier to check.</param>
         /// <param name="DefaultValue">Fallback value.</param>
         /// <returns>Actual strength of the given affliction if present, else the defaultvalue.</returns>
-        public static float GetAfflictionStrength(Character Character, string Identifier = "", float DefaultValue = 0)
+        public static float GetAfflictionStrength(Character Target, string AfflictionID = "", float DefaultValue = 0)
         {
-            Affliction aff = GetAffliction(Character, Identifier);
+            Affliction aff = GetAffliction(Target, AfflictionID);
 
             if (aff == null)
             {
@@ -1405,14 +1399,14 @@ namespace Neurotrauma
         /// <summary>
         /// Fetches the strength of an affliction on a given limb.
         /// </summary>
-        /// <param name="Character">The character to check.</param>
+        /// <param name="Target">The character to check.</param>
         /// <param name="GivenLimbType">The limb to check.</param>
-        /// <param name="Identifier">The Affliction Identifier to check.</param>
+        /// <param name="AfflictionID">The Affliction Identifier to check.</param>
         /// <param name="DefaultValue">Fallback value.</param>
         /// <returns>Actual strength of the given affliction if present, else the defaultvalue.</returns>
-        public static float GetAfflictionStrengthLimb(Character Character, LimbType GivenLimbType = LimbType.Torso, string Identifier = "", float DefaultValue = 0)
+        public static float GetAfflictionStrengthLimb(Character Target, LimbType GivenLimbType = LimbType.Torso, string AfflictionID = "", float DefaultValue = 0)
         {
-            Affliction? aff = GetAfflictionLimb(Character, Identifier, GivenLimbType);
+            Affliction? aff = GetAfflictionLimb(Target, AfflictionID, GivenLimbType);
 
             if (aff == null)
             {
@@ -1425,76 +1419,69 @@ namespace Neurotrauma
         /// <summary>
         /// Adds an affliction to a character with a given strength; adds on top of existing strength.
         /// </summary>
-        /// <param name="Character">The character to add the affliction to.</param>
-        /// <param name="Identifier">The affliction's identifier.</param>
+        /// <param name="Target">The character to add the affliction to.</param>
+        /// <param name="AfflictionID">The affliction's identifier.</param>
         /// <param name="Strength">The strength of the affliction.</param>
         /// <param name="Aggressor">Possible aggressor that caused the affliction.</param>
-        public static void AddAffliction(Character Character, string Identifier, float Strength, Character ?Aggressor = null)
+        public static void AddAffliction(Character Target, string AfflictionID, float Strength, Character ?Aggressor = null)
         {
-            if (Aggressor == null)
-            {
-                Aggressor = Character;
-            }
-
-            float PrevStrength = GetAfflictionStrength(Character, Identifier, 0);
-            SetAffliction(Character, Identifier, Strength + PrevStrength, Aggressor, PrevStrength);
+            float prev = GetAfflictionStrength(Target, AfflictionID, 0f);
+            SetAffliction(Target, AfflictionID, prev + Strength, Aggressor == null ? Target : Aggressor);
         }
 
         /// <summary>
         /// Sets an affliction on a character with a given strength; replacing existing strength.
         /// </summary>
-        /// <param name="Character">The character to add the affliction to.</param>
-        /// <param name="Identifier">The affliction's identifier.</param>
+        /// <param name="Target">The character to add the affliction to.</param>
+        /// <param name="AfflictionID">The affliction's identifier.</param>
         /// <param name="Strength">The strength of the affliction.</param>
         /// <param name="Aggressor">Possible aggressor that caused the affliction.</param>
         /// <param name="PreviousStrength">Previous strength if hardcoded.</param>
-        public static void SetAffliction(Character Character, string Identifier, float Strength, Character ?Aggressor = null, float PreviousStrength = 0)
-        {
-            if (Aggressor == null)
-            {
-                Aggressor = Character;
-            }
-                
-            SetAfflictionLimb(Character, Identifier, LimbType.Torso, NormalizeFloat(Strength), Aggressor, PreviousStrength);
+        public static void SetAffliction(Character Target, string AfflictionID, float Strength, Character ?Aggressor = null, float PreviousStrength = 0)
+        {         
+            SetAfflictionLimb(Target, AfflictionID, LimbType.Torso, NormalizeFloat(Strength), Aggressor == null ? Target : Aggressor, PreviousStrength);
         }
 
         /// <summary>
         /// Sets a limb-specific affliction on a character with a given strength; replacing existing strength.
         /// </summary>
-        /// <param name="Character">The character to add the affliction to.</param>
-        /// <param name="Identifier">The affliction's identifier.</param>
+        /// <param name="Target">The character to add the affliction to.</param>
+        /// <param name="AfflictionID">The affliction's identifier.</param>
         /// <param name="GivenLimbType"></param>
         /// <param name="Strength">The strength of the affliction.</param>
         /// <param name="Aggressor">Possible aggressor that caused the affliction.</param>
         /// <param name="PreviousStrength">Previous strength if hardcoded.</param>
-        public static void SetAfflictionLimb(Character Character, string Identifier, LimbType GivenLimbType, float Strength, Character ?Aggressor = null, float PreviousStrength = 0)
+        public static void SetAfflictionLimb(Character Target, string AfflictionID, LimbType GivenLimbType, float Strength, Character ?Aggressor = null, float PreviousStrength = 0)
         {
+            Limb? RealLimb = Target.AnimController.GetLimb(GivenLimbType, excludeSevered: false);
+            if (RealLimb == null) return;
+
             // This Error was in the original but not ported for some reason?
-            if (!AfflictionPrefab.Prefabs.TryGet(Identifier, out AfflictionPrefab ?Prefab) || Prefab == null || Character == null || Character.CharacterHealth == null)
+            if (!AfflictionPrefab.Prefabs.TryGet(AfflictionID, out AfflictionPrefab? Prefab) || Prefab == null || Target == null || Target.CharacterHealth == null)
             {
                 LuaCsLogger.LogError(string.Format(
                     "Can't apply affliction to character limb\ncharacter = {0}, limbtype = {1}, affliction = {2}, strength = {3}",
-                    Character != null ? Character.Name : "nil",
+                    Target != null ? Target.Name : "nil",
                     GivenLimbType.ToString(),
-                    Prefab != null ? $"{Prefab.Name} ({Prefab.Identifier})" : Identifier ?? "nil",
+                    Prefab != null ? $"{Prefab.Name} ({Prefab.Identifier})" : AfflictionID ?? "nil",
                     Strength.ToString("F3")
                 ));
                 return;
             }
 
-            float Resistance = Character.CharacterHealth.GetResistance(Prefab, GivenLimbType);
-            if (Resistance >= 1) 
-            { 
-                return; 
+            float Resistance = Target.CharacterHealth.GetResistance(Prefab, GivenLimbType);
+            if (Resistance >= 1)
+            {
+                return;
             }
 
             // Flip the resistances effects so we get the right values accounting for them
-            float ScaledStrength = Strength * Character.CharacterHealth.MaxVitality / 100 / (1 - Resistance);
-            Affliction Affliction = Prefab.Instantiate(NormalizeFloat(ScaledStrength), Aggressor);
-            bool RecalculateVitality = NTC.AfflictionsAffectingVitality.Contains(Identifier);
+            float ScaledStrength = Strength * Target.CharacterHealth.MaxVitality / 100 / (1 - Resistance);
+            Affliction Affliction = Prefab.Instantiate(HF.NormalizeFloat(ScaledStrength), Aggressor);
+            bool RecalculateVitality = NTC.AfflictionsAffectingVitality.Contains(AfflictionID);
 
-            Character.CharacterHealth.ApplyAffliction(
-                Character.AnimController.GetLimb(GivenLimbType),
+            Target.CharacterHealth.ApplyAffliction(
+                RealLimb,
                 Affliction,
                 false,
                 false,
@@ -1505,49 +1492,52 @@ namespace Neurotrauma
         /// <summary>
         /// Adds a limb-specific affliction to a character with a given strength; adds on top of existing strength.
         /// </summary>
-        /// <param name="Character">The character to add the affliction to.</param>
-        /// <param name="Identifier">The affliction's identifier.</param>
+        /// <param name="Target">The character to add the affliction to.</param>
+        /// <param name="AfflictionID">The affliction's identifier.</param>
         /// <param name="GivenLimbType">Limb to add the affliction to.</param>
         /// <param name="Strength">The strength of the affliction.</param>
         /// <param name="Aggressor">Possible aggressor that caused the affliction.</param>
-        public static void AddAfflictionLimb(Character Character, string Identifier, LimbType GivenLimbType, float Strength, Character ?Aggressor = null)
+        public static void AddAfflictionLimb(Character Target, string AfflictionID, LimbType GivenLimbType, float Strength, Character ?Aggressor = null)
         {
+            Limb? RealLimb = Target.AnimController.GetLimb(GivenLimbType, excludeSevered: false);
+            if (RealLimb == null) return;
+
             if (Aggressor == null)
             {
-                Aggressor = Character;
+                Aggressor = Target;
             }
 
             if (Strength < 0)
             {
-                Character.CharacterHealth.ReduceAfflictionOnLimb(
-                    GetCharacterLimb(Character, GivenLimbType),
-                    Identifier.ToIdentifier(),
-                    NormalizeFloat(-Strength),
+                Target.CharacterHealth.ReduceAfflictionOnLimb(
+                    RealLimb,
+                    AfflictionID.ToIdentifier(),
+                    HF.NormalizeFloat(-Strength),
                     null,
                     Aggressor);
 
                 return;
             }
 
-            if (!AfflictionPrefab.Prefabs.TryGet(Identifier, out AfflictionPrefab ?Prefab) || Prefab == null || Character == null || Character.CharacterHealth == null) 
-            { 
-                return; 
+            if (!AfflictionPrefab.Prefabs.TryGet(AfflictionID, out AfflictionPrefab? Prefab) || Prefab == null || Target == null || Target.CharacterHealth == null)
+            {
+                return;
             }
 
-            float Resistance = Character.CharacterHealth.GetResistance(Prefab, GivenLimbType);
+            float Resistance = Target.CharacterHealth.GetResistance(Prefab, GivenLimbType);
 
-            if (Resistance >= 1) 
-            { 
-                return; 
+            if (Resistance >= 1)
+            {
+                return;
             }
 
-            float ScaledStrength = Strength * Character.CharacterHealth.MaxVitality / 100 / (1 - Resistance);
+            float ScaledStrength = Strength * Target.CharacterHealth.MaxVitality / 100 / (1 - Resistance);
             Affliction Affliction = Prefab.Instantiate(ScaledStrength, Aggressor);
-            bool RecalculateVitality = NTC.AfflictionsAffectingVitality.Contains(Identifier);
+            bool RecalculateVitality = NTC.AfflictionsAffectingVitality.Contains(AfflictionID);
 
             // No need to manually calculate strength, just stack it - Lukako
-            Character.CharacterHealth.ApplyAffliction(
-                Character.AnimController.GetLimb(GivenLimbType),
+            Target.CharacterHealth.ApplyAffliction(
+                RealLimb,
                 Affliction,
                 true,
                 false,
@@ -1558,41 +1548,41 @@ namespace Neurotrauma
         /// <summary>
         /// Adds an affliction to a character, considering type resistance.
         /// </summary>
-        /// <param name="Character">The character to add the affliction to.</param>
-        /// <param name="Identifier">The affliction's identifier.</param>
+        /// <param name="Target">The character to add the affliction to.</param>
+        /// <param name="AfflictionID">The affliction's identifier.</param>
         /// <param name="Strength">The amount of strength that should be added.</param>
         /// <param name="Aggressor">Possible aggressor that caused the affliction.</param>
-        public static void AddAfflictionResisted(Character Character, string Identifier, float Strength, Character ?Aggressor = null)
+        public static void AddAfflictionResisted(Character Target, string AfflictionID, float Strength, Character ?Aggressor = null)
         {
             if (Aggressor == null)
             {
-                Aggressor = Character;
+                Aggressor = Target;
             }
 
-            float PrevStrength = GetAfflictionStrength(Character, Identifier);
-            Strength *= 1 - GetResistance(Character, Identifier);
+            float PrevStrength = GetAfflictionStrength(Target, AfflictionID);
+            Strength *= 1 - GetResistance(Target, AfflictionID);
 
-            SetAffliction(Character, Identifier, Strength + PrevStrength, Aggressor, PrevStrength);
+            SetAffliction(Target, AfflictionID, Strength + PrevStrength, Aggressor, PrevStrength);
         }
 
         // Needed for some slow-acting Consumables. - Lukako
         /// <summary>
         /// Applies a given Affliction over a given Duration.
         /// </summary>
-        /// <param name="Character">Character to apply the affliction to.</param>
-        /// <param name="Identifier">Identifier of the affliction to apply.</param>
+        /// <param name="Target">Character to apply the affliction to.</param>
+        /// <param name="AfflictionID">Identifier of the affliction to apply.</param>
         /// <param name="TotalAmount">Total combined strength of applications.</param>
         /// <param name="Duration">Amount of time in seconds over which the application happens.</param>
         /// <param name="Aggressor">Character that's considered the one applying the affliction.</param>
-        public static void ApplyAfflictionOverTime(Character Character, string Identifier, float TotalAmount, float Duration, Character ?Aggressor = null)
+        public static void ApplyAfflictionOverTime(Character Target, string AfflictionID, float TotalAmount, float Duration, Character ?Aggressor = null)
         {
             if (Aggressor == null)
             {
-                Aggressor = Character;
+                Aggressor = Target;
             }
 
             int Applications = (int)Duration;
-            if (Applications <= 0 || Character == null)
+            if (Applications <= 0 || Target == null)
             {
                 return;
             }
@@ -1601,12 +1591,12 @@ namespace Neurotrauma
 
             void ApplyAfflictionAgain(int RemainingApplications)
             {
-                if (RemainingApplications <= 0 || Character == null || Character.Removed)
+                if (RemainingApplications <= 0 || Target == null || Target.Removed)
                 {
                     return;
                 }
 
-                HF.AddAffliction(Character, Identifier, AfflictionAmountPerApplication, Aggressor);
+                HF.AddAffliction(Target, AfflictionID, AfflictionAmountPerApplication, Aggressor);
 
                 LuaCsSetup.Instance.Timer.Wait((params object[] _) =>
                 {
