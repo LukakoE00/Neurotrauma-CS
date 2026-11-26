@@ -27,6 +27,9 @@ namespace Neurotrauma
         // All HealthUI Limbs
         public static readonly List<LimbType> LimbsToCheck = [LimbType.LeftArm, LimbType.RightArm, LimbType.LeftLeg, LimbType.RightLeg, LimbType.Torso, LimbType.Head];
 
+        // Temporary Amputation debug print
+        private static readonly HashSet<LimbType> AmputatableLimbTypes = new() { LimbType.LeftArm, LimbType.RightArm, LimbType.LeftLeg, LimbType.RightLeg, LimbType.Head};
+
         // Limb Dictionaries
         public static readonly Dictionary<LimbType, string> StringLimbsToCheck = new Dictionary<LimbType, string>()
         {
@@ -2065,8 +2068,9 @@ namespace Neurotrauma
         {
             GivenLimbType = NormalizeLimbType(GivenLimbType);
 
-            if (!LimbsToCheck.Contains(GivenLimbType) || LimbIsAmputated(Character, GivenLimbType))
+            if (!AmputatableLimbTypes.Contains(GivenLimbType))
             {
+                HF.PrintError($"Tried to amputate {GivenLimbType}, which is not a valid limb. Please report this!");
                 return false;
             }
 
@@ -2085,13 +2089,19 @@ namespace Neurotrauma
         /// Amputates an extremity and gives the surgeon the respective limb item.
         /// </summary>
         /// <param name="UsingCharacter">Character performing the surgery.</param>
-        /// <param name="GivenLimbType">Limb being surgically removed.</param>
+        /// <param name="GivenLimbType">The limb to amputate.</param>
         /// <param name="TargetCharacter">Character receiving the surgery.</param>
         public static void AmputateLimbAndGenerateItem(Character UsingCharacter, LimbType GivenLimbType, Character TargetCharacter, bool IsTraumatic = false)
         {
             if (TargetCharacter == null || TargetCharacter.Removed) return;
 
             GivenLimbType = NormalizeLimbType(GivenLimbType);
+
+            if (!AmputatableLimbTypes.Contains(GivenLimbType))
+            {
+                HF.PrintError($"Tried to amputate {GivenLimbType}, which is not a valid limb. Please report this!");
+                return;
+            }
 
             if (GivenLimbType == LimbType.Head)
             {
@@ -2116,6 +2126,7 @@ namespace Neurotrauma
 
             if (IsTraumatic)
             {
+                SetAfflictionLimb(TargetCharacter, "arterialcut", GivenLimbType, 100f, null);
                 SpawnItemAt(itemIdentifier, TargetCharacter.WorldPosition);
                 return;
             }
