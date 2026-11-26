@@ -9,25 +9,17 @@ A complete re-write of Neurotrauma in C# (with a dash of Lua).
 - Brand new QOL features.
 - Bug fixes.
 - New additions.
-- Full addon compatibility.
 
 Prior releases can be found under "Releases". To revert back download the zip and extract it into local mods.
 
 <h3>Links</h3>
 
 <hr>
-
-Google Doc with codebase can be found [here](https://docs.google.com/document/d/1AJDsnBTOf8GZjzLwk0Dm6FDzZSp3U4sCgUFjvv2a_uo/edit?tab=t.0#heading=h.w01ukn2d7564)
-
 C# Documentation (for Barotrauma) can be found [here](https://luatrauma.github.io/Luatrauma.Docs/api/cs/client/html/)
 
 Lua Documentation (for Barotrauma) can be found [here](https://evilfactory.github.io/LuaCsForBarotrauma/lua-docs/)
 
-NT Repository (Lua version) can be found [here](https://github.com/OlegBSTU/Neurotrauma)
-
 NT C# Template Repository can be found [here](https://github.com/BigEvilGreenBean/Neurotrauma-CS-Addon-Template)
-
-NT C# Refs can be found [here](https://github.com/BigEvilGreenBean/Neurotrauma-C-Refs/releases/download/NT_CS_Refs/NT.zip)
 
 <h3>Code & Requirements</h3>
 
@@ -36,8 +28,6 @@ NT C# Refs can be found [here](https://github.com/BigEvilGreenBean/Neurotrauma-C
 - Namespace: _Neurotrauma_
   
 - PascalCase is recommended. Following C# conventions.
-
-- Download the required refs from [here](https://github.com/evilfactory/LuaCsForBarotrauma/releases/download/latest/luacsforbarotrauma_refs.zip)
 
 - If you're going to be running this locally, change the LocalMods folder directory in **Build.props**. IDK if there is a better way to do this without GitHub constantly changing it.
 
