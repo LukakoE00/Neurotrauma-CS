@@ -316,6 +316,10 @@
 <!-- Immunosuppressants -->
 <afflictionname.afimmunosuppressant>Иммунодепрессанты</afflictionname.afimmunosuppressant>
 
+<!-- Laying down on a Surgery Table -->
+<afflictionname.laytable>Лежит</afflictionname.laytable>
+<afflictiondescription.laytable>Некоторые повреждения регенерируют из-за отдыха.</afflictiondescription.laytable>
+
 <!-- ================================================= Kidneys ================================================= -->
 
 <!-- Kidney Damage -->
@@ -509,8 +513,8 @@
 <afflictiondescription.craving>Тяга к наркотикам, вызванная ‖color:gui.red‖Наркотической ломкой‖end‖.</afflictiondescription.craving>
 
 <!-- Nausea -->
-<afflictionname.nausea>Тошнота</afflictionname.nausea>
-<afflictiondescription.nausea>Кожа липкая, и пациент испытывает тошноту. Обычно вызывается ‖color:gui.red‖Повреждением почек‖end‖, ‖color:gui.red‖Сотрясением мозга‖end‖, ‖color:gui.red‖Абстинентным синдромом‖end‖ или ‖color:gui.red‖Гемотрансфузионным шоком‖end‖. Рвота вызовет ‖color:gui.red‖Алкалоз‖end‖.</afflictiondescription.nausea>
+<afflictionname.nausea_nt>Тошнота</afflictionname.nausea_nt>
+<afflictiondescription.nausea_nt>Кожа пациента липкая и у него позывы рвоты. Обычно вызвано ‖color:gui.red‖Повреждением почек‖end‖, ‖color:gui.red‖Контузией‖end‖, ‖color:gui.red‖Наркотической ломкой‖end‖, или ‖color:gui.red‖Гемотрансфузионным шоком‖end‖. Рвота вызывает ‖color:gui.red‖Алкалоз‖end‖.</afflictiondescription.nausea_nt>
 
 <!-- On Fire -->
 <afflictionname.onfire>В огне!</afflictionname.onfire>
@@ -524,7 +528,7 @@
 <afflictionname.abdominalpain>Боль в животе</afflictionname.abdominalpain>
 <afflictiondescription.abdominalpain>Пациент выражает постоянную боль в животе. Обычно вызывается ‖color:gui.red‖Гемотрансфузионным шоком‖end‖.</afflictiondescription.abdominalpain>
 
-<!-- Vomiting -->
+<!-- Intense Pain -->
 <afflictionname.intensepain>Интенсивная боль</afflictionname.intensepain>
 <afflictiondescription.intensepain>Пациент выражает интенсивную боль в поражённой области. Обычно вызывается ‖color:gui.red‖Вывихами‖end‖ или ‖color:gui.red‖Переломами‖end‖.</afflictiondescription.intensepain>
 
@@ -800,6 +804,10 @@
 <!-- Blue Shark -->
 <entityname.blahaj>Синяя акула</entityname.blahaj>
 <entitydescription.blahaj>Милый плюшевый зверёк, который слегка снижает ‖color:gui.green‖Психоз‖end‖ каждый раз, когда пациента ударяют им.</entitydescription.blahaj>
+
+<!-- Lizard Doggo -->
+<entityname.lizarddoggo>Собачка-Ящерка</entityname.lizarddoggo>
+<entitydescription.lizarddoggo>Милая плюшевая игрушка, которая немного лечит ‖color:gui.green‖Психоз‖end‖ у пациента, когда ею бьют его. НЕ КОРМИТЕ РАДИАКТИВНЫМИ ОТХОДАМИ!</entitydescription.lizarddoggo>
 
 <!-- Analgesic Tank -->
 <entityname.analgesictank>Баллон с анальгетиком</entityname.analgesictank>
@@ -1283,15 +1291,19 @@
 <ntconfig.resetconfirm.no>Нет</ntconfig.resetconfirm.no>
 
 <!-- Default Pages -->
-<ntconfig.defaultpage.prices>Множители цен предметов</ntconfig.defaultpage.prices>
-<ntconfig.defaultpage.availability>Настройки доступности предметов</ntconfig.defaultpage.availability>
-<ntconfig.defaultpage.experimental>Экспериментальное</ntconfig.defaultpage.experimental>
+<ntconfig.defaultpage.prices>Настройка стоимости предметов</ntconfig.defaultpage.prices>
+<ntconfig.defaultpage.itemchanges>Настройка предметов</ntconfig.defaultpage.itemchanges>
+<ntconfig.defaultpage.afflictionchanges>Настройка повреждений</ntconfig.defaultpage.afflictionchanges>
+<ntconfig.defaultpage.experimental>Экспериментальные</ntconfig.defaultpage.experimental>
 
 <!-- Default Warning -->
 <ntconfig.body.defaultwarning>Серверные настройки может изменять только хост или авторизованные клиенты.</ntconfig.body.defaultwarning>
 
 <!-- Reset Button-->
 <ntconfig.tooltip.resetbutton>Сбросить до значений по умолчанию</ntconfig.tooltip.resetbutton>
+
+<!-- Credits -->
+<ntconfig.header.credits>Благодарности</ntconfig.header.credits>
 
 <!-- =================== Default Config Content =================== -->
 <!-- Dislocation chance multiplier -->
@@ -1693,22 +1705,14 @@
 <!-- Multipurpose Scalpel -->
 <ntconfig.entryname.itemprice_advscalpel>Многофункциональный скальпель</ntconfig.entryname.itemprice_advscalpel>
 
-<!-- =================== Dynamic Item Availability ===================-->
-<ntconfig.entryname.header8>Изменить количество использований предметов</ntconfig.entryname.header8>
+<!-- =================== Item Changes ===================-->
+<ntconfig.entryname.header8>Настройка функционала предметов</ntconfig.entryname.header8>
 
 <!-- Osteosynthesis Implant Uses -->
 <ntconfig.entryname.osteoimplants_uses>Использования остеосинтетических имплантатов</ntconfig.entryname.osteoimplants_uses>
 
 <!-- Spinal Cord Implant Uses -->
 <ntconfig.entryname.spinalimplants_uses>Использования имплантатов спинного мозга</ntconfig.entryname.spinalimplants_uses>
-
-<!-- Hardmode Aortic Rupture -->
-<ntconfig.entryname.hardmodeaorticrupture>Хардмод разрыва аорты</ntconfig.entryname.hardmodeaorticrupture>
-<ntconfig.entrydescription.hardmodeaorticrupture>Включить медицинский стент и аортальный баллон как единственный способ исправить разрыв аорты.</ntconfig.entrydescription.hardmodeaorticrupture>
-
-<!-- Open Close Tamponade -->
-<ntconfig.entryname.openclosetamponade>Открытое-закрытое лечение тампонады</ntconfig.entryname.openclosetamponade>
-<ntconfig.entrydescription.openclosetamponade>Включить закрытие швами как единственный способ исправить тампонаду сердца.</ntconfig.entrydescription.openclosetamponade>
 
 <!-- Enable Sodium Nitroprusside -->
 <ntconfig.entryname.donitroprusside>Включить нитропруссид натрия</ntconfig.entryname.donitroprusside>
@@ -1717,6 +1721,26 @@
 <!-- Enable Organ Scalpels -->
 <ntconfig.entryname.doorganscalpels>Включить скальпели для органов</ntconfig.entryname.doorganscalpels>
 <ntconfig.entrydescription.doorganscalpels>Разрешить производство, покупку и нахождение скальпелей для органов и набора скальпелей для хирургического ящика.</ntconfig.entrydescription.doorganscalpels>
+
+<!-- Enable Additional Surgery Table Healing -->
+<ntconfig.entryname.surgerytablehealsmore>Дополнительное лечение на Операционном столе</ntconfig.entryname.surgerytablehealsmore>
+<ntconfig.entrydescription.surgerytablehealsmore>Эту настройку можно изменить в любое время. \n\nПозволяет операционному столу лечить повреждения отдельных органов Нейротравмы, если вы лежите на нём.</ntconfig.entrydescription.surgerytablehealsmore>
+
+
+<!-- =================== Affliction Changes =================== -->
+<ntconfig.entryname.afflictionchanges>Настройка функционала повреждений</ntconfig.entryname.afflictionchanges>
+
+<!-- Hardmode Aortic Rupture -->
+<ntconfig.entryname.hardmodeaorticrupture>Усложненный Разрыв аорты</ntconfig.entryname.hardmodeaorticrupture>
+<ntconfig.entrydescription.hardmodeaorticrupture>Эту настройку можно изменить в любое время. \n\n‖color:gui.green‖Включён:‖end‖ Разрывы аорты теперь требуют Медицинский стент и Эндоваскулярный баллон для лечения; также позволяет находить/покупать/крафтить эти предметы. \n\n‖color:gui.red‖Выключен:‖end‖ Разрывы аорты лечатся процедурой Вскрыть / Зашить; также убирает Медицинские стенты и Эндоваскулярные баллоны из находок/покупок/крафта.</ntconfig.entrydescription.hardmodeaorticrupture>
+
+<!-- Open Close Tamponade -->
+<ntconfig.entryname.openclosetamponade>Вскрыть Зашить Тампонаду</ntconfig.entryname.openclosetamponade>
+<ntconfig.entrydescription.openclosetamponade>Эту настройку можно изменить в любое время. \n\n‖color:gui.green‖Включён:‖end‖ Сердечная тампонада лечится процедурой Вскрыть / Зашить. \n\n‖color:gui.red‖Выключен:‖end‖ Сердечная тампонада лечится только Дренажом во время процедуры Вскрыть / Зашить.</ntconfig.entrydescription.openclosetamponade>
+
+<!-- Additional Matriarch Genes Healing -->
+<ntconfig.entryname.extramatriarchhealing>Больше лечения Генетическим материалом Молотоглава Матриарха</ntconfig.entryname.extramatriarchhealing>
+<ntconfig.entrydescription.extramatriarchhealing>Эту настройку можно изменить в любое время. \n\nПозволяет генам Молотоглава Матриарха лечить повреждения отдельных органов Нейротравмы, возрастая с силой гена.</ntconfig.entrydescription.extramatriarchhealing>
 
 <!-- =================== EXPERIMENTAL ===================-->
 
