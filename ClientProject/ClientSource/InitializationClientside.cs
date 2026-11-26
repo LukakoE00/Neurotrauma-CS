@@ -3,6 +3,7 @@ using Barotrauma.Networking;
 using Barotrauma.Plugins;
 using Neurotrauma.ClientSource;
 using Neurotrauma.ClientSource.OverlayEffects;
+using MoonSharp.Interpreter;
 
 namespace Neurotrauma;
 
@@ -12,6 +13,10 @@ public partial class Initialization
 
     public partial void InitProjectSpecific()
     {
+
+        // Eyes Compatibility
+        UserData.RegisterType(typeof(ButtonData));
+
         ConfigurationMenu.InitNTConfig();
         DynamicItems.InitDynamicItemsClient();
         ButtonsHUI.InitClient();

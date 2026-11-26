@@ -48,6 +48,9 @@ namespace Neurotrauma
 
             // MiscellaneousShared
             UserData.RegisterType(typeof(NTHumanUpdate));
+
+            // Multiscalpel
+            UserData.RegisterType(typeof(NTMultiscalpel));
         }
     }
 }
