@@ -18,10 +18,6 @@
     <damagemodifier DamageSound="" DamageParticle="" DamageMultiplier="3" ProbabilityMultiplier="1" ArmorSector="0,360" DeflectProjectiles="False" AfflictionIdentifiers="gunshotwound,lacerations,blunttrauma,explosiondamage" AfflictionTypes="" />
     <!-- New since latest; Torso has it commented out so we do the same here -->
     <!-- <damagemodifier DamageSound="" DamageParticle="" DamageMultiplier="0.75" ProbabilityMultiplier="1" ArmorSector="0,360" DeflectProjectiles="False" AfflictionIdentifiers="bleeding,bitewounds" AfflictionTypes="" /> -->
-    <StatusEffect type="OnDamaged" target="This">
-      <RequiredAffliction identifier="internaldamage,blunttrauma,bitewounds,explosiondamage,lacerations" minstrength="5" />
-      <Affliction identifier="concussion" strength="10" probability="0.25" />
-    </StatusEffect>
     <StatusEffect type="OnSevered" target="Character">
       <Conditional IsDead="false" />
       <Affliction identifier="internaldamage" strength="200" />
