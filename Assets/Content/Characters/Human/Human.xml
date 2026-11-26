@@ -40,7 +40,7 @@
     
     <names path="Content/Characters/Human/names.xml" />
 	<!-- Leaving this to default will cause issues. Be explicit -->
-    <ragdolls folder="Content/Characters/Human/Ragdolls" />
+    <ragdolls folder="%ModDir%/Characters/Human/Ragdolls" />
     <animations folder="Content/Characters/Human/Animations" />
     <damageemitter drawontop="True" Particle="gib" AngleMin="0" AngleMax="360" ScaleMin="0.25" ScaleMax="0.5" VelocityMin="50" VelocityMax="300" EmitInterval="0" ParticlesPerSecond="0" ParticleAmount="10" HighQualityCollisionDetection="False" CopyEntityAngle="False" />
     <bloodemitter Particle="blood" AngleMin="0" AngleMax="0" ScaleMin="1" ScaleMax="1" VelocityMin="0" VelocityMax="0" EmitInterval="0" ParticlesPerSecond="0" ParticleAmount="10" HighQualityCollisionDetection="False" CopyEntityAngle="False" />
