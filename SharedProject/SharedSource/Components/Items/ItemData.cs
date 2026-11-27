@@ -1339,6 +1339,9 @@ public class NTItemsData
                 float healedAmount = Math.Min(affAmount, 200f);
 
                 HF.AddAfflictionLimb(infos.target.Human, "burn", infos.targetLimb.type, -healedAmount, infos.user.Human);
+                HF.SetAfflictionLimb(infos.target.Human, "firstdegreeburn", infos.targetLimb.type, 0, infos.user.Human);
+                HF.SetAfflictionLimb(infos.target.Human, "seconddegreeburn", infos.targetLimb.type, 0, infos.user.Human);
+                HF.SetAfflictionLimb(infos.target.Human, "thirddegreeburn", infos.targetLimb.type, 0, infos.user.Human);
 
                 if (HF.IsNTSPEnabled() && NTConfig.Get("NTSP_enableSurgerySkill", true))
                 {
@@ -1350,7 +1353,7 @@ public class NTItemsData
                 }
 
             }
-            else if (HF.GetAfflictionStrengthLimb(infos.target.Human, infos.targetLimb.type, "burn", 0) > 50f)
+            else if (HF.GetAfflictionStrengthLimb(infos.target.Human, infos.targetLimb.type, "burn", 0) < 50f)
             {
                 HF.AddAfflictionLimb(infos.target.Human, "burn", infos.targetLimb.type, -12 - successNum * 12, infos.user.Human);
             }
