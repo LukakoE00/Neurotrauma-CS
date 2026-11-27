@@ -1364,10 +1364,14 @@ namespace Neurotrauma
             "- " + Coloured("Lillian Vorpa", 225, 157, 237) + " supplying additional ideas." + "\n" +
 
             "\n" + "Notable Testers:" + "\n" +
-            "- Captain Isaac, SzaraKryik, JustGlassin." + "\n" +
+            "- Captain Isaac, SzaraKryik, JustGlassin, Azure." + "\n" +
 
             "\n" + "Notable Community Members:" + "\n" +
-            "- Rosa, FancyPants, MediumTank M4A1 76."
+            "- Rosa, FancyPants, MediumTank M4A1 76." + "\n" +
+
+            "\n" + "Translations:" + "\n" +
+            "- Russian : " + Coloured("Heelge", 255, 102, 102) + "\n" +
+            "- Portuguese : Pombo Espadachim" + "\n"
         ;
 
         public static void OpenCredits()
