@@ -218,7 +218,7 @@ public class NTItemsData
 
         if (limbType != itemLimbType) return;
 
-        if (HF.HasAfflictionLimb(infos.target.Human, "sawedbones", limbType, 99))
+        if (HF.HasAfflictionLimb(infos.target.Human, "sawedbones", limbType, 99) || HF.LimbIsAmputated(infos.target.Human, infos.targetLimb.type))
         {
             HF.SetAfflictionLimb(infos.target.Human, "sawedbones", limbType, 0f, infos.user.Human, 99);
             HF.RegenerateLimb(infos.target.Human, limbType, infos.user.Human);
