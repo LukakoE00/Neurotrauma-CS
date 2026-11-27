@@ -1,0 +1,1841 @@
+<?xml version="1.0" encoding="utf-8"?>
+<infotexts language="Brazilian Portuguese" nowhitespace="false" translatedname="Português (Brasil)">
+<!-- ================================================= ORIGINAL SKELETON ================================================= -->
+
+<!-- Sample Client Setting --><!--
+<MyModName.SampleSettingClient.DisplayName>Sample Client Setting</MyModName.SampleSettingClient.DisplayName>
+<MyModName.SampleSettingClient.DisplayCategory>Sample</MyModName.SampleSettingClient.DisplayCategory>
+<MyModName.SampleSettingClient.Tooltip>Sample tooltip!</MyModName.SampleSettingClient.Tooltip>
+
+--><!-- Sample Server Setting --><!--
+<MyModName.SampleSettingServer.DisplayName>Sample Server Setting</MyModName.SampleSettingServer.DisplayName>
+<MyModName.SampleSettingServer.DisplayCategory>Sample</MyModName.SampleSettingServer.DisplayCategory>
+<MyModName.SampleSettingServer.Tooltip>Sample tooltip!</MyModName.SampleSettingServer.Tooltip>
+
+--><!-- Sample Shared Setting --><!--
+<MyModName.SampleSettingShared.DisplayName>Sample Shared Setting</MyModName.SampleSettingShared.DisplayName>
+<MyModName.SampleSettingShared.DisplayCategory>Sample</MyModName.SampleSettingShared.DisplayCategory>
+<MyModName.SampleSettingShared.Tooltip>Sample tooltip!</MyModName.SampleSettingShared.Tooltip>-->
+	
+
+<!-- ================================================= COLOUR CODING ================================================= -->
+<!-- Blue: Used for Items. -->
+<!-- Green: Beneficial; Effect or Affliction. -->
+<!-- Red: Detrimental; Effect or Affliction. -->
+<!-- Orange: Surgical Procedures -->
+
+<!-- ================================================= AFFLICTIONS ================================================= -->
+<!-- TEMPLATE -->
+
+<!-- <afflictionname.organdamage>AfflictionName</afflictionname.organdamage> -->
+<!-- <afflictiondescription.organdamage>AfflictionDescription</afflictiondescription.organdamage> -->
+<!-- <afflictioncauseofdeath.organdamage>CauseOfDeathOther</afflictioncauseofdeath.organdamage> -->
+<!-- <afflictioncauseofdeathself.organdamage>CauseOfDeathSelf</afflictioncauseofdeathself.organdamage> -->
+
+<!-- ================================================= Any Bodypart ================================================= -->
+<!-- Bandaged -->
+<afflictionname.bandaged>Enfaixado</afflictionname.bandaged>
+<afflictiondescription.bandaged>Protege o membro contra ‖color:gui.red‖Infecções‖end‖ leves, estabiliza ‖color:gui.red‖Luxações‖end‖ e ‖color:gui.red‖Fraturas‖end‖ nos braços, além de acelerar a regeneração de ferimentos abertos superficiais. Entretanto, ‖color:gui.red‖reduz‖end‖ levemente a velocidade de movimento.</afflictiondescription.bandaged>
+
+<!-- Dirty Bandage -->
+<afflictionname.bandageddirty>Atadura Suja</afflictionname.bandageddirty>
+<afflictiondescription.bandageddirty>Uma ‖color:gui.blue‖Atadura‖end‖ que ficou suja demais e deve ser removida ou substituída; caso contrário, favorecerá o surgimento de ‖color:gui.red‖Infecções‖end‖. Ainda é capaz de estabilizar ‖color:gui.red‖Luxações‖end‖ e ‖color:gui.red‖Fraturas‖end‖ nos braços.</afflictiondescription.bandageddirty>
+
+<!-- Iced -->
+<afflictionname.iced>Resfriado</afflictionname.iced>
+<afflictiondescription.iced>A aplicação de uma ‖color:gui.blue‖Bolsa de gel fria‖end‖ neste membro aumentou drasticamente a velocidade natural de cicatrização do ‖color:gui.red‖Trauma Contuso‖end‖ e está tratando a ‖color:gui.red‖Hemorragia Interna‖end‖ ao longo do tempo. Contudo, ‖color:gui.red‖reduz‖end‖ levemente a velocidade de movimento e agrava as ‖color:gui.red‖Infecções‖end‖.</afflictiondescription.iced>
+
+<!-- Ointmented -->
+<afflictionname.ointmented>Pomada Antibiótica</afflictionname.ointmented>
+<afflictiondescription.ointmented>Uma camada de gel antibiótico protege e descontamina a ferida contra microrganismos. É muito difícil que uma ‖color:gui.red‖Infecção‖end‖ se desenvolva aqui.</afflictiondescription.ointmented>
+
+<!-- Infected Wound-->
+<afflictionname.infectedwound>Ferida Infectada</afflictionname.infectedwound>
+
+<!-- Foreign Body -->
+<afflictionname.foreignbody>Corpo Estranho</afflictionname.foreignbody>
+
+<!-- First-Degree Burn -->
+<afflictionname.firstdegreeburn>Queimadura de Primeiro Grau</afflictionname.firstdegreeburn>
+<afflictiondescription.firstdegreeburn>A área apresenta vermelhidão e dor ao toque, podendo ocorrer uma ‖color:gui.red‖Infecção‖end‖ em casos graves. ‖color:gui.blue‖Ataduras‖end‖, ‖color:gui.blue‖Cola Antibiótica‖end‖ ou ‖color:gui.blue‖Pomada Antibiótica‖end‖ podem ser usadas para tratar a queimadura, se necessário.</afflictiondescription.firstdegreeburn>
+
+<!-- Second-Degree Burn-->
+<afflictionname.seconddegreeburn>Queimadura de Segundo Grau</afflictionname.seconddegreeburn>
+<afflictiondescription.seconddegreeburn>A região afetada está coberta por bolhas muito dolorosas. Há alto risco de ‖color:gui.red‖Infecção‖end‖, o que pode evoluir para uma ‖color:gui.red‖Sepse‖end‖ com risco de vida. ‖color:gui.blue‖Ataduras‖end‖, ‖color:gui.blue‖Cola Antibiótica‖end‖ ou ‖color:gui.blue‖Pomada Antibiótica‖end‖ podem ser usadas para tratar a queimadura.</afflictiondescription.seconddegreeburn>
+
+<!-- Third-Degree Burn-->
+<afflictionname.thirddegreeburn>Queimadura de Terceiro Grau</afflictionname.thirddegreeburn>
+<afflictiondescription.thirddegreeburn>A área afetada está com aspecto de couro, sem flexibilidade e com perda total da sensibilidade. A ‖color:gui.red‖Infecção‖end‖ é quase imediata e, consequentemente, o início da ‖color:gui.red‖Sepse‖end‖ é rápido. A ‖color:gui.blue‖Cola Antibiótica‖end‖ é o tratamento mais rápido, embora um ‖color:gui.blue‖Selante cutâneo‖end‖ possa ser utilizado durante a ‖color:gui.orange‖Cirurgia de Abertura / Fechamento‖end‖ para substituir totalmente a pele.</afflictiondescription.thirddegreeburn>
+
+<!-- ================================================= Blood ================================================= -->
+
+<!-- Blood Pressure -->
+<afflictionname.bloodpressure>Pressão Arterial</afflictionname.bloodpressure>
+
+<!-- Hypoxemia -->
+<afflictionname.hypoxemia>Hipoxemia</afflictionname.hypoxemia>
+
+<!-- Alkalosis -->
+<afflictionname.alkalosis>Alcalose</afflictionname.alkalosis>
+
+<!-- Acidosis -->
+<afflictionname.acidosis>Acidose</afflictionname.acidosis>
+
+<!-- Sepsis -->
+<afflictionname.sepsis>Sepse</afflictionname.sepsis>
+
+<!-- Immunity -->
+<afflictionname.immunity>Imunidade</afflictionname.immunity>
+
+<!-- Hemotransfusion Shock -->
+<afflictionname.hemotransfusionshock>Choque Transfusional</afflictionname.hemotransfusionshock>
+
+<!-- ================================================= Bones ================================================= -->
+
+<!-- Bone Damage-->
+<afflictionname.bonedamage>Dano Ósseo</afflictionname.bonedamage>
+
+<!-- Bone Death -->
+<afflictionname.bonedeath>Necrose Óssea</afflictionname.bonedeath>
+
+<!-- Stimulated Bone Growth -->
+<afflictionname.stimulatedbonegrowth>Osteogênese Estimulada</afflictionname.stimulatedbonegrowth>
+<afflictiondescription.stimulatedbonegrowth>O crescimento ósseo foi estimulado. Para curar a ‖color:gui.red‖Necrose Óssea‖end‖, esta condição precisa estar presente em todas as partes do corpo.</afflictiondescription.stimulatedbonegrowth>
+
+<!-- Fractured Extremity -->
+<afflictionname.fracturedextremity>Fratura de Membro</afflictionname.fracturedextremity>
+<afflictiondescription.fracturedextremity>Este membro está fraturado e causará ‖color:gui.red‖Dor‖end‖ até que um ‖color:gui.blue‖Gesso Ortopédico‖end‖ seja aplicado ou seja operado cirurgicamente.</afflictiondescription.fracturedextremity>
+
+<!-- Dislocation -->
+<afflictionname.dislocation>Luxação</afflictionname.dislocation>
+<afflictiondescription.dislocation>Um osso sofreu deslocamento neste membro, causando ‖color:gui.red‖Dor‖end‖ e dificultando a movimentação. Uma ‖color:gui.blue‖Atadura‖end‖ restaurará a funcionalidade deste membro, e uma ‖color:gui.blue‖Chave Inglesa‖end‖ deve ser utilizada para reduzir a luxação.</afflictiondescription.dislocation>
+
+<!-- Fractured Ribs -->
+<afflictionname.fracturedribs>Fratura de Costelas</afflictionname.fracturedribs>
+<afflictiondescription.fracturedribs>Uma ou mais costelas foram fraturadas e, a menos que o torso seja ‖color:gui.green‖Enfaixado‖end‖, a instabilidade estrutural pode causar ‖color:gui.red‖Pneumotórax‖end‖. As costelas devem ser tratadas por meio de uma ‖color:gui.orange‖Cirurgia de Osteossíntese‖end‖.</afflictiondescription.fracturedribs>
+
+<!-- Fractured Skull -->
+<afflictionname.fracturedskull>Fratura Craniana</afflictionname.fracturedskull>
+<afflictiondescription.fracturedskull>O crânio foi fraturado e a instabilidade estrutural impedirá que o ‖color:gui.red‖Neurotrauma‖end‖ diminua naturalmente. O crânio deve ser tratado por meio de ‖color:gui.orange‖Cirurgia de Osteossíntese‖end‖.</afflictiondescription.fracturedskull>
+
+<!-- Fractured Neck -->
+<afflictionname.fracturedneck>Fratura Cervical</afflictionname.fracturedneck>
+<afflictiondescription.fracturedneck>O pescoço foi fraturado e, a menos que seja ‖color:gui.green‖Enfaixado‖end‖, a instabilidade estrutural causará uma ‖color:gui.red‖Lesão Medular‖end‖. A coluna cervical deve ser tratada por meio de uma ‖color:gui.orange‖Cirurgia de Osteossíntese‖end‖.</afflictiondescription.fracturedneck>
+
+<!-- ================================================= Brain ================================================= -->
+
+<!-- Stroke -->
+<afflictionname.stroke>Acidente Vascular Cerebral (AVC)</afflictionname.stroke>
+
+<!-- Seizure -->
+<afflictionname.seizure>Convulsão</afflictionname.seizure>
+<afflictiondescription.seizure>O paciente está apresentando convulsões generalizadas. Geralmente causado por ‖color:gui.red‖Acidose‖end‖ grave, ‖color:gui.red‖Alcalose‖end‖, ‖color:gui.red‖Acidente Vascular Cerebral (AVC)‖end‖, ‖color:gui.red‖Overdose de Opiáceos‖end‖ ou ‖color:gui.red‖Síndrome Aguda da Radiação‖end‖.</afflictiondescription.seizure>
+
+<!-- Coma -->
+<afflictionname.coma>Coma</afflictionname.coma>
+
+<!-- Neurotrauma -->
+<afflictionname.neurotrauma>Neurotrauma</afflictionname.neurotrauma>
+<afflictioncauseofdeath.neurotrauma>Morte por Neurotrauma</afflictioncauseofdeath.neurotrauma>
+<afflictioncauseofdeathself.neurotrauma>Você morreu de Neurotrauma.</afflictioncauseofdeathself.neurotrauma>
+
+<!-- Brain Removed -->
+<afflictionname.brainremoved>Cérebro Removido</afflictionname.brainremoved>
+<afflictiondescription.brainremoved>O cérebro foi removido cirurgicamente.</afflictiondescription.brainremoved>
+<afflictioncauseofdeath.brainremoved>Morreu devido à ausência de cérebro</afflictioncauseofdeath.brainremoved>
+<afflictioncauseofdeathself.brainremoved>Seu cérebro foi removido.</afflictioncauseofdeathself.brainremoved>
+
+<!-- Brain Swap -->
+<afflictionname.brainswap>Substituindo Cérebro</afflictionname.brainswap>
+<afflictiondescription.brainswap>O cérebro antigo foi preparado cirurgicamente para um novo transplante.</afflictiondescription.brainswap>
+<afflictioncauseofdeath.brainswap>Morreu devido à ausência de cérebro</afflictioncauseofdeath.brainswap>
+<afflictioncauseofdeathself.brainswap>Seu cérebro estava em processo de substituição.</afflictioncauseofdeathself.brainswap>
+ 
+<!-- ================================================= Extremities ================================================= -->
+
+<!-- Plaster Cast -->
+<afflictionname.plastercast>Gesso Ortopédico</afflictionname.plastercast>
+<afflictiondescription.plastercast>Promove a cicatrização gradual das ‖color:gui.red‖Fraturas‖end‖ nos membros, mas ‖color:gui.red‖reduz‖end‖ a velocidade de movimento enquanto estiver aplicado. Pode ser removido com ‖color:gui.blue‖Tesoura de Resgate‖end‖.</afflictiondescription.plastercast>
+
+<!-- Tourniqueted -->
+<afflictionname.tourniqueted>Torniquete aplicado</afflictionname.tourniqueted>
+<afflictiondescription.tourniqueted>O ‖color:gui.red‖Sangramento‖end‖ arterial foi contido, mas a circulação sanguínea no membro está severamente reduzida. Se o torniquete não for removido a tempo, poderá ocorrer ‖color:gui.red‖Gangrena‖end‖.</afflictiondescription.tourniqueted>
+
+<!-- Arterial Bleeding -->
+<afflictionname.arterialcut>Hemorragia Arterial</afflictionname.arterialcut>
+<afflictiondescription.arterialcut>Uma artéria foi lesionada e está causando ‖color:gui.red‖Perda Sanguínea‖end‖ grave; aplique um ‖color:gui.blue‖Torniquete‖end‖ o mais rápido possível!</afflictiondescription.arterialcut>
+
+<!-- Gangrene -->
+<afflictionname.gangrene>Gangrena</afflictionname.gangrene>
+<afflictiondescription.gangrene>A extremidade encolheu e escureceu. Acima de 15%, este membro não pode mais ser salvo e ‖color:gui.red‖deve‖end‖ ser ‖color:gui.orange‖Amputado‖end‖.</afflictiondescription.gangrene>
+
+<!-- Traumatic Amputations -->
+<afflictionname.tra_amputation>Amputação Traumática</afflictionname.tra_amputation>
+<afflictiondescription.tra_amputation>A maior parte dos tecidos do braço direito foi arrancada. Este membro pode ser substituído após ‖color:gui.orange‖Serrar Ossos‖end‖.</afflictiondescription.tra_amputation>
+
+<afflictionname.tla_amputation>Amputação Traumática</afflictionname.tla_amputation>
+<afflictiondescription.tla_amputation>A maior parte dos tecidos do braço esquerdo foi arrancada. Este membro pode ser substituído após ‖color:gui.orange‖Serrar Ossos‖end‖.</afflictiondescription.tla_amputation>
+
+<afflictionname.trl_amputation>Amputação Traumática</afflictionname.trl_amputation>
+<afflictiondescription.trl_amputation>A maior parte dos tecidos da perna direita foi arrancada. Este membro pode ser substituído após ‖color:gui.orange‖Serrar Ossos‖end‖.</afflictiondescription.trl_amputation>
+
+<afflictionname.tll_amputation>Amputação Traumática</afflictionname.tll_amputation>
+<afflictiondescription.tll_amputation>A maior parte dos tecidos da perna esquerda foi arrancada. Este membro pode ser substituído após ‖color:gui.orange‖Serrar Ossos‖end‖.</afflictiondescription.tll_amputation>
+
+<afflictionname.th_amputation>Amputação Traumática</afflictionname.th_amputation>
+<afflictiondescription.th_amputation>A cabeça foi violentamente decapitada do corpo, causando ‖color:gui.red‖morte instantânea‖end‖.</afflictiondescription.th_amputation>
+
+<!-- Surgical Amputations -->
+<afflictionname.sra_amputation>Amputação</afflictionname.sra_amputation>
+<afflictiondescription.sra_amputation>O braço direito foi amputado cirurgicamente.</afflictiondescription.sra_amputation>
+
+<afflictionname.sla_amputation>Amputação</afflictionname.sla_amputation>
+<afflictiondescription.sla_amputation>O braço esquerdo foi amputado cirurgicamente.</afflictiondescription.sla_amputation>
+
+<afflictionname.srl_amputation>Amputação</afflictionname.srl_amputation>
+<afflictiondescription.srl_amputation>A perna direita foi amputado cirurgicamente.</afflictiondescription.srl_amputation>
+
+<afflictionname.sll_amputation>Amputação</afflictionname.sll_amputation>
+<afflictiondescription.sll_amputation>A perna esquerda foi amputada cirurgicamente.</afflictiondescription.sll_amputation>
+
+<afflictionname.sh_amputation>Amputação</afflictionname.sh_amputation>
+<afflictiondescription.sh_amputation>A cabeça foi amputada cirurgicamente.</afflictiondescription.sh_amputation>
+
+<!-- ================================================= Functionality ================================================= -->
+
+<!-- Luabotomy -->
+<afflictionname.luabotomy>Lua inativo</afflictionname.luabotomy>
+<afflictiondescription.luabotomy>O Lua não está em execução. Isso significa que o Neurotrauma e outros mods que dependam dele não funcionarão. Por favor, leia as páginas da oficina dos mods que planeja usar.</afflictiondescription.luabotomy>
+
+<!-- Mod Conflict -->
+<afflictionname.modconflict>Conflito de Mods</afflictionname.modconflict>
+<afflictiondescription.modconflict>Há um conflito de mods. Outro mod está sobrescrevendo alguns dos mesmos itens modificados pelo Neurotrauma. Algumas mecânicas podem não funcionar corretamente. Por favor, ajuste a ordem de carregamento dos mods.</afflictiondescription.modconflict>
+
+<!-- Traumatic Shock Immunity -->
+<afflictionname.tshocktimeout>Imunidade ao Choque Traumático</afflictionname.tshocktimeout>
+<afflictiondescription.tshocktimeout>O paciente foi deixado sem atendimento. Por algum tempo, ele não perceberá que está aberto.</afflictiondescription.tshocktimeout>
+
+<!-- ================================================= Head ================================================= -->
+
+<!-- Lesão Medular -->
+<afflictionname.spinalcordinjury>Lesão medular</afflictionname.spinalcordinjury>
+<afflictiondescription.spinalcordinjury>A medula espinhal foi lesionada em decorrência de uma ‖color:gui.red‖fratura cervical‖end‖, causando ‖color:gui.red‖paralisia de todo o corpo‖end‖ e ‖color:gui.green‖analgesia‖end‖, mas sem provocar ‖color:gui.red‖perda de consciência‖end‖. A lesão deve ser reparada cirurgicamente com ‖color:gui.blue‖implantes de medula espinhal‖end‖.</afflictiondescription.spinalcordinjury>
+<afflictioncauseofdeath.spinalcordinjury>Morreu em decorrência de paralisia.</afflictioncauseofdeath.spinalcordinjury>
+<afflictioncauseofdeathself.spinalcordinjury>Você morreu em decorrência de paralisia.</afflictioncauseofdeathself.spinalcordinjury>
+
+<!-- Carotid Artery Bleeding -->
+<afflictionname.carotidarterialcut>Hemorragia da Artéria Carótida</afflictionname.carotidarterialcut>
+<afflictiondescription.carotidarterialcut>Uma artéria foi lesionada e está causando ‖color:gui.red‖Perda Sanguínea‖end‖ grave. Não é possível aplicar torniquete na carótida, portanto deve ser reparada cirurgicamente!</afflictiondescription.carotidarterialcut>
+
+<!-- ================================================= Heart ================================================= -->
+
+<!-- Increased Heartrate -->
+<afflictionname.increasedheartrate>Taquicardia</afflictionname.increasedheartrate>
+<afflictiondescription.increasedheartrate>A frequência cardíaca do paciente está anormalmente elevada. Se esta condição aumentar em intensidade, ocorrerá uma ‖color:gui.red‖Fibrilação‖end‖ potencialmente letal; geralmente causada por ‖color:gui.red‖Hipotensão‖end‖ ou ‖color:gui.red‖Hipoxemia‖end‖.</afflictiondescription.increasedheartrate>
+
+<!-- Irregular heartbeat -->
+<afflictionname.fibrillation>Arritmia Cardíaca</afflictionname.fibrillation>
+<afflictiondescription.fibrillation>O coração do paciente está batendo de forma irregular; isso pode ser um sinal de que uma ‖color:gui.red‖Fibrilação‖end‖ potencialmente letal está ocorrendo; geralmente causada por ‖color:gui.red‖Hipotensão‖end‖ ou ‖color:gui.red‖Hipoxemia‖end‖. </afflictiondescription.fibrillation>
+
+<!-- Cardiac Arrest -->
+<afflictionname.cardiacarrest>Parada Cardíaca</afflictionname.cardiacarrest>
+<afflictiondescription.cardiacarrest>O coração do paciente não está batendo. Impede que a ‖color:gui.red‖Pressão Arterial‖end‖ se normalize e causa ‖color:gui.red‖Coma‖end‖ se não tratada. É o estágio final da ‖color:gui.red‖Fibrilação‖end‖, além de ser causada por ‖color:gui.red‖Hipoxemia‖end‖. O coração deve ser reanimado utilizando um ‖color:gui.blue‖Desfibrilador‖end‖, ‖color:gui.blue‖Adrenalina‖end‖ ou um ‖color:gui.blue‖AutoPulse‖end‖.</afflictiondescription.cardiacarrest>
+
+<!-- Cardiac tamponade -->
+<afflictionname.tamponade>Tamponamento Cardíaco</afflictionname.tamponade>
+
+<!-- Heart attack -->
+<afflictionname.heartattack>Infarto Agudo do Miocárdio</afflictionname.heartattack>
+
+<!-- Heart damage -->
+<afflictionname.heartdamage>Lesão Cardíaca</afflictionname.heartdamage>
+
+<!-- Heart failure -->
+<afflictionname.heartfailure>Insuficiência Cardíaca</afflictionname.heartfailure>
+
+<!-- Heart Removed -->
+<afflictionname.heartremoved>Coração Removido</afflictionname.heartremoved>
+<afflictiondescription.heartremoved>O coração foi removido cirurgicamente.</afflictiondescription.heartremoved>
+<afflictioncauseofdeath.heartremoved>Morreu devido à ausência de coração</afflictioncauseofdeath.heartremoved>
+<afflictioncauseofdeathself.heartremoved>Seu coração foi removido.</afflictioncauseofdeathself.heartremoved>
+
+<!-- Heart Swap -->
+<afflictionname.heartswap>Substituindo Coração</afflictionname.heartswap>
+<afflictiondescription.heartswap>O coração antigo foi preparado cirurgicamente para um novo transplante.</afflictiondescription.heartswap>
+<afflictioncauseofdeath.heartswap>Morreu devido à ausência de coração</afflictioncauseofdeath.heartswap>
+<afflictioncauseofdeathself.heartswap>Seu coração estava em processo de substituição.</afflictioncauseofdeathself.heartswap>
+
+<!-- ================================================= Item Derived ================================================= -->
+
+<!-- Skin Ointment -->
+<afflictionname.skinointmented>Pomada Regenerativa</afflictionname.skinointmented>
+<afflictiondescription.skinointmented>Uma camada de gel regenerativo acelera o processo de cicatrização de queimaduras e traumas contusos.</afflictiondescription.skinointmented>
+
+<!-- Needle -->
+<afflictionname.needlec>Agulha de Descompressão</afflictionname.needlec>
+<afflictiondescription.needlec>Uma agulha valvulada no tórax impede o agravamento do ‖color:gui.red‖Pneumotórax‖end‖. Entretanto, aplicar uma Agulha em um paciente saudável causará ‖color:gui.red‖Pneumotórax‖end‖, exigindo o uso de um ‖color:gui.blue‖Dreno Torácico‖end‖ durante a ‖color:gui.orange‖Cirurgia de Abertura / Fechamento‖end‖ para curá-lo.</afflictiondescription.needlec>
+
+<!-- Analgesia -->
+<afflictionname.analgesia>Analgesia</afflictionname.analgesia>
+<afflictiondescription.analgesia>A ausência de dor suprime certos sintomas e viabiliza procedimentos cirúrgicos. Em níveis elevados, aumenta a ‖color:gui.green‖Resistência a Danos e Atordoamento‖end‖, além de estabilizar a mira.</afflictiondescription.analgesia>
+
+<!-- Anesthesia -->
+<afflictionname.anesthesia>Anestesia</afflictionname.anesthesia>
+<afflictiondescription.anesthesia>Estado controlado de ‖color:gui.red‖inconsciência‖end‖, geralmente induzido por medicamentos. É seguro realizar procedimentos cirúrgicos neste paciente.</afflictiondescription.anesthesia>
+
+<!-- Adrenaline -->
+<afflictionname.afadrenaline>Adrenalina</afflictionname.afadrenaline>
+
+<!-- Anti-clot -->
+<afflictionname.afstreptokinase>Anticoagulante</afflictionname.afstreptokinase>
+
+<!-- Thiamine -->
+<afflictionname.afthiamine>Tiamina</afflictionname.afthiamine>
+
+<!-- Blood pressure reducers -->
+<afflictionname.afpressuredrug>Anti-hipertensivos</afflictionname.afpressuredrug>
+
+<!-- Saline -->
+<afflictionname.afsaline>Soro Fisiológico</afflictionname.afsaline>
+
+<!-- Ringer's solution -->
+<afflictionname.afringerssolution>Solução de Ringer</afflictionname.afringerssolution>
+
+<!-- Mannitol -->
+<afflictionname.afmannitol>Manitol</afflictionname.afmannitol>
+
+<!-- Antibiotics -->
+<afflictionname.afantibiotics>Antibióticos</afflictionname.afantibiotics>
+
+<!-- Anaesthetics -->
+<afflictionname.afanaesthetic>Anestésicos</afflictionname.afanaesthetic>
+
+<!-- Opioids -->
+<afflictionname.afopioid>Opiáceos</afflictionname.afopioid>
+
+<!-- Immunosuppressants -->
+<afflictionname.afimmunosuppressant>Imunossupressores</afflictionname.afimmunosuppressant>
+
+<!-- Laying down on a Surgery Table -->
+<afflictionname.laytable>Deitado</afflictionname.laytable>
+<afflictiondescription.laytable>Outras afecções estão sendo regeneradas durante o repouso.</afflictiondescription.laytable>
+
+<!-- ================================================= Kidneys ================================================= -->
+
+<!-- Kidney Damage -->
+<afflictionname.kidneydamage>Lesão Renal</afflictionname.kidneydamage>
+
+<!-- Kidneys Removed -->
+<afflictionname.kidneyremoved>Rins Removidos</afflictionname.kidneyremoved>
+<afflictiondescription.kidneyremoved>Os rins foram removidos cirurgicamente.</afflictiondescription.kidneyremoved>
+
+<!-- Replacing Kidneys -->
+<afflictionname.kidneyswap>Substituindo Rins</afflictionname.kidneyswap>
+<afflictiondescription.kidneyswap>Os rins antigos foram preparados cirurgicamente para um novo transplante.</afflictiondescription.kidneyswap>
+
+<!-- ================================================= Liver ================================================= -->
+
+<!-- Liver Damage -->
+<afflictionname.liverdamage>Lesão Hepática</afflictionname.liverdamage>
+
+<!-- Liver Removed -->
+<afflictionname.liverremoved>Fígado Removido</afflictionname.liverremoved>
+<afflictiondescription.liverremoved>O fígado foi removido cirurgicamente.</afflictiondescription.liverremoved>
+
+<!-- Replacing Liver -->
+<afflictionname.liverswap>Substituindo Fígado</afflictionname.liverswap>
+<afflictiondescription.liverswap>O fígado antigo foi preparado cirurgicamente para um novo transplante.</afflictiondescription.liverswap>
+
+<!-- ================================================= Lungs ================================================= -->
+
+<!-- Respiratory Arrest -->
+<afflictionname.respiratoryarrest>Parada Respiratória</afflictionname.respiratoryarrest>
+<afflictiondescription.respiratoryarrest>O paciente não está respirando. Uma condição letal que impede a oxigenação do sangue. Tipicamente causada por ‖color:gui.red‖Hipoxemia‖end‖, ‖color:gui.red‖Neurotrauma‖end‖ ou ‖color:gui.red‖Overdose de Opiáceos‖end‖. A ‖color:gui.green‖Ventilação Artificial‖end‖ de uma ‖color:gui.blue‖Mesa Cirúrgica‖end‖ compensará os efeitos adversos desta condição.</afflictiondescription.respiratoryarrest>
+
+<!-- Hyperventilation -->
+<afflictionname.hyperventilation>Hiperventilação</afflictionname.hyperventilation>
+<afflictiondescription.hyperventilation>O paciente está respirando em uma frequência alarmantemente rápida. Aumenta gradualmente a ‖color:gui.red‖Alcalose‖end‖ (não letal) e geralmente é causada por ‖color:gui.red‖Hipotensão‖end‖, ‖color:gui.red‖Hipoxemia‖end‖ ou ‖color:gui.red‖Pneumotórax‖end‖.</afflictiondescription.hyperventilation>
+
+<!-- Hypoventilation -->
+<afflictionname.hypoventilation>Hipoventilação</afflictionname.hypoventilation>
+<afflictiondescription.hypoventilation>O paciente está respirando em uma frequência alarmantemente lenta. Aumenta gradualmente a ‖color:gui.red‖Acidose‖end‖ potencialmente letal, que pode ser prevenida por meio de ‖color:gui.green‖Ventilação Artificial‖end‖ de uma ‖color:gui.blue‖Mesa Cirúrgica‖end‖. Geralmente é causada por ‖color:gui.green‖Analgesia‖end‖. ‖color:gui.red‖Acidose‖end‖ grave causará ‖color:gui.red‖Fibrilação‖end‖.</afflictiondescription.hypoventilation>
+
+<!-- Shortness of Breath -->
+<afflictionname.shortnessofbreath>Dispneia</afflictionname.shortnessofbreath>
+<afflictiondescription.shortnessofbreath>A respiração do paciente está difícil e superficial, geralmente causada por ‖color:gui.red‖Tamponamento Cardíaco‖end‖, ‖color:gui.red‖Pneumotórax‖end‖ ou ‖color:gui.red‖Hipoxemia‖end‖.</afflictiondescription.shortnessofbreath>
+
+<!-- Pneumothorax -->
+<afflictionname.pneumothorax>Pneumotórax</afflictionname.pneumothorax>
+
+<!-- Lung Damage -->
+<afflictionname.lungdamage>Lesão Pulmonar</afflictionname.lungdamage>
+
+<!-- Lungs Removed -->
+<afflictionname.lungremoved>Pulmões Removidos</afflictionname.lungremoved>
+<afflictiondescription.lungremoved>Os pulmões foram removidos cirurgicamente.</afflictiondescription.lungremoved>
+<afflictioncauseofdeath.lungswap>Morreu devido à ausência de pulmões</afflictioncauseofdeath.lungswap>
+<afflictioncauseofdeathself.lungswap>Seus pulmões foram removidos.</afflictioncauseofdeathself.lungswap>
+
+<!-- Lungs Swap-->
+<afflictionname.lungswap>Substituindo Pulmões</afflictionname.lungswap>
+<afflictiondescription.lungswap>Os pulmões antigos foram preparados cirurgicamente para um novo transplante.</afflictiondescription.lungswap>
+<afflictioncauseofdeath.lungswap>Morreu devido à ausência de pulmões</afflictioncauseofdeath.lungswap>
+<afflictioncauseofdeathself.lungswap>Seus pulmões estavam em processo de substituição.</afflictioncauseofdeathself.lungswap>
+
+<!-- ================================================= Surgical ================================================= -->
+
+<!-- Surgery Incision -->
+<afflictionname.surgeryincision>Incisão Cirúrgica</afflictionname.surgeryincision>
+<afflictiondescription.surgeryincision>Uma incisão foi realizada com um ‖color:gui.blue‖Bisturi‖end‖.</afflictiondescription.surgeryincision>
+
+<!-- Clamped Bleeding -->
+<afflictionname.clampedbleeding>Hemostasia Pinçada</afflictionname.clampedbleeding>
+<afflictiondescription.clampedbleeding>O sangramento causado pela incisão foi contido utilizando uma ‖color:gui.blue‖Pinça Hemostática‖end‖.</afflictiondescription.clampedbleeding>
+
+<!-- Retracted Skin-->
+<afflictionname.retractedskin>Pele Afastada</afflictionname.retractedskin>
+<afflictiondescription.retractedskin>A pele está sendo mantida aberta por um conjunto de ‖color:gui.blue‖Afastadores Cirúrgicos‖end‖.</afflictiondescription.retractedskin>
+
+<!-- Drilled Bones -->
+<afflictionname.drilledbones>Ossos Perfurados</afflictionname.drilledbones>
+<afflictiondescription.drilledbones>Os ossos foram preparados para procedimentos ortopédicos utilizando uma ‖color:gui.blue‖Perfuratriz Cirúrgica‖end‖.</afflictiondescription.drilledbones>
+
+<!-- Stitched Incision -->
+<afflictionname.suturedi>Incisão Suturada</afflictionname.suturedi>
+<afflictiondescription.suturedi>Uma incisão foi fechada utilizando ‖color:gui.blue‖Suturas‖end‖.</afflictiondescription.suturedi>
+
+<!-- Bones Sawed-->
+<afflictionname.sawedbones>Ossos Serrados</afflictionname.sawedbones>
+<afflictiondescription.sawedbones>O osso foi seccionado utilizando uma ‖color:gui.blue‖Serra Cirúrgica‖end‖.</afflictiondescription.sawedbones>
+
+<!-- Ballooned Aorta -->
+<afflictionname.balloonedaorta>Aorta Ocluída por Balão</afflictionname.balloonedaorta>
+<afflictiondescription.balloonedaorta>A hemorragia da aorta cessou, mas o fluxo sanguíneo para suas extremidades e órgãos foi interrompido.</afflictiondescription.balloonedaorta>
+
+<!-- Stitched Wound -->
+<afflictionname.suturedw>Ferida Suturada</afflictionname.suturedw>
+<afflictiondescription.suturedw>Os ferimentos foram fechados utilizando ‖color:gui.blue‖Suturas‖end‖.</afflictiondescription.suturedw>
+
+<!-- Traumatic Shock -->
+<afflictionname.traumaticshock>Choque Traumático</afflictionname.traumaticshock>
+<afflictiondescription.traumaticshock>Ocorre geralmente durante condições cirúrgicas inseguras, causando ‖color:gui.red‖Hipotensão‖end‖ potencialmente letal. Para realizar uma cirurgia segura, o paciente deve estar sob o efeito de ‖color:gui.green‖Analgesia‖end‖ e próximo a qualquer ‖color:gui.blue‖Cama‖end‖, ou estar ‖color:gui.red‖Inconsciente‖end‖.</afflictiondescription.traumaticshock>
+
+<!-- Cavity Cleaning -->
+<afflictionname.caviclean>Lavagem da cavidade abdominal</afflictionname.caviclean>
+<afflictiondescription.caviclean>A cavidade abdominal está sendo irrigada com soro fisiológico pressurizado, removendo focos de infecções.</afflictiondescription.caviclean>
+
+<!-- ================================================= Symptoms ================================================= -->
+
+<!-- Cough -->
+<afflictionname.cough>Tosse</afflictionname.cough>
+<afflictiondescription.cough>O paciente está tossindo periodicamente. Geralmente causada por ‖color:gui.red‖Tamponamento Cardíaco‖end‖, ‖color:gui.red‖Lesão Pulmonar‖end‖ ou ‖color:gui.red‖Lesão Cardíaca‖end‖.</afflictiondescription.cough>
+
+<!-- Pale Skin -->
+<afflictionname.paleskin>Palidez Cutânea</afflictionname.paleskin>
+<afflictiondescription.paleskin>A pele do paciente está pálida. Geralmente causada por ‖color:gui.red‖Hipoxemia‖end‖ ou ‖color:gui.red‖Perda Sanguínea‖end‖.</afflictiondescription.paleskin>
+
+<!-- Lightheadedness -->
+<afflictionname.lightheadedness>Tontura</afflictionname.lightheadedness>
+<afflictiondescription.lightheadedness>O paciente está apresentando tontura. Geralmente causada por ‖color:gui.red‖Hipotensão‖end‖.</afflictiondescription.lightheadedness>
+
+<!-- Blurred Vision -->
+<afflictionname.blurredvision>Visão Turva</afflictionname.blurredvision>
+<afflictiondescription.blurredvision>O paciente está apresentando visão embaçada. Geralmente causada por ‖color:gui.red‖Hipotensão‖end‖ ou ‖color:gui.red‖Concussão‖end‖.</afflictiondescription.blurredvision>
+
+<!-- Confusion -->
+<afflictionname.confusion>Confusão Mental</afflictionname.confusion>
+<afflictiondescription.confusion>O paciente parece desorientado e confuso. Geralmente causada por ‖color:gui.red‖Hipoxemia‖end‖, ‖color:gui.red‖Acidose‖end‖ ou ‖color:gui.red‖Concussão‖end‖.</afflictiondescription.confusion>
+
+<!-- Headache -->
+<afflictionname.headache>Cefaleia</afflictionname.headache>
+<afflictiondescription.headache>O paciente está apresentando dor de cabeça. Geralmente causada por ‖color:gui.red‖Hipoxemia‖end‖, ‖color:gui.red‖Fratura Craniana‖end‖, ‖color:gui.red‖Acidose‖end‖, ‖color:gui.red‖Concussão‖end‖ ou ‖color:gui.red‖Acidente Vascular Cerebral‖end‖.</afflictiondescription.headache>
+
+<!-- Leg Swelling -->
+<afflictionname.legswelling>Edema nos Membros Inferiores</afflictionname.legswelling>
+<afflictiondescription.legswelling>As pernas do paciente estão inchadas. Geralmente causado por ‖color:gui.red‖Lesão Hepática‖end‖, ‖color:gui.red‖Renal‖end‖ ou ‖color:gui.red‖Lesão Cardíaca‖end‖ grave.</afflictiondescription.legswelling>
+
+<!-- Weakness -->
+<afflictionname.weakness>Fraqueza Muscular</afflictionname.weakness>
+<afflictiondescription.weakness>O paciente está apresentando fraqueza nas extremidades. Geralmente causada por ‖color:gui.red‖Tamponamento Cardíaco‖end‖, ‖color:gui.red‖Perda Sanguínea‖end‖ ou ‖color:gui.red‖Acidose‖end‖.</afflictiondescription.weakness>
+
+<!-- Wheezing -->
+<afflictionname.wheezing>Sibilância</afflictionname.wheezing>
+<afflictiondescription.wheezing>A respiração do paciente está produzindo um som agudo e sibilante. Geralmente causada por ‖color:gui.red‖Choque Hemotransfusional‖end‖.</afflictiondescription.wheezing>
+
+<!-- Vomiting -->
+<afflictionname.vomiting>Vomitando</afflictionname.vomiting>
+<afflictiondescription.vomiting>O paciente está vomitando periodicamente. Geralmente causada por ‖color:gui.red‖Lesão Renal‖end‖, consumo de álcool ou ‖color:gui.red‖Choque Hemotransfusional‖end‖. O vômito causará ‖color:gui.red‖Alcalose‖end‖.</afflictiondescription.vomiting>
+<afflictioncauseofdeath.vomiting>Asfixiado pelo próprio vômito</afflictioncauseofdeath.vomiting>
+<afflictioncauseofdeathself.vomiting>Você se asfixiou com o próprio vômito.</afflictioncauseofdeathself.vomiting>
+
+<!-- Vomiting Blood -->
+<afflictionname.vomitingblood>Vomitando Sangue</afflictionname.vomitingblood>
+<afflictiondescription.vomitingblood>O paciente está vomitando sangue periodicamente. Geralmente causada por ‖color:gui.red‖Hemorragia Interna‖end‖ grave ou ‖color:gui.red‖Lesão Hepática‖end‖.</afflictiondescription.vomitingblood>
+
+<!-- Fever -->
+<afflictionname.fever>Febre</afflictionname.fever>
+<afflictiondescription.fever>A temperatura corporal do paciente está elevada. Geralmente causada por ‖color:gui.red‖Sepse‖end‖ ou ‖color:gui.red‖Cavidade Abdominal Infectada‖end‖.</afflictiondescription.fever>
+
+<!-- Abdominal Discomfort -->
+<afflictionname.abdominaldiscomfort>Desconforto Abdominal</afflictionname.abdominaldiscomfort>
+<afflictiondescription.abdominaldiscomfort>O paciente está apresentando desconforto abdominal. Geralmente causado por ‖color:gui.red‖Lesão Hepática‖end‖.</afflictiondescription.abdominaldiscomfort>
+
+<!-- Bloating -->
+<afflictionname.bloating>Distensão Abdominal</afflictionname.bloating>
+<afflictiondescription.bloating>O abdômen do paciente está distendido. Geralmente causada por ‖color:gui.red‖Lesão Hepática‖end‖.</afflictiondescription.bloating>
+
+<!-- Jaundice -->
+<afflictionname.jaundice>Icterícia</afflictionname.jaundice>
+<afflictiondescription.jaundice>A pele do paciente adquiriu uma tonalidade amarelada doentia. Geralmente causada por ‖color:gui.red‖Lesão Hepática‖end‖ grave.</afflictiondescription.jaundice>
+
+<!-- Sweating -->
+<afflictionname.sweating>Suando</afflictionname.sweating>
+<afflictiondescription.sweating>O paciente está suando excessivamente. Geralmente causada por um ‖color:gui.red‖Infarto Agudo do Miocárdio‖end‖ ou ‖color:gui.red‖Abstinência Química‖end‖.</afflictiondescription.sweating>
+
+<!-- Palpitations -->
+<afflictionname.palpitations>Palpitações</afflictionname.palpitations>
+<afflictiondescription.palpitations>O paciente está apresentando palpitações. Geralmente causadas por ‖color:gui.red‖Alcalose‖end‖.</afflictiondescription.palpitations>
+
+<!-- Unconsciousness -->
+<afflictionname.unconsciousness>Inconsciência</afflictionname.unconsciousness>
+<afflictiondescription.unconsciousness>O paciente está inconsciente. Geralmente causada por trauma físico grave, ‖color:gui.red‖Hipoxemia‖end‖, ‖color:gui.red‖Neurotrauma‖end‖, ‖color:gui.red‖Ruptura Aórtica‖end‖ ou ‖color:gui.red‖Overdose de Opiáceos‖end‖.</afflictiondescription.unconsciousness>
+
+<!-- Inflammation -->
+<afflictionname.inflammation>Inflamação</afflictionname.inflammation>
+<afflictiondescription.inflammation>A região apresenta vermelhidão, inchaço e aumento da temperatura local. Geralmente causada por uma ‖color:gui.red‖infecção‖end‖ ou pela presença de ‖color:gui.red‖corpos estranhos‖end‖.</afflictiondescription.inflammation>
+
+<!-- Spasms -->
+<afflictionname.spasm>Espasmos</afflictionname.spasm>
+<afflictiondescription.spasm>O paciente não consegue controlar os movimentos erráticos do membro. Geralmente causado por ‖color:gui.red‖Acidose‖end‖ grave, ‖color:gui.red‖Alcalose‖end‖, ‖color:gui.red‖Acidente Vascular Cerebral‖end‖, ‖color:gui.red‖Overdose de Opiáceos‖end‖ ou ‖color:gui.red‖Síndrome Aguda da Radiação‖end‖.</afflictiondescription.spasm>
+
+<!-- Craving -->
+<afflictionname.craving>Fissura</afflictionname.craving>
+<afflictiondescription.craving>Desejo compulsivo por drogas, causado por ‖color:gui.red‖Abstinência‖end‖.</afflictiondescription.craving>
+
+<!-- Nausea -->
+<afflictionname.nausea_nt>Náusea</afflictionname.nausea_nt>
+<afflictiondescription.nausea_nt>A pele está fria e pegajosa e o paciente apresenta ânsia de vômito. Geralmente causada por ‖color:gui.red‖Lesão Renal‖end‖, ‖color:gui.red‖Concussão‖end‖, ‖color:gui.red‖Abstinência Química‖end‖ ou ‖color:gui.red‖Choque Hemotransfusional‖end‖. O vômito causará ‖color:gui.red‖Alcalose‖end‖.</afflictiondescription.nausea_nt>
+
+<!-- On Fire -->
+<afflictionname.onfire>Em Chamas!</afflictionname.onfire>
+<afflictiondescription.onfire>O paciente está queimando vivo! Pegue um extintor!</afflictiondescription.onfire>
+
+<!-- Chest Pain -->
+<afflictionname.chestpain>Dor Torácica</afflictionname.chestpain>
+<afflictiondescription.chestpain>O paciente relata dor aguda e penetrante no peito. Geralmente causada por ‖color:gui.red‖Choque Hemotransfusional‖end‖ ou ‖color:gui.red‖Fratura de Costelas‖end‖.</afflictiondescription.chestpain>
+
+<!-- Abdominal Pain -->
+<afflictionname.abdominalpain>Dor Abdominal</afflictionname.abdominalpain>
+<afflictiondescription.abdominalpain>O paciente relata dor persistente no abdômen. Geralmente causada por ‖color:gui.red‖Choque Hemotransfusional‖end‖.</afflictiondescription.abdominalpain>
+
+<!-- Intense Pain -->
+<afflictionname.intensepain>Dor Intensa</afflictionname.intensepain>
+<afflictiondescription.intensepain>O paciente relata dor intensa na área afetada. Geralmente causada por ‖color:gui.red‖Luxações‖end‖ ou ‖color:gui.red‖Fraturas‖end‖.</afflictiondescription.intensepain>
+
+<!-- ================================================= Torso ================================================= -->
+
+<!-- Internal Bleeding -->
+<afflictionname.internalbleeding>Hemorragia Interna</afflictionname.internalbleeding>
+
+<!-- Aortic Rupture -->
+<afflictionname.aorticrupture>Ruptura da aorta</afflictionname.aorticrupture>
+
+<!-- Infected Stomach Cavity -->
+<afflictionname.infectedcavity>Cavidade Abdominal Infectada</afflictionname.infectedcavity>
+
+<!-- ================================================= Invisible Afflictions ================================================= -->
+<afflictionname.safesurgery>Cirurgia Segura</afflictionname.safesurgery>
+<afflictionname.artificialventilation>Ventilação Artificial</afflictionname.artificialventilation>
+
+<!-- ================================================= ITEMS ================================================= -->
+
+<!-- ================================================= Blood Stuff ================================================= -->
+
+<!-- Hematology Analyzer -->
+<entityname.bloodanalyzer>Analisador Hematológico</entityname.bloodanalyzer>
+<entitydescription.bloodanalyzer>Um equipamento que exibe o tipo sanguíneo e a imunidade do paciente. Também indica se o paciente apresenta ‖color:gui.red‖Perda Sanguínea‖end‖, ‖color:gui.red‖Sepse‖end‖, ‖color:gui.red‖Acidose‖end‖, ‖color:gui.red‖Alcalose‖end‖ ou substâncias na corrente sanguínea. Se um ‖color:gui.blue‖cartão de doador em branco‖end‖ for inserido, imprimirá o tipo sanguíneo do paciente em seu cartão de identificação. Se uma ‖color:gui.blue‖bolsa de sangue‖end‖ for inserida, qualquer ‖color:gui.red‖Sepse‖end‖, ‖color:gui.red‖Acidose‖end‖ ou ‖color:gui.red‖Alcalose‖end‖ presente será exibida. O analisador requer uma pequena amostra de ‖color:gui.red‖sangue‖end‖ para imprimir cartões de doador.</entitydescription.bloodanalyzer>
+
+<!-- Blank Donor Card -->
+<entityname.bloodcollector>Cartão de Doador em Branco</entityname.bloodcollector>
+<entitydescription.bloodcollector>Um cartão de doador vazio utilizado pelo ‖color:gui.blue‖analisador hematológico‖end‖ para registrar o tipo sanguíneo de um paciente.</entitydescription.bloodcollector>
+
+<!-- Empty Blood Pack -->
+<entityname.emptybloodpack>Bolsa de Sangue Vazia</entityname.emptybloodpack>
+<entitydescription.emptybloodpack>Uma bolsa vazia para coleta de sangue. O sangue coletado reterá uma pequena fração de ‖color:gui.red‖Acidose‖end‖, ‖color:gui.red‖Alcalose‖end‖ ou ‖color:gui.red‖Sepse‖end‖ do doador, caso estejam presentes. É seguro coletar uma única bolsa de sangue de um paciente, desde que esteja saudável. Em caso de falha, será coletada uma quantidade ‖color:gui.red‖potencialmente letal‖end‖ de sangue.</entitydescription.emptybloodpack>
+  
+<!-- Blood Pack O+ -->
+<entityname.bloodpacko_positive>Bolsa de Sangue O+</entityname.bloodpacko_positive>
+<entitydescription.bloodpacko_positive>Compatível com: O+, A+, B+, AB+</entitydescription.bloodpacko_positive>
+  
+<!-- Blood Pack O- -->
+<entityname.antibloodloss2>Bolsa de Sangue O-</entityname.antibloodloss2>
+<entitydescription.antibloodloss2>Uma bolsa de sangue que pode ser transfundida em qualquer paciente.</entitydescription.antibloodloss2>
+  
+<!-- Blood Pack A+ -->
+<entityname.bloodpacka_positive>Bolsa de Sangue A+</entityname.bloodpacka_positive>
+<entitydescription.bloodpacka_positive>Compatível com: A+, AB+</entitydescription.bloodpacka_positive>
+  
+<!-- Blood Pack A- -->
+<entityname.bloodpacka_negative>Bolsa de Sangue A-</entityname.bloodpacka_negative>
+<entitydescription.bloodpacka_negative>Compatível com: A-, A+, AB-, AB+</entitydescription.bloodpacka_negative>
+  
+<!-- Blood Pack B+ -->
+<entityname.bloodpackb_positive>Bolsa de Sangue B+</entityname.bloodpackb_positive>
+<entitydescription.bloodpackb_positive>Compatível com: B+, AB+</entitydescription.bloodpackb_positive>
+  
+<!-- Blood Pack B- -->
+<entityname.bloodpackb_negative>Bolsa de Sangue B-</entityname.bloodpackb_negative>
+<entitydescription.bloodpackb_negative>Compatível com: B-, B+, AB-, AB+</entitydescription.bloodpackb_negative>
+  
+<!-- Blood Pack AB+ -->
+<entityname.bloodpackab_positive>Bolsa de Sangue AB+</entityname.bloodpackab_positive>
+<entitydescription.bloodpackab_positive>Compatível com: AB+</entitydescription.bloodpackab_positive>
+  
+<!-- Blood Pack AB- -->
+<entityname.bloodpackab_negative>Bolsa de Sangue AB-</entityname.bloodpackab_negative>
+<entitydescription.bloodpackab_negative>Compatível com: AB-, AB+</entitydescription.bloodpackab_negative>
+  
+<!-- Donor card O- -->
+<entityname.o_negativecard>Cartão de Doador O-</entityname.o_negativecard>
+<entitydescription.o_negativecard>Pode receber sangue de: O-
+Pode doar sangue para: todos</entitydescription.o_negativecard>
+  
+<!-- Donor card O+ -->
+<entityname.o_positivecard>Cartão de Doador O+</entityname.o_positivecard>
+<entitydescription.o_positivecard>Pode receber sangue de: O-, O+
+Pode doar sangue para: O+, A+, B+, AB+</entitydescription.o_positivecard>
+  
+<!-- Donor card A- -->
+<entityname.a_negativecard>Cartão de Doador A-</entityname.a_negativecard>
+<entitydescription.a_negativecard>Pode receber sangue de: O-, A-
+Pode doar sangue para: A-, A+, AB-, AB+</entitydescription.a_negativecard>
+  
+<!-- Donor card A+ -->
+<entityname.a_positivecard>Cartão de Doador A+</entityname.a_positivecard>
+<entitydescription.a_positivecard>Pode receber sangue de: O-, O+, A-, A+
+Pode doar sangue para: A+, AB+</entitydescription.a_positivecard>
+  
+<!-- Donor card B- -->
+<entityname.b_negativecard>Cartão de Doador B-</entityname.b_negativecard>
+<entitydescription.b_negativecard>Pode receber sangue de: O-, B-
+Pode doar sangue para: B-, B+, AB-, AB+</entitydescription.b_negativecard>
+  
+<!-- Donor card B+ -->
+<entityname.b_positivecard>Cartão de Doador B+</entityname.b_positivecard>
+<entitydescription.b_positivecard>Pode receber sangue de: O-, O+, B-, B+
+Pode doar sangue para: B+, AB+</entitydescription.b_positivecard>
+  
+<!-- Donor card AB- -->
+<entityname.ab_negativecard>Cartão de Doador AB-</entityname.ab_negativecard>
+<entitydescription.ab_negativecard>Pode receber sangue de: O-, A-, B-, AB-
+Pode doar sangue para: AB-, AB+</entitydescription.ab_negativecard>
+  
+<!-- Donor card AB+ -->
+<entityname.ab_positivecard>Cartão de Doador AB+</entityname.ab_positivecard>
+<entitydescription.ab_positivecard>Pode receber sangue de: todos
+Pode doar sangue para: AB+</entitydescription.ab_positivecard>
+
+<!-- ================================================= Bodyparts ================================================= -->
+  
+<!-- Right Arm -->
+<entityname.rarm>Braço Direito</entityname.rarm>
+<entitydescription.rarm>Um braço direito decepado. Pode ser reimplantado cirurgicamente após ‖color:gui.orange‖Serrar Ossos‖end‖. Membros decepados entram em decomposição lentamente a menos que sejam refrigerados, embora a condição do membro não importe para fins de transplante. Os ossos são ricos em ‖color:gui.blue‖Cálcio‖end‖ e são um petisco saboroso para mascotes.</entitydescription.rarm>
+  
+<!-- Left Arm -->
+<entityname.larm>Braço Esquerdo</entityname.larm>
+<entitydescription.larm>Um braço esquerdo decepado. Pode ser reimplantado cirurgicamente após ‖color:gui.orange‖Serrar Ossos‖end‖. Membros decepados entram em decomposição lentamente a menos que sejam refrigerados, embora a condição do membro não importe para fins de transplante. Os ossos são ricos em ‖color:gui.blue‖Cálcio‖end‖ e são um petisco saboroso para mascotes.</entitydescription.larm>
+  
+<!-- Right Leg -->
+<entityname.rleg>Perna Direita</entityname.rleg>
+<entitydescription.rleg>Uma perna direita decepada. Pode ser reimplantada cirurgicamente após ‖color:gui.orange‖Serrar Ossos‖end‖. Membros decepados entram em decomposição lentamente a menos que sejam refrigerados, embora a condição do membro não importe para fins de transplante. Os ossos são ricos em ‖color:gui.blue‖Cálcio‖end‖ e são um petisco saboroso para mascotes.</entitydescription.rleg>
+  
+<!-- Left Leg -->
+<entityname.lleg>Perna Esquerda</entityname.lleg>
+<entitydescription.lleg>Uma perna esquerda decepada. Pode ser reimplantada cirurgicamente após ‖color:gui.orange‖Serrar Ossos‖end‖. Membros decepados entram em decomposição lentamente a menos que sejam refrigerados, embora a condição do membro não importe para fins de transplante. Os ossos são ricos em ‖color:gui.blue‖Cálcio‖end‖ e são um petisco saboroso para mascotes.</entitydescription.lleg>
+  
+<!-- Severed Head -->
+<entityname.headta>Restos de Cabeça</entityname.headta>
+<entitydescription.headta>Os restos de uma cabeça humana que foi arrancada. O rosto está mutilado e irreconhecível, e entrará em decomposição lentamente a menos que seja refrigerado. Os ossos são ricos em ‖color:gui.blue‖Cálcio‖end‖ e são um petisco saboroso para mascotes. Não, você não pode transplantá-la, nem pense nisso.</entitydescription.headta>
+  
+<!-- Amputated Head -->
+<entityname.headsa>Cabeça Amputada</entityname.headsa>
+<entitydescription.headsa>Uma cabeça amputada em um saco que entrará em decomposição lentamente a menos que seja refrigerada. Os ossos são ricos em ‖color:gui.blue‖Cálcio‖end‖ e são um petisco saboroso para mascotes. Não, você não pode transplantá-la, nem pense nisso.</entitydescription.headsa>
+  
+<!-- Right Arm Prosthesis -->
+<entityname.rarmp>Prótese Biônica de Braço Direito</entityname.rarmp>
+<entitydescription.rarmp>Um braço direito biônico. Pode ser usado para tratar amputações, transformando-se em um braço biológico. Pode ser implantado após ‖color:gui.orange‖Serrar Ossos‖end‖.</entitydescription.rarmp>
+  
+<!-- Left Arm Prosthesis -->
+<entityname.larmp>Prótese Biônica de Braço Esquerdo</entityname.larmp>
+<entitydescription.larmp>Um braço esquerdo biônico. Pode ser usado para tratar amputações, transformando-se em um braço biológico. Pode ser implantado após ‖color:gui.orange‖Serrar Ossos‖end‖.</entitydescription.larmp>
+  
+<!-- Right Leg Prosthesis -->
+<entityname.rlegp>Prótese Biônica de Perna Direita</entityname.rlegp>
+<entitydescription.rlegp>Uma perna direita biônica. Pode ser usada para tratar amputações, transformando-se em uma perna biológica. Pode ser implantada após ‖color:gui.orange‖Serrar Ossos‖end‖.</entitydescription.rlegp>
+  
+<!-- Left Leg Prosthesis -->
+<entityname.llegp>Prótese Biônica de Perna Esquerda</entityname.llegp>
+<entitydescription.llegp>Uma perna esquerda biônica. Pode ser usada para tratar amputações, transformando-se em uma perna biológica. Pode ser implantada após ‖color:gui.orange‖Serrar Ossos‖end‖.</entitydescription.llegp>
+  
+<!-- Liver Transplant Item -->
+<entityname.livertransplant>Fígado para Transplante</entityname.livertransplant>
+<entitydescription.livertransplant>Um fígado humano. Para transplantar um órgão, o antigo deve ser removido e o novo inserido no lugar. Órgãos entram em decomposição rapidamente se não forem refrigerados ou mantidos em um humano, e são um petisco saboroso para mascotes.</entitydescription.livertransplant>
+<entityname.livertransplant_q1>Fígado para Transplante</entityname.livertransplant_q1>
+<entitydescription.livertransplant_q1>Um fígado humano. Para transplantar um órgão, o antigo deve ser removido e o novo inserido no lugar. Órgãos entram em decomposição rapidamente se não forem refrigerados ou mantidos em um humano, e são um petisco saboroso para mascotes.</entitydescription.livertransplant_q1>
+<entityname.livertransplant_q2>Fígado para Transplante</entityname.livertransplant_q2>
+<entityname.livertransplant_q3>Fígado para Transplante</entityname.livertransplant_q3>
+<entityname.livertransplant_q4>Fígado para Transplante</entityname.livertransplant_q4>
+<entityname.livertransplant_q5>Fígado para Transplante</entityname.livertransplant_q5>
+  
+<!-- Lungs Transplant Item -->
+<entityname.lungtransplant>Pulmões para Transplante</entityname.lungtransplant>
+<entitydescription.lungtransplant>Um par de pulmões humanos. Para transplantar um órgão, o antigo deve ser removido e o novo inserido no lugar. Órgãos entram em decomposição rapidamente se não forem refrigerados ou mantidos em um humano, e são um petisco saboroso para mascotes.</entitydescription.lungtransplant>
+<entityname.lungtransplant_q1>Pulmões para Transplante</entityname.lungtransplant_q1>
+<entitydescription.lungtransplant_q1>Um par de pulmões humanos. Para transplantar um órgão, o antigo deve ser removido e o novo inserido no lugar. Órgãos entram em decomposição rapidamente se não forem refrigerados ou mantidos em um humano, e são um petisco saboroso para mascotes.</entitydescription.lungtransplant_q1>
+<entityname.lungtransplant_q2>Pulmões para Transplante</entityname.lungtransplant_q2>
+<entityname.lungtransplant_q3>Pulmões para Transplante</entityname.lungtransplant_q3>
+<entityname.lungtransplant_q4>Pulmões para Transplante</entityname.lungtransplant_q4>
+<entityname.lungtransplant_q5>Pulmões para Transplante</entityname.lungtransplant_q5>
+  
+<!-- Kidney Transplant Item -->
+<entityname.kidneytransplant>Rins para Transplante</entityname.kidneytransplant>
+<entitydescription.kidneytransplant>Um rim humano. Para transplantar um órgão, o antigo deve ser removido e o novo inserido no lugar. Órgãos entram em decomposição rapidamente se não forem refrigerados ou mantidos em um humano, e são um petisco saboroso para mascotes.</entitydescription.kidneytransplant>
+<entityname.kidneytransplant_q1>Rins para Transplante</entityname.kidneytransplant_q1>
+<entitydescription.kidneytransplant_q1>Um rim humano. Para transplantar um órgão, o antigo deve ser removido e o novo inserido no lugar. Órgãos entram em decomposição rapidamente se não forem refrigerados ou mantidos em um humano, e são um petisco saboroso para mascotes.</entitydescription.kidneytransplant_q1>
+<entityname.kidneytransplant_q2>Rins para Transplante</entityname.kidneytransplant_q2>
+<entityname.kidneytransplant_q3>Rins para Transplante</entityname.kidneytransplant_q3>
+<entityname.kidneytransplant_q4>Rins para Transplante</entityname.kidneytransplant_q4>
+<entityname.kidneytransplant_q5>Rins para Transplante</entityname.kidneytransplant_q5>
+  
+<!-- Heart Transplant Item -->
+<entityname.hearttransplant>Coração para Transplante</entityname.hearttransplant>
+<entitydescription.hearttransplant>Um coração humano. Para transplantar um órgão, o antigo deve ser removido e o novo inserido no lugar. Órgãos entram em decomposição rapidamente se não forem refrigerados ou mantidos em um humano, e são um petisco saboroso para mascotes.</entitydescription.hearttransplant>
+<entityname.hearttransplant_q1>Coração para Transplante</entityname.hearttransplant_q1>
+<entitydescription.hearttransplant_q1>Um coração humano. Para transplantar um órgão, o antigo deve ser removido e o novo inserido no lugar. Órgãos entram em decomposição rapidamente se não forem refrigerados ou mantidos em um humano, e são um petisco saboroso para mascotes.</entitydescription.hearttransplant_q1>
+<entityname.hearttransplant_q2>Coração para Transplante</entityname.hearttransplant_q2>
+<entityname.hearttransplant_q3>Coração para Transplante</entityname.hearttransplant_q3>
+<entityname.hearttransplant_q4>Coração para Transplante</entityname.hearttransplant_q4>
+<entityname.hearttransplant_q5>Coração para Transplante</entityname.hearttransplant_q5>
+  
+<!-- Brain Transplant Item -->
+<entityname.braintransplant>Cérebro para Transplante</entityname.braintransplant>
+<entitydescription.braintransplant>Um cérebro humano. Para transplantar um órgão, o antigo deve ser removido e o novo inserido no lugar. O cérebro entrará em decomposição mesmo se refrigerado e é extremamente frágil, sendo também um petisco saboroso para mascotes.</entitydescription.braintransplant>
+
+<!-- Arm Locks -->
+<entityname.armlock>Braço Incapacitado</entityname.armlock>
+<entitydescription.armlock>Este braço tornou-se inutilizável! \nIsso pode ser decorrente de uma ‖color:gui.red‖Luxação‖end‖, uma ‖color:gui.red‖Fratura‖end‖ ou uma ‖color:gui.red‖Amputação‖end‖.</entitydescription.armlock>
+
+<!-- ================================================= Consumables ================================================= -->
+  
+<!-- Mannitol -->
+<entityname.mannitol>Manitol</entityname.mannitol>
+<entitydescription.mannitol>Um poliálcool utilizado para tratar uma quantidade significativa de ‖color:gui.green‖Neurotrauma‖end‖ e reduzir pela metade sua taxa de progressão. Contudo, não fará efeito a menos que o paciente tenha mais de 70% de Pressão Arterial e sangue oxigenado. Além disso, causará ‖color:gui.red‖Lesão Cardíaca‖end‖ e ‖color:gui.red‖Lesão Renal‖end‖. Em caso de falha, é menos eficaz e causará ainda mais ‖color:gui.red‖Lesão Cardíaca‖end‖ e ‖color:gui.red‖Renal‖end‖.</entitydescription.mannitol>
+  
+<!-- Streptokinase -->
+<entityname.streptokinase>Estreptoquinase</entityname.streptokinase>
+<entitydescription.streptokinase>Uma enzima trombolítica que dissolve coágulos sanguíneos, útil no tratamento de ‖color:gui.green‖Infartos Agudos do Miocárdio‖end‖. Entretanto, aumentará o risco de ‖color:gui.red‖Acidentes Vasculares Cerebrais‖end‖ se o paciente tiver mais de 150% de Pressão Arterial. Além disso, é utilizada para tratar ‖color:gui.green‖Choque Hemotransfusional‖end‖.</entitydescription.streptokinase>
+  
+<!-- Azathioprine -->
+<entityname.immunosuppressant>Azatioprina</entityname.immunosuppressant>
+<entitydescription.immunosuppressant>Um imunossupressor que reduzirá a ‖color:gui.green‖Imunidade‖end‖ do paciente. Isso é útil para prevenir a ‖color:gui.green‖Rejeição de Órgãos‖end‖ ou para ‖color:gui.green‖administrar tipos sanguíneos incompatíveis‖end‖ sem desencadear uma resposta imune. Contudo, uma imunidade reduzida tornará o paciente mais suscetível à ‖color:gui.red‖Sepse‖end‖. Se um paciente receber um transplante de órgão e este falhar imediatamente, significa que foi rejeitado pelo sistema imunológico. Em caso de falha, causa ‖color:gui.red‖Sepse‖end‖.</entitydescription.immunosuppressant>
+  
+<!-- Thiamine -->
+<entityname.thiamine>Tiamina</entityname.thiamine>
+<entitydescription.thiamine>Também conhecida como Vitamina B1. Estes comprimidos fornecem um leve estímulo à ‖color:gui.green‖Regeneração de Órgãos‖end‖. Em caso de falha, é menos eficaz.</entitydescription.thiamine>
+  
+<!-- Antibiotic ointment -->
+<entityname.ointment>Pomada Antibiótica</entityname.ointment>
+<entitydescription.ointment>Um gel antisséptico que auxilia no combate a ‖color:gui.green‖Feridas Infectadas‖end‖ e alivia ‖color:gui.green‖Queimaduras‖end‖ leves. Em caso de falha, é menos eficaz.</entitydescription.ointment>
+
+<!-- Tourniquet -->
+<entityname.tourniquet>Torniquete</entityname.tourniquet>
+<entitydescription.tourniquet>Um dispositivo que previne a ‖color:gui.green‖Perda Sanguínea por Hemorragia Arterial‖end‖. Não pode ser utilizado na ‖color:gui.red‖Artéria Carótida‖end‖. Um membro com torniquete desenvolverá ‖color:gui.red‖Gangrena‖end‖ ao longo do tempo, sendo removido durante procedimentos cirúrgicos. Em caso de falha, causa ‖color:gui.red‖Trauma Contuso‖end‖.</entitydescription.tourniquet>
+  
+<!-- Drainage -->
+<entityname.drainage>Drenagem</entityname.drainage>
+<entitydescription.drainage>Trata ‖color:gui.green‖Pneumotórax‖end‖ e ‖color:gui.green‖Tamponamento Cardíaco‖end‖ drenando ar e fluidos, respectivamente. Pode ser utilizado após a ‖color:gui.orange‖Retração de Pele‖end‖.</entitydescription.drainage>
+  
+<!-- Needle -->
+<entityname.needle>Agulha</entityname.needle>
+<entitydescription.needle>Uma agulha especializada utilizada para descomprimir o acúmulo de ar e fluidos, como opção de primeiros socorros para ‖color:gui.green‖Pneumotórax‖end‖ e ‖color:gui.green‖Tamponamento Cardíaco‖end‖. Se o paciente ainda não tiver Pneumotórax, ela ‖color:gui.red‖causará um‖end‖. Em caso de falha, causa ‖color:gui.red‖Lesão de Órgãos‖end‖ e ‖color:gui.red‖Sangramento‖end‖.</entitydescription.needle>
+  
+<!-- Ringer's solution -->
+<entityname.ringerssolution>Solução de Ringer</entityname.ringerssolution>
+<entitydescription.ringerssolution>Uma solução isotônica utilizada para elevar a ‖color:gui.green‖Pressão Arterial‖end‖, causando adicionalmente ‖color:gui.green‖Alcalose‖end‖. Em caso de falha, possui menor duração.</entitydescription.ringerssolution>
+  
+<!-- Propofol -->
+<entityname.propofol>Propofol</entityname.propofol>
+<entitydescription.propofol>Um ‖color:gui.green‖Anestésico‖end‖ geral. Seus efeitos iniciam após algum tempo e não duram muito. Pacientes anestesiados ficam ‖color:gui.red‖Inconscientes‖end‖ e não sofrem ‖color:gui.green‖Choque Traumático‖end‖ durante operações cirúrgicas. O uso pode ser acompanhado de diversos ‖color:gui.red‖Efeitos Colaterais‖end‖ não letais.</entitydescription.propofol>
+  
+<!-- Gypsum -->
+<entityname.gypsum>Gesso</entityname.gypsum>
+<entitydescription.gypsum>Um pó que pode ser moldado em um Gesso Ortopédico. É utilizado para imobilizar ‖color:gui.green‖Fraturas de Membros‖end‖, permitindo sua consolidação. Utilizado após ‖color:gui.blue‖Enfaixar‖end‖ o membro. Em caso de falha, é consumido sem formar o gesso.</entitydescription.gypsum>
+  
+<!-- Gel coolant pack -->
+<entityname.gelipack>Bolsa de gel frio</entityname.gelipack>
+<entitydescription.gelipack>Uma bolsa de gel frio que acelera consideravelmente a cicatrização natural de ‖color:gui.green‖Trauma Contuso‖end‖ e trata ‖color:gui.green‖Hemorragia Interna‖end‖ ao longo do tempo. É ineficaz contra ‖color:gui.red‖outros tipos de lesões‖end‖ e agrava ‖color:gui.red‖Infecções‖end‖. Efeitos que aumentam a velocidade de cicatrização natural não funcionam se a lesão ultrapassar seu limiar de cura natural. Pode ser usada até três vezes e perderá eficácia se não for refrigerada. Quando refrigerada, sua condição regenera com o tempo. Em caso de falha, sua duração de resfriamento é reduzida.</entitydescription.gelipack>
+
+<!-- ================================================= Other Equipment ================================================= -->
+
+<!-- Manual defibrillator -->
+<entityname.defibrillator>Desfibrilador Manual</entityname.defibrillator>
+<entitydescription.defibrillator>Um equipamento que utiliza energia de bateria para reverter ‖color:gui.green‖Parada Cardíaca‖end‖ ou desfibrilar ‖color:gui.green‖Fibrilação‖end‖. Para tratar Parada Cardíaca, use o ‖color:gui.blue‖DEA‖end‖ caso a habilidade médica seja inferior a 80. Para tratar Fibrilação, use o ‖color:gui.blue‖DEA‖end‖ caso a habilidade médica seja inferior a 100. Em caso de falha, causa ‖color:gui.red‖Parada Cardíaca‖end‖.</entitydescription.defibrillator>
+
+<!-- Automated external defibrillator / AED -->
+<entityname.aed>Desfibrilador Externo Automático</entityname.aed>
+<entitydescription.aed>O DEA utiliza energia de bateria para uma pequena chance de reverter ‖color:gui.green‖Parada Cardíaca‖end‖ e garante a desfibrilação da ‖color:gui.green‖Fibrilação‖end‖. Para tratar Parada Cardíaca, use o ‖color:gui.blue‖Desfibrilador Manual‖end‖ caso a habilidade médica seja superior a 80.</entitydescription.aed>
+
+<!-- Ambu bag -->
+<entityname.bvm>Ambu (reanimador manual)</entityname.bvm>
+<entitydescription.bvm>O Ambu tratará ‖color:gui.green‖Hipóxia‖end‖ quando equipado com um cilindro de oxigênio e também tratará ‖color:gui.green‖Parada Respiratória‖end‖ se equipado com um cilindro de oxigenita.</entitydescription.bvm>
+
+<!-- AutoPulse -->
+<entityname.autocpr>AutoPulse (compressor torácico)</entityname.autocpr>
+<entitydescription.autocpr>Um dispositivo de compressão torácica que ocupa o espaço de vestimenta externa do paciente. Com o tempo, reverte ‖color:gui.green‖Parada Cardíaca‖end‖ e ‖color:gui.green‖Fibrilação‖end‖. Usar o AutoPulse também eleva a ‖color:gui.green‖Pressão Arterial‖end‖, o que pode ser útil em emergências. Lembre-se de removê-lo quando não for mais necessário! Também pode ser equipado pela interface de saúde e desequipado usando uma ‖color:gui.blue‖Chave Inglesa‖end‖ no torso.</entitydescription.autocpr>
+
+<!-- Trauma shears -->
+<entityname.traumashears>Tesoura de Resgate</entityname.traumashears>
+<entitydescription.traumashears>Uma ferramenta utilizada para remover ‖color:gui.green‖Ataduras‖end‖ ou ‖color:gui.green‖Aparelhos Gessados‖end‖. Em caso de falha, causa ‖color:gui.red‖Sangramento‖end‖ e ‖color:gui.red‖Lacerações‖end‖.</entitydescription.traumashears>
+
+<!-- Wheelchair -->
+<entityname.nt_wheelchair>Cadeira de Rodas</entityname.nt_wheelchair>
+	<entitydescription.nt_wheelchair>Um equipamento que ocupa o espaço de vestimenta externa do paciente. Permite utilizar os braços para locomoção, possibilitando mover-se melhor com as pernas lesionadas.</entitydescription.nt_wheelchair>
+
+<!-- Blue Shark -->
+<entityname.blahaj>Tubarão Azul</entityname.blahaj>
+<entitydescription.blahaj>Uma pelúcia fofa que reduz levemente a ‖color:gui.green‖Psicose‖end‖ cada vez que um paciente é atingido com ela.</entitydescription.blahaj>
+
+<!-- Lizard Doggo -->
+<entityname.lizarddoggo>Cão-Lagarto</entityname.lizarddoggo>
+<entitydescription.lizarddoggo>Uma pelúcia fofa que reduz levemente a ‖color:gui.green‖Psicose‖end‖ cada vez que um paciente é atingido com ela. NÃO OS ALIMENTE COM LIXO RADIOATIVO!</entitydescription.lizarddoggo>
+
+<!-- Analgesic Tank -->
+<entityname.analgesictank>Cilindro de Analgésico</entityname.analgesictank>
+<entitydescription.analgesictank>Um cilindro de analgésicos que pode ser acoplado a uma ‖color:gui.blue‖Mesa Cirúrgica‖end‖ para fornecer ao paciente deitado Analgesia suficiente para realizar cirurgias. Também pode ser usado em um ‖color:gui.blue‖Ambu‖end‖, mas causa ‖color:gui.red‖Dependência Química‖end‖ adicional.</entitydescription.analgesictank>
+
+<!-- Dialysis Filter -->
+<entityname.dialyzer>Filtro de hemodiálise</entityname.dialyzer>
+<entitydescription.dialyzer>Um filtro que pode ser instalado em uma ‖color:gui.blue‖mesa cirúrgica‖end‖ para reduzir a ‖color:gui.green‖alcalose‖end‖ e a ‖color:gui.green‖acidose‖end‖ do paciente deitado. A redução dessas afecções apresenta um pequeno risco de causar ‖color:gui.red‖sepse‖end‖.</entitydescription.dialyzer>
+
+<!-- Toxin Filter -->
+<entityname.toxfilter>Filtro de Toxinas</entityname.toxfilter>
+<entitydescription.toxfilter>Um filtro que pode ser acoplado a uma ‖color:gui.blue‖Mesa Cirúrgica‖end‖ para depurar ‖color:gui.green‖Venenos‖end‖ no paciente deitado. Embora seja mais lento que antídotos, trata todos os venenos padrão do jogo. A depuração de venenos acarreta um pequeno risco de contrair ‖color:gui.red‖Sepse‖end‖.</entitydescription.toxfilter>
+
+<!-- Health scanner -->
+<entityname.healthscanner>Scanner Médico</entityname.healthscanner>
+<entitydescription.healthscanner>Um instrumento alimentado por bateria que exibe as condições clínicas do paciente. Pode ser apontado para uma pessoa para uma varredura corporal completa ou aplicado na interface de saúde para exibir as condições de um membro específico. O uso do scanner causa uma pequena dose de ‖color:gui.red‖Síndrome Aguda da Radiação‖end‖. Não exibe Tipo Sanguíneo, ‖color:gui.red‖Sepse‖end‖, ‖color:gui.green‖Imunidade‖end‖, ‖color:gui.red‖Acidose‖end‖, ‖color:gui.red‖Alcalose‖end‖ ou Fármacos; essas condições exigem um ‖color:gui.blue‖Analisador Hematológico‖end‖.</entitydescription.healthscanner>
+
+<!-- Medical container -->
+<entityname.medtoolbox>Maleta Médica</entityname.medtoolbox>
+<entitydescription.medtoolbox>Pode armazenar medicamentos e instrumentos médicos</entitydescription.medtoolbox>
+  
+<!-- Surgery toolbox -->
+<entityname.surgerytoolbox>Caixa de Instrumentos Cirúrgicos</entityname.surgerytoolbox>
+<entitydescription.surgerytoolbox>Pode armazenar diversos itens pequenos utilizados durante cirurgias</entitydescription.surgerytoolbox>
+  
+<!-- Surgery toolbox (Kit) -->
+<entityname.surgerytoolboxset>Caixa de Instrumentos Cirúrgicos</entityname.surgerytoolboxset>
+<entitydescription.surgerytoolboxset>Pode armazenar diversos itens pequenos utilizados durante cirurgias</entitydescription.surgerytoolboxset>
+<displayname.surgeryset>[itemname] (kit)</displayname.surgeryset>
+<displayname.surgerysetscalpel>[itemname] (kit, bisturis de órgãos)</displayname.surgerysetscalpel>
+  
+<!-- Refrigerated crate -->
+<entityname.organcrate>Caixa Refrigerada</entityname.organcrate>
+<entitydescription.organcrate>Uma caixa para armazenar órgãos e membros preciosos prontos para transplante. Órgãos entram em decomposição rapidamente quando deixados fora, enquanto membros decompõem-se mais lentamente. Órgãos e membros regeneram quando refrigerados — mas apenas se o órgão estiver acima de 90% de condição ou se o membro estiver acima de 95%.</entitydescription.organcrate>
+  
+<!-- Medical starter crate -->
+<entityname.medstartercrate>Caixa Médica Inicial</entityname.medstartercrate>
+<entitydescription.medstartercrate>Ao ser obtida, esta caixa gerará suprimentos básicos de primeiros socorros e cirurgia.</entitydescription.medstartercrate>
+  
+<!-- Refrigerated container -->
+<entityname.organtoolbox>Contêiner Refrigerado</entityname.organtoolbox>
+<entitydescription.organtoolbox>Um contêiner para armazenar órgãos e membros preciosos prontos para transplante. Órgãos entram em decomposição rapidamente quando deixados fora, enquanto membros decompõem-se mais lentamente. Órgãos e membros regeneram quando refrigerados — mas apenas se o órgão estiver acima de 90% de condição ou se o membro estiver acima de 95%.</entitydescription.organtoolbox>
+  
+<!-- Body bag -->
+<entityname.bodybag>Saco para cadáver</entityname.bodybag>
+<entitydescription.bodybag>Um saco que ocupa o espaço de vestimenta externa de um paciente ou cadáver. Permite que sejam ‖color:gui.green‖arrastados em velocidade máxima‖end‖, mas uma pessoa viva não consegue respirar dentro do saco, causando ‖color:gui.red‖Hipóxia‖end‖.</entitydescription.bodybag>
+  
+<!-- Stasis bag -->
+<entityname.stasisbag>Saco de Estase</entityname.stasisbag>
+<entitydescription.stasisbag>Um saco que ocupa o espaço de vestimenta externa do paciente, protegendo contra pressão até 7.000 metros. Causará ‖color:gui.red‖Parada Cardíaca‖end‖, ‖color:gui.red‖Parada Respiratória‖end‖, ‖color:gui.red‖Inconsciência‖end‖ e ‖color:gui.red‖impedirá procedimentos cirúrgicos‖end‖, mas ‖color:gui.green‖pausará a progressão de condições negativas‖end‖ enquanto equipado. Durante o uso, o saco deteriora-se 1% a cada quatro segundos.</entitydescription.stasisbag>
+<stasisbagequipconfirmation>Você ficará inconsciente. Tem certeza de que deseja equipar o saco de estase?</stasisbagequipconfirmation>
+
+<!-- ================================================= Surgical Equipment ================================================= -->
+   
+<!-- Scalpel -->
+<entityname.advscalpel>Bisturi</entityname.advscalpel>
+<entitydescription.advscalpel>Um instrumento utilizado para realizar ‖color:gui.orange‖Incisões Cirúrgicas‖end‖ durante cirurgias. Incisões são o primeiro passo em todas as operações cirúrgicas, mas causarão ‖color:gui.red‖Perda Sanguínea‖end‖ a menos que a ‖color:gui.blue‖Pinça Hemostática‖end‖ seja utilizada em seguida. Além disso, incisões só podem ser feitas se o paciente não sentir dor, e pacientes que recuperarem a sensibilidade à dor durante a cirurgia sofrerão ‖color:gui.red‖Choque Traumático‖end‖. Em caso de falha, causa ‖color:gui.red‖Sangramento‖end‖ e ‖color:gui.red‖Lacerações‖end‖.</entitydescription.advscalpel>
+  
+<!-- Hemostat -->
+<entityname.advhemostat>Pinça Hemostática</entityname.advhemostat>
+<entitydescription.advhemostat>Um instrumento utilizado para ‖color:gui.orange‖Pinçar Vasos Sanguíneos‖end‖ durante cirurgias. O segundo passo na maioria das operações cirúrgicas, realizado após as ‖color:gui.orange‖Incisões Cirúrgicas‖end‖.</entitydescription.advhemostat>
+  
+<!-- Skin retractors -->
+<entityname.advretractors>Afastadores de Pele</entityname.advretractors>
+<entitydescription.advretractors>Um instrumento utilizado para ‖color:gui.orange‖Afastar a Pele‖end‖ durante as cirurgias. Afastar a pele é o terceiro passo na maioria das operações cirúrgicas, mas causará ‖color:gui.red‖Choque Traumático‖end‖ se o paciente estiver consciente e não estiver deitado em uma cama ou próximo a uma ‖color:gui.blue‖Mesa Cirúrgica‖end‖ ou leito hospitalar. Utilizado após o ‖color:gui.orange‖Pinçamento Hemostático‖end‖. Em caso de falha, causa ‖color:gui.red‖Lesão Interna‖end‖.</entitydescription.advretractors>
+  
+<!-- Tweezers -->
+<entityname.tweezers>Pinça Anatômica</entityname.tweezers>
+<entitydescription.tweezers>Um instrumento pequeno que permite remover tecidos indesejados. Após a ‖color:gui.orange‖Retração de Pele‖end‖, a Pinça Anatômica pode ser usada para remover alguns ‖color:gui.green‖Corpos Estranhos‖end‖ ou converter ‖color:gui.green‖Trauma Contuso‖end‖ e ‖color:gui.green‖Lesão Interna‖end‖ em ‖color:gui.red‖Lacerações‖end‖ ‖color:gui.blue‖Suturáveis‖end‖. ‖color:gui.green‖Corpos Estranhos‖end‖ também podem ser removidos através de ferimentos por arma de fogo abertos ou lesões teciduais profundas, mas isso causará um leve ‖color:gui.red‖Choque Traumático‖end‖. Em caso de falha, causa ‖color:gui.red‖Lesão Interna‖end‖.</entitydescription.tweezers>
+  
+<!-- Surgical saw -->
+<entityname.surgerysaw>Serra Cirúrgica</entityname.surgerysaw>
+<entitydescription.surgerysaw>Um instrumento utilizado para ‖color:gui.orange‖Serrar Ossos‖end‖. Após a ‖color:gui.orange‖Retração de Pele‖end‖, os ossos podem ser serrados para remover membros existentes ou implantar novos. A substituição de membros é necessária se a Gangrena ultrapassar 15%. Em caso de falha, causa ‖color:gui.red‖Sangramento‖end‖, ‖color:gui.red‖Lesão Interna‖end‖ e ‖color:gui.red‖Lacerações‖end‖.</entitydescription.surgerysaw>
+  
+<!-- Suture -->
+<entityname.suture>Sutura</entityname.suture>
+<entitydescription.suture>Fios de sutura biodegradáveis utilizados para concluir cirurgias. Ao serem usados, encerram operações cirúrgicas em qualquer etapa. Além disso, podem ser usados para ‖color:gui.orange‖Suturar‖end‖ e fechar ‖color:gui.green‖Feridas Abertas‖end‖, reduzindo significativamente o ‖color:gui.green‖Sangramento‖end‖ externo. Em caso de falha, causa ‖color:gui.red‖Lesão Interna‖end‖.</entitydescription.suture>
+  
+<!-- Surgical drill -->
+<entityname.surgicaldrill>Furadeira cirúrgica</entityname.surgicaldrill>
+<entitydescription.surgicaldrill>Um instrumento utilizado para ‖color:gui.orange‖Perfurar Ossos‖end‖ durante cirurgias. Após a ‖color:gui.orange‖Retração de Pele‖end‖, os ossos podem ser perfurados para realizar a ‖color:gui.orange‖Cirurgia de Osteossíntese‖end‖, capaz de reparar fraturas. Em caso de falha, causa ‖color:gui.red‖Sangramento‖end‖ e ‖color:gui.red‖Lesão Interna‖end‖.</entitydescription.surgicaldrill>
+  
+<!-- Osteosynthesis implants -->
+<entityname.osteosynthesisimplants>Implantes de Osteossíntese</entityname.osteosynthesisimplants>
+<entitydescription.osteosynthesisimplants>Placas e parafusos de titânio utilizados para reparar fraturas. Podem ser instalados após ‖color:gui.orange‖Perfurar Ossos‖end‖. Em caso de Necrose Óssea generalizada, a ‖color:gui.orange‖Cirurgia de Osteossíntese‖end‖ deve ser realizada em todas as partes do corpo. Em caso de falha, causa ‖color:gui.red‖Sangramento‖end‖ e ‖color:gui.red‖Lesão Interna‖end‖.</entitydescription.osteosynthesisimplants>
+  
+<!-- Spinal cord implants -->
+<entityname.spinalimplant>Implantes de Medula Espinhal</entityname.spinalimplant>
+<entitydescription.spinalimplant>Implantes de titânio utilizados para reparar lesões medulares. Podem ser instalados após a ‖color:gui.orange‖Retração de Pele‖end‖. Contudo, a medula espinhal sofrerá nova lesão caso a Fratura Cervical não seja reparada com ‖color:gui.orange‖Cirurgia de Osteossíntese‖end‖. Em caso de falha, causa ‖color:gui.red‖Sangramento‖end‖ e ‖color:gui.red‖Lesão Interna‖end‖.</entitydescription.spinalimplant>
+  
+<!-- Surgery table -->
+<entityname.operatingtable>Mesa Cirúrgica</entityname.operatingtable>
+<entitydescription.operatingtable>Uma versão portátil do leito hospitalar, projetada para instalação em submarinos. Assim como o leito hospitalar, possui ‖color:gui.green‖Ventilação Artificial‖end‖ integrada. Além disso, conta com pinos elétricos que podem transmitir os sinais vitais do paciente. Possui compartimentos embutidos para acoplar um ‖color:gui.blue‖Cilindro de Analgésico‖end‖, um dos ‖color:gui.blue‖Filtros‖end‖ e uma ‖color:gui.blue‖Caixa Refrigerada‖end‖. Para utilizar o ‖color:gui.blue‖Cilindro de Analgésico‖end‖ e os ‖color:gui.blue‖Filtros‖end‖ em um paciente inconsciente, será necessário colocá-lo à força sobre a mesa.</entitydescription.operatingtable>
+<itemmsgmodifytable>[[attack]] Interagir</itemmsgmodifytable>
+<operatingtabellabel>Melhorias da Mesa Cirúrgica</operatingtabellabel>  
+
+<!-- Multipurpose scalpel -->
+<entityname.multiscalpel>Bisturi Multifuncional</entityname.multiscalpel>
+<entitydescription.multiscalpel>Bisturi experimental. Desativado e requer ativação. Nas mãos do cirurgião, um painel de botões pode ser utilizado para ativar o bisturi e alternar entre operações: realizar incisões, extrair órgãos, remover ataduras ou cometer imperícia médica.</entitydescription.multiscalpel>
+<multiscalpel.incision>Modo ativo: Incisão cirúrgica</multiscalpel.incision>
+<multiscalpel.kidneys>Modo ativo: Extrair rins</multiscalpel.kidneys>
+<multiscalpel.liver>Modo ativo: Extrair fígado</multiscalpel.liver>
+<multiscalpel.lungs>Modo ativo: Extrair pulmões</multiscalpel.lungs>
+<multiscalpel.heart>Modo ativo: Extrair coração</multiscalpel.heart>
+<multiscalpel.brain>Modo ativo: Extrair cérebro</multiscalpel.brain>
+<multiscalpel.bandage>Modo ativo: Remover ataduras e gessos / imperícia médica</multiscalpel.bandage>
+<multiscalpel.speedflex>Modo: Extração adaptativa de órgãos. Após a ‖color:gui.orange‖Retração de Pele‖end‖, utilize no membro respectivo para remover os seguintes ‖color:gui.blue‖órgãos‖end‖. Para extrair ‖color:gui.blue‖órgãos‖end‖ sem transplantar novos, utilize duas vezes no membro respectivo. Equipe na mão para alterar o modo.
+- Cabeça: ‖color:gui.blue‖Cérebro‖end‖
+- Braço Esquerdo: ‖color:gui.blue‖Rins‖end‖
+- Torso: ‖color:gui.blue‖Fígado‖end‖
+- Braço Direito: ‖color:gui.blue‖Coração‖end‖
+- Perna Esquerda: ‖color:gui.blue‖Pulmões‖end‖</multiscalpel.speedflex>
+
+<multiscalpel.btn.incision>Incisão</multiscalpel.btn.incision>
+<multiscalpel.btn.kidneys>Rins</multiscalpel.btn.kidneys>
+<multiscalpel.btn.liver>Fígado</multiscalpel.btn.liver>
+<multiscalpel.btn.lungs>Pulmões</multiscalpel.btn.lungs>
+<multiscalpel.btn.heart>Coração</multiscalpel.btn.heart>
+<multiscalpel.btn.brain>Cérebro</multiscalpel.btn.brain>
+<multiscalpel.btn.bandage>Ataduras, gessos, imperícia</multiscalpel.btn.bandage>
+<multiscalpel.btn.speedflex>Extração adaptativa de órgãos</multiscalpel.btn.speedflex>
+
+<!-- Surgery Kit -->
+<entityname.surgerykit>Kit Cirúrgico</entityname.surgerykit>
+<entitydescription.surgerykit>Um kit que contém todo o equipamento cirúrgico básico de que um médico precisa, com espaço extra restante para outros itens. 
+
+‖color:gui.blue‖Habilita o uso de todas as ferramentas básicas do Neurotrauma no Menu de Saúde.‖end‖</entitydescription.surgerykit>
+
+	<!-- ================================================= Toggleable ================================================= -->
+
+<!-- Sodium nitroprusside -->
+<entityname.pressuremeds>Nitroprussiato de Sódio</entityname.pressuremeds>
+<entitydescription.pressuremeds>Um medicamento vasodilatador utilizado para reduzir a ‖color:gui.green‖Pressão Arterial‖end‖. Em caso de falha, é menos eficaz.</entitydescription.pressuremeds>
+
+<!-- Endovascular balloon -->
+<entityname.endovascballoon>Balão Endovascular</entityname.endovascballoon>
+<entitydescription.endovascballoon>Um balão inserido em uma aorta rompida. Impedirá a ‖color:gui.green‖Perda Sanguínea‖end‖ causada pela ruptura, mas a oclusão causará ‖color:gui.red‖Gangrena‖end‖ ao longo do tempo. Pode ser instalado após uma ‖color:gui.orange‖Incisão com Bisturi‖end‖.</entitydescription.endovascballoon>
+  
+<!-- Medical stent -->
+<entityname.medstent>Stent Endovascular</entityname.medstent>
+<entitydescription.medstent>Um stent que pode ser inserido na aorta para reparar uma ruptura. Deve ser utilizado após o ‖color:gui.blue‖Balão Endovascular‖end‖.</entitydescription.medstent>
+
+<!-- Antiseptic -->
+<entityname.antiseptic>Antisséptico</entityname.antiseptic>
+<entitydescription.antiseptic>Utilizado pelo ‖color:gui.blue‖Pulverizador Antisséptico‖end‖, é eficaz no tratamento de ‖color:gui.green‖Feridas Infectadas‖end‖.</entitydescription.antiseptic>
+  
+<!-- Antiseptic sprayer -->
+<entityname.antisepticspray>Pulverizador Antisséptico</entityname.antisepticspray>
+<entitydescription.antisepticspray>Aplica ‖color:gui.blue‖Antisséptico‖end‖ para combater ‖color:gui.green‖Feridas Infectadas‖end‖.</entitydescription.antisepticspray>
+
+<!-- Organ procurement scalpel: Liver -->
+<entityname.organscalpel_liver>Bisturi de Remoção de Órgãos: Fígado</entityname.organscalpel_liver>
+<entitydescription.organscalpel_liver>Um bisturi especializado para a remoção de fígados.</entitydescription.organscalpel_liver>
+  
+<!-- Organ procurement scalpel: Kidneys -->
+<entityname.organscalpel_kidneys>Bisturi de Remoção de Órgãos: Rins</entityname.organscalpel_kidneys>
+<entitydescription.organscalpel_kidneys>Um bisturi especializado para a remoção de rins.</entitydescription.organscalpel_kidneys>
+  
+<!-- Organ procurement scalpel: Lungs -->
+<entityname.organscalpel_lungs>Bisturi de Remoção de Órgãos: Pulmões</entityname.organscalpel_lungs>
+<entitydescription.organscalpel_lungs>Um bisturi especializado para a remoção dos pulmões.</entitydescription.organscalpel_lungs>
+  
+<!-- Organ procurement scalpel: Heart -->
+<entityname.organscalpel_heart>Bisturi de Remoção de Órgãos: Coração</entityname.organscalpel_heart>
+<entitydescription.organscalpel_heart>Um bisturi especializado para a remoção do coração.</entitydescription.organscalpel_heart>
+  
+<!-- Organ procurement scalpel: Brain -->
+<entityname.organscalpel_brain>Bisturi de Remoção de Órgãos: Cérebro</entityname.organscalpel_brain>
+<entitydescription.organscalpel_brain>Um bisturi especializado para a remoção do cérebro.</entitydescription.organscalpel_brain>
+
+<!-- ================================================= Vanilla Overrides ================================================= -->
+<!-- 99% of this is by the goat ThousandFields. -->
+
+<!-- Alien Blood -->
+<entitydescription.alienblood>Sangue extraído de uma forma de vida europana. É ‖color:gui.red‖incompatível‖end‖ com sangue humano.</entitydescription.alienblood>
+
+<!-- Saline -->
+<entitydescription.antibloodloss1>Uma infusão de cloreto de sódio utilizada para elevar a ‖color:gui.green‖Pressão Arterial‖end‖, causando adicionalmente ‖color:gui.green‖Acidose‖end‖. Em caso de falha, possui menor duração.</entitydescription.antibloodloss1>
+
+<!-- Bandages -->
+<entitydescription.antibleeding1>Ataduras básicas, úteis no tratamento de ‖color:gui.green‖Sangramento‖end‖, além de acelerarem a cicatrização natural de ‖color:gui.green‖Queimaduras leves‖end‖ e ‖color:gui.green‖ferimentos‖end‖. Além disso, estar enfaixado estabiliza ‖color:gui.green‖Fraturas‖end‖ e ‖color:gui.green‖Luxações‖end‖. Efeitos que aumentam a velocidade de cicatrização natural não funcionam se a lesão ultrapassar seu limiar de cura natural. Em caso de falha, são menos eficazes. A estabilização previne: 
+- Que fraturas no braço atinjam 100% 
+- Que fraturas cervicais causem lesão medular e lesão interna 
+- Que fraturas de costelas causem pneumotórax 
+- Que luxações causem lesão interna 
+- Que luxações no braço incapacitem o membro 
+- E restaura a função de pernas luxadas</entitydescription.antibleeding1>
+
+<!-- Plastiseal -->
+<entitydescription.antibleeding2>Uma pele sintética com propriedades hemostáticas capaz de selar eficazmente ‖color:gui.green‖sangramentos‖end‖, sendo um bom tratamento contra ‖color:gui.green‖Queimaduras leves‖end‖ enquanto acelera a cicatrização natural de ‖color:gui.green‖Ferimentos‖end‖. Também estabiliza ‖color:gui.green‖Fraturas‖end‖ e ‖color:gui.green‖Luxações‖end‖. Por fim, pode ser utilizada para tratar ‖color:gui.green‖Queimaduras de Terceiro Grau‖end‖ quando aplicada após a ‖color:gui.orange‖Retração de Pele‖end‖. Em caso de falha, é menos eficaz.</entitydescription.antibleeding2>
+
+<!-- Opium -->
+<entitydescription.opium>Um ‖color:gui.green‖Analgésico‖end‖ ‖color:gui.blue‖Opiáceo‖end‖ relativamente leve obtido da papoula aquática. Mais comumente usado para fabricar Morfina e Fentanil. Em caso de falha, é menos eficaz e há maior risco de ‖color:gui.red‖Dependência Química‖end‖ e ‖color:gui.red‖Overdose‖end‖.</entitydescription.opium>
+
+<!-- Morphine -->
+<entitydescription.antidama1>Um potente ‖color:gui.green‖Analgésico‖end‖ ‖color:gui.blue‖Opiáceo‖end‖, mas o uso excessivo causará ‖color:gui.red‖Dependência Química‖end‖ e ‖color:gui.red‖Overdose‖end‖. Em caso de falha, é menos eficaz e há maior risco de ‖color:gui.red‖Dependência Química‖end‖ e ‖color:gui.red‖Overdose‖end‖.</entitydescription.antidama1>
+
+<!-- Fentanyl -->
+<entitydescription.antidama2>Um ‖color:gui.green‖Analgésico‖end‖ ‖color:gui.blue‖Opiáceo‖end‖ extremamente potente, mas o uso excessivo causará ‖color:gui.red‖Dependência Química‖end‖ e ‖color:gui.red‖Overdose‖end‖. A analgesia não apenas previne a ‖color:gui.green‖dor‖end‖, mas também reduz o ‖color:gui.green‖dano sofrido‖end‖ e aumenta a ‖color:gui.green‖resistência a atordoamento‖end‖. Em caso de falha, é menos eficaz e há maior risco de ‖color:gui.red‖dependência química‖end‖ e ‖color:gui.red‖overdose‖end‖.</entitydescription.antidama2>
+
+<!-- Naloxone -->
+<entitydescription.antinarc>Um antagonista opioide para o tratamento de ‖color:gui.green‖Abstinência‖end‖ e ‖color:gui.green‖Overdose‖end‖ de opiáceos. Além disso, reduzirá a ‖color:gui.green‖Analgesia‖end‖. Em caso de falha, é menos eficaz e pode causar um breve ‖color:gui.red‖Coma‖end‖.</entitydescription.antinarc>
+
+<!-- Broad-Spectrum Antibiotics -->
+<entitydescription.antibiotics>Um antibiótico que atua contra um amplo espectro de bactérias, tornando-o um tratamento eficaz para ‖color:gui.green‖Sepse‖end‖ e, em menor grau, ‖color:gui.green‖Infecção por Parasita Husk‖end‖. Entretanto, sua natureza de amplo espectro causa ‖color:gui.red‖Lesão de Órgãos‖end‖. Usado como ingrediente em múltiplos compostos médicos. Em caso de falha, é menos eficaz.</entitydescription.antibiotics>
+
+<!-- Adrenaline -->
+<entitydescription.adrenaline>Um hormônio de ocorrência natural. Por um curto período, elevará a ‖color:gui.green‖Pressão Arterial‖end‖ do paciente, aumentará o ‖color:gui.green‖Dano Corpo a Corpo‖end‖, reduzirá pela metade a ‖color:gui.green‖Taxa de Fibrilação‖end‖, prevenirá a ‖color:gui.green‖Dor‖end‖ e evitará a incapacitação e lentidão causadas por ‖color:gui.green‖Fraturas‖end‖ e ‖color:gui.green‖Luxações‖end‖. Ao ser usada, também reverterá ‖color:gui.green‖Parada Cardíaca‖end‖, removerá ‖color:gui.green‖Atordoamento‖end‖ e reduzirá brevemente ‖color:gui.green‖Atordoamentos recebidos‖end‖.</entitydescription.adrenaline>
+
+<!-- Captain's Pipe -->
+<entitydescription.captainspipe>Para acalmar os nervos quando o mar está agitado. Faz mal aos pulmões, porém.</entitydescription.captainspipe>
+
+<!-- Cigar -->
+<entitydescription.cigar>A vida de um submarinista é mentalmente exaustiva, mas talvez este charuto primorosamente elaborado ajude a acalmar um pouco seus nervos. Faz mal aos pulmões, porém.</entitydescription.cigar>
+
+<!-- Liquid Oxygenite -->
+<entitydescription.liquidoxygenite>Uma seringa ‖color:gui.red‖volátil‖end‖ de oxigenita que pode ser injetada, ‖color:gui.green‖oxigenando o sangue‖end‖ forçadamente por um curto período. Entretanto, sua toxicidade causa leve ‖color:gui.red‖Lesão de Órgãos‖end‖. Em caso de falha, a oxigenação é ‖color:gui.red‖momentânea‖end‖ e ‖color:gui.red‖os órgãos sofrem danos adicionais‖end‖. A hipoxemia danifica o cérebro e os órgãos, sendo a principal causa de morte decorrente de ferimentos em combate.</entitydescription.liquidoxygenite>
+
+<!-- Deusizine -->
+<entitydescription.deusizine>Um estimulante que aumenta a ‖color:gui.green‖resistência muscular‖end‖ e pode ser usado no tratamento de ‖color:gui.green‖Lesão Interna‖end‖, ‖color:gui.green‖Privação de Oxigênio‖end‖ e ‖color:gui.green‖Perda Sanguínea‖end‖. Em caso de falha, é menos eficaz.</entitydescription.deusizine>
+
+<!-- Antibiotic Glue -->
+<entitydescription.antibleeding3>Uma cola antibiótica com propriedades hemostáticas. Sela ferimentos com ‖color:gui.green‖Sangramento‖end‖ quase imediatamente e evita que fiquem ‖color:gui.green‖Infectados‖end‖. Também é eficaz contra ‖color:gui.green‖Queimaduras‖end‖. Em caso de falha, pode causar ‖color:gui.red‖êmbolos (coágulos móveis)‖end‖ na corrente sanguínea.</entitydescription.antibleeding3>
+
+<!-- Methamphetamine -->
+<entitydescription.meth>Um potente estimulante do sistema nervoso central, aumentando temporariamente a ‖color:gui.green‖velocidade muscular‖end‖ do usuário. Entretanto, causa ‖color:gui.red‖dependência química‖end‖, lesiona levemente os ‖color:gui.red‖Órgãos‖end‖ e causará algum ‖color:gui.red‖Neurotrauma‖end‖. Em caso de falha, é menos eficaz, causa mais ‖color:gui.red‖dependência‖end‖ e provocará maior ‖color:gui.red‖dano‖end‖.</entitydescription.meth>
+
+<!-- Anabolic Steroids -->
+<entitydescription.steroids>Aumentam temporariamente a ‖color:gui.green‖força muscular‖end‖ e a ‖color:gui.green‖resistência‖end‖. Causam dependência química. Em caso de falha, são menos eficazes e causam mais ‖color:gui.red‖dependência‖end‖.</entitydescription.steroids>
+
+<!-- Hyperzine -->
+<entitydescription.hyperzine>Um estimulante muscular extremamente potente para aqueles momentos em que você precisa ir rápido. Aumenta a ‖color:gui.green‖força muscular‖end‖, ‖color:gui.green‖resistência‖end‖ e ‖color:gui.green‖velocidade‖end‖, além de reduzir a ‖color:gui.green‖suscetibilidade a atordoamento‖end‖. Causa ‖color:gui.red‖dependência química‖end‖ e uma pequena quantidade de ‖color:gui.red‖Neurotrauma‖end‖. Em caso de falha, causa mais ‖color:gui.red‖dependência‖end‖ e mais ‖color:gui.red‖dano cerebral‖end‖.</entitydescription.hyperzine>
+
+<!-- Haloperidol -->
+<entitydescription.antipsychosis>Um forte fármaco ‖color:gui.green‖antipsicótico‖end‖, eficaz no tratamento da ‖color:gui.green‖Abstinência Alcoólica‖end‖. Em caso de falha, é menos eficaz.</entitydescription.antipsychosis>
+
+<!-- Anaparalyzant -->
+<entitydescription.antiparalysis>Uma cura para ‖color:gui.green‖Paralisia‖end‖ que também encerra prematuramente a ‖color:gui.green‖Anestesia‖end‖. O uso excessivo pode causar ‖color:gui.red‖Psicose‖end‖. Em caso de falha, é menos eficaz e causa mais ‖color:gui.red‖Psicose‖end‖.</entitydescription.antiparalysis>
+
+<!-- Tonic Liquid -->
+<entitydescription.tonicliquid>Uma solução médica levemente eficaz no tratamento de ‖color:gui.green‖Lesão Interna‖end‖, mas mais comumente utilizada para ‖color:gui.green‖prolongar a duração‖end‖ de fármacos na corrente sanguínea e estimulantes de desempenho.</entitydescription.tonicliquid>
+
+<!-- Nitroglycerin -->
+<entitydescription.nitroglycerin>Um líquido altamente instável que pode explodir quando submetido a calor ou impacto físico. Quando administrado a um paciente, provoca vasodilatação e reduz a ‖color:gui.green‖Pressão Arterial‖end‖.</entitydescription.nitroglycerin>
+
+<!-- Pomegrenade Extract -->
+<entitydescription.pomegrenadeextract>Suco concentrado de romã-explosiva. Oferece propriedades leves de ‖color:gui.green‖cicatrização de feridas‖end‖, incluindo ‖color:gui.green‖Feridas Suturadas‖end‖. Em caso de falha, é menos eficaz.</entitydescription.pomegrenadeextract>
+
+<!-- Combat Stimulant -->
+<entitydescription.combatstimulantsyringe>Um estimulante altamente avançado que faz o usuário recuperar-se rapidamente de ‖color:gui.green‖Danos‖end‖, ‖color:gui.green‖Queimaduras‖end‖ e ‖color:gui.green‖Perda Sanguínea‖end‖. Além disso, o usuário coagulará rapidamente ‖color:gui.green‖Hemorragias Externas‖end‖ e ‖color:gui.green‖Internas‖end‖. Causa ‖color:gui.red‖dependência química‖end‖. Em caso de falha, causa ainda mais ‖color:gui.red‖dependência‖end‖.</entitydescription.combatstimulantsyringe>
+
+<!-- Ethanol -->
+<entitydescription.ethanol>Álcool medicinal usado como ingrediente na fabricação de diversos medicamentos. Não é aconselhável beber em serviço, e o consumo excessivo é prejudicial ao fígado.</entitydescription.ethanol>
+
+<!-- Rum -->
+<entitydescription.rum>Um licor fino feito de erva-raptor ou suco de romã-explosiva. Alguns puristas insistem que o verdadeiro rum é feito de cana-de-açúcar, mas boa sorte para encontrar isso em Europa. Sua potência é suficiente para danificar ‖color:gui.green‖Infecções por Husk‖end‖ em estágio inicial, mas o consumo excessivo é prejudicial ao fígado.</entitydescription.rum>
+
+<!-- Diving Knife -->
+<entitydescription.divingknife>Perfura, espeta, corta e fatia. Também pode ser usada para remover ‖color:gui.green‖Ataduras‖end‖ antigas. Em caso de falha, causa ‖color:gui.red‖Lacerações‖end‖ e ‖color:gui.red‖Sangramento‖end‖.</entitydescription.divingknife>
+
+<!-- Raptor Bane Extract -->
+<entitydescription.raptorbaneextract>Suco concentrado de erva-raptor. Levemente tóxico para humanos, catastroficamente tóxico para mudraptors. Induzirá vômito em humanos, tornando-se um tratamento razoável para ‖color:gui.green‖Acidose‖end‖. Em caso de falha, não induz vômito.</entitydescription.raptorbaneextract>
+
+<!-- Protein Bar -->
+<entitydescription.proteinbar>Pode conter traços de galena. Trata alguns ‖color:gui.green‖Danos‖end‖ externos e ‖color:gui.green‖Queimaduras‖end‖.</entitydescription.proteinbar>
+
+<!-- Stabilozine -->
+<entitydescription.stabilozine>Utilizada como ingrediente na fabricação de diversos medicamentos. Por si só, pode ser usada para retardar os efeitos de ‖color:gui.green‖venenos‖end‖ e ‖color:gui.green‖Síndrome Aguda da Radiação‖end‖. Em caso de falha, é menos eficaz.</entitydescription.stabilozine>
+
+<!-- Hallucinogenic Bufotoxin -->
+<entitydescription.hallucinogenicbufotoxin>Toxina alucinógena secretada por algumas espécies europanas. Serve como um ‖color:gui.green‖Antiparalisante‖end‖ em situações de emergência.</entitydescription.hallucinogenicbufotoxin>
+
+<!-- Cyanide -->
+<entitydescription.cyanide>Um composto químico altamente tóxico que causa morte rápida uma vez administrada uma dose suficientemente grande. Pode ser usado como um método arriscado para eliminar ‖color:gui.green‖Infecções por Husk‖end‖.</entitydescription.cyanide>
+
+<!-- Europabrew -->
+<entitydescription.europabrew>Uma bebida química de dois gumes. Embora ative o sistema imunológico para tratar moderadamente ‖color:gui.green‖venenos‖end‖, também enfraquece significativamente o alvo, tornando-o mais suscetível a todos os ‖color:gui.red‖Danos‖end‖, ‖color:gui.red‖Queimaduras‖end‖ e ‖color:gui.red‖Infecção por Husk‖end‖.</entitydescription.europabrew>
+
+<!-- Sufforin -->
+<entitydescription.sufforin>Uma neurotoxina furtiva, indetectável nos estágios iniciais. Causa perda de visão e, por fim, a morte. Pode ser usada como um método arriscado para eliminar ‖color:gui.green‖Infecções por Husk‖end‖.</entitydescription.sufforin>
+
+<!-- Antirad -->
+<entitydescription.antirad>Retarda a degradação celular causada pela radiação. Em caso de falha, é menos eficaz.</entitydescription.antirad>
+
+<!-- Calyxanide -->
+<entitydescription.calyxanide>Um fármaco antiparasitário utilizado no tratamento de ‖color:gui.green‖Infecções por Husk‖end‖. Em caso de falha, é menos eficaz.</entitydescription.calyxanide>
+
+<!-- Extinguisher -->
+<entitydescription.extinguisher>Um extintor portátil de dióxido de carbono. Também apaga fogo em pessoas em chamas.</entitydescription.extinguisher>
+
+<!-- Diving Suit -->
+<entitydescription.divingsuit>Um traje de mergulho atmosférico capaz de suportar a imensa pressão sob a crosta de Europa. Oferece proteção adequada apenas até a profundidade de 4.000 metros — além desse ponto, é necessário um traje Abissal ou de Combate. Trajes selados a vácuo como este abafam chamas facilmente.</entitydescription.divingsuit>
+
+<!-- Repair Pack -->
+<entitydescription.repairpack>Uma multiferramenta improvisada, capaz de corrigir rapidamente problemas mecânicos e elétricos. Assim como a ‖color:gui.blue‖Chave Inglesa‖end‖, pode ser usada para reduzir ‖color:gui.green‖Luxações‖end‖. Em caso de falha, resulta em uma ‖color:gui.red‖Fratura‖end‖.</entitydescription.repairpack>
+
+<!-- Wrench -->
+<entitydescription.wrench>Torna reparos mecânicos possíveis. Também é utilizada para reduzir ‖color:gui.green‖Luxações‖end‖, exigindo apenas metade da habilidade se o paciente não sentir dor. Contudo, falhar ao reduzir uma Luxação resultará em uma ‖color:gui.red‖Fratura‖end‖.</entitydescription.wrench>
+
+<!-- Syringe Gun -->
+<entitydescription.syringegun>Dispara seringas contendo fármacos ou venenos. Não parece ser compatível com ‖color:gui.blue‖Opiáceos‖end‖.</entitydescription.syringegun>
+
+<!-- Advanced Syringe Gun -->
+<entitydescription.advancedsyringegun>Dispara seringas contendo fármacos ou venenos. Possui maior capacidade e scanner médico integrado. Não parece ser compatível com ‖color:gui.blue‖Opiáceos‖end‖.</entitydescription.advancedsyringegun>
+
+<!-- ================================================= Unused ================================================= -->
+
+<!-- Emergency Suit -->
+<!--<entityname.emergencysuit>Emergency suit</entityname.emergencysuit>
+<entitydescription.emergencysuit>Makes it relatively safe for using a defibrillator and performing all kinds of surgeries. Stops movement, but has a battery slot to power artificial ventilation.</entitydescription.emergencysuit>-->
+
+<!-- Regenerative ointment -->
+<entityname.skinaid>Pomada regenerativa</entityname.skinaid>
+<entitydescription.skinaid>Um potente gel regenerativo que promove a cicatrização natural da maioria dos traumas superficiais.</entitydescription.skinaid>
+  
+<!-- ================================================= Miscellaneous Translations ================================================= -->
+
+<!-- Emergency Suit Equip Warning -->
+<!--<emergencysuitequipconfirmation>Equipping this will cause you to go immobile. Are you sure?</emergencysuitequipconfirmation>-->
+
+<!-- ================================================= AI Voicelines ================================================= -->
+
+<!-- Fractured Neck -->
+<npcdialogsym.fracturedneck_1>Acho que quebrei meu pescoço!</npcdialogsym.fracturedneck_1>
+<npcdialogsym.fracturedneck_2>Meu pescoço acabou de fazer um estalo alto!</npcdialogsym.fracturedneck_2>
+
+<!-- Carotid Arterial Bleeding -->
+<npcdialogsym.carotidarterialcut_1>Está jorrando sangue do meu pescoço!</npcdialogsym.carotidarterialcut_1>
+<npcdialogsym.carotidarterialcut_2>Estou sangrando muito pelo pescoço!</npcdialogsym.carotidarterialcut_2>
+
+<!-- Arterial Bleeding -->
+<npcdialogsym.arterialcut_1>Está jorrando sangue de um dos meus membros!</npcdialogsym.arterialcut_1>
+<npcdialogsym.arterialcut_2>Estou sangrando muito de um dos meus membros!</npcdialogsym.arterialcut_2>
+
+<!-- Vomiting Blood -->
+<npcdialogsym.vomitingblood_1>Estou vomitando sangue!</npcdialogsym.vomitingblood_1>
+<npcdialogsym.vomitingblood_2>Acabei de vomitar sangue!</npcdialogsym.vomitingblood_2>
+<npcdialogsym.vomitingblood_3>Meu vômito está cheio de sangue!</npcdialogsym.vomitingblood_3>
+
+<!-- Pale Skin -->
+<npcdialogsym.paleskin_1>Minha pele está ficando pálida!</npcdialogsym.paleskin_1>
+<npcdialogsym.paleskin_2>Estou sentindo frio e minha pele está perdendo a cor!</npcdialogsym.paleskin_2>
+
+<!-- Confusion -->
+<npcdialogsym.confusion_1>Estou me sentindo confuso..</npcdialogsym.confusion_1>
+<npcdialogsym.confusion_2>Estou tão perdido.. o que está acontecendo?</npcdialogsym.confusion_2>
+<npcdialogsym.confusion_3>Estou desligando..</npcdialogsym.confusion_3>
+
+<!-- Lightheadedness -->
+<npcdialogsym.lightheadedness_1>Estou sentindo tontura..</npcdialogsym.lightheadedness_1>
+<npcdialogsym.lightheadedness_2>Tudo está girando ao meu redor..</npcdialogsym.lightheadedness_2>
+<npcdialogsym.lightheadedness_3>Estou me sentindo zonzo..</npcdialogsym.lightheadedness_3>
+
+<!-- Abdominal Pain -->
+<npcdialogsym.abdominalpain_1>Meu estômago está doendo muito!</npcdialogsym.abdominalpain_1>
+<npcdialogsym.abdominalpain_2>Algo no meu abdômen dói demais!</npcdialogsym.abdominalpain_2>
+<npcdialogsym.abdominalpain_3>Estou com dor no abdômen!</npcdialogsym.abdominalpain_3>
+
+<!-- Inflammation -->
+<npcdialogsym.inflammation_1>Uma das minhas feridas está muito quente!</npcdialogsym.inflammation_1>
+<npcdialogsym.inflammation_2>Uma das minhas feridas está inchando!</npcdialogsym.inflammation_2>
+<npcdialogsym.inflammation_3>Uma das minhas feridas está ficando muito vermelha!</npcdialogsym.inflammation_3>
+
+<!-- Gangrene -->
+<npcdialogsym.gangrene_1>Um dos meus membros está ficando preto!</npcdialogsym.gangrene_1>
+<npcdialogsym.gangrene_2>Estou perdendo a sensibilidade em um dos meus membros!</npcdialogsym.gangrene_2>
+<npcdialogsym.gangrene_3>Acho que um dos meus membros está apodrecendo!</npcdialogsym.gangrene_3>
+
+<!-- Fever -->
+<npcdialogsym.fever_1>Sinto como se estivesse queimando de febre!</npcdialogsym.fever_1>
+<npcdialogsym.fever_2>Estou com febre!</npcdialogsym.fever_2>
+<npcdialogsym.fever_3>Estou com calor, mas não paro de tremer de frio!</npcdialogsym.fever_3>
+
+<!-- Headache -->
+<npcdialogsym.headache_1>Minha cabeça está latejando!</npcdialogsym.headache_1>
+<npcdialogsym.headache_2>Minha cabeça está me matando!</npcdialogsym.headache_2>
+<npcdialogsym.headache_3>Alguém tem um Ibuprofeno? Estou com dor de cabeça.</npcdialogsym.headache_3>
+<npcdialogsym.headache_4>Estou com uma dor latejante na cabeça!</npcdialogsym.headache_4>
+
+<!-- Blurred Vision -->
+<npcdialogsym.blurredvision_1>Tudo parece embaçado!</npcdialogsym.blurredvision_1>
+<npcdialogsym.blurredvision_2>Não consigo focar em nada!</npcdialogsym.blurredvision_2>
+<npcdialogsym.blurredvision_3>Não consigo mais enxergar direito!</npcdialogsym.blurredvision_3>
+
+<!-- Fractured Ribs -->
+<npcdialogsym.fracturedribs_1>Acho que quebrei algumas costelas!</npcdialogsym.fracturedribs_1>
+<npcdialogsym.fracturedribs_2>Meu peito fez um estalo alto!</npcdialogsym.fracturedribs_2>
+<npcdialogsym.fracturedribs_3>Minhas costelas doem quando eu respiro!</npcdialogsym.fracturedribs_3>
+
+<!-- Fractured Skull -->
+<npcdialogsym.fracturedskull_1>Meu crânio fez um estalo alto!</npcdialogsym.fracturedskull_1>
+<npcdialogsym.fracturedskull_2>Tem algo errado com a minha cabeça!</npcdialogsym.fracturedskull_2>
+<npcdialogsym.fracturedskull_3>Acho que acabei de fraturar meu crânio!</npcdialogsym.fracturedskull_3>
+
+<!-- Fractured Extremity -->
+<npcdialogsym.fracturedextremity_1>Acho que quebrei um dos meus membros!</npcdialogsym.fracturedextremity_1>
+<npcdialogsym.fracturedextremity_2>Um dos meus membros acabou de fazer um estalo alto!</npcdialogsym.fracturedextremity_2>
+<npcdialogsym.fracturedextremity_3>Não consigo mexer um membro direito!</npcdialogsym.fracturedextremity_3>
+
+<!-- Dislocation -->
+<npcdialogsym.dislocation_1>Acho que desloquei um dos meus membros!</npcdialogsym.dislocation_1>
+<npcdialogsym.dislocation_2>Um dos meus membros acabou de sair do lugar!</npcdialogsym.dislocation_2>
+<npcdialogsym.dislocation_3>Não consigo mexer um membro direito!</npcdialogsym.dislocation_3>
+
+<!-- Chest Pain -->
+<npcdialogsym.chestpain_1>Meu peito dói!</npcdialogsym.chestpain_1>
+<npcdialogsym.chestpain_2>Sinto uma pressão dolorosa no peito!</npcdialogsym.chestpain_2>
+<npcdialogsym.chestpain_3>Estou com uma dor no peito!</npcdialogsym.chestpain_3>
+
+<!-- Weakness -->
+<npcdialogsym.weakness_1>Estou me sentindo tão fraco..</npcdialogsym.weakness_1>
+<npcdialogsym.weakness_2>Parece que meus músculos não respondem..</npcdialogsym.weakness_2>
+
+<!-- Sweating -->
+<npcdialogsym.sweating_1>Estou suando profusamente!</npcdialogsym.sweating_1>
+<npcdialogsym.sweating_2>Estou encharcado de suor!</npcdialogsym.sweating_2>
+<npcdialogsym.sweating_3>Estou pingando de suor!</npcdialogsym.sweating_3>
+
+<!-- Shortness of Breath -->
+<npcdialogsym.shortnessofbreath_1>Não consigo respirar direito!</npcdialogsym.shortnessofbreath_1>
+<npcdialogsym.shortnessofbreath_2>Parece que não consigo puxar o ar!</npcdialogsym.shortnessofbreath_2>
+<npcdialogsym.shortnessofbreath_3>Tem algo errado com a minha respiração!</npcdialogsym.shortnessofbreath_3>
+
+<!-- Bloating -->
+<npcdialogsym.bloating_1>Meu estômago parece inchado!</npcdialogsym.bloating_1>
+<npcdialogsym.bloating_2>Meu abdômen parece estufado!</npcdialogsym.bloating_2>
+
+<!-- Leg Swelling -->
+<npcdialogsym.legswelling_1>Minha perna está inchando!</npcdialogsym.legswelling_1>
+<npcdialogsym.legswelling_2>Minha perna está muito maior que o normal!</npcdialogsym.legswelling_2>
+
+<!-- Craving -->
+<npcdialogsym.craving_1>Eu preciso muito da minha dose..</npcdialogsym.craving_1>
+<npcdialogsym.craving_2>Eu bem que precisava de algo para levantar o ânimo..</npcdialogsym.craving_2>
+
+<!-- Palpitations -->
+<npcdialogsym.palpitations_1>Meu coração está disparado!</npcdialogsym.palpitations_1>
+<npcdialogsym.palpitations_2>Meu coração está batendo mais rápido que o normal!</npcdialogsym.palpitations_2>
+<npcdialogsym.palpitations_3>Meu coração está martelando no peito!</npcdialogsym.palpitations_3>
+
+<!-- ================================================= HUI Button Translations ================================================= -->
+<!-- Scalpel Button -->
+<nt_huibutton_enabled_scalpel>Usar um Bisturi no membro selecionado no momento. 
+Habilidade Médica Necessária: ‖color:gui.green‖30‖end‖</nt_huibutton_enabled_scalpel>
+
+<!-- Hemostat Button -->
+<nt_huibutton_enabled_hemostat>Usar uma Pinça Hemostática no membro selecionado no momento. 
+Habilidade Médica Necessária: ‖color:gui.green‖Nenhuma‖end‖</nt_huibutton_enabled_hemostat>
+
+<!-- Skin Retractors Button -->
+<nt_huibutton_enabled_skinretractors>Usar Afastadores Cirúrgicos no membro selecionado no momento. 
+Habilidade Médica Necessária: ‖color:gui.green‖30‖end‖</nt_huibutton_enabled_skinretractors>
+
+<!-- Surgical Drill Button -->
+<nt_huibutton_enabled_surgicaldrill>Usar uma Perfuratriz Cirúrgica no membro selecionado no momento. 
+Habilidade Médica Necessária: ‖color:gui.green‖45‖end‖</nt_huibutton_enabled_surgicaldrill>
+
+<!-- Surgery Saw Button -->
+<nt_huibutton_enabled_surgerysaw>Usar uma Serra Cirúrgica no membro selecionado no momento. 
+Habilidade Médica Necessária: ‖color:gui.green‖50‖end‖</nt_huibutton_enabled_surgerysaw>
+
+<!-- Tweezers Button -->
+<nt_huibutton_enabled_tweezers>Usar uma Pinça Anatômica no membro selecionado no momento. 
+Habilidade Médica Necessária: ‖color:gui.green‖30‖end‖</nt_huibutton_enabled_tweezers>
+
+<!-- Trauma Shears Button -->
+<nt_huibutton_enabled_traumashears>Usar uma Tesoura de Resgate no membro selecionado no momento. 
+Habilidade Médica Necessária: ‖color:gui.green‖10‖end‖</nt_huibutton_enabled_traumashears>
+
+<!-- Organ Scalpel Button -->
+<nt_huibutton_enabled_organscalpel>Substituir ou remover um órgão específico no Torso ou na Cabeça, dependendo do membro selecionado no momento.</nt_huibutton_enabled_organscalpel>
+
+<!-- Disabled Tooltip for Surgery Kit Dependencies -->
+<nt_huibutton_disabled_surgerykit>Requer Kit Cirúrgico no inventário!</nt_huibutton_disabled_surgerykit>
+
+<!-- ================================================= Config Options ================================================= -->
+<!-- Pause Menu Button -->
+<ntconfig.header.pausemenu>Configurações do Neurotrauma</ntconfig.header.pausemenu>
+
+<!-- Save Preset -->
+<ntconfig.tooltip.savepresetbutton>Criar uma nova Predefinição com as configurações selecionadas no momento.</ntconfig.tooltip.savepresetbutton>
+<ntconfig.header.savepreset>Criar nova Predefinição</ntconfig.header.savepreset>
+
+<!-- Load Preset -->
+<ntconfig.tooltip.loadpresetbutton>Carregar uma Predefinição existente e alterar as configurações de acordo.</ntconfig.tooltip.loadpresetbutton>
+<ntconfig.header.loadpreset>Carregar Predefinição existente</ntconfig.header.loadpreset>
+
+<!-- Button Row-->
+<ntconfig.button.saveexit>Salvar Configurações na Predefinição e Sair</ntconfig.button.saveexit>
+<ntconfig.button.discardexit>Descartar Alterações e Sair</ntconfig.button.discardexit>
+<ntconfig.button.resetexit>Redefinir Configurações para o Padrão e Sair</ntconfig.button.resetexit>
+
+<ntconfig.resetconfirm.header>Redefinir Configurações do Neurotrauma</ntconfig.resetconfirm.header>
+<ntconfig.resetconfirm.body>Tem certeza de que deseja redefinir as configurações do Neurotrauma para os valores padrão?</ntconfig.resetconfirm.body>
+<ntconfig.resetconfirm.yes>Sim</ntconfig.resetconfirm.yes>
+<ntconfig.resetconfirm.no>Não</ntconfig.resetconfirm.no>
+
+<!-- Default Pages -->
+<ntconfig.defaultpage.prices>Ajustar Preços dos Itens</ntconfig.defaultpage.prices>
+<ntconfig.defaultpage.itemchanges>Ajustar Itens</ntconfig.defaultpage.itemchanges>
+<ntconfig.defaultpage.afflictionchanges>Ajustar Condições</ntconfig.defaultpage.afflictionchanges>
+<ntconfig.defaultpage.experimental>Experimental</ntconfig.defaultpage.experimental>
+
+<!-- Default Warning -->
+<ntconfig.body.defaultwarning>A configuração do servidor só pode ser alterada pelo host ou por clientes autorizados.</ntconfig.body.defaultwarning>
+
+<!-- Reset Button-->
+<ntconfig.tooltip.resetbutton>Redefinir para o Padrão</ntconfig.tooltip.resetbutton>
+
+<!-- Credits -->
+<ntconfig.header.credits>Créditos</ntconfig.header.credits>
+
+<!-- =================== Default Config Content =================== -->
+<!-- Dislocation chance multiplier -->
+<ntconfig.entryname.dislocationchance>Multiplicador de chance de luxação</ntconfig.entryname.dislocationchance>
+<ntconfig.entrydescription.dislocationchance>‖color:gui.green‖Desative Luxações definindo este valor como 0.‖end‖
+
+Ajuste a probabilidade de ocorrer uma Luxação. Um multiplicador de 0.5 reduzirá a chance em 50%, enquanto aumentá-lo para 1.5 aumentará em 50%.</ntconfig.entrydescription.dislocationchance>
+
+<!-- Fracture chance multiplier -->
+<ntconfig.entryname.fracturechance>Multiplicador de chance de fratura</ntconfig.entryname.fracturechance>
+<ntconfig.entrydescription.fracturechance>‖color:gui.green‖Desative Fraturas definindo este valor como 0.‖end‖
+
+Ajuste a probabilidade de ocorrer uma Fratura. Um multiplicador de 0.5 reduzirá a chance em 50%, enquanto aumentá-lo para 1.5 aumentará em 50%.</ntconfig.entrydescription.fracturechance>
+
+<!-- Pneumothorax chance multiplier -->
+<ntconfig.entryname.pneumothoraxchance>Multiplicador de chance de pneumotórax</ntconfig.entryname.pneumothoraxchance>
+<ntconfig.entrydescription.pneumothoraxchance>‖color:gui.green‖Desative Pneumotórax definindo este valor como 0.‖end‖
+
+Ajuste a probabilidade de ocorrer um Pneumotórax. Um multiplicador de 0.5 reduzirá a chance em 50%, enquanto aumentá-lo para 1.5 aumentará em 50%.</ntconfig.entrydescription.pneumothoraxchance>
+
+<!-- Tamponade chance multiplier -->
+<ntconfig.entryname.tamponadechance>Multiplicador de chance de tamponamento cardíaco</ntconfig.entryname.tamponadechance>
+<ntconfig.entrydescription.tamponadechance>‖color:gui.green‖Desative Tamponamento Cardíaco definindo este valor como 0.‖end‖
+
+Ajuste a probabilidade de ocorrer Tamponamento Cardíaco. Um multiplicador de 0.5 reduzirá a chance em 50%, enquanto aumentá-lo para 1.5 aumentará em 50%.</ntconfig.entrydescription.tamponadechance>
+
+<!-- Heart attack chance multiplier -->
+<ntconfig.entryname.heartattackchance>Multiplicador de chance de infarto</ntconfig.entryname.heartattackchance>
+<ntconfig.entrydescription.heartattackchance>‖color:gui.green‖Desative Infartos Agudos do Miocárdio definindo este valor como 0.‖end‖
+
+Ajuste a probabilidade de ocorrer um Infarto. Um multiplicador de 0.5 reduzirá a chance em 50%, enquanto aumentá-lo para 1.5 aumentará em 50%.</ntconfig.entrydescription.heartattackchance>
+
+<!-- Stroke chance multiplier -->
+<ntconfig.entryname.strokechance>Multiplicador de chance de AVC</ntconfig.entryname.strokechance>
+<ntconfig.entrydescription.strokechance>‖color:gui.green‖Desative Acidentes Vasculares Cerebrais definindo este valor como 0.‖end‖
+
+Ajuste a probabilidade de ocorrer um AVC. Um multiplicador de 0.5 reduzirá a chance em 50%, enquanto aumentá-lo para 1.5 aumentará em 50%.</ntconfig.entrydescription.strokechance>
+
+<!-- Infection rate multiplier -->
+<ntconfig.entryname.infectionrate>Multiplicador de taxa de infecção</ntconfig.entryname.infectionrate>
+<ntconfig.entrydescription.infectionrate>‖color:gui.green‖Desative Feridas Infectadas definindo este valor como 0.‖end‖
+
+Ajuste a probabilidade de ocorrerem Feridas Infectadas. Um multiplicador de 0.5 reduzirá a chance em 50%, enquanto aumentá-lo para 1.5 aumentará em 50%.</ntconfig.entrydescription.infectionrate>
+
+<!-- Sepsis rate multiplier -->
+<ntconfig.entryname.sepsisrate>Multiplicador de taxa de sepse</ntconfig.entryname.sepsisrate>
+<ntconfig.entrydescription.sepsisrate>‖color:gui.green‖Desative Sepse definindo este valor como 0.‖end‖
+
+Ajuste a probabilidade de ocorrer Sepse. Um multiplicador de 0.5 reduzirá a chance em 50%, enquanto aumentá-lo para 1.5 aumentará em 50%.</ntconfig.entrydescription.sepsisrate>
+
+<!-- CPR fracture chance multiplier -->
+<ntconfig.entryname.cprfracturechance>Multiplicador de chance de fratura por RCP</ntconfig.entryname.cprfracturechance>
+<ntconfig.entrydescription.cprfracturechance>‖color:gui.green‖Desative Fraturas por RCP definindo este valor como 0.‖end‖
+
+Ajuste a chance de a RCP causar Fraturas. Um multiplicador de 0.5 reduzirá a chance em 50%, enquanto aumentá-lo para 1.5 aumentará em 50%.</ntconfig.entrydescription.cprfracturechance>
+
+<!-- Traumatic amputation chance multiplier -->
+<ntconfig.entryname.traumaticamputationchance>Multiplicador de chance de amputação traumática</ntconfig.entryname.traumaticamputationchance>
+<ntconfig.entrydescription.traumaticamputationchance>‖color:gui.green‖Desative Amputações Traumáticas definindo este valor como 0.‖end‖
+
+Ajuste a probabilidade de ocorrer uma Amputação Traumática. Um multiplicador de 0.5 reduzirá a chance em 50%, enquanto aumentá-lo para 1.5 aumentará em 50%.</ntconfig.entrydescription.traumaticamputationchance>
+
+<!-- Neurotrauma gain rate -->
+<ntconfig.entryname.neurotraumagain>Taxa de ganho de neurotrauma</ntconfig.entryname.neurotraumagain>
+<ntconfig.entrydescription.neurotraumagain>Ajuste a taxa na qual o Neurotrauma evolui. Um multiplicador de 0.5 reduzirá a taxa em 50%, enquanto aumentá-lo para 1.5 aumentará em 50%.</ntconfig.entrydescription.neurotraumagain>
+
+<!-- Organ damage gain rate -->
+<ntconfig.entryname.organdamagegain>Taxa de dano aos órgãos</ntconfig.entryname.organdamagegain>
+<ntconfig.entrydescription.organdamagegain>Ajuste a taxa na qual o dano específico aos órgãos evolui. Um multiplicador de 0.5 reduzirá a taxa em 50%, enquanto aumentá-lo para 1.5 aumentará em 50%.</ntconfig.entrydescription.organdamagegain>
+
+<!-- Fibrillation gain rate -->
+<ntconfig.entryname.fibrillationspeed>Taxa de progressão da fibrilação</ntconfig.entryname.fibrillationspeed>
+<ntconfig.entrydescription.fibrillationspeed>Ajuste a taxa na qual a Fibrilação evolui. Um multiplicador de 0.5 reduzirá a taxa em 50%, enquanto aumentá-lo para 1.5 aumentará em 50%.</ntconfig.entrydescription.fibrillationspeed>
+
+<!-- Gangrene gain rate -->
+<ntconfig.entryname.gangrenespeed>Taxa de progressão da gangrena</ntconfig.entryname.gangrenespeed>
+<ntconfig.entrydescription.gangrenespeed>Ajuste a taxa na qual a Gangrena evolui. Um multiplicador de 0.5 reduzirá a taxa em 50%, enquanto aumentá-lo para 1.5 aumentará em 50%.</ntconfig.entrydescription.gangrenespeed>
+
+<!-- Maximum fall damage multiplier -->
+<ntconfig.entryname.falldamageceiling>Multiplicador de dano máximo de queda</ntconfig.entryname.falldamageceiling>
+<ntconfig.entrydescription.falldamageceiling>‖color:gui.green‖Desative o Dano de Queda definindo este valor como 0.‖end‖
+
+Ajuste a quantidade máxima de dano recebido por quedas. Um multiplicador de 0.5 reduzirá o valor em 50%, enquanto aumentá-lo para 1.5 aumentará em 50%.</ntconfig.entrydescription.falldamageceiling>
+
+<!-- Falldamage multiplier -->
+<ntconfig.entryname.falldamage>Multiplicador de dano de queda</ntconfig.entryname.falldamage>
+<ntconfig.entrydescription.falldamage>‖color:gui.green‖Desative o Dano de Queda definindo este valor como 0.‖end‖
+
+Ajuste a quantidade de dano recebido por quedas. Um multiplicador de 0.5 reduzirá o dano em 50%, enquanto aumentá-lo para 1.5 aumentará em 50%.</ntconfig.entrydescription.falldamage>
+
+<!-- Falldamage serious injury chance multiplier -->
+<ntconfig.entryname.falldamageseriousinjurychance>Multiplicador de chance de lesão grave por queda</ntconfig.entryname.falldamageseriousinjurychance>
+<ntconfig.entrydescription.falldamageseriousinjurychance>‖color:gui.green‖Faça com que quedas causem apenas danos leves definindo este valor como 0.‖end‖
+
+Ajuste a chance de ocorrerem lesões graves devido a quedas. Um multiplicador de 0.5 reduzirá a chance em 50%, enquanto aumentá-lo para 1.5 aumentará em 50%.</ntconfig.entrydescription.falldamageseriousinjurychance>
+
+<!-- Clientside: Show HUI Buttons -->
+<ntconfig.entryname.DoHUIButtons>Exibir Botões de Ferramentas do Neurotrauma</ntconfig.entryname.DoHUIButtons>
+<ntconfig.entrydescription.DoHUIButtons>‖color:gui.green‖Opção do cliente (Clientside).‖end‖
+
+Adiciona uma sobreposição extra na interface de saúde que pode ser clicada para usar o item exibido. Desative esta opção se não pretende usá-los e os acha incômodos.</ntconfig.entrydescription.DoHUIButtons>
+
+<!-- Deterministic Blood Types -->
+<ntconfig.entryname.DoDeterministicBloodTypes>Tipos Sanguíneos Determinísticos</ntconfig.entryname.DoDeterministicBloodTypes>
+<ntconfig.entrydescription.DoDeterministicBloodTypes>Se ativado, seu tipo sanguíneo é calculado com base no nome do seu personagem em vez de ser aleatório. Isso significa que você manterá o mesmo tipo sanguíneo entre vidas e não poderá sorteá-lo novamente.</ntconfig.entrydescription.DoDeterministicBloodTypes>
+
+<!-- Character calculations -->
+<ntconfig.entryname.calculations>Funcionalidade do Mod Neurotrauma</ntconfig.entryname.calculations>
+<ntconfig.entrydescription.calculations>‖color:gui.red‖Desativar esta opção fará com que o mod pare de funcionar corretamente.‖end‖
+
+Desativa os cálculos de atualização do mod. Isso não deve ser feito a menos que você esteja enfrentando níveis extremos de dessincronização (desync) ou lag — pois desativar os cálculos do NT pode tornar o jogo jogável novamente.</ntconfig.entrydescription.calculations>
+
+<!-- Vanilla skill check formula -->
+<ntconfig.entryname.vanillaskillcheck>Fórmula padrão de teste de habilidade</ntconfig.entryname.vanillaskillcheck>
+<ntconfig.entrydescription.vanillaskillcheck>Usa a fórmula padrão (Vanilla) de teste de habilidade em vez da fórmula modificada do Neurotrauma. Alteração efetiva: Habilidade / HabilidadeNecessária (NTCS) para 100 - (HabilidadeNecessária - Habilidade) / 100 (Vanilla).</ntconfig.entrydescription.vanillaskillcheck>
+
+<!-- Disable bot treatment algorithms -->
+<ntconfig.entryname.disablebotalgorithms>Desativar algoritmos de tratamento de bots</ntconfig.entryname.disablebotalgorithms>
+<ntconfig.entrydescription.disablebotalgorithms>Impede que os bots tentem tratar condições médicas.
+Isso é recomendável, pois atualmente os bots são péssimos em tratar pacientes.</ntconfig.entrydescription.disablebotalgorithms>
+
+<!-- Screams -->
+<ntconfig.entryname.screams>Gritos</ntconfig.entryname.screams>
+<ntconfig.entrydescription.screams>Se ativado, os personagens podem gritar quando sentirem dor intensa.</ntconfig.entrydescription.screams>
+
+<!-- Organ rejection -->
+<ntconfig.entryname.organrejection>Rejeição de órgãos</ntconfig.entryname.organrejection>
+<ntconfig.entrydescription.organrejection>Se ativado, há uma chance de um órgão transplantado sofrer rejeição.
+
+Quanto maior a imunidade do paciente no momento do transplante, maior a chance de rejeição.</ntconfig.entrydescription.organrejection>
+
+<!-- Fractures remove casts -->
+<ntconfig.entryname.fracturesremovecasts>Fraturas removem gessos</ntconfig.entryname.fracturesremovecasts>
+<ntconfig.entrydescription.fracturesremovecasts>Se ativado, danos que fraturariam um membro já engessado removerão o gesso e refraturarão o membro.</ntconfig.entrydescription.fracturesremovecasts>
+
+<!-- NPC Consent Required -->
+<ntconfig.entryname.consentrequiredextra>Exigência de consentimento de NPCs para interações médicas</ntconfig.entryname.consentrequiredextra>
+<ntconfig.entrydescription.consentrequiredextra>Mod integrado de exigência de consentimento.
+Se ativado, NPCs fora da sua tripulação ou missão do submarino ficarão hostis com interações médicas.</ntconfig.entrydescription.consentrequiredextra>
+
+<!-- Excluded creatures that abuse the fall damage mechanic -->
+<ntconfig.entryname.creaturenofalldamage>Criaturas excluídas que abusam da mecânica de dano de queda</ntconfig.entryname.creaturenofalldamage>
+<ntconfig.style.creaturenofalldamage>SpeciesName,SpeciesName</ntconfig.style.creaturenofalldamage>
+<ntconfig.entrydescription.creaturenofalldamage>Certas criaturas abusam dos cálculos de dano de queda de uma forma que causa dano excessivo; o dano causado por criaturas nesta lista é reduzido para compensar isso.
+
+Você pode adicionar ou remover criaturas para personalizar esta lista como preferir. Use o comando de depuração `nt_listcreatures` para listar o SpeciesName da criatura que você deseja ajustar no seu jogo.
+
+Reporte outras criaturas que abusam do dano de queda no servidor do Discord para melhorar esta lista padrão.</ntconfig.entrydescription.creaturenofalldamage>
+
+<!-- =================== Scanner Settings =================== -->
+<ntconfig.entryname.header2>Configurações do Scanner</ntconfig.entryname.header2>
+
+<!-- Colored Scanner -->
+<ntconfig.entryname.enablecoloredscanner>Scanner Colorido</ntconfig.entryname.enablecoloredscanner>
+<ntconfig.entrydescription.enablecoloredscanner>Ativa mensagens de texto coloridas no scanner médico.</ntconfig.entrydescription.enablecoloredscanner>
+
+<!-- Low-Medium Text Threshold -->
+<ntconfig.entryname.lowmedthreshold>Limiar de Texto Baixo-Médio</ntconfig.entryname.lowmedthreshold>
+<ntconfig.entrydescription.lowmedthreshold>Onde termina a cor de progresso Baixo e começa a cor de progresso Médio.</ntconfig.entrydescription.lowmedthreshold>
+
+<!-- Medium-High Text Threshold -->
+<ntconfig.entryname.medhighthreshold>Limiar de Texto Médio-Alto</ntconfig.entryname.medhighthreshold>
+<ntconfig.entrydescription.medhighthreshold>Onde termina a cor de progresso Médio e começa a cor de progresso Alto.</ntconfig.entrydescription.medhighthreshold>
+
+<!-- Base Text Color -->
+<ntconfig.entryname.basecolor>Cor Base do Texto</ntconfig.entryname.basecolor>
+<ntconfig.style.basecolor>R,G,B</ntconfig.style.basecolor>
+<ntconfig.entrydescription.basecolor>Cor do texto do scanner.</ntconfig.entrydescription.basecolor>
+
+<!-- Name Text Color -->
+<ntconfig.entryname.namecolor>Cor do Texto dos Nomes</ntconfig.entryname.namecolor>
+<ntconfig.style.namecolor>R,G,B</ntconfig.style.namecolor>
+<ntconfig.entrydescription.namecolor>Cor do texto do scanner para nomes de jogadores.</ntconfig.entrydescription.namecolor>
+
+<!-- Low Priority Color -->
+<ntconfig.entryname.lowcolor>Cor de Prioridade Baixa</ntconfig.entryname.lowcolor>
+<ntconfig.style.lowcolor>R,G,B</ntconfig.style.lowcolor>
+<ntconfig.entrydescription.lowcolor>Cor do texto do scanner para condições com progresso baixo.</ntconfig.entrydescription.lowcolor>
+
+<!-- Medium Priority Color -->
+<ntconfig.entryname.medcolor>Cor de Prioridade Média</ntconfig.entryname.medcolor>
+<ntconfig.style.medcolor>R,G,B</ntconfig.style.medcolor>
+<ntconfig.entrydescription.medcolor>Cor do texto do scanner para condições com progresso médio.</ntconfig.entrydescription.medcolor>
+
+<!-- High Priority Color -->
+<ntconfig.entryname.highcolor>Cor de Prioridade Alta</ntconfig.entryname.highcolor>
+<ntconfig.style.highcolor>R,G,B</ntconfig.style.highcolor>
+<ntconfig.entrydescription.highcolor>Cor do texto do scanner para condições com progresso alto.</ntconfig.entrydescription.highcolor>
+
+<!-- Vital Priority Color -->
+<ntconfig.entryname.vitalcolor>Cor de Prioridade Vital</ntconfig.entryname.vitalcolor>
+<ntconfig.style.vitalcolor>R,G,B</ntconfig.style.vitalcolor>
+<ntconfig.entrydescription.vitalcolor>Cor do texto do scanner para condições vitais (Hemorragia arterial, Amputação traumática).</ntconfig.entrydescription.vitalcolor>
+
+<!-- Removed Organ Color -->
+<ntconfig.entryname.removalcolor>Cor de Órgão Removido</ntconfig.entryname.removalcolor>
+<ntconfig.style.removalcolor>R,G,B</ntconfig.style.removalcolor>
+<ntconfig.entrydescription.removalcolor>Cor do texto do scanner para órgãos removidos (Coração removido, amputação de perna).</ntconfig.entrydescription.removalcolor>
+
+<!-- Custom Category Color -->
+<ntconfig.entryname.customcolor>Cor da Categoria Personalizada</ntconfig.entryname.customcolor>
+<ntconfig.style.customcolor>R,G,B</ntconfig.style.customcolor>
+<ntconfig.entrydescription.customcolor>Cor do texto do scanner para a categoria personalizada.</ntconfig.entrydescription.customcolor>
+
+<!-- Included Vital Afflictions -->
+<ntconfig.entryname.vitalcategory>Condições Vitais Incluídas</ntconfig.entryname.vitalcategory>
+<ntconfig.style.vitalcategory>identifier,identifier</ntconfig.style.vitalcategory>
+<ntconfig.entrydescription.vitalcategory>Você pode adicionar ou remover condições para personalizar esta lista como preferir.</ntconfig.entrydescription.vitalcategory>
+
+<!-- Included Removal Affictions -->
+<ntconfig.entryname.removalcategory>Condições de Remoção Incluídas</ntconfig.entryname.removalcategory>
+<ntconfig.style.removalcategory>identifier,identifier</ntconfig.style.removalcategory>
+<ntconfig.entrydescription.removalcategory>Você pode adicionar ou remover condições para personalizar esta lista como preferir.</ntconfig.entrydescription.removalcategory>
+
+<!-- Custom Affliction Category -->
+<ntconfig.entryname.customcategory>Categoria de Condições Personalizada</ntconfig.entryname.customcategory>
+<ntconfig.style.customcategory>identifier,identifier</ntconfig.style.customcategory>
+<ntconfig.entrydescription.customcategory>Você pode adicionar ou remover condições para personalizar esta lista como preferir.</ntconfig.entrydescription.customcategory>
+
+<!-- Ignored Afflictions -->
+<ntconfig.entryname.ignoredcategory>Condições Ignoradas</ntconfig.entryname.ignoredcategory>
+<ntconfig.style.ignoredcategory>identifier,identifier</ntconfig.style.ignoredcategory>
+<ntconfig.entrydescription.ignoredcategory>Condições adicionadas a esta categoria serão ignoradas pelo scanner médico.</ntconfig.entrydescription.ignoredcategory>
+
+<ntconfigname_debugmode>Modo de Depuração</ntconfigname_debugmode>
+<ntconfigdescription_debugmode>MAIS LOGS! Útil se você estiver depurando ou desenvolvendo um addon.</ntconfigdescription_debugmode>
+	
+<!-- =================== Common Item Price Multipliers =================== -->
+<ntconfig.entryname.header3>Multiplicadores de Preço de Itens Comuns</ntconfig.entryname.header3>
+<!-- Morphine -->
+<ntconfig.entryname.itemprice_antidama1>Morfina</ntconfig.entryname.itemprice_antidama1>
+
+<!-- Gypsum -->
+<ntconfig.entryname.itemprice_gypsum>Gesso</ntconfig.entryname.itemprice_gypsum>
+
+<!-- Suture -->
+<ntconfig.entryname.itemprice_suture>Sutura</ntconfig.entryname.itemprice_suture>
+
+<!-- Tourniquet -->
+<ntconfig.entryname.itemprice_tourniquet>Torniquete</ntconfig.entryname.itemprice_tourniquet>
+
+<!-- Needle -->
+<ntconfig.entryname.itemprice_needle>Agulha de Descompressão</ntconfig.entryname.itemprice_needle>
+
+<!-- Drainage -->
+<ntconfig.entryname.itemprice_drainage>Dreno Torácico</ntconfig.entryname.itemprice_drainage>
+
+<!-- Gel Coolant Pack -->
+<ntconfig.entryname.itemprice_gelipack>Compressa de Gel Refrigerante</ntconfig.entryname.itemprice_gelipack>
+
+<!-- Antibiotic Ointment -->
+<ntconfig.entryname.itemprice_ointment>Pomada Antibiótica</ntconfig.entryname.itemprice_ointment>
+
+<!-- Bandage -->
+<ntconfig.entryname.itemprice_antibleeding1>Atadura</ntconfig.entryname.itemprice_antibleeding1>
+
+<!-- Plastiseal -->
+<ntconfig.entryname.itemprice_antibleeding2>Selante cutâneo</ntconfig.entryname.itemprice_antibleeding2>
+
+<!-- Blood Packs -->
+<ntconfig.entryname.itemprice_bloodpacks>Bolsas de Sangue</ntconfig.entryname.itemprice_bloodpacks>
+
+<!-- Empty Blood Pack -->
+<ntconfig.entryname.itemprice_emptybloodpack>Bolsa de Sangue Vazia</ntconfig.entryname.itemprice_emptybloodpack>
+
+<!-- Osteosynthesis Implants -->
+<ntconfig.entryname.itemprice_osteosynthesisimplants>Implantes de Osteossíntese</ntconfig.entryname.itemprice_osteosynthesisimplants>
+
+<!-- Spinal Cord Implants -->
+<ntconfig.entryname.itemprice_spinalimplant>Implantes de Medula Espinhal</ntconfig.entryname.itemprice_spinalimplant>
+
+<!-- =================== Bodypart Price Multipliers =================== -->
+<ntconfig.entryname.header4>Multiplicadores de Preço de Partes do Corpo</ntconfig.entryname.header4>
+
+<!-- Arms -->
+<ntconfig.entryname.itemprice_arms>Braços</ntconfig.entryname.itemprice_arms>
+
+<!-- Legs -->
+<ntconfig.entryname.itemprice_legs>Pernas</ntconfig.entryname.itemprice_legs>
+
+<!-- Bionic Arms -->
+<ntconfig.entryname.itemprice_bionicarms>Braços Biônicos</ntconfig.entryname.itemprice_bionicarms>
+
+<!-- Bionic Legs -->
+<ntconfig.entryname.itemprice_bioniclegs>Pernas Biônicas</ntconfig.entryname.itemprice_bioniclegs>
+
+<!-- Liver Transplant -->
+<ntconfig.entryname.itemprice_livertransplant>Fígado para Transplante</ntconfig.entryname.itemprice_livertransplant>
+
+<!-- Lung Transplant -->
+<ntconfig.entryname.itemprice_lungtransplant>Pulmões para Transplante</ntconfig.entryname.itemprice_lungtransplant>
+
+<!-- Kidney Transplant -->
+<ntconfig.entryname.itemprice_kidneytransplant>Rins para Transplante</ntconfig.entryname.itemprice_kidneytransplant>
+
+<!-- Heart Transplant -->
+<ntconfig.entryname.itemprice_hearttransplant>Coração para Transplante</ntconfig.entryname.itemprice_hearttransplant>
+
+<!-- =================== Gear Price Multipliers =================== -->
+<ntconfig.entryname.header5>Multiplicadores de Preço de Equipamentos</ntconfig.entryname.header5>
+
+<!-- Health Scanner -->
+<ntconfig.entryname.itemprice_healthscanner>Scanner Médico</ntconfig.entryname.itemprice_healthscanner>
+
+<!-- Hematology Analyzer -->
+<ntconfig.entryname.itemprice_bloodanalyzer>Analisador Hematológico</ntconfig.entryname.itemprice_bloodanalyzer>
+
+<!-- Manual Defibrillator -->
+<ntconfig.entryname.itemprice_defibrillator>Desfibrilador Manual</ntconfig.entryname.itemprice_defibrillator>
+
+<!-- Automated External Defibrillator -->
+<ntconfig.entryname.itemprice_aed>Desfibrilador Externo Automático</ntconfig.entryname.itemprice_aed>
+
+<!-- BVM -->
+<ntconfig.entryname.itemprice_bvm>Ambu (BVM)</ntconfig.entryname.itemprice_bvm>
+
+<!-- AutoPulse -->
+<ntconfig.entryname.itemprice_autocpr>AutoPulse</ntconfig.entryname.itemprice_autocpr>
+
+<!-- Refrigerated Crate -->
+<ntconfig.entryname.itemprice_organcrate>Caixa Refrigerada</ntconfig.entryname.itemprice_organcrate>
+
+<!-- Refrigerated Container -->
+<ntconfig.entryname.itemprice_organtoolbox>Contêiner Refrigerado</ntconfig.entryname.itemprice_organtoolbox>
+
+<!-- Medical Container -->
+<ntconfig.entryname.itemprice_medtoolbox>Maleta Médica</ntconfig.entryname.itemprice_medtoolbox>
+
+<!-- Surgery Toolbox -->
+<ntconfig.entryname.itemprice_surgerytoolbox>Caixa de Instrumentos Cirúrgicos</ntconfig.entryname.itemprice_surgerytoolbox>
+
+<!-- Surgery Toolbox (Kit) -->
+<ntconfig.entryname.itemprice_surgerytoolboxset>Caixa de Instrumentos Cirúrgicos (Kit)</ntconfig.entryname.itemprice_surgerytoolboxset>
+
+<!-- Medical Starter Crate -->
+<ntconfig.entryname.itemprice_medstartercrate>Caixa Médica Inicial</ntconfig.entryname.itemprice_medstartercrate>
+
+<!-- Bodybag -->
+<ntconfig.entryname.itemprice_bodybag>Saco Cadavérico</ntconfig.entryname.itemprice_bodybag>
+
+<!-- Stasis Bag -->
+<ntconfig.entryname.itemprice_stasisbag>Saco de Estase</ntconfig.entryname.itemprice_stasisbag>
+
+<!-- Wheelchair -->
+<ntconfig.entryname.itemprice_wheelchair>Cadeira de Rodas</ntconfig.entryname.itemprice_wheelchair>
+
+<!-- Analgesic Tank -->
+<ntconfig.entryname.itemprice_analgesictank>Cilindro de Analgésico</ntconfig.entryname.itemprice_analgesictank>
+
+<!-- Toxin Filter -->
+<ntconfig.entryname.itemprice_toxfilter>Filtro de Toxinas</ntconfig.entryname.itemprice_toxfilter>
+
+<!-- Dialyzer -->
+<ntconfig.entryname.itemprice_dialyzer>Filtro de Diálise</ntconfig.entryname.itemprice_dialyzer>
+
+<!-- =================== Other Medicine Items Price Multipliers =================== -->
+<ntconfig.entryname.header6>Multiplicadores de Preço de Outros Medicamentos</ntconfig.entryname.header6>
+
+<!-- Saline -->
+<ntconfig.entryname.itemprice_antibloodloss1>Soro Fisiológico</ntconfig.entryname.itemprice_antibloodloss1>
+
+<!-- Opium -->
+<ntconfig.entryname.itemprice_opium>Ópio</ntconfig.entryname.itemprice_opium>
+
+<!-- Fentanyl -->
+<ntconfig.entryname.itemprice_antidama2>Fentanil</ntconfig.entryname.itemprice_antidama2>
+
+<!-- Ringer's Solution -->
+<ntconfig.entryname.itemprice_ringerssolution>Solução de Ringer</ntconfig.entryname.itemprice_ringerssolution>
+
+<!-- Mannitol -->
+<ntconfig.entryname.itemprice_mannitol>Manitol</ntconfig.entryname.itemprice_mannitol>
+
+<!-- Azathioprine -->
+<ntconfig.entryname.itemprice_immunosuppressant>Azatioprina</ntconfig.entryname.itemprice_immunosuppressant>
+
+<!-- Thiamine -->
+<ntconfig.entryname.itemprice_thiamine>Tiamina</ntconfig.entryname.itemprice_thiamine>
+
+<!-- Streptokinase -->
+<ntconfig.entryname.itemprice_streptokinase>Estreptoquinase</ntconfig.entryname.itemprice_streptokinase>
+
+<!-- Naloxone -->
+<ntconfig.entryname.itemprice_antinarc>Naloxona</ntconfig.entryname.itemprice_antinarc>
+
+<!-- Broad-Spectrum Antibiotics -->
+<ntconfig.entryname.itemprice_antibiotics>Antibióticos de Amplo Espectro</ntconfig.entryname.itemprice_antibiotics>
+
+<!-- Adrenaline -->
+<ntconfig.entryname.itemprice_adrenaline>Adrenalina</ntconfig.entryname.itemprice_adrenaline>
+
+<!-- Liquid Oxygenite -->
+<ntconfig.entryname.itemprice_liquidoxygenite>Oxigenita Líquida</ntconfig.entryname.itemprice_liquidoxygenite>
+
+<!-- Deusizine -->
+<ntconfig.entryname.itemprice_deusizine>Deusizina</ntconfig.entryname.itemprice_deusizine>
+
+<!-- Antibiotic Glue -->
+<ntconfig.entryname.itemprice_antibleeding3>Cola Antibiótica</ntconfig.entryname.itemprice_antibleeding3>
+
+<!-- Methamphetamine -->
+<ntconfig.entryname.itemprice_meth>Metanfetamina</ntconfig.entryname.itemprice_meth>
+
+<!-- Hyperzine -->
+<ntconfig.entryname.itemprice_hyperzine>Hiperzina</ntconfig.entryname.itemprice_hyperzine>
+
+<!-- Haloperidol -->
+<ntconfig.entryname.itemprice_antipsychosis>Haloperidol</ntconfig.entryname.itemprice_antipsychosis>
+
+<!-- Anaparalyzant -->
+<ntconfig.entryname.itemprice_antiparalysis>Antiparalisante</ntconfig.entryname.itemprice_antiparalysis>
+
+<!-- Nitroglycerin -->
+<ntconfig.entryname.itemprice_nitroglycerin>Nitroglicerina</ntconfig.entryname.itemprice_nitroglycerin>
+
+<!-- =================== Surgical Tools Price Multipliers =================== -->
+<ntconfig.entryname.header7>Multiplicadores de Preço de Instrumentos Cirúrgicos</ntconfig.entryname.header7>
+
+<!-- Hemostat -->
+<ntconfig.entryname.itemprice_advhemostat>Pinça Hemostática</ntconfig.entryname.itemprice_advhemostat>
+
+<!-- Retractors -->
+<ntconfig.entryname.itemprice_advretractors>Afastadores Cirúrgicos</ntconfig.entryname.itemprice_advretractors>
+
+<!-- Surgical Drill -->
+<ntconfig.entryname.itemprice_surgicaldrill>Perfuratriz Cirúrgica</ntconfig.entryname.itemprice_surgicaldrill>
+
+<!-- Surgical Saw -->
+<ntconfig.entryname.itemprice_surgerysaw>Serra Cirúrgica</ntconfig.entryname.itemprice_surgerysaw>
+
+<!-- Tweezers -->
+<ntconfig.entryname.itemprice_tweezers>Pinça Anatômica</ntconfig.entryname.itemprice_tweezers>
+
+<!-- Trauma Shears -->
+<ntconfig.entryname.itemprice_traumashears>Tesoura de Resgate</ntconfig.entryname.itemprice_traumashears>
+
+<!-- Multipurpose Scalpel -->
+<ntconfig.entryname.itemprice_advscalpel>Bisturi Multifuncional</ntconfig.entryname.itemprice_advscalpel>
+
+<!-- =================== Item Changes ===================-->
+<ntconfig.entryname.header8>Ajustar Funcionalidade de Itens</ntconfig.entryname.header8>
+
+<!-- Osteosynthesis Implant Uses -->
+<ntconfig.entryname.osteoimplants_uses>Usos dos Implantes de Osteossíntese</ntconfig.entryname.osteoimplants_uses>
+
+<!-- Spinal Cord Implant Uses -->
+<ntconfig.entryname.spinalimplants_uses>Usos dos Implantes de Medula Espinhal</ntconfig.entryname.spinalimplants_uses>
+
+<!-- Enable Sodium Nitroprusside -->
+<ntconfig.entryname.donitroprusside>Ativar Nitroprussiato de Sódio</ntconfig.entryname.donitroprusside>
+<ntconfig.entrydescription.donitroprusside>Esta configuração pode ser alterada a qualquer momento. 
+
+‖color:gui.green‖Ativado:‖end‖ Nitroprussiato de Sódio pode ser encontrado/comprado/fabricado. 
+
+‖color:gui.red‖Desativado:‖end‖ Nitroprussiato de Sódio não pode ser encontrado/comprado/fabricado.</ntconfig.entrydescription.donitroprusside>
+
+<!-- Enable Organ Scalpels -->
+<ntconfig.entryname.doorganscalpels>Ativar Bisturis de Remoção de Órgãos</ntconfig.entryname.doorganscalpels>
+<ntconfig.entrydescription.doorganscalpels>Esta configuração pode ser alterada a qualquer momento. 
+
+‖color:gui.green‖Ativado:‖end‖ Bisturis de Remoção de Órgãos podem ser encontrados/comprados/fabricados. 
+
+‖color:gui.red‖Desativado:‖end‖ Bisturis de Remoção de Órgãos não podem ser encontrados/comprados/fabricados.
+
+O Bisturi Multifuncional está isento desta configuração.</ntconfig.entrydescription.doorganscalpels>
+
+<!-- Enable Additional Surgery Table Healing -->
+<ntconfig.entryname.surgerytablehealsmore>Cura Adicional da Mesa Cirúrgica</ntconfig.entryname.surgerytablehealsmore>
+<ntconfig.entrydescription.surgerytablehealsmore>Esta configuração pode ser alterada a qualquer momento. 
+
+Faz com que a mesa cirúrgica cure danos adicionais aos órgãos do Neurotrauma enquanto você estiver deitado nela.</ntconfig.entrydescription.surgerytablehealsmore>
+
+
+<!-- =================== Affliction Changes =================== -->
+<ntconfig.entryname.afflictionchanges>Ajustar Funcionalidade de Condições</ntconfig.entryname.afflictionchanges>
+
+<!-- Hardmode Aortic Rupture -->
+<ntconfig.entryname.hardmodeaorticrupture>Ruptura Aórtica Difícil</ntconfig.entryname.hardmodeaorticrupture>
+<ntconfig.entrydescription.hardmodeaorticrupture>Esta configuração pode ser alterada a qualquer momento. 
+
+‖color:gui.green‖Ativado:‖end‖ Rupturas Aórticas agora exigem Stent Endovascular e Balão Endovascular para serem curadas; também permite que esses itens sejam encontrados/comprados/fabricados. 
+
+‖color:gui.red‖Desativado:‖end‖ Rupturas Aórticas podem ser curadas apenas com Cirurgia de Abertura / Fechamento; também impede que Stents Endovasculares e Balões Endovasculares sejam encontrados/comprados/fabricados.</ntconfig.entrydescription.hardmodeaorticrupture>
+
+<!-- Open Close Tamponade -->
+<ntconfig.entryname.openclosetamponade>Tamponamento por Abertura / Fechamento</ntconfig.entryname.openclosetamponade>
+<ntconfig.entrydescription.openclosetamponade>Esta configuração pode ser alterada a qualquer momento. 
+
+‖color:gui.green‖Ativado:‖end‖ Tamponamento Cardíaco pode ser curado apenas com Cirurgia de Abertura / Fechamento. 
+
+‖color:gui.red‖Desativado:‖end‖ Tamponamento Cardíaco só pode ser curado com um Dreno Torácico durante a Cirurgia de Abertura / Fechamento.</ntconfig.entrydescription.openclosetamponade>
+
+<!-- Additional Matriarch Genes Healing -->
+<ntconfig.entryname.extramatriarchhealing>Cura Adicional de Genes da Matriarca</ntconfig.entryname.extramatriarchhealing>
+<ntconfig.entrydescription.extramatriarchhealing>Esta configuração pode ser alterada a qualquer momento. 
+
+Faz com que os genes de Matriarca Tubarão-Martelo curem danos aos órgãos do Neurotrauma, escalando conforme a potência do gene.</ntconfig.entrydescription.extramatriarchhealing>
+
+<!-- =================== EXPERIMENTAL =================== -->
+
+<ntconfigname_header9>Configurações Experimentais</ntconfigname_header9>
+
+<ntconfigname_description1>As configurações abaixo definem o intervalo de tempo (em ticks, 60 ticks por segundo) entre cada ciclo de atualização. As condições são separadas em diferentes níveis de prioridade de acordo com sua "importância". Alterar esses valores pode causar comportamentos inesperados; altere-os apenas se souber o que está fazendo!</ntconfigname_description1>
+<ntconfigname_description2></ntconfigname_description2>
+
+<ntconfigname_updateinterval_high>Intervalo de Atualização (Condições de Alta Prioridade)</ntconfigname_updateinterval_high>
+<ntconfigname_updateinterval_medium>Intervalo de Atualização (Condições de Média Prioridade)</ntconfigname_updateinterval_medium>
+<ntconfigname_updateinterval_low>Intervalo de Atualização (Condições de Baixa Prioridade)</ntconfigname_updateinterval_low>
+<ntconfigname_updateinterval_monster>Intervalo de Atualização (Monstros)</ntconfigname_updateinterval_monster>
+
+<ntconfigdescription_updateinterval_high></ntconfigdescription_updateinterval_high>
+<ntconfigdescription_updateinterval_medium></ntconfigdescription_updateinterval_medium>
+<ntconfigdescription_updateinterval_low></ntconfigdescription_updateinterval_low>
+<ntconfigdescription_updateinterval_monster></ntconfigdescription_updateinterval_monster>
+
+<ntconfig.entryname.reviveexcluded>Condições Excluídas ao Reviver</ntconfig.entryname.reviveexcluded>
+<ntconfig.style.reviveexcluded>identifier,identifier</ntconfig.style.reviveexcluded>
+<ntconfig.entrydescription.reviveexcluded>Condições nesta lista ‖color:gui.red‖não‖end‖ serão removidas ao utilizar o comando Revive.</ntconfig.entrydescription.reviveexcluded>
+
+</infotexts>
