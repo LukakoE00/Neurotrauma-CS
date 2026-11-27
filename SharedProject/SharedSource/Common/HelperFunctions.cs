@@ -1303,6 +1303,24 @@ namespace Neurotrauma
         {
             if (string.IsNullOrEmpty(AfflictionID) || Target?.CharacterHealth == null) return false;
 
+            if (LimbIsAmputated(Target, GivenLimbType))
+            {
+                switch (GivenLimbType)
+                {
+
+                    case LimbType.LeftLeg:
+                    case LimbType.LeftThigh:
+                    case LimbType.LeftFoot:
+                        GivenLimbType = LimbType.LeftThigh;
+                        break;
+                    case LimbType.RightLeg:
+                    case LimbType.RightThigh:
+                    case LimbType.RightFoot:
+                        GivenLimbType = LimbType.RightThigh;
+                        break;
+                }
+            }
+
             Limb? limb = Target.AnimController.GetLimb(GivenLimbType);
             if (limb == null) return false;
 
@@ -1373,6 +1391,24 @@ namespace Neurotrauma
         {
 
             if (Target == null || Target.CharacterHealth == null || Target.IdFreed) return null;
+
+            if (LimbIsAmputated(Target, GivenLimbType))
+            {
+                switch (GivenLimbType)
+                {
+
+                    case LimbType.LeftLeg:
+                    case LimbType.LeftThigh:
+                    case LimbType.LeftFoot:
+                        GivenLimbType = LimbType.LeftThigh;
+                        break;
+                    case LimbType.RightLeg:
+                    case LimbType.RightThigh:
+                    case LimbType.RightFoot:
+                        GivenLimbType = LimbType.RightThigh;
+                        break;
+                }
+            }
 
             Limb? RealLimb = Target.AnimController.GetLimb(GivenLimbType, excludeSevered: false);
             if (RealLimb == null) return null;
@@ -1456,6 +1492,24 @@ namespace Neurotrauma
         /// <param name="PreviousStrength">Previous strength if hardcoded.</param>
         public static void SetAfflictionLimb(Character Target, string AfflictionID, LimbType GivenLimbType, float Strength, Character ?Aggressor = null, float PreviousStrength = 0)
         {
+            if (LimbIsAmputated(Target, GivenLimbType))
+            {
+                switch (GivenLimbType)
+                {
+
+                    case LimbType.LeftLeg:
+                    case LimbType.LeftThigh:
+                    case LimbType.LeftFoot:
+                        GivenLimbType = LimbType.LeftThigh;
+                        break;
+                    case LimbType.RightLeg:
+                    case LimbType.RightThigh:
+                    case LimbType.RightFoot:
+                        GivenLimbType = LimbType.RightThigh;
+                        break;
+                }
+            }
+
             Limb? RealLimb = Target.AnimController.GetLimb(GivenLimbType, excludeSevered: false);
             if (RealLimb == null) return;
 
@@ -1502,6 +1556,25 @@ namespace Neurotrauma
         /// <param name="Aggressor">Possible aggressor that caused the affliction.</param>
         public static void AddAfflictionLimb(Character Target, string AfflictionID, LimbType GivenLimbType, float Strength, Character ?Aggressor = null)
         {
+
+            if (LimbIsAmputated(Target, GivenLimbType))
+            {
+                switch (GivenLimbType)
+                {
+
+                    case LimbType.LeftLeg:
+                    case LimbType.LeftThigh:
+                    case LimbType.LeftFoot:
+                        GivenLimbType = LimbType.LeftThigh;
+                        break;
+                    case LimbType.RightLeg:
+                    case LimbType.RightThigh:
+                    case LimbType.RightFoot:
+                        GivenLimbType = LimbType.RightThigh;
+                        break;
+                }
+            }
+
             Limb? RealLimb = Target.AnimController.GetLimb(GivenLimbType, excludeSevered: false);
             if (RealLimb == null) return;
 
