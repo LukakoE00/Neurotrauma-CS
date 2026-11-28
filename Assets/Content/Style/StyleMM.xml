@@ -4,7 +4,7 @@
     <!-- Barotrauma Logo Override -->
     <!-- Made by EvilGreenBean -->
     <TitleText color="255,255,255,255" hovercolor="255,255,255,255" selectedcolor="255,255,255,255" pressedcolor="255,255,255,255">
-      <Sprite texture="%ModDir%/Style/NeurotraumaHeader.png" sourcerect="0,0,2000,500" tile="false" maintainaspectratio="true" />
+      <Sprite texture="%ModDir%/Style/NeurotraumaHeader.png" sourcerect="0,0,800,200" tile="false" maintainaspectratio="true" />
     </TitleText>
   </Override>
 </Style>
