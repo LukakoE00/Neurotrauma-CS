@@ -427,7 +427,7 @@ namespace Neurotrauma.ClientSource
         }
 
         // Force Main UI to update for new additions
-        public static void SyncButtonData()
+        public static void RefreshButtonUI()
         {
             RegisteredButtons.Clear();
             RegisteredButtons.AddRange(ButtonDefinitions.Entries);
