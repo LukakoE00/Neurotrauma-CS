@@ -26,7 +26,7 @@ public partial class Initialization
         {
             Client? sender = args.Length > 1 ? args[1] as Client : null;
 
-            if (sender == null)
+            if (sender == null || !(sender.HasPermission(ClientPermissions.ManageSettings)))
             {
                 return;
             }

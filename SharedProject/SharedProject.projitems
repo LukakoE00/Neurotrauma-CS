@@ -11,6 +11,8 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)SharedSource\AssemblySettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)sharedsource\components\afflictions\Amputations.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SharedSource\Config\ConfigNetworking.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SharedSource\Config\ConfigPresets.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)sharedsource\harmonypatches\HarmonyRegisters.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SharedSource\Hooks\CharacterEvents.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SharedSource\Hooks\HookRegisters.cs" />

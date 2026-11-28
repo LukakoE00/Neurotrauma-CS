@@ -77,17 +77,17 @@ namespace Neurotrauma
                     }
                     else
                     {
-                        LuaCsLogger.LogError($"NT Dynamic Items Harmony patch failed at step 3.");
+                        HF.PrintError($"NT Dynamic Items Harmony patch failed at step 3.");
                     }
                 }
                 else
                 {
-                    LuaCsLogger.LogError($"NT Dynamic Items Harmony patch failed at step 2.");
+                    HF.PrintError($"NT Dynamic Items Harmony patch failed at step 2.");
                 }
             }
             catch (Exception ex)
             {
-                LuaCsLogger.LogError($"NT Dynamic Items Harmony patch failed at step 1, Exception: {ex}");
+                HF.PrintError($"NT Dynamic Items Harmony patch failed at step 1, Exception: {ex}");
             }
 
             // PRICE CHANGING
@@ -256,13 +256,13 @@ namespace Neurotrauma
                     }
                     catch (Exception ex)
                     {
-                        LuaCsLogger.LogError($"NT Dynamic Items Harmony patch filter entities failed at step 2, Exception; {ex}");
+                        HF.PrintError($"NT Dynamic Items Harmony patch filter entities failed at step 2, Exception; {ex}");
                     }
                 }, 1); // Wait 1ms for UI to fully load
             }
             catch (Exception ex)
             {
-                LuaCsLogger.LogError($"NT Dynamic Items Harmony patch filter entities failed at step 1, Exception; {ex}");
+                HF.PrintError($"NT Dynamic Items Harmony patch filter entities failed at step 1, Exception; {ex}");
             }
         }
     }

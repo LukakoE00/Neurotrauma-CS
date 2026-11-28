@@ -54,6 +54,10 @@ public partial class Initialization : IAssemblyPlugin
         NTAfflictionsToAdd.AddAfflictions();
         NTStats.DefineAllStats();
         NTItemsData.DefineAllItems();
+
+#if SERVER
+        NTConfig.RegisterPresetCommands();
+#endif
     }
 
     public void PreInitPatching()
@@ -74,7 +78,7 @@ public partial class Initialization : IAssemblyPlugin
     {
         // Shared Scripts
         NTConfigData.Register();
-        NTConfig.LoadConfig();
+        NTConfig.LoadStartupPreset();
 
         // Serverside code that ALSO runs in Singleplayer
         if (HF.GameIsMultiplayer())

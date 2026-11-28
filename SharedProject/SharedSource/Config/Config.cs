@@ -2,9 +2,9 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text.Json;
 using Barotrauma;
-using Barotrauma.Networking;
 using MoonSharp.Interpreter;
 
 namespace Neurotrauma
@@ -42,42 +42,10 @@ namespace Neurotrauma
         public Dictionary<string, ConfigEntry>? ConfigData;
     }
 
-    public static class NTConfig
+    public static partial class NTConfig
     {
         public static Dictionary<string, ConfigEntry> Entries = new Dictionary<string, ConfigEntry>();
         public static List<ConfigExpansion> Expansions = new List<ConfigExpansion>();
-
-        private static readonly string PresetDirectoryPath = Path.Combine(SaveUtil.DefaultSaveFolder, "ModConfigs", "Neurotrauma Configs").Replace('\\', '/');
-
-        private static readonly string DefaultPresetDirectory = Path.Combine(Initialization.NeurotraumaModDir, "DefaultPresets").Replace('\\', '/');
-        private static readonly string DefaultPresetDirectoryFull = Path.GetFullPath(DefaultPresetDirectory).Replace('\\', '/');
-
-        private static readonly string DefaultConfigFilePath = Path.Combine(DefaultPresetDirectory, "Intended Config Preset.json").Replace('\\', '/');
-        public static string CurrentConfigPath { get; private set; } = DefaultConfigFilePath;
-        public static string DefaultConfigName => Path.GetFileNameWithoutExtension(DefaultConfigFilePath);
-
-        public static IEnumerable<string> GetDefaultPresetFiles() => Directory.GetFiles(DefaultPresetDirectory, "*.json");
-
-        public static bool IsDefaultPreset(string PresetPath)
-        {
-            string FullPresetPath = Path.GetFullPath(PresetPath).Replace('\\', '/');
-            return FullPresetPath.StartsWith(DefaultPresetDirectoryFull);
-        }
-
-        public static string ResolvePathFromName(string name)
-        {
-            if (string.IsNullOrWhiteSpace(name) || name.Equals(DefaultConfigName))
-            {
-                return DefaultConfigFilePath;
-            }
-
-            return GetPresetFilePath(name);
-        }
-
-        public static void SetCurrentConfigPath(string path)
-        {
-            CurrentConfigPath = path;
-        }
 
         private static ConfigEntryType StringToConfigEntry(string Type)
         {
@@ -217,32 +185,66 @@ namespace Neurotrauma
             }
         }
 
-        public static string GetPresetFilePath(string PresetName) => Path.Combine(PresetDirectoryPath, SanitizePresetName(PresetName) + ".json").Replace('\\', '/');
-
-        private static string SanitizePresetName(string PresetName)
+        // This was used twice before, now its a helper. Convert the values from a stored config preset into usable types.
+        private static void ConvertJsonValues(ConfigEntry entry, JsonElement value)
         {
-            foreach (char Character in Path.GetInvalidFileNameChars())
+            switch (entry.Type)
             {
-                PresetName = PresetName.Replace(Character, '_');
+                case ConfigEntryType.Bool:
+                    entry.Value = value.GetBoolean();
+                    break;
+
+                case ConfigEntryType.Float:
+                    entry.Value = (float)value.GetDouble();
+                    break;
+
+                case ConfigEntryType.Integer:
+                    entry.Value = value.GetInt32();
+                    break;
+
+                case ConfigEntryType.String:
+                    if (entry.Default is List<string> || value.ValueKind == JsonValueKind.Array)
+                    {
+                        entry.Value = value.EnumerateArray().Select(e => e.GetString()).ToList();
+                    }
+                    else
+                    {
+                        entry.Value = value.GetString();
+                    }
+                    break;
+            }
+        }
+
+        public static void LoadConfig(string? path = null)
+        {
+            string TargetPath = path ?? DefaultConfigFilePath;
+
+            if (!File.Exists(TargetPath))
+            {
+                return;
             }
 
-            return PresetName;
-        }
+            try
+            {
+                var readConfig = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(File.ReadAllText(TargetPath));
+                if (readConfig == null)
+                {
+                    return;
+                }
 
-        public static void SavePreset(string PresetName)
-        {
-            string PresetPath = GetPresetFilePath(PresetName);
-            SaveConfig(PresetPath);
-            CurrentConfigPath = PresetPath;
+                foreach (KeyValuePair<string, JsonElement> kvp in readConfig)
+                {
+                    if (Entries.TryGetValue(kvp.Key, out ConfigEntry? entry))
+                    {
+                        ConvertJsonValues(entry, kvp.Value);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                HF.PrintError("Error loading config: " + ex.Message);
+            }
         }
-
-        public static void LoadPreset(string PresetPath)
-        {
-            LoadConfig(PresetPath);
-            CurrentConfigPath = PresetPath;
-        }
-
-        public static IEnumerable<string> GetPresetFiles() => Directory.Exists(PresetDirectoryPath) ? Directory.GetFiles(PresetDirectoryPath, "*.json") : Array.Empty<string>();
 
         public static string SaveConfig(string? TargetPath = null)
         {
@@ -252,14 +254,14 @@ namespace Neurotrauma
             {
                 string OriginalName = Path.GetFileNameWithoutExtension(TargetPath);
                 TargetPath = GetPresetFilePath(OriginalName + " - Local Copy");
-                CurrentConfigPath = TargetPath;
+                SetActivePath(TargetPath);
             }
 
 #if CLIENT
-                if (IsDefaultPreset(TargetPath) && HF.GameIsMultiplayer() && GameMain.Client.IsServerOwner)
-                {
-                    return TargetPath;
-                }
+            if (IsDefaultPreset(TargetPath) && HF.GameIsMultiplayer() && GameMain.Client.IsServerOwner)
+            {
+                return TargetPath;
+            }
 #endif
 
             Dictionary<string, object> tableToSave = new Dictionary<string, object>(Entries.Count);
@@ -288,118 +290,6 @@ namespace Neurotrauma
             }
 
             return TargetPath;
-        }
-
-        public static void SendConfig()
-        {
-            Dictionary<string, object> tableToSend = new Dictionary<string, object>();
-
-            foreach (var kvp in Entries)
-            {
-                if (kvp.Value.Type != ConfigEntryType.Category && kvp.Value.IsClientside != true)
-                {
-                    tableToSend[kvp.Key] = kvp.Value.Value;
-                }
-            }
-
-            IWriteMessage msg = LuaCsSetup.Instance.Networking.Start("NT.ConfigUpdate");
-            msg.WriteString(JsonSerializer.Serialize(tableToSend));
-            LuaCsSetup.Instance.Networking.Send(msg);
-        }
-
-        public static void LoadConfig(string? path = null)
-        {
-            string TargetPath = path ?? DefaultConfigFilePath;
-
-            if (!File.Exists(TargetPath))
-            {
-                return;
-            }
-
-            try
-            {
-                string jsonContent = File.ReadAllText(TargetPath);
-                var readConfig = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(jsonContent);
-                if (readConfig == null)
-                {
-                    return;
-                }
-
-                foreach (KeyValuePair<string, JsonElement> kvp in readConfig)
-                {
-                    if (Entries.TryGetValue(kvp.Key, out ConfigEntry? entry))
-                    {
-                        switch (entry.Type)
-                        {
-                            case ConfigEntryType.Bool:
-                                entry.Value = kvp.Value.GetBoolean();
-                                break;
-
-                            case ConfigEntryType.Float:
-                                entry.Value = (float)kvp.Value.GetDouble();
-                                break;
-
-                            case ConfigEntryType.Integer:
-                                entry.Value = kvp.Value.GetInt32();
-                                break;
-
-                            case ConfigEntryType.String:
-                                if (entry.Default is List<string> || kvp.Value.ValueKind == JsonValueKind.Array)
-                                {
-                                    entry.Value = kvp.Value.EnumerateArray()
-                                        .Select(e => e.GetString())
-                                        .ToList();
-                                }
-                                else
-                                {
-                                    entry.Value = kvp.Value.GetString();
-                                }
-                                break;
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                LuaCsLogger.LogError("[NT] Error loading config: " + ex.Message);
-            }
-        }
-
-        public static void ReceiveConfig(IReadMessage msg)
-        {
-            try
-            {
-                string json = msg.ReadString();
-                var receivedTable = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(json);
-                if (receivedTable == null) return;
-
-                foreach (KeyValuePair<string, JsonElement> kvp in receivedTable)
-                {
-                    if (Entries.TryGetValue(kvp.Key, out ConfigEntry? entry) && entry.IsClientside != true)
-                    {
-                        if (entry.Type == ConfigEntryType.Bool) entry.Value = kvp.Value.GetBoolean();
-                        else if (entry.Type == ConfigEntryType.Float) entry.Value = (float)kvp.Value.GetDouble();
-                        else if (entry.Type == ConfigEntryType.Integer) entry.Value = kvp.Value.GetInt32();
-                        else if (entry.Type == ConfigEntryType.String)
-                        {
-                            if (entry.Default is List<string> || kvp.Value.ValueKind == JsonValueKind.Array)
-                            {
-                                entry.Value = kvp.Value.EnumerateArray()
-                                    .Select(e => e.GetString())
-                                    .ToList();
-                            }
-                            else
-                            {
-                                entry.Value = kvp.Value.GetString();
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                LuaCsLogger.LogError("[Neurotrauma] Error receiving network config: " + ex.Message);
-            }
         }
 
         public static void ResetConfig(bool ClientsideOnly = false)

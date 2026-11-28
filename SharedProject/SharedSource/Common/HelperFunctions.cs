@@ -1516,7 +1516,7 @@ namespace Neurotrauma
             // This Error was in the original but not ported for some reason?
             if (!AfflictionPrefab.Prefabs.TryGet(AfflictionID, out AfflictionPrefab? Prefab) || Prefab == null || Target == null || Target.CharacterHealth == null)
             {
-                LuaCsLogger.LogError(string.Format(
+                HF.PrintError(string.Format(
                     "Can't apply affliction to character limb\ncharacter = {0}, limbtype = {1}, affliction = {2}, strength = {3}",
                     Target != null ? Target.Name : "nil",
                     GivenLimbType.ToString(),

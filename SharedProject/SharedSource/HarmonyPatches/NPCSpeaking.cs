@@ -82,7 +82,7 @@ namespace Neurotrauma
                 // If the message is STILL empty then something went wrong!! Throw an error for that affliction.
                 if (string.IsNullOrEmpty(Message))
                 {
-                    LuaCsLogger.LogError($"[NT] NPC Voiceline for Affliction {Identifier} was not found! Possibly empty localization?");
+                    HF.PrintError($"NPC Voiceline for Affliction {Identifier} was not found! Possibly empty localization?");
                     continue;
                 }
 

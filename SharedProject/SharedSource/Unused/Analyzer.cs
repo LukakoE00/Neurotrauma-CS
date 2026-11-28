@@ -36,7 +36,7 @@ public class NTAnalyzer
         }
         catch (Exception ex)
         {
-            LuaCsLogger.LogError("[Neurotrauma] Error saving Stats: " + ex.Message);
+            HF.PrintError("Error saving Stats: " + ex.Message);
         }
     }
 

@@ -144,7 +144,7 @@ namespace Neurotrauma
             // This holds the name of the currently selected Config Preset and is used to determine to which Preset settings should be saved.
             ConfigFileNameTextBox = new GUITextBox(new RectTransform(new Vector2(0.7f, 0.5f), parent: ConfigPresetLayoutGroup.RectTransform, anchor: Anchor.CenterLeft), createPenIcon: false)
             {
-                Text = Path.GetFileNameWithoutExtension(NTConfig.CurrentConfigPath),
+                Text = GetDisplayedPresetName(),
                 CanBeFocused = false
             };
 
@@ -844,11 +844,34 @@ namespace Neurotrauma
                 }
             }
         }
+
+        // If we're on a server, use the currently active preset from the Server (either Host or Dedicated Server) in the config GUI.
+        public static string GetDisplayedPresetName()
+        {
+            if (GameMain.NetworkMember != null && GameMain.NetworkMember.IsClient && !string.IsNullOrEmpty(NTConfig.ServerPresetName))
+            {
+                return NTConfig.ServerPresetName;
+            }
+
+            return Path.GetFileNameWithoutExtension(NTConfig.CurrentConfigPath);
+        }
+
+        // If we as host save / select a new config OR if the Dedicated Server swaps, update the name accordingly.
+        public static void RefreshFromConfig()
+        {
+            if (BaseFrame?.Parent == null || PageListBox == null) return;
+
+            if (ConfigFileNameTextBox != null)
+            {
+                ConfigFileNameTextBox.Text = GetDisplayedPresetName();
+            }
+
+            PopulateSettings(PageListBox, SelectedExpansion);
+        }
     }
 
     public static class GUIComponents
     {
-
         // Is this client the server host?
         public static bool IsServerHost() => GameMain.NetworkMember?.IsServer == true;
 
@@ -1394,6 +1417,34 @@ namespace Neurotrauma
                 CloseAndRestore(MessageBox);
                 return false;
             };
+        }
+    }
+
+    public static partial class NTConfig
+    {
+        public static string? ServerPresetName { get; private set; }
+
+        public static void ClearServerPresetName() => ServerPresetName = null;
+
+        static partial void AddPresetInfo(Dictionary<string, object> table)
+        {
+            if (GameMain.NetworkMember?.IsClient == true)
+            {
+                table[ConfigMsg.PresetToServer] = Path.GetFileNameWithoutExtension(CurrentConfigPath);
+            }
+        }
+
+        static partial void OnConfigReceived(Dictionary<string, System.Text.Json.JsonElement> table)
+        {
+            if (GameMain.NetworkMember?.IsClient != true) return;
+
+            if (table.TryGetValue(ConfigMsg.ActivePresetToClient, out System.Text.Json.JsonElement ActiveElement) && ActiveElement.ValueKind == System.Text.Json.JsonValueKind.String)
+            {
+                ServerPresetName = ActiveElement.GetString();
+            }
+
+            // Make sure we're up-to-date.
+            ConfigurationMenu.RefreshFromConfig();
         }
     }
 }
