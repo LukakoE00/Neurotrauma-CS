@@ -1515,8 +1515,11 @@ public class NTItemsData
             if (!HF.GetSurgerySkillRequirementMet(infos.user.Human, 30))
             {
                 HF.AddAfflictionLimb(infos.target.Human, "internaldamage", infos.targetLimb.type, 6, infos.user.Human);
+                HF.RemoveItem(infos.item);
                 return;
             }
+
+            bool consumeItem = false;
 
             // Common afflictions part
             double healeddamage = 0;
@@ -1529,6 +1532,8 @@ public class NTItemsData
             healeddamage += Math.Clamp(HF.GetAfflictionStrengthLimb(infos.target.Human, infos.targetLimb.type, "bleeding", 0) / 10, 0, 40);
             healeddamage += Math.Clamp(HF.GetAfflictionStrengthLimb(infos.target.Human, infos.targetLimb.type, "bleedingnonstop", 0) / 10, 0, 40);
 
+            if (healeddamage > 0 || HF.HasAfflictionLimb(infos.target.Human, "surgeryincision", infos.targetLimb.type)) consumeItem = true;
+
             HF.AddAfflictionLimb(infos.target.Human, "lacerations", infos.targetLimb.type, -20, infos.user.Human);
             HF.AddAfflictionLimb(infos.target.Human, "bitewounds", infos.targetLimb.type, -20, infos.user.Human);
             HF.AddAfflictionLimb(infos.target.Human, "explosiondamage", infos.targetLimb.type, -20, infos.user.Human);
@@ -1539,6 +1544,8 @@ public class NTItemsData
             HF.AddAfflictionLimb(infos.target.Human, "suturedw", infos.targetLimb.type, (float)healeddamage, infos.user.Human);
 
             HF.GiveSkillScaled(infos.user.Human, "medical".ToIdentifier(), (float)healeddamage * 100);
+
+            
 
             // A slight delay is needed for the Surgery afflictions to clear themselves.
             if (HF.HasAfflictionLimb(infos.target.Human, "sawedbones", infos.targetLimb.type, 1))
@@ -1602,7 +1609,17 @@ public class NTItemsData
                 HF.GiveSurgerySkill(infos.user.Human, affInfos.XPGain);
             }
 
-            
+            if (consumeItem)
+            {
+                HF.RemoveItem(infos.item);
+            } else
+            {
+                LuaCsSetup.Instance.Timer.Wait((params object[] _) =>
+                {
+                    infos.item.Condition = 100;
+                }, 1000);
+                
+            }
         });
 
         // Drainage

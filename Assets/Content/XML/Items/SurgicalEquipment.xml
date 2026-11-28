@@ -40,9 +40,9 @@
             <StatusEffect type="OnUse" tags="medical" target="This, Limb">
                 <Sound file="%ModDir%/Sounds/ItemApplication/Consumables/suture.ogg" range="500"/>
             </StatusEffect>
-            <StatusEffect type="OnBroken" target="This">
+			<!--<StatusEffect type="OnBroken" target="This">
                 <Remove/>
-            </StatusEffect>
+            </StatusEffect> -->
         </MeleeWeapon>
 
         <SkillRequirementHint identifier="medical" level="30"/>
