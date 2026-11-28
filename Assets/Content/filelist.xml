@@ -9,6 +9,7 @@
     <Text file="%ModDir%/Localization/English/English.xml" />
 	<Text file="%ModDir%/Localization/PortugueseBrazil/PT-BR.xml" />
 	<Text file="%ModDir%/Localization/Russian/Russian.xml" />
+	<Text file="%ModDir%/Localization/Italian/Italian.xml" />
     <!-- Afflictions -->
     <Afflictions file="%ModDir%/XML/Afflictions/AnyBodypart.xml" />
     <Afflictions file="%ModDir%/XML/Afflictions/Blood.xml" />

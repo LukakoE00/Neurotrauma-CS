@@ -1394,7 +1394,8 @@ namespace Neurotrauma
 
             "\n" + "Translations:" + "\n" +
             "- Russian : " + Coloured("Heelge", 255, 102, 102) + "\n" +
-            "- Portuguese : Pombo Espadachim" + "\n"
+            "- Portuguese : Pombo Espadachim" + "\n" +
+            "- Italian : Rosa" + "\n" 
         ;
 
         public static void OpenCredits()
