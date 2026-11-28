@@ -1025,7 +1025,7 @@ namespace Neurotrauma
         /// <returns>Surgery / Medical skill as a float.</returns>
         public static float GetSurgerySkill(Character Character)
         {
-            if (IsNTSPEnabled() && NTConfig.Get("NTSP_enableSurgerySkill", false))
+            if (IsNTSPEnabled() && NTConfig.Get("NTCS_SurgeryPlus_enableSurgerySkill", false))
             {
                 return Math.Max(5f, Math.Max(GetSkillLevel(Character, "surgery".ToIdentifier()), GetSkillLevel(Character, "medical".ToIdentifier()) / 4));
             }
@@ -1069,7 +1069,7 @@ namespace Neurotrauma
         /// <param name="Amount">The amount of skill the character should gain.</param>
         public static void GiveSurgerySkill(Character Character, float Amount)
         {
-            if (IsNTSPEnabled() && NTConfig.Get("NTSP_enableSurgerySkill", true))
+            if (IsNTSPEnabled() && NTConfig.Get("NTCS_SurgeryPlus_enableSurgerySkill", true))
             {
                 Character.Info.IncreaseSkillLevel("surgery".ToIdentifier(), Amount);
             }

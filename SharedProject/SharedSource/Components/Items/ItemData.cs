@@ -1343,7 +1343,7 @@ public class NTItemsData
                 HF.SetAfflictionLimb(infos.target.Human, "seconddegreeburn", infos.targetLimb.type, 0, infos.user.Human);
                 HF.SetAfflictionLimb(infos.target.Human, "thirddegreeburn", infos.targetLimb.type, 0, infos.user.Human);
 
-                if (HF.IsNTSPEnabled() && NTConfig.Get("NTSP_enableSurgerySkill", true))
+                if (HF.IsNTSPEnabled() && NTConfig.Get("NTCS_SurgeryPlus_enableSurgerySkill", true))
                 {
                     HF.GiveSkillScaled(infos.user.Human, "surgery".ToIdentifier(), (float)healedAmount * 300);
                 }
@@ -1723,7 +1723,7 @@ public class NTItemsData
                     {
                         HF.SetAfflictionLimb(infos.target.Human, afflictionId, infos.targetLimb.type, 0f, infos.user.Human, 0);
 
-                        if (HF.IsNTSPEnabled() && NTConfig.Get("NTSP_enableSurgerySkill", true))
+                        if (HF.IsNTSPEnabled() && NTConfig.Get("NTCS_SurgeryPlus_enableSurgerySkill", true))
                         {
                             HF.GiveSkillScaled(infos.user.Human, "surgery".ToIdentifier(), skillGain);
                         }
@@ -1741,7 +1741,7 @@ public class NTItemsData
                     {
                         HF.SetAffliction(infos.target.Human, afflictionId, 0f, infos.user.Human, 0);
 
-                        if (HF.IsNTSPEnabled() && NTConfig.Get("NTSP_enableSurgerySkill", true))
+                        if (HF.IsNTSPEnabled() && NTConfig.Get("NTCS_SurgeryPlus_enableSurgerySkill", true))
                         {
                             HF.GiveSkillScaled(infos.user.Human, "surgery".ToIdentifier(), skillGain);
                         }
@@ -1838,7 +1838,7 @@ public class NTItemsData
                     HF.RemoveItem(infos.item);
                 }
 
-                if (HF.IsNTSPEnabled() && NTConfig.Get("NTSP_enableSurgerySkill", true))
+                if (HF.IsNTSPEnabled() && NTConfig.Get("NTCS_SurgeryPlus_enableSurgerySkill", true))
                 {
                     HF.GiveSkillScaled(infos.user.Human, "surgery".ToIdentifier(), 12000f);
                 }
@@ -2024,7 +2024,7 @@ public class NTItemsData
 
                         HF.AddAfflictionLimb(infos.target.Human, identifier, infos.targetLimb.type, -healAmount, infos.user.Human);
 
-                        if (HF.IsNTSPEnabled() && NTConfig.Get("NTSP_enableSurgerySkill", true))
+                        if (HF.IsNTSPEnabled() && NTConfig.Get("NTCS_SurgeryPlus_enableSurgerySkill", true))
                         {
                             HF.GiveSkillScaled(infos.user.Human, "surgery".ToIdentifier(), healedAmount * skillGain);
                         }
@@ -2498,7 +2498,7 @@ public class NTItemsData
                 {
                     if (!HF.HasAffliction(infos.target.Human, "infectedcavity", 1f))
                     {
-                        if (HF.IsNTSPEnabled() && NTConfig.Get("NTSP_enableSurgerySkill", true))
+                        if (HF.IsNTSPEnabled() && NTConfig.Get("NTCS_SurgeryPlus_enableSurgerySkill", true))
                         {
                             HF.GiveSkillScaled(infos.user.Human, "surgery".ToIdentifier(), 20000f);
                         }
@@ -2536,7 +2536,7 @@ public class NTItemsData
                 HF.AddAffliction(infos.target.Human, "balloonedaorta", 100f, infos.user.Human);
                 HF.SetAffliction(infos.target.Human, "internalbleeding", 0f, infos.user.Human, 0);
 
-                if (HF.IsNTSPEnabled() && NTConfig.Get("NTSP_enableSurgerySkill", true))
+                if (HF.IsNTSPEnabled() && NTConfig.Get("NTCS_SurgeryPlus_enableSurgerySkill", true))
                 {
                     HF.GiveSkillScaled(infos.user.Human, "surgery".ToIdentifier(), 10000f);
                 }
@@ -2563,7 +2563,7 @@ public class NTItemsData
                 HF.SetAffliction(infos.target.Human, "balloonedaorta", 0f, infos.user.Human, 0);
                 HF.SetAffliction(infos.target.Human, "aorticrupture", 0f, infos.user.Human, 0);
 
-                if (HF.IsNTSPEnabled() && NTConfig.Get("NTSP_enableSurgerySkill", true))
+                if (HF.IsNTSPEnabled() && NTConfig.Get("NTCS_SurgeryPlus_enableSurgerySkill", true))
                 {
                     HF.GiveSkillScaled(infos.user.Human, "surgery".ToIdentifier(), 20000f);
                 }

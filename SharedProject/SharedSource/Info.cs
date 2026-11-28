@@ -24,7 +24,7 @@ public struct NTVariants
 
 public struct NTLuaAddonIDs
 {
-    public static string NTSP = "3478084070";
+    public static string NTSP = "3816469440";
 }
 
 
