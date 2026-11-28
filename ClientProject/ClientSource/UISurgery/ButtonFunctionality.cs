@@ -425,5 +425,13 @@ namespace Neurotrauma.ClientSource
             Harmony?.UnpatchSelf();
             Harmony = null;
         }
+
+        // Force Main UI to update for new additions
+        public static void SyncButtonData()
+        {
+            RegisteredButtons.Clear();
+            RegisteredButtons.AddRange(ButtonDefinitions.Entries);
+            BuildMainButtonList();
+        }
     }
 }

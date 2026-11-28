@@ -73,6 +73,10 @@ namespace Neurotrauma.ClientSource
                 Target.Add(Button);
             }
 
+            #if CLIENT
+            if (ParentIdentifier == null) ButtonsHUI.RefreshButtonUI();
+            #endif
+
             return true;
         }
 
