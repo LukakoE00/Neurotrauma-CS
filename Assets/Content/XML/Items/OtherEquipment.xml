@@ -932,11 +932,11 @@
             </Attack>
 
             <StatusEffect type="OnUse" target="This" disabledeltatime="true">
-                <Sound file="%ModDir%/Sounds/ItemApplication/Tools/squeak1.ogg" type="OnUse" range="500"/>
-                <Sound file="%ModDir%/Sounds/ItemApplication/Tools/squeak2.ogg" type="OnUse" range="500"/>
-                <Sound file="%ModDir%/Sounds/ItemApplication/Tools/squeak3.ogg" type="OnUse" range="500"/>
-                <Sound file="%ModDir%/Sounds/ItemApplication/Tools/squeak4.ogg" type="OnUse" range="500"/>
-                <Sound file="%ModDir%/Sounds/ItemApplication/Tools/squeak5.ogg" type="OnUse" range="500"/>
+                <Sound file="%ModDir%/Sounds/ItemApplication/Tools/squeak1.ogg" range="500"/>
+                <Sound file="%ModDir%/Sounds/ItemApplication/Tools/squeak2.ogg" range="500"/>
+                <Sound file="%ModDir%/Sounds/ItemApplication/Tools/squeak3.ogg" range="500"/>
+                <Sound file="%ModDir%/Sounds/ItemApplication/Tools/squeak4.ogg" range="500"/>
+                <Sound file="%ModDir%/Sounds/ItemApplication/Tools/squeak5.ogg" range="500"/>
             </StatusEffect>
         </MeleeWeapon>
     </Item>
@@ -959,11 +959,11 @@
 			</Attack>
 
 			<StatusEffect type="OnUse" target="This" disabledeltatime="true">
-				<Sound file="%ModDir%/Sounds/ItemApplication/Tools/squeak1.ogg" type="OnUse" range="500"/>
-				<Sound file="%ModDir%/Sounds/ItemApplication/Tools/squeak2.ogg" type="OnUse" range="500"/>
-				<Sound file="%ModDir%/Sounds/ItemApplication/Tools/squeak3.ogg" type="OnUse" range="500"/>
-				<Sound file="%ModDir%/Sounds/ItemApplication/Tools/squeak4.ogg" type="OnUse" range="500"/>
-				<Sound file="%ModDir%/Sounds/ItemApplication/Tools/squeak5.ogg" type="OnUse" range="500"/>
+				<Sound file="%ModDir%/Sounds/ItemApplication/Tools/squeak1.ogg" range="500"/>
+				<Sound file="%ModDir%/Sounds/ItemApplication/Tools/squeak2.ogg" range="500"/>
+				<Sound file="%ModDir%/Sounds/ItemApplication/Tools/squeak3.ogg" range="500"/>
+				<Sound file="%ModDir%/Sounds/ItemApplication/Tools/squeak4.ogg" range="500"/>
+				<Sound file="%ModDir%/Sounds/ItemApplication/Tools/squeak5.ogg" range="500"/>
 			</StatusEffect>
 		</MeleeWeapon>
 	</Item>

@@ -35,8 +35,8 @@
         <Sprite texture="Content/Items/Medical/Medicines.png" sourcerect="0,0,1,1" depth="0.6" origin="0.5,0.5"/>
         <ItemComponent capacity="1" maxstacksize="1" hideitems="true" containedstateindicatorstyle="battery">
             <StatusEffect type="OnSpawn" target="This" disabledeltatime="true" stackable="false">
-                <Sound file="Content/Items/Medical/Bandage2.ogg" type="OnUse" range="500"/>
-                <Sound file="Content/Items/Medical/Bandage1.ogg" type="OnUse" range="500"/>
+                <Sound file="Content/Items/Medical/Bandage2.ogg" range="500"/>
+                <Sound file="Content/Items/Medical/Bandage1.ogg" range="500"/>
             </StatusEffect>
             <StatusEffect type="always" target="This" disabledeltatime="true" delay="1" stackable="false">
                 <Remove/>
@@ -64,7 +64,7 @@
         <Sprite texture="Content/Items/Medical/Medicines.png" sourcerect="0,0,1,1" depth="0.6" origin="0.5,0.5"/>
         <ItemComponent capacity="1" maxstacksize="1" hideitems="true" containedstateindicatorstyle="battery">
             <StatusEffect type="OnSpawn" target="This" disabledeltatime="true" stackable="false">
-                <Sound file="Content/Items/Medical/Syringe.ogg" type="OnUse" range="500"/>
+                <Sound file="Content/Items/Medical/Syringe.ogg" range="500"/>
             </StatusEffect>
             <StatusEffect type="always" target="This" disabledeltatime="true" delay="1" stackable="false">
                 <Remove/>
@@ -125,11 +125,11 @@
         <Sprite texture="Content/Items/Medical/Medicines.png" sourcerect="0,0,1,1" depth="0.6" origin="0.5,0.5"/>
         <ItemComponent capacity="1" maxstacksize="1" hideitems="true" containedstateindicatorstyle="battery">
             <StatusEffect type="OnSpawn" target="This" disabledeltatime="true" stackable="false">
-                <Sound file="%ModDir%/Sounds/ItemApplication/Tools/squeak1.ogg" type="OnUse" range="500"/>
-                <Sound file="%ModDir%/Sounds/ItemApplication/Tools/squeak2.ogg" type="OnUse" range="500"/>
-                <Sound file="%ModDir%/Sounds/ItemApplication/Tools/squeak3.ogg" type="OnUse" range="500"/>
-                <Sound file="%ModDir%/Sounds/ItemApplication/Tools/squeak4.ogg" type="OnUse" range="500"/>
-                <Sound file="%ModDir%/Sounds/ItemApplication/Tools/squeak5.ogg" type="OnUse" range="500"/>
+                <Sound file="%ModDir%/Sounds/ItemApplication/Tools/squeak1.ogg" range="500"/>
+                <Sound file="%ModDir%/Sounds/ItemApplication/Tools/squeak2.ogg" range="500"/>
+                <Sound file="%ModDir%/Sounds/ItemApplication/Tools/squeak3.ogg" range="500"/>
+                <Sound file="%ModDir%/Sounds/ItemApplication/Tools/squeak4.ogg" range="500"/>
+                <Sound file="%ModDir%/Sounds/ItemApplication/Tools/squeak5.ogg" range="500"/>
             </StatusEffect>
             <StatusEffect type="always" target="This" disabledeltatime="true" delay="2" stackable="false">
                 <Remove/>
