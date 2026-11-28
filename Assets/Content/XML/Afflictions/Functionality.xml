@@ -95,7 +95,7 @@
 
     <!-- CPR: Invisible, used to make CPR work with Neurotrauma afflictions. -->
     <Affliction
-      name=""
+      name="CPR"
       description=""
       identifier="cpr_buff"
 
