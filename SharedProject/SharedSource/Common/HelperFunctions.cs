@@ -897,7 +897,7 @@ namespace Neurotrauma
 #if SERVER
             LuaGame.SendDirectChatMessage(Header, Msg, null, ChatMessageType.MessageBox, CharacterClient);
 #elif CLIENT
-            GUI.AddMessage(Msg, Color.White);
+            new GUIMessageBox(Header, Msg);
 #endif
         }
 
