@@ -149,7 +149,7 @@ namespace Neurotrauma.ClientSource
             int ContentWidth = Math.Min(ButtonCount, MaxPerRow) * OutlineSize;
 
             // Add some text on top so it doesnt look naked
-            var Header = new GUITextBlock(new RectTransform(new Point(ContentWidth, HeaderHeight), ButtonContainer!.RectTransform), "Surgery Tools", font: GUIStyle.LargeFont)
+            var Header = new GUITextBlock(new RectTransform(new Point(ContentWidth, HeaderHeight), ButtonContainer!.RectTransform), TextManager.Get("nt_huibuttons_surgerytools"), font: GUIStyle.LargeFont)
             {
                 TextAlignment = Alignment.TopCenter,
                 CanBeFocused = false

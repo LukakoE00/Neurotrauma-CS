@@ -1241,6 +1241,9 @@ Can give blood to: AB+</entitydescription.ab_positivecard>
 <npcdialogsym.palpitations_3>My heart is pounding!</npcdialogsym.palpitations_3>
 
 <!-- ================================================= HUI Button Translations ================================================= -->
+<!-- Surgery Tools Button -->
+<nt_huibutton_surgerytools>Surgery Tools</nt_huibutton_surgerytools>
+
 <!-- Scalpel Button -->
 <nt_huibutton_enabled_scalpel>Use a Scalpel on the currently selected limb. \nRequired Medical Skill: ‖color:gui.green‖30‖end‖</nt_huibutton_enabled_scalpel>
 
