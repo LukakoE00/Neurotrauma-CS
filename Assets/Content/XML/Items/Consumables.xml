@@ -122,7 +122,7 @@
 
         <MeleeWeapon canBeCombined="false" removeOnCombined="true" slots="Any,RightHand,LeftHand" aimpos="40,5" handle1="0,0" holdangle="10" reload="1.0" msg="ItemMsgPickUpSelect" HitOnlyCharacters="true">
             <!-- HE compatibility -->
-            <StatusEffect type="Always" target="This" interval="5" disabledeltatime="true" condition="-0.15">
+            <StatusEffect type="Always" target="This" interval="5" disabledeltatime="true" condition="-0.15" conditionalComparison="and">
                 <Conditional hastag="neq refrigerated" targetcontainer="true" />
                 <Conditional HasStatusTag="neq activecooling" targetcontainer="true" />
             </StatusEffect>
